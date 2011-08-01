@@ -119,12 +119,13 @@ const CGFloat _UITableViewDefaultRowHeight = 44;
     _sections = [[NSMutableArray alloc] init];
     _reusableCells = [[NSMutableSet alloc] init];
     
-    self.separatorColor = [UIColor colorWithRed:.67f green:.67f blue:.67f alpha:1];
+    self.separatorColor = [UIColor colorWithRed:.88f green:.88f blue:.88f alpha:1];
     self.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.showsHorizontalScrollIndicator = NO;
     self.allowsSelection = YES;
     self.allowsSelectionDuringEditing = NO;
     self.sectionHeaderHeight = self.sectionFooterHeight = 22;
+    self.alwaysBounceVertical = YES;
     
     if (_style == UITableViewStylePlain) {
         self.backgroundColor = [UIColor whiteColor];
@@ -796,6 +797,10 @@ const CGFloat _UITableViewDefaultRowHeight = 44;
     [self reloadData];
 }
 
+- (void)reloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
+    [self reloadData];
+}
+
 - (void)insertRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation
 {
     [self reloadData];
@@ -803,6 +808,10 @@ const CGFloat _UITableViewDefaultRowHeight = 44;
 
 - (void)deleteRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation
 {
+    [self reloadData];
+}
+
+- (void)reloadRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
     [self reloadData];
 }
 
@@ -925,7 +934,7 @@ const CGFloat _UITableViewDefaultRowHeight = 44;
         [menu release];
         [theItem release];
         
-        [[UIApplication sharedApplication] _cancelTouchesInView:nil];
+        [[UIApplication sharedApplication] _cancelTouches];
 
         if (didSelectItem) {
             [_dataSource tableView:self commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:indexPath];
@@ -973,6 +982,12 @@ const CGFloat _UITableViewDefaultRowHeight = 44;
     if (newIndexPath) {
         [self _selectRowAtIndexPath:newIndexPath sendDelegateMessages:NO animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
+    [self flashScrollIndicators];
+    if (newIndexPath.row == 0 && newIndexPath.section == 0) {
+        [self scrollRectToVisible:CGRectMake(0.0f, 0.0f, self.bounds.size.width, self.bounds.size.height) animated:YES];
+    } else {
+        [self scrollToRowAtIndexPath:newIndexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+    }
 }
 
 - (void) moveDown:(id)sender
@@ -991,6 +1006,8 @@ const CGFloat _UITableViewDefaultRowHeight = 44;
     if (newIndexPath) {
         [self _selectRowAtIndexPath:newIndexPath sendDelegateMessages:NO animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
+    [self flashScrollIndicators];
+    [self scrollToRowAtIndexPath:newIndexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
 }
 
 - (void) pageUp:(id)sender

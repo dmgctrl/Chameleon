@@ -27,13 +27,16 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIAction.h"
-#import "UIControl.h"
+#import "UIApplication.h"
 
-@interface UIControlAction : UIAction {
-    UIControlEvents _controlEvents;
+@interface UIBackgroundTask : NSObject {
+    void (^_expirationHandler)(void);
+    UIBackgroundTaskIdentifier _taskIdentifier;
 }
 
-@property (nonatomic, assign) UIControlEvents controlEvents;
+- (id)initWithExpirationHandler:(void(^)(void))handler;
+
+@property (nonatomic, readonly) void (^expirationHandler)(void);
+@property (nonatomic, readonly) UIBackgroundTaskIdentifier taskIdentifier;
 
 @end

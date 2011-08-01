@@ -67,32 +67,45 @@ static NSString* const kUISubviewsKey = @"UISubviews";
 static NSMutableArray *_animationGroups;
 static BOOL _animationsEnabled = YES;
 
-
 @implementation UIView {
+    BOOL _needsDidAppearOrDisappear;
+
     NSMutableSet *_subviews;
-    BOOL _implementsDrawRect;
-    BOOL _multipleTouchEnabled;
-    BOOL _exclusiveTouch;
     UIViewController *_viewController;
     NSMutableSet *_gestureRecognizers;
+    IMP ourDrawRect_;
+    
+    struct {
+        BOOL overridesDisplayLayer : 1;
+        BOOL clearsContextBeforeDrawing : 1;
+        BOOL multipleTouchEnabled : 1;
+        BOOL exclusiveTouch : 1;
+        BOOL userInteractionEnabled : 1;
+        BOOL autoresizesSubviews : 1;
+    } _flags;
 }
 @synthesize layer = _layer;
 @synthesize superview = _superview;
-@synthesize clearsContextBeforeDrawing = _clearsContextBeforeDrawing;
-@synthesize autoresizesSubviews = _autoresizesSubviews;
 @synthesize tag = _tag;
-@synthesize userInteractionEnabled = _userInteractionEnabled;
 @synthesize contentMode = _contentMode;
 @synthesize backgroundColor = _backgroundColor;
-@synthesize multipleTouchEnabled = _multipleTouchEnabled;
 @synthesize exclusiveTouch = _exclusiveTouch;
 @synthesize autoresizingMask = _autoresizingMask;
 @synthesize toolTip = _toolTip;
+
+static SEL drawRectSelector;
+static SEL displayLayerSelector;
+static IMP defaultImplementationOfDrawRect;
+static IMP defaultImplementationOfDisplayLayer;
 
 + (void)initialize
 {
     if (self == [UIView class]) {
         _animationGroups = [[NSMutableArray alloc] init];
+        drawRectSelector = @selector(drawRect:);
+        displayLayerSelector = @selector(displayLayer:);
+        defaultImplementationOfDrawRect = [UIView instanceMethodForSelector:drawRectSelector];
+        defaultImplementationOfDisplayLayer = [UIView instanceMethodForSelector:displayLayerSelector];
     }
 }
 
@@ -101,17 +114,19 @@ static BOOL _animationsEnabled = YES;
     return [CALayer class];
 }
 
-+ (BOOL)_instanceImplementsDrawRect
-{
-    return [UIView instanceMethodForSelector:@selector(drawRect:)] != [self instanceMethodForSelector:@selector(drawRect:)];
-}
-
 - (void) _commonInitForUIView
 {
-    _implementsDrawRect = [[self class] _instanceImplementsDrawRect];
-    _clearsContextBeforeDrawing = YES;
-    _autoresizesSubviews = YES;
-    _userInteractionEnabled = YES;
+    _flags.overridesDisplayLayer = defaultImplementationOfDisplayLayer != [[self class] instanceMethodForSelector:displayLayerSelector];
+
+    IMP ourDrawRect = [[self class] instanceMethodForSelector:drawRectSelector];
+    if (ourDrawRect != defaultImplementationOfDrawRect) {
+        ourDrawRect_ = ourDrawRect;
+    }
+    
+    _flags.clearsContextBeforeDrawing = YES;
+    _flags.autoresizesSubviews = YES;
+    _flags.userInteractionEnabled = YES;
+    
     _subviews = [[NSMutableSet alloc] init];
     _gestureRecognizers = [[NSMutableSet alloc] init];
     
@@ -362,8 +377,8 @@ static BOOL _animationsEnabled = YES;
 {
     if (_superview) {
         [self retain];
-				        
-        [[UIApplication sharedApplication] _cancelTouchesInView:self];
+        
+        [[UIApplication sharedApplication] _removeViewFromTouches:self];
         
         UIWindow *oldWindow = self.window;
         
@@ -511,6 +526,10 @@ static BOOL _animationsEnabled = YES;
 
 - (void)displayLayer:(CALayer *)theLayer
 {
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
     // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
     // specified in the UIView's subview. This nicely prevents a ton of useless memory usage and likley improves performance a lot on iPhone.
     // It took great pains to discover this trick and I think I'm doing this right. By having this method empty here, it means that it overrides
@@ -536,13 +555,10 @@ static BOOL _animationsEnabled = YES;
     // a bunch of unnecessary memory in those cases - but you can still use background colors because CALayer manages that effeciently.
     
     // Clever, huh?
-}
-
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
-    // For notes about why this is done, see displayLayer: above.
-    if (aSelector == @selector(displayLayer:)) {
-        return !_implementsDrawRect;
+    if (aSelector == @selector(drawLayer:inContext:)) {
+        return nil != ourDrawRect_;
+    } else if (aSelector == @selector(displayLayer:)) { 
+        return _flags.overridesDisplayLayer || nil == ourDrawRect_;
     } else {
         return [super respondsToSelector:aSelector];
     }
@@ -552,19 +568,18 @@ static BOOL _animationsEnabled = YES;
 {
     // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.
     // See the discussion in drawLayer: above.
+    assert(ourDrawRect_);
 
     const CGRect bounds = CGContextGetClipBoundingBox(ctx);
 
     UIGraphicsPushContext(ctx);
     CGContextSaveGState(ctx);
     
-    if (_clearsContextBeforeDrawing) {
-        CGContextClearRect(ctx, bounds);
-    }
-
     if (_backgroundColor) {
         [_backgroundColor setFill];
         CGContextFillRect(ctx,bounds);
+    } else if (_flags.clearsContextBeforeDrawing) {
+        CGContextClearRect(ctx, bounds);
     }
 
     /*
@@ -593,7 +608,7 @@ static BOOL _animationsEnabled = YES;
     CGContextSetShouldSubpixelQuantizeFonts(ctx, YES);
     
     [[UIColor blackColor] set];
-    [self drawRect:bounds];
+    ourDrawRect_(self, drawRectSelector, bounds);
 
     CGContextRestoreGState(ctx);
     UIGraphicsPopContext();
@@ -612,72 +627,61 @@ static BOOL _animationsEnabled = YES;
 {
     if (_autoresizingMask != UIViewAutoresizingNone) {
         CGRect frame = self.frame;
-        BOOL originChanged = NO;
-        BOOL sizeChanged = NO;
+        const CGSize delta = CGSizeMake(newSize.width-oldSize.width, newSize.height-oldSize.height);
         
-        CGFloat xDelta = newSize.width - oldSize.width;
-        CGFloat yDelta = newSize.height - oldSize.height;
+#define hasAutoresizingFor(x) ((_autoresizingMask & (x)) == (x))
         
-        if (_autoresizingMask & UIViewAutoresizingFlexibleLeftMargin) {
-            if (_autoresizingMask & UIViewAutoresizingFlexibleWidth) {
-                if (_autoresizingMask & UIViewAutoresizingFlexibleRightMargin) {
-                    frame.origin.x += xDelta / 3;
-                    frame.size.width += xDelta / 3;
-                } else {
-                    frame.origin.x += xDelta / 2;
-                    frame.size.width += xDelta / 2;
-                }
-                originChanged = YES;
-                sizeChanged = YES;
-            } else if (_autoresizingMask & UIViewAutoresizingFlexibleRightMargin) {
-                frame.origin.x += xDelta / 2;
-                originChanged = YES;
-            } else {
-                frame.origin.x += xDelta;
-                originChanged = YES;
-            }
-        } else if (_autoresizingMask & UIViewAutoresizingFlexibleWidth) {
-            if (_autoresizingMask & UIViewAutoresizingFlexibleRightMargin) {
-                frame.size.width += xDelta / 2;
-            } else {
-                frame.size.width += xDelta;
-            }
-            sizeChanged = YES;
-        } else if (_autoresizingMask & UIViewAutoresizingFlexibleRightMargin) {
-            // don't move or resize
+        /*
+         
+         top + bottom + height      => y = floor(y + (y / HEIGHT * delta)); height = floor(height + (height / HEIGHT * delta))
+         top + height               => t = y + height; y = floor(y + (y / t * delta); height = floor(height + (height / t * delta);
+         bottom + height            => height = floor(height + (height / (HEIGHT - y) * delta))
+         top + bottom               => y = floor(y + (delta / 2))
+         height                     => height = floor(height + delta)
+         top                        => y = floor(y + delta)
+         bottom                     => y = floor(y)
+
+         */
+
+        if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin)) {
+            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
+            frame.size.height = floorf(frame.size.height + (frame.size.height / oldSize.height * delta.height));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight)) {
+            const CGFloat t = frame.origin.y + frame.size.height;
+            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / t * delta.height));
+            frame.size.height = floorf(frame.size.height + (frame.size.height / t * delta.height));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight)) {
+            frame.size.height = floorf(frame.size.height + (frame.size.height / (oldSize.height - frame.origin.y) * delta.height));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin)) {
+            frame.origin.y = floorf(frame.origin.y + (delta.height / 2.f));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleHeight)) {
+            frame.size.height = floorf(frame.size.height + delta.height);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin)) {
+            frame.origin.y = floorf(frame.origin.y + delta.height);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin)) {
+            frame.origin.y = floorf(frame.origin.y);
         }
-        
-        
-        if (_autoresizingMask & UIViewAutoresizingFlexibleTopMargin) {
-            if (_autoresizingMask & UIViewAutoresizingFlexibleHeight) {
-                if (_autoresizingMask & UIViewAutoresizingFlexibleBottomMargin) {
-                    frame.origin.y += yDelta / 3;
-                    frame.size.height += yDelta / 3;
-                } else {
-                    frame.origin.y += yDelta / 2;
-                    frame.size.height += yDelta / 2;
-                }
-                originChanged = YES;
-                sizeChanged = YES;
-            } else if (_autoresizingMask & UIViewAutoresizingFlexibleBottomMargin) {
-                frame.origin.y += yDelta / 2;
-                originChanged = YES;
-            } else {
-                frame.origin.y += yDelta;
-                originChanged = YES;
-            }
-        } else if (_autoresizingMask & UIViewAutoresizingFlexibleHeight) {
-            if (_autoresizingMask & UIViewAutoresizingFlexibleBottomMargin) {
-                frame.size.height += yDelta / 2;
-            } else {
-                frame.size.height += yDelta;
-            }
-            sizeChanged = YES;
+
+        if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin)) {
+            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / oldSize.width * delta.width));
+            frame.size.width = floorf(frame.size.width + (frame.size.width / oldSize.width * delta.width));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth)) {
+            const CGFloat t = frame.origin.x + frame.size.width;
+            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / t * delta.width));
+            frame.size.width = floorf(frame.size.width + (frame.size.width / t * delta.width));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth)) {
+            frame.size.width = floorf(frame.size.width + (frame.size.width / (oldSize.width - frame.origin.x) * delta.width));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin)) {
+            frame.origin.x = floorf(frame.origin.x + (delta.width / 2.f));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleWidth)) {
+            frame.size.width = floorf(frame.size.width + delta.width);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin)) {
+            frame.origin.x = floorf(frame.origin.x + delta.width);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin)) {
+            frame.origin.x = floorf(frame.origin.x);
         }
-        
-        if (originChanged || sizeChanged) {
-            self.frame = frame;
-        }
+
+        self.frame = frame;
     }
 }
 
@@ -690,13 +694,53 @@ static BOOL _animationsEnabled = YES;
         [self setNeedsLayout];
 
         if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
-            if (_autoresizesSubviews) {
+            if (_flags.autoresizesSubviews) {
                 for (UIView *subview in _subviews) {
                     [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
                 }
             }
         }
     }
+}
+
+- (BOOL) clearsContextBeforeDrawing
+{
+    return _flags.clearsContextBeforeDrawing;
+}
+
+- (void) setClearsContextBeforeDrawing:(BOOL)clearsContextBeforeDrawing
+{
+    _flags.clearsContextBeforeDrawing = clearsContextBeforeDrawing;
+}
+
+- (BOOL) autoresizesSubviews
+{
+    return _flags.autoresizesSubviews;
+}
+
+- (void) setAutoresizesSubviews:(BOOL)autoresizesSubviews
+{
+    _flags.autoresizesSubviews = autoresizesSubviews;
+}
+
+- (BOOL) isUserInteractionEnabled
+{
+    return _flags.userInteractionEnabled;
+}
+
+- (void) setUserInteractionEnabled:(BOOL)userInteractionEnabled
+{
+    _flags.userInteractionEnabled = userInteractionEnabled;
+}
+
+- (BOOL) isMultipleTouchEnabled
+{
+    return _flags.multipleTouchEnabled;
+}
+
+- (void) setMultipleTouchEnabled:(BOOL)multipleTouchEnabled
+{
+    _flags.multipleTouchEnabled = multipleTouchEnabled;
 }
 
 + (NSSet *)keyPathsForValuesAffectingFrame
@@ -794,7 +838,7 @@ static BOOL _animationsEnabled = YES;
             self.opaque = (CGColorGetAlpha(color) == 1);
         }
         
-        if (!_implementsDrawRect) {
+        if (!ourDrawRect_) {
             _layer.backgroundColor = color;
         }
     }
@@ -994,6 +1038,7 @@ static BOOL _animationsEnabled = YES;
         animationCurve = UIViewAnimationCurveLinear;
     }
     
+    // NOTE: As of iOS 5 this is only supposed to block interaction events for the views being animated, not the whole app.
     if (ignoreInteractionEvents) {
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     }

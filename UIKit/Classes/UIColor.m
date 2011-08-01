@@ -46,7 +46,7 @@ static void releasePatternImage(void *info)
     CGImageRelease((CGImageRef)info);
 }
 
-CGPatternRef CreateImagePattern(CGImageRef image)
+static CGPatternRef CreateImagePattern(CGImageRef image)
 {
     NSCParameterAssert(image);
     CGImageRetain(image);
@@ -55,7 +55,7 @@ CGPatternRef CreateImagePattern(CGImageRef image)
     static const CGPatternCallbacks callbacks = {0, &drawPatternImage, &releasePatternImage};
     return CGPatternCreate (image,
                             CGRectMake (0, 0, width, height),
-                            CGAffineTransformMake (1, 0, 0, 1, 0, 0),
+                            CGAffineTransformMake (1, 0, 0, -1, 0, height),
                             width,
                             height,
                             kCGPatternTilingConstantSpacing,
@@ -63,7 +63,7 @@ CGPatternRef CreateImagePattern(CGImageRef image)
                             &callbacks);
 }
 
-CGColorRef CreatePatternColor(CGImageRef image)
+static CGColorRef CreatePatternColor(CGImageRef image)
 {
     CGPatternRef pattern = CreateImagePattern(image);
     CGColorSpaceRef space = CGColorSpaceCreatePattern(NULL);
@@ -126,11 +126,6 @@ static UIColor *ClearColor = nil;
 {
     CGColorRelease(_color);
     [super dealloc];
-}
-
-- (void)finalize {
-	CGColorRelease(_color);
-	[super finalize];
 }
 
 + (id)colorWithNSColor:(NSColor *)c
@@ -206,7 +201,10 @@ static UIColor *ClearColor = nil;
 
 - (id)initWithPatternImage:(UIImage *)patternImage
 {
-    if ((self=[super init])) {
+    if (!patternImage) {
+        [self release];
+        self = nil;
+    } else if ((self=[super init])) {
         _color = CreatePatternColor(patternImage.CGImage);
     }
 

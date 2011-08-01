@@ -27,13 +27,25 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIAction.h"
-#import "UIControl.h"
+#import "UIBackgroundTask.h"
 
-@interface UIControlAction : UIAction {
-    UIControlEvents _controlEvents;
+@implementation UIBackgroundTask
+@synthesize expirationHandler=_expirationHandler, taskIdentifier=_taskIdentifier;
+
+- (id)initWithExpirationHandler:(void(^)(void))handler
+{
+    if ((self = [super init])) {
+        _expirationHandler = [handler copy];
+        _taskIdentifier = (UIBackgroundTaskIdentifier)&self;
+    }
+
+    return self;
 }
 
-@property (nonatomic, assign) UIControlEvents controlEvents;
+- (void)dealloc
+{
+    [_expirationHandler release];
+    [super dealloc];
+}
 
 @end

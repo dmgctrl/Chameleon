@@ -39,6 +39,9 @@ static NSString* const kUIHighlightedColorKey = @"UIHighlightedColor";
 static NSString* const kUIShadowColorKey = @"UIShadowColor";
 static NSString* const kUIShadowOffsetKey = @"UIShadowOffset";
 static NSString* const kUITextColorKey = @"UITextColor";
+static NSString* const kUITextKey = @"UIText";
+static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
+static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 
 @implementation UILabel 
@@ -106,10 +109,19 @@ static NSString* const kUITextColorKey = @"UITextColor";
             self.shadowColor = [coder decodeObjectForKey:kUIShadowColorKey];
         }
         if ([coder containsValueForKey:kUIShadowOffsetKey]) {
-            self.shadowOffset = [coder decodeSizeForKey:kUIShadowOffsetKey];
+            self.shadowOffset = [coder decodeCGSizeForKey:kUIShadowOffsetKey];
         }
         if ([coder containsValueForKey:kUITextColorKey]) {
             self.textColor = [coder decodeObjectForKey:kUITextColorKey];
+        }
+        if ([coder containsValueForKey:kUITextKey]) {
+            self.text = [coder decodeObjectForKey:kUITextKey];
+        }
+        if ([coder containsValueForKey:kUIBaselineAdjustmentKey]) {
+            self.baselineAdjustment = [coder decodeIntegerForKey:kUIBaselineAdjustmentKey];
+        }
+        if ([coder containsValueForKey:kUIAdjustsFontSizeToFitKey]) {
+            self.adjustsFontSizeToFitWidth = [coder decodeBoolForKey:kUIAdjustsFontSizeToFitKey];
         }
     }
     return self;

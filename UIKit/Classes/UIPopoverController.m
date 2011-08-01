@@ -125,6 +125,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize p
     UIPopoverView *_popoverView;
     id _popoverWindow;
     id _overlayWindow;
+    UIWindow* _windowToReactivate;
     
     struct {
         BOOL popoverControllerDidDismissPopover : 1;
@@ -191,6 +192,8 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize p
     assert(arrowDirections != UIPopoverArrowDirectionUnknown);
     assert(!CGRectIsNull(rect));
     assert(!CGRectEqualToRect(rect,CGRectZero));
+
+    [_windowToReactivate release], _windowToReactivate = [view.window retain];
     
     NSWindow *viewNSWindow = [[view.window.screen UIKitView] window];
 
@@ -243,7 +246,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize p
     // button and a timer triggered the appearance of this popover. the window would possibly then not receive the mouseUp depending on how
     // all this works out... I first ran into this problem with NSMenus. A NSWindow is a bit different, but I think this makes sense here
     // too so premptively doing it to avoid potential problems.)
-    [[UIApplication sharedApplication] _cancelTouchesInView:nil];
+    [[UIApplication sharedApplication] _cancelTouches];
     
     // now position the popover window according to the passed in parameters.
     CGRect windowRect = [view convertRect:rect toView:nil];
@@ -298,13 +301,17 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize p
 - (void)dismissPopoverAnimated:(BOOL)animated
 {
     if ([self isPopoverVisible]) {
-        id overlayWindow = [_overlayWindow retain];
-        [_overlayWindow release], _overlayWindow = nil;
-        id popoverWindow = [_popoverWindow retain];
-        [_popoverWindow release], _popoverWindow = nil;
-        UIView *popoverView = [_popoverView retain];
-        [_popoverView release], _popoverView = nil;
+        id overlayWindow = _overlayWindow;
+        id popoverWindow = _popoverWindow;
+        UIView* popoverView = _popoverView;
+        UIWindow* windowToReactivate = _windowToReactivate; 
+        
+        _overlayWindow = nil;
+        _popoverWindow = nil;
+        _popoverView = nil;
+        _windowToReactivate = nil;
         _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
+        
         [UIView animateWithDuration:!animated ? 0.0 : 0.2 
             animations:^{
                 popoverView.alpha = 0;
@@ -318,9 +325,13 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize p
                 [overlayWindow removeChildWindow:popoverWindow];
                 [parentWindow removeChildWindow:overlayWindow];
                 
+                [parentWindow makeKeyWindow];
+                [windowToReactivate makeKeyAndVisible];
+
                 [popoverView release];
                 [popoverWindow release];
                 [overlayWindow release];
+                [windowToReactivate release];
             }
         ];
     }

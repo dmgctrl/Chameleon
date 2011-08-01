@@ -32,6 +32,7 @@
 
 static NSString *UIFontSystemFontName = nil;
 static NSString *UIFontBoldSystemFontName = nil;
+static NSString *UIFontItalicSystemFontName = nil;
 
 static NSString* const kUIFontNameKey = @"UIFontName";
 static NSString* const kUIFontPointSizeKey = @"UIFontPointSize";
@@ -53,6 +54,12 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
 {
     [UIFontBoldSystemFontName release];
     UIFontBoldSystemFontName = [aName copy];
+}
+
++ (void)setItalicSystemFontName:(NSString *)aName
+{
+    [UIFontItalicSystemFontName release];
+    UIFontItalicSystemFontName = [aName copy];
 }
 
 + (UIFont *)_fontWithCTFont:(CTFontRef)aFont
@@ -101,7 +108,7 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
     [self doesNotRecognizeSelector:_cmd];
 }
 
-NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFStringRef nameAttr)
+static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFStringRef nameAttr)
 {
     NSMutableSet *names = [NSMutableSet set];
     if (collection) {
@@ -162,7 +169,16 @@ NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFStringRef nam
 
 + (UIFont *)boldSystemFontOfSize:(CGFloat)fontSize
 {
-    NSFont *systemFont = UIFontBoldSystemFontName? [NSFont fontWithName:UIFontBoldSystemFontName size:fontSize] : [NSFont boldSystemFontOfSize:fontSize];
+    NSFont *systemFont = UIFontBoldSystemFontName
+                ? [NSFont fontWithName:UIFontBoldSystemFontName size:fontSize] 
+                : [NSFont boldSystemFontOfSize:fontSize];
+    return [self fontWithNSFont:systemFont];
+}
+
++ (UIFont *)italicSystemFontOfSize:(CGFloat)fontSize {
+    NSFont *systemFont = UIFontItalicSystemFontName
+                                ? [NSFont fontWithName:UIFontItalicSystemFontName size:fontSize] 
+                                : [NSFont systemFontOfSize:fontSize];
     return [self fontWithNSFont:systemFont];
 }
 
@@ -170,11 +186,6 @@ NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFStringRef nam
 {
     CFRelease(_font);
     [super dealloc];
-}
-
-- (void)finalize {
-	CFRelease(_font);
-	[super finalize];
 }
 
 - (NSString *)fontName
