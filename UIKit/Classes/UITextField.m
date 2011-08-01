@@ -41,7 +41,7 @@ NSString *const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChang
 NSString *const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
 
 
-static NSString* const kUIPlaceHolderKey = @"UIPlaceHolder";
+static NSString* const kUIPlaceholderKey = @"UIPlaceholder";
 static NSString* const kUITextAlignmentKey = @"UITextAlignment";
 static NSString* const kUITextKey = @"UIText";
 static NSString* const kUITextFieldBackgroundKey = @"UITextFieldBackground";
@@ -49,6 +49,7 @@ static NSString* const kUITextFieldDisabledBackgroundKey = @"UITextFieldDisabled
 static NSString* const kUIBorderStyleKey = @"UIBorderStyle";
 static NSString* const kUIClearsOnBeginEditingKey = @"UIClearsOnBeginEditing";
 static NSString* const kUIMinimumFontSizeKey = @"UIMinimumFontSize";
+static NSString* const kUIFontKey = @"UIFont";
 static NSString* const kUIClearButtonModeKey = @"UIClearButtonMode";
 static NSString* const kUIClearButtonOffsetKey = @"UIClearButtonOffset";
 static NSString* const kUIAutocorrectionTypeKey = @"UIAutocorrectionType";
@@ -149,8 +150,8 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 {
     if (nil != (self = [super initWithCoder:coder])) {
         [self _commonInitForUITextField];
-        if ([coder containsValueForKey:kUIPlaceHolderKey]) {
-            self.placeholder = [coder decodeObjectForKey:kUIPlaceHolderKey];
+        if ([coder containsValueForKey:kUIPlaceholderKey]) {
+            self.placeholder = [coder decodeObjectForKey:kUIPlaceholderKey];
         }
         if ([coder containsValueForKey:kUITextAlignmentKey]) {
             self.textAlignment = [coder decodeIntegerForKey:kUITextAlignmentKey];
@@ -172,6 +173,9 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
         }
         if ([coder containsValueForKey:kUIMinimumFontSizeKey]) {
             self.minimumFontSize = [coder decodeFloatForKey:kUIMinimumFontSizeKey];
+        }
+        if ([coder containsValueForKey:kUIFontKey]) {
+            self.font = [coder decodeObjectForKey:kUIFontKey];
         }
         if ([coder containsValueForKey:kUIClearButtonModeKey]) {
             self.clearButtonMode = [coder decodeIntegerForKey:kUIClearButtonModeKey];
