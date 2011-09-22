@@ -427,15 +427,18 @@
 
 - (BOOL)beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated
 {
-    _flags.isInAnimatedVCTransition = YES;
-    UIViewControllerAppearState appearState;
-    if (shouldAppear) {
-        appearState = UIViewControllerStateWillAppear;
-    } else {
-        appearState = UIViewControllerStateWillDisappear;
+    if (animated) {
+        _flags.isInAnimatedVCTransition = YES;
+        UIViewControllerAppearState appearState;
+        if (shouldAppear) {
+            appearState = UIViewControllerStateWillAppear;
+        } else {
+            appearState = UIViewControllerStateWillDisappear;
+        }
+        [self _setViewAppearState:appearState isAnimating:animated];
+        return YES;
     }
-    [self _setViewAppearState:appearState isAnimating:animated];
-    return YES;
+    return NO;
 }
 
 - (BOOL)_endAppearanceTransition
@@ -450,6 +453,7 @@
             return NO;
         }
         [self _setViewAppearState:appearState isAnimating:NO];
+        _flags.isInAnimatedVCTransition = NO;
         return YES;
     }
     return NO;

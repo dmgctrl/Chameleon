@@ -268,12 +268,12 @@ static const CGFloat ToolbarHeight = 28;
     [UIView animateWithDuration:duration
                      animations:animations
                      completion:^(BOOL finished){
+                         if (completion) {
+                             completion(finished);
+                         }
                          if (self.view.window) {
                              [fromViewController _endAppearanceTransition];
                              [toViewController _endAppearanceTransition];
-                         }
-                         if (completion) {
-                             completion(finished);
                          }
                          if (delegateHasDidShowViewController) {
                              [_delegate navigationController:self didShowViewController:toViewController animated:duration > 0];
