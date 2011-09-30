@@ -56,9 +56,9 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize p
     NSRect screenRect = [[inWindow screen] visibleFrame];
     
     NSRect bottomQuad = NSMakeRect(screenRect.origin.x, screenRect.origin.y, screenRect.size.width, fromRect.origin.y-screenRect.origin.y);
-    NSRect topQuad = NSMakeRect(screenRect.origin.x, fromRect.origin.y+fromRect.size.height, screenRect.size.width, screenRect.size.height-fromRect.origin.y-fromRect.size.height-screenRect.origin.y);
-    NSRect leftQuad = NSMakeRect(screenRect.origin.x, screenRect.origin.y, fromRect.origin.x-screenRect.origin.x, screenRect.size.height-screenRect.origin.y);
-    NSRect rightQuad = NSMakeRect(fromRect.origin.x+fromRect.size.width, screenRect.origin.y, screenRect.size.width-fromRect.origin.x-fromRect.size.width-screenRect.origin.x, screenRect.size.height-screenRect.origin.y);
+    NSRect topQuad = NSMakeRect(screenRect.origin.x, fromRect.origin.y+fromRect.size.height, screenRect.size.width, screenRect.size.height+screenRect.origin.y-fromRect.origin.y-fromRect.size.height);
+    NSRect leftQuad = NSMakeRect(screenRect.origin.x, screenRect.origin.y, fromRect.origin.x-screenRect.origin.x, screenRect.size.height);
+    NSRect rightQuad = NSMakeRect(fromRect.origin.x+fromRect.size.width, screenRect.origin.y, screenRect.size.width-fromRect.origin.x-fromRect.size.width-screenRect.origin.x, screenRect.size.height);
     
     pointTo->x = fromRect.origin.x+(fromRect.size.width/2.f);
     pointTo->y = fromRect.origin.y+(fromRect.size.height/2.f);
