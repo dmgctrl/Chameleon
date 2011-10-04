@@ -77,7 +77,9 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     self.textAlignment = UITextAlignmentLeft;
     self.lineBreakMode = UILineBreakModeTailTruncation;
     self.textColor = [UIColor blackColor];
-    self.backgroundColor = [UIColor whiteColor];
+    if (!self.backgroundColor) {
+        self.backgroundColor = [UIColor whiteColor];
+    }
     self.enabled = YES;
     self.font = [UIFont systemFontOfSize:17];
     self.numberOfLines = 1;
