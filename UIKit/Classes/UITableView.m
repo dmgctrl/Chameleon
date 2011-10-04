@@ -140,7 +140,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     self.sectionHeaderHeight = self.sectionFooterHeight = 22;
     self.alwaysBounceVertical = YES;
     
-    if (_style == UITableViewStylePlain) {
+    if (_style == UITableViewStylePlain && !self.backgroundColor) {
         self.backgroundColor = [UIColor whiteColor];
     }
     
