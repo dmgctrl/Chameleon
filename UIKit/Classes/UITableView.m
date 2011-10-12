@@ -427,6 +427,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
                 CGRect rowRect = [self rectForRowAtIndexPath:indexPath];
                 if (CGRectIntersectsRect(rowRect,visibleBounds) && rowRect.size.height > 0) {
                     UITableViewCell* cell = [self _ensureCellExistsAtIndexPath:indexPath];
+                    cell.frame = rowRect;
                     [usedCells setObject:cell forKey:indexPath];
                 }
                 [rowPool drain];
