@@ -96,19 +96,21 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         *arrowDirection = UIPopoverArrowDirectionDown;
     } else {
         CGFloat maxArea = -1;
+        CGFloat popoverWidthDelta = -1;
         if (allowBottomQuad) {
             // TODO: need to handle bottom quad
         }
         if (allowRightQuad) {
             CGFloat area = rightQuad.height * rightQuad.width;
             if (area > maxArea) {
+                popoverWidthDelta = -1;
                 maxArea = area;
                 NSInteger quadWidth = rightQuad.width + fromRect.size.width/2.f;
                 NSInteger popoverWidth = popoverSize->width + arrowPadding;
                 if (popoverWidth <= quadWidth) {
                     pointTo->x = fromRect.origin.x + fromRect.size.width/2.f + (quadWidth - popoverWidth);
                 } else {
-                    popoverSize->width -= popoverWidth - quadWidth;
+                    popoverWidthDelta = popoverWidth - quadWidth;
                 }
                 origin.x = pointTo->x - arrowPadding;
                 *arrowDirection = UIPopoverArrowDirectionLeft;
@@ -117,13 +119,14 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         if (allowLeftQuad) {
             CGFloat area = leftQuad.height * leftQuad.width;
             if (area > maxArea) {
+                popoverWidthDelta = -1;
                 maxArea = area;
                 NSInteger quadWidth = leftQuad.width + fromRect.size.width/2.f;
                 NSInteger popoverWidth = popoverSize->width + arrowPadding;
                 if (popoverWidth <= quadWidth) {
                     pointTo->x = fromRect.origin.x + fromRect.size.width/2.f - (quadWidth - popoverWidth);
                 } else {
-                    popoverSize->width -= popoverWidth - quadWidth;
+                    popoverWidthDelta = popoverWidth - quadWidth;
                 }
                 origin.x = pointTo->x - popoverSize->width + arrowPadding;
                 *arrowDirection = UIPopoverArrowDirectionRight;
@@ -131,6 +134,9 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         }
         if (allowTopQuad) {
             // TODO: need to handle top quad
+        }
+        if (-1 != popoverWidthDelta) {
+            popoverSize->width -= popoverWidthDelta;
         }
         if (-1 == maxArea) {
             *arrowDirection = UIPopoverArrowDirectionUnknown;
