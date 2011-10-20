@@ -241,7 +241,7 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     if (firstResponder && selectedItem) {
         for (UIMenuItem *item in _enabledMenuItems) {
             if (item.action == selectedItem.action) {
-                [app sendAction:item.action to:firstResponder from:app forEvent:nil];
+                [app sendAction:item.action to:nil from:app forEvent:nil];
                 break;
             }
         }
