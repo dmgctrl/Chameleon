@@ -105,7 +105,7 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     if ((self=[super initWithFrame:CGRectMake(0,0,320,480)])) {
         _contentView = [aView retain];
 		
-		_popoverController = controller;
+		_popoverController = [controller retain];
         
         _backgroundView = [[UIImageView alloc] initWithImage:[[_popoverController class] backgroundImage]];
         
@@ -131,6 +131,7 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     [_arrowView release];
     [_contentContainerView release];
     [_contentView release];
+    [_popoverController release];
     [super dealloc];
 }
 
