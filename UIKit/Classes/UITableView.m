@@ -1073,9 +1073,9 @@ static NSString* const kUIStyleKey = @"UIStyle";
 {
     NSIndexPath* indexPath = [self indexPathForSelectedRow];
     NSIndexPath* newIndexPath = nil;
-    if(indexPath == nil) {
+    if(indexPath == nil && [self numberOfSections]) {
         newIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    } else if (indexPath.section <= self.numberOfSections) {
+    } else if (indexPath && indexPath.section <= self.numberOfSections) {
         if (indexPath.row < [self numberOfRowsInSection:indexPath.section] - 1) {
             newIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
         } else if (indexPath.section < [self numberOfSections] - 1) {
