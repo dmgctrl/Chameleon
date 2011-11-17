@@ -37,6 +37,8 @@ NSString *const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidB
 NSString *const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeNotification";
 NSString *const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
 
+static NSString* const kUIEditableKey = @"UIEditable";
+
 @interface UIScrollView () <UITextLayerContainerViewProtocol>
 @end
 
@@ -101,6 +103,9 @@ NSString *const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEnd
 {
     if (nil != (self = [super initWithCoder:coder])) {
         [self _commonInitForUITextView];
+        if ([coder containsValueForKey:kUIEditableKey]) {
+            self.editable = [coder decodeBoolForKey:kUIEditableKey];
+        }
     }
     return self;
 }
