@@ -40,6 +40,7 @@ static NSString* const kUIShadowColorKey = @"UIShadowColor";
 static NSString* const kUIShadowOffsetKey = @"UIShadowOffset";
 static NSString* const kUITextColorKey = @"UITextColor";
 static NSString* const kUITextKey = @"UIText";
+static NSString* const kUITextAlignmentKey = @"UITextAlignment";
 static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
 static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
@@ -118,6 +119,9 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
         }
         if ([coder containsValueForKey:kUITextKey]) {
             self.text = [coder decodeObjectForKey:kUITextKey];
+        }
+        if ([coder containsValueForKey:kUITextAlignmentKey]) {
+            self.textAlignment = [coder decodeBoolForKey:kUITextAlignmentKey];
         }
         if ([coder containsValueForKey:kUIBaselineAdjustmentKey]) {
             self.baselineAdjustment = [coder decodeIntegerForKey:kUIBaselineAdjustmentKey];
