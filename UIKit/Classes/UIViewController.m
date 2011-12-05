@@ -74,7 +74,13 @@
 
 - (id)init
 {
-    return [self initWithNibName:nil bundle:nil];
+    NSBundle* bundle = [NSBundle bundleForClass:[self class]];
+    NSString* nibPath = [bundle pathForResource:NSStringFromClass([self class]) ofType:@"nib"];
+    if (nibPath && bundle) {
+        return [self initWithNibName:NSStringFromClass([self class]) bundle:bundle];
+    } else {
+        return [self initWithNibName:nil bundle:nil];
+    }
 }
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
