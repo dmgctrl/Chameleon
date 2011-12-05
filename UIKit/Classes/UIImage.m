@@ -1,3 +1,33 @@
+//
+// UIImage.m
+//
+// Original Author:
+//  The IconFactory
+//
+// Contributor: 
+//	Zac Bowling <zac@seatme.com>
+//
+// Copyright (C) 2011 SeatMe, Inc http://www.seatme.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
@@ -34,9 +64,7 @@
 #import "UIPhotosAlbum.h"
 #import <AppKit/NSImage.h>
 
-@implementation UIImage {
-    CGImageRef _image;
-}
+@implementation UIImage 
 
 - (id)initWithNSImage:(NSImage *)theImage
 {
@@ -201,6 +229,20 @@
     }
 }
 
+- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets 
+{
+    const CGSize size = self.size;
+    if (UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, capInsets)) {
+        return self;
+    } else if ((capInsets.left <= 0 || capInsets.left >= size.width) && (capInsets.right <= 0 || capInsets.right >= size.width)){
+        return [[[UIThreePartImage alloc] initWithCGImage:_image capTop:MIN(capInsets.top,size.height) capBottom:MIN(capInsets.bottom,size.height)] autorelease];
+    } else if ((capInsets.top <= 0 || capInsets.top >= size.height) && (capInsets.bottom <= 0 || capInsets.bottom >= size.height)) {
+        return [[[UIThreePartImage alloc] initWithCGImage:_image capLeft:MIN(capInsets.left,size.width) capRight:MIN(capInsets.right,size.width)] autorelease];
+    } else {
+        return [[[UINinePartImage alloc] initWithCGImage:_image edge:capInsets] autorelease];
+    }
+}
+
 - (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha
 {
     const CGSize size = self.size;
@@ -248,6 +290,11 @@
     return 0;
 }
 
+- (UIEdgeInsets)capInsets 
+{
+    return UIEdgeInsetsZero;
+}
+
 - (CGImageRef)CGImage
 {
     return _image;
@@ -291,7 +338,7 @@ BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString *videoPath)
 
 NSData *UIImageJPEGRepresentation(UIImage *image, CGFloat compressionQuality)
 {
-    return [[image _NSBitmapImageRep] representationUsingType:NSJPEGFileType properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:compressionQuality] forKey:NSImageCompressionFactor]];
+    return [[image _NSBitmapImageRep] representationUsingType:NSJPEGFileType properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:compressionQuality] forKey:NSImageCompressionFactor]];
 }
 
 NSData *UIImagePNGRepresentation(UIImage *image)

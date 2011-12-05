@@ -39,6 +39,20 @@ typedef enum {
 } UIDatePickerMode;
 
 @interface UIDatePicker : UIControl
+{
+@private
+    NSCalendar *_calendar;
+    NSDate *_date;
+    NSLocale *_locale;
+    NSTimeZone *_timeZone;
+    
+    UIDatePickerMode _datePickerMode;
+    
+    NSDate *_minimumDate;
+    NSDate *_maximumDate;
+    NSInteger _minuteInterval;
+    NSTimeInterval _countDownDuration;
+}
 
 @property (nonatomic, retain) NSCalendar *calendar;
 @property (nonatomic, retain) NSDate *date;
@@ -51,5 +65,7 @@ typedef enum {
 @property (nonatomic, retain) NSDate *maximumDate;
 @property (nonatomic, assign) NSInteger minuteInterval;
 @property (nonatomic, assign) NSTimeInterval countDownDuration;
+
+- (void)setDate:(NSDate *)date animated:(BOOL)animated;
 
 @end

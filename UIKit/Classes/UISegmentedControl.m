@@ -1,4 +1,35 @@
 //
+// UISegmentedControl.m
+//
+// Original Author:
+//  Sam Soffes
+//
+// Contributor: 
+//	Zac Bowling <zac@seatme.com>
+//
+// Copyright (C) 2011 SeatMe, Inc http://www.seatme.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+//
 //  SSSegmentedControl.m
 //  SSToolkit
 //
@@ -12,8 +43,9 @@
 #import "UIColor.h"
 #import "UIStringDrawing.h"
 #import "UIGraphics.h"
+#include <tgmath.h>
 
-static NSString *kSSSegmentedControlEnabledKey = @"enabled";
+static NSString* const kUISegmentedControlEnabledKey = @"kUISegmentedControlEnabledKey";
 static NSString* const kUISegmentsKey = @"UISegments";
 static NSString* const kUISegmentedControlStyleKey = @"UISegmentedControlStyle";
 static NSString* const kUISegmentedControlTintColorKey = @"UISegmentedControlTintColor";
@@ -32,16 +64,14 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 @property (nonatomic, retain) UIColor *textShadowColor;
 @property (nonatomic, assign) CGSize textShadowOffset;
 @property (nonatomic, assign) UIEdgeInsets textEdgeInsets;
+
 - (void)_commonInitForUISegmentedControl;
 - (NSMutableDictionary *)_metaForSegmentIndex:(NSUInteger)index;
 - (id)_metaValueForKey:(NSString *)key segmentIndex:(NSUInteger)index;
 - (void)_setMetaValue:(id)value forKey:(NSString *)key segmentIndex:(NSUInteger)index;
 @end
 
-@implementation UISegmentedControl {
-    NSMutableArray *_segments;
-    NSMutableDictionary *_segmentMeta;
-}
+@implementation UISegmentedControl 
 @synthesize numberOfSegments = _numberOfSegments;
 @synthesize selectedSegmentIndex = _selectedSegmentIndex;
 @synthesize momentary = _momentary;
@@ -124,7 +154,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
         return;
     }
     
-    NSUInteger index = (NSUInteger)floorf((CGFloat)x / (self.frame.size.width / (CGFloat)[self numberOfSegments]));
+    NSUInteger index = (NSUInteger)floor((CGFloat)x / (self.frame.size.width / (CGFloat)[self numberOfSegments]));
     if ([self isEnabledForSegmentAtIndex:index]) {
         self.selectedSegmentIndex = (NSInteger)index;
     }
@@ -180,7 +210,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
     
     NSInteger count = (NSInteger)[self numberOfSegments];
     CGSize size = frame.size;
-    CGFloat segmentWidth = roundf((size.width - count - 1) / (CGFloat)count);
+    CGFloat segmentWidth = round((size.width - count - 1) / (CGFloat)count);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     for (NSInteger i = 0; i < count; i++) {
@@ -247,7 +277,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
         if ([item isKindOfClass:[NSString class]]) {
             NSString *string = (NSString *)item;
             CGSize textSize = [string sizeWithFont:_font constrainedToSize:CGSizeMake(segmentWidth, size.height) lineBreakMode:UILineBreakModeTailTruncation];
-            CGRect textRect = CGRectMake(x, roundf((size.height - textSize.height) / 2.0f), segmentWidth, size.height);
+            CGRect textRect = CGRectMake(x, round((size.height - textSize.height) / 2.0f), segmentWidth, size.height);
             textRect = UIEdgeInsetsInsetRect(textRect, _textEdgeInsets);
             
             if (enabled) {
@@ -265,8 +295,8 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
         else if ([item isKindOfClass:[UIImage class]]) {
             UIImage *image = (UIImage *)item;
             CGSize imageSize = image.size;
-            CGRect imageRect = CGRectMake(x + roundf((segmentRect.size.width - imageSize.width) / 2.0f),
-                                          roundf((segmentRect.size.height - imageSize.height) / 2.0f),
+            CGRect imageRect = CGRectMake(x + round((segmentRect.size.width - imageSize.width) / 2.0f),
+                                          round((segmentRect.size.height - imageSize.height) / 2.0f),
                                           imageSize.width, imageSize.height);
             [image drawInRect:imageRect blendMode:kCGBlendModeNormal alpha:enabled ? 1.0f : 0.5f];
         }
@@ -334,12 +364,71 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 }
 
 
+- (void)insertSegmentWithImage:(UIImage *)image atIndex:(NSUInteger)segment animated:(BOOL)animated {
+    if (animated)
+    {
+        [UIView beginAnimations:@"insertSegmentWithImage" context:NULL];
+        [UIView setAnimationDuration:0.3];
+    }
+    if ((NSInteger)([self numberOfSegments] - 1) < (NSInteger)segment) {
+        [_segments addObject:image];
+    } else {
+        [_segments insertObject:image atIndex:segment];
+    }
+    [self setNeedsDisplay];
+    if (animated)
+        [UIView commitAnimations];
+}
+
+- (void)insertSegmentWithTitle:(NSString *)title atIndex:(NSUInteger)segment animated:(BOOL)animated {
+    if (animated)
+    {
+        [UIView beginAnimations:@"insertSegmentWithTitle" context:NULL];
+        [UIView setAnimationDuration:0.3];
+    }
+    
+    if ((NSInteger)([self numberOfSegments] - 1) < (NSInteger)segment) {
+        [_segments addObject:[[title copy]autorelease]];
+    } else {
+        [_segments insertObject:[[title copy]autorelease] atIndex:segment];
+    }
+    
+    [self setNeedsDisplay];
+    if (animated)
+        [UIView commitAnimations];
+}
+
+- (void)removeSegmentAtIndex:(NSUInteger)segment animated:(BOOL)animated {
+    if (animated)
+    {
+        [UIView beginAnimations:@"removeSegmentAtIndex" context:NULL];
+        [UIView setAnimationDuration:0.3];
+    }
+    
+    [_segments removeObjectAtIndex:segment];
+    [self setNeedsDisplay];
+    
+    if (animated)
+        [UIView commitAnimations];
+
+}
+
+- (void)removeAllSegments 
+{
+    [_segments autorelease];
+    _segments = [[NSMutableArray alloc] init];
+    _selectedSegmentIndex = UISegmentedControlNoSegment;
+    
+    [self setNeedsDisplay];
+}
+
+
 - (void)setTitle:(NSString *)title forSegmentAtIndex:(NSUInteger)segment
 {
     if ((NSInteger)([self numberOfSegments] - 1) < (NSInteger)segment) {
-        [_segments addObject:title];
+        [_segments addObject:[[title copy] autorelease]];
     } else {
-        [_segments replaceObjectAtIndex:segment withObject:title];
+        [_segments replaceObjectAtIndex:segment withObject:[[title copy] autorelease]];
     }
     
     [self setNeedsDisplay];
@@ -354,7 +443,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
     
     id item = [_segments objectAtIndex:segment];
     if ([item isKindOfClass:[NSString class]]) {
-        return item;
+        return [[item retain] autorelease];
     }
     
     return nil;
@@ -390,14 +479,14 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 
 - (void)setEnabled:(BOOL)enabled forSegmentAtIndex:(NSUInteger)segment
 {
-    [self _setMetaValue:[NSNumber numberWithBool:enabled] forKey:kSSSegmentedControlEnabledKey segmentIndex:segment];
+    [self _setMetaValue:[NSNumber numberWithBool:enabled] forKey:kUISegmentedControlEnabledKey segmentIndex:segment];
     
 }
 
 
 - (BOOL)isEnabledForSegmentAtIndex:(NSUInteger)segment
 {
-    NSNumber *value = [self _metaValueForKey:kSSSegmentedControlEnabledKey segmentIndex:segment];
+    NSNumber *value = [self _metaValueForKey:kUISegmentedControlEnabledKey segmentIndex:segment];
     if (!value) {
         return YES;
     }

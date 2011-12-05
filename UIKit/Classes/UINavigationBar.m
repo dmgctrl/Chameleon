@@ -52,26 +52,7 @@ typedef enum {
 	_UINavigationBarTransitionReload		// explicitly tag reloads from changed UINavigationItem data
 } _UINavigationBarTransition;
 
-@implementation UINavigationBar {
-    NSMutableArray *_navStack;
-    
-    UIView *_leftView;
-    UIView *_centerView;
-    UIView *_rightView;
-    
-    struct {
-        BOOL shouldPushItem : 1;
-        BOOL didPushItem : 1;
-        BOOL shouldPopItem : 1;
-        BOOL didPopItem : 1;
-    } _delegateHas;
-    
-    // ideally this should share the same memory as the above flags structure...
-    struct {
-        unsigned reloadItem : 1;
-        unsigned __RESERVED__ : 31;
-    } _navigationBarFlags;
-}
+@implementation UINavigationBar 
 @synthesize tintColor = _tintColor;
 @synthesize delegate = _delegate;
 @synthesize items = _navStack;
@@ -272,6 +253,7 @@ typedef enum {
             moveCenterBy *= -1.f;
         }
 
+
         CGRect destinationLeftFrame = _leftView.frame;
         CGRect destinationCenterFrame = _centerView.frame;
         
@@ -294,8 +276,8 @@ typedef enum {
                 _rightView.alpha = 1;
                 _centerView.alpha = 1;
             }
-            completion:nil
-        ];
+            completion:NULL];
+
     } else {
         _leftView = _centerView = _rightView = nil;
     }
@@ -407,7 +389,7 @@ typedef enum {
 	}
 }
 
-- (void)drawRect:(NSRect)dirtyRect {
+- (void)drawRect:(CGRect)dirtyRect {
 	
 	const CGRect bounds = self.bounds;
 	

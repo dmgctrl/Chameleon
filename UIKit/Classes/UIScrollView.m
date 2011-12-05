@@ -42,6 +42,7 @@
 #import "UIScrollWheelGestureRecognizer.h"
 #import "UIGeometry.h"
 #import <QuartzCore/QuartzCore.h>
+#include <tgmath.h>
 
 static const NSTimeInterval UIScrollViewAnimationDuration = 0.33;
 static const NSTimeInterval UIScrollViewQuickAnimationDuration = 0.22;
@@ -72,37 +73,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 @interface UIScrollView () <_UIScrollerDelegate>
 @end
 
-@implementation UIScrollView {
-    UIScroller *_verticalScroller;
-    UIScroller *_horizontalScroller;
-    UIPanGestureRecognizer *_panGestureRecognizer;
-    UIScrollWheelGestureRecognizer *_scrollWheelGestureRecognizer;
-    NSTimer *_dragDelegateTimer;
-    BOOL _bouncesZoom;
-    id _scrollAnimation;
-    NSTimer *_scrollTimer;
-    NSTimeInterval _scrollAnimationTime;
-    
-    BOOL _dragging;
-    BOOL _decelerating;
-    
-    struct {
-        BOOL scrollViewDidScroll : 1;
-        BOOL scrollViewWillBeginDragging : 1;
-        BOOL scrollViewDidEndDragging : 1;
-        BOOL viewForZoomingInScrollView : 1;
-        BOOL scrollViewWillBeginZooming : 1;
-        BOOL scrollViewDidEndZooming : 1;
-        BOOL scrollViewDidZoom : 1;
-        BOOL scrollViewDidEndScrollingAnimation : 1;
-        BOOL scrollViewWillBeginDecelerating : 1;
-        BOOL scrollViewDidEndDecelerating : 1;
-    } _delegateCan;
-    
-    // should be flag struct
-    BOOL _alwaysBounceHorizontal;
-    BOOL _alwaysBounceVertical;
-}
+@implementation UIScrollView 
 @synthesize contentOffset = _contentOffset;
 @synthesize contentInset = _contentInset;
 @synthesize scrollIndicatorInsets = _scrollIndicatorInsets;
@@ -451,8 +422,8 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
         [self _setScrollAnimation:animation];
         [animation release];
     } else {
-        _contentOffset.x = roundf(theOffset.x);
-        _contentOffset.y = roundf(theOffset.y);
+        _contentOffset.x = round(theOffset.x);
+        _contentOffset.y = round(theOffset.y);
 
         [self _updateContentLayout];
 
@@ -522,9 +493,9 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 - (UIScrollViewAnimation *)_pageSnapAnimation
 {
     const CGSize pageSize = self.bounds.size;
-    const CGSize numberOfWholePages = CGSizeMake(floorf(_contentSize.width/pageSize.width), floorf(_contentSize.height/pageSize.height));
+    const CGSize numberOfWholePages = CGSizeMake(floor(_contentSize.width/pageSize.width), floor(_contentSize.height/pageSize.height));
     const CGSize currentRawPage = CGSizeMake(_contentOffset.x/pageSize.width, _contentOffset.y/pageSize.height);
-    const CGSize currentPage = CGSizeMake(floorf(currentRawPage.width), floorf(currentRawPage.height));
+    const CGSize currentPage = CGSizeMake(floor(currentRawPage.width), floor(currentRawPage.height));
     const CGSize currentPagePercentage = CGSizeMake(1-(currentRawPage.width-currentPage.width), 1-(currentRawPage.height-currentPage.height));
     
     CGPoint finalContentOffset = CGPointZero;
@@ -818,19 +789,16 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     scale = MIN(MAX(scale, _minimumZoomScale), _maximumZoomScale);
 
     if (zoomingView && self.zoomScale != scale) {
-        [UIView animateWithDuration:!animated ? 0.0 : UIScrollViewAnimationDuration
-            delay:0
-            options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
-            animations:^{
-                zoomingView.transform = CGAffineTransformMakeScale(scale, scale);
-                
-                const CGSize size = zoomingView.frame.size;
-                zoomingView.layer.position = CGPointMake(size.width/2.f, size.height/2.f);
-                
-                self.contentSize = size;
-            }
-            completion:nil
-        ];
+        [UIView animateWithDuration:animated? UIScrollViewAnimationDuration : 0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                         animations:^(void) {
+                             zoomingView.transform = CGAffineTransformMakeScale(scale, scale);
+                             const CGSize size = zoomingView.frame.size;
+                             zoomingView.layer.position = CGPointMake(size.width/2.f, size.height/2.f);
+                             self.contentSize = size;
+                         }
+                         completion:NULL];
     }
 }
 
@@ -846,6 +814,10 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p; frame = (%.0f %.0f; %.0f %.0f); clipsToBounds = %@; layer = %@; contentOffset = {%.0f, %.0f}>", [self className], self, self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, (self.clipsToBounds ? @"YES" : @"NO"), self.layer, self.contentOffset.x, self.contentOffset.y];
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    //TODO: later
 }
 
 @end

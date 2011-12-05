@@ -29,10 +29,7 @@
 
 #import "UITableViewController.h"
 
-@implementation UITableViewController {
-    UITableViewStyle _style;
-    BOOL _hasReloaded;
-}
+@implementation UITableViewController 
 @synthesize clearsSelectionOnViewWillAppear = _clearsSelectionOnViewWillAppear;
 
 - (id)init
@@ -98,6 +95,10 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p; tableView = %@>", [self className], self, self.tableView];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return self.tableView.rowHeight;
 }
 
 @end

@@ -39,14 +39,12 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 {
     NSMutableArray *CGImages = [NSMutableArray arrayWithCapacity:[images count]];
     for (UIImage *img in images) {
-        [CGImages addObject:(id)[img CGImage]];
+        [CGImages addObject:(__bridge id)[img CGImage]];
     }
     return CGImages;
 }
 
-@implementation UIImageView {
-    NSInteger _drawMode;
-}
+@implementation UIImageView 
 @synthesize image = _image;
 @synthesize animationImages = _animationImages;
 @synthesize animationDuration = _animationDuration;
@@ -194,7 +192,7 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
         UIGraphicsEndImageContext();
     }
 
-    theLayer.contents = (id)[displayImage CGImage];
+    theLayer.contents = (__bridge id)[displayImage CGImage];
 }
 
 - (void)_displayIfNeededChangingFromOldSize:(CGSize)oldSize toNewSize:(CGSize)newSize

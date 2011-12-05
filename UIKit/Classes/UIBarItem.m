@@ -28,6 +28,7 @@
  */
 
 #import "UIBarItem.h"
+#import "UIImage.h"
 
 @implementation UIBarItem
 @synthesize enabled = _enabled;

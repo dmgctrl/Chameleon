@@ -30,11 +30,11 @@
 #import <Foundation/Foundation.h>
 
 @interface UIAction : NSObject {
-    id _target;
+    __weak id _target;
     SEL _action;
 }
 
-@property (nonatomic, assign) id target;
+@property (nonatomic, ASSIGNWEAK) id target;
 @property (nonatomic, assign) SEL action;
 
 @end

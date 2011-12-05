@@ -38,6 +38,7 @@
 @class UITabBar, UITabBarItem;
 
 @protocol UITabBarDelegate <NSObject>
+
 @optional
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
@@ -50,8 +51,11 @@
 
 @end
 
-
-@interface UITabBar : UIView 
+@interface UITabBar : UIView {
+    NSArray *_items;
+    id<UITabBarDelegate>  _delegate;
+    UITabBarItem *_selectedItem;
+}
 
 @property (nonatomic, assign) id<UITabBarDelegate>  delegate;
 @property (nonatomic, copy)   NSArray              *items;

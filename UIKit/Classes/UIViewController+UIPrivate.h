@@ -28,13 +28,8 @@
  */
 
 #import "UIViewController.h"
+#import "UITabBarController.h"
 
-typedef enum {
-    UIViewControllerStateDidDisappear,
-    UIViewControllerStateWillAppear,
-    UIViewControllerStateDidAppear,
-    UIViewControllerStateWillDisappear
-} UIViewControllerAppearState;
 
 @interface UIViewController (UIPrivate)
 - (void)_setParentViewController:(UIViewController *)controller;
@@ -43,4 +38,5 @@ typedef enum {
 - (void)viewDidMoveToWindow:(UIWindow *)window;
 - (BOOL)beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated;
 - (BOOL)_endAppearanceTransition;
+- (void)_setTabBarController:(UITabBarController *)controller;
 @end

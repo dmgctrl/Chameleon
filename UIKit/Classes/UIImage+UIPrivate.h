@@ -66,7 +66,6 @@
 + (UIImage *)_buttonBarSystemItemRewind;
 + (UIImage *)_buttonBarSystemItemFastForward;
 + (UIImage *)_tabBarBackgroundImage;
-+ (UIImage *)_tabBarItemImage;
 + (UIImage *)_textFieldRoundedRectBackground;
 + (UIImage *)_searchBarIcon;
 + (UIImage *)_buttonBarSystemItemDone;
@@ -78,6 +77,9 @@
 + (UIImage *)_defaultNavigationBarBackgroundImage;
 + (UIImage *)_blackTranslucentNavigationBarBackgroundImage;
 + (UIImage *)_blackOpaqueNavigationBarBackgroundImage;
++ (UIImage *)_tabBarButtonImage;
++ (UIImage *)_highlightedTabBarImage;
++ (UIImage *)_tabBarButtonBadgeImage;
 
 - (UIImage *)_toolbarImage;		// returns a new image which is modified as required for toolbar buttons (turned into a solid color)
 + (UIImage *)_imageFromNSImage:(NSImage *)ns;

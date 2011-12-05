@@ -1,3 +1,33 @@
+//
+// UIViewController.m
+//
+// Original Author:
+//  The IconFactory
+//
+// Contributor: 
+//	Zac Bowling <zac@seatme.com>
+//
+// Copyright (C) 2011 SeatMe, Inc http://www.seatme.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
@@ -41,36 +71,31 @@
 #import "UITabBarController.h"
 #import "UINib.h"
 
-@implementation UIViewController {
-    UIViewControllerAppearState _appearState;
-    
-    struct {
-        BOOL wantsFullScreenLayout : 1;
-        BOOL modalInPopover : 1;
-        BOOL editing : 1;
-        BOOL hidesBottomBarWhenPushed : 1;
-        BOOL isInAnimatedVCTransition : 1;
-        BOOL viewLoadedFromControllerNib : 1;
-    } _flags;
-}
+@implementation UIViewController 
+
+@dynamic wantsFullScreenLayout;
+@dynamic hidesBottomBarWhenPushed;
+@dynamic editing;
+@dynamic modalInPopover;
+
 @synthesize navigationItem = _navigationItem;
 @synthesize view = _view;
-@synthesize wantsFullScreenLayout = _wantsFullScreenLayout;
 @synthesize title = _title;
 @synthesize contentSizeForViewInPopover = _contentSizeForViewInPopover;
-@synthesize modalInPopover = _modalInPopover;
 @synthesize toolbarItems = _toolbarItems;
 @synthesize modalPresentationStyle = _modalPresentationStyle;
-@synthesize editing = _editing;
+
 @synthesize modalViewController = _modalViewController;
 @synthesize parentViewController = _parentViewController;
 @synthesize modalTransitionStyle = _modalTransitionStyle;
-@synthesize hidesBottomBarWhenPushed = _hidesBottomBarWhenPushed;
+
 @synthesize searchDisplayController = _searchDisplayController;
 @synthesize tabBarItem = _tabBarItem;
 @synthesize tabBarController = _tabBarController;
 @synthesize nibBundle = _nibBundle;
 @synthesize nibName = _nibName;
+
+@synthesize childViewControllers=_childViewControllers;
 
 - (id)init
 {
@@ -102,6 +127,7 @@
     [_view release];
     [_nibName release];
     [_nibBundle release];
+    [_tabBarItem release];
     [super dealloc];
 }
 
@@ -182,6 +208,10 @@
 {
 }
 
+- (void)viewWillUnload
+{
+}
+
 - (void)didReceiveMemoryWarning
 {
 }
@@ -204,7 +234,9 @@
 
 - (UIInterfaceOrientation)interfaceOrientation
 {
+
     return (UIInterfaceOrientation) UIDeviceOrientationPortrait;
+
 }
 
 - (UINavigationItem *)navigationItem
@@ -218,6 +250,11 @@
 - (void)_setParentViewController:(UIViewController *)parentController
 {
     _parentViewController = parentController;
+}
+
+- (void)_setTabBarController:(UITabBarController *)tabBarController
+{
+    _tabBarController = tabBarController;
 }
 
 - (void)setToolbarItems:(NSArray *)theToolbarItems animated:(BOOL)animated
@@ -253,6 +290,22 @@
 {
     // this should really return a fancy bar button item that toggles between edit/done and sends setEditing:animated: messages to this controller
     return nil;
+}
+
+- (void)setTabBarItem:(UITabBarItem *)tabBarItem
+{
+    if (_tabBarItem != tabBarItem) {
+        [_tabBarItem release];
+        _tabBarItem = [tabBarItem retain];
+    }
+}
+
+- (UITabBarItem *)tabBarItem
+{
+    if (!_tabBarItem) {
+        _tabBarItem = [[UITabBarItem alloc] initWithTitle:([self title] ?: @"") image:nil tag:0];
+    }
+    return _tabBarItem;
 }
 
 - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated
@@ -309,6 +362,10 @@
     }
 }
 
++ (void)attemptRotationToDeviceOrientation
+{
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -326,6 +383,7 @@
 {
     [childController willMoveToParentViewController:self];
     [childController _setParentViewController:self];
+    [_childViewControllers addObject:childController];
 }
 
 - (void)removeFromParentViewController
@@ -336,10 +394,12 @@
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
 {
+    
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
+    
 }
 
 - (void)transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
@@ -360,7 +420,8 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
                                          duration:(NSTimeInterval)duration
-{    
+{
+    
 }
 
 - (id)_nearestParentViewControllerThatIsKindOf:(Class)c
@@ -383,6 +444,72 @@
 {
     return [self _nearestParentViewControllerThatIsKindOf:[UISplitViewController class]];
 }
+
+- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers 
+{
+    return YES;
+}
+
+
+- (void)viewWillLayoutSubviews 
+{
+    
+}
+
+- (void)viewDidLayoutSubviews 
+{
+    
+}
+
+- (BOOL)isMovingToParentViewController
+{
+    //TODO
+    return FALSE;
+}
+
+- (BOOL)isMovingFromParentViewController
+{
+    //TODO
+    return FALSE;
+}
+
+- (BOOL)isBeingDismissed 
+{
+    //TODO
+    return FALSE;
+}
+
+- (BOOL)isBeingPresented
+{
+    //TODO
+    return FALSE;
+}
+
+- (BOOL)disablesAutomaticKeyboardDismissal 
+{
+    return FALSE;
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion
+{
+    
+}
+
+- (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
+{
+    
+}
+
+- (NSArray *)childViewControllers
+{
+    return [[_childViewControllers retain] autorelease];
+}
+
+- (void)setChildViewControllers:(NSArray *)childViewControllers 
+{
+
+}
+
 
 - (void)_setViewAppearState:(UIViewControllerAppearState)appearState isAnimating:(BOOL)animating
 {

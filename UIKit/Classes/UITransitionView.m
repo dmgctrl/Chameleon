@@ -105,6 +105,7 @@
                     }
                 }
             }
+
             completion:^(BOOL finished){
                 [_view removeFromSuperview];
                 [_delegate transitionView:self didTransitionFromView:_view toView:view withTransition:_transition];

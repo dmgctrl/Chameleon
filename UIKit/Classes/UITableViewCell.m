@@ -50,7 +50,6 @@ static NSString* const kUIReuseIdentifierKey = @"UIReuseIdentifier";
 
 extern CGFloat _UITableViewDefaultRowHeight;
 
-
 @interface UITableViewCell ()
 - (UITableViewCellLayoutManager*) layoutManager;
 - (void) _setSeparatorStyle:(UITableViewCellSeparatorStyle)theStyle color:(UIColor*)theColor;
@@ -61,19 +60,7 @@ extern CGFloat _UITableViewDefaultRowHeight;
 @end
 
 
-@implementation UITableViewCell {
-    UITableViewCellSeparator *_separatorView;
-    UITableViewCellStyle _style;
-    CFMutableDictionaryRef _unhighlightedStates;
-    UITableViewCellLayoutManager* _layoutManager;
-
-    struct {
-        BOOL tableViewStyleIsGrouped : 1;
-        BOOL usingDefaultSelectedBackgroundView : 1;
-        BOOL usingDefaultAccessoryView : 1;
-        BOOL highlighted : 1;
-    } _tableCellFlags;
-}
+@implementation UITableViewCell 
 @synthesize accessoryType=_accessoryType; 
 @synthesize accessoryView=_accessoryView;
 @synthesize backgroundView=_backgroundView;
@@ -144,7 +131,8 @@ static Class kUIButtonClass;
 {
     _layoutManager = [[UITableViewCellLayoutManager layoutManagerForTableViewCellStyle:_style] retain];
     if (!_contentView) {
-        _contentView = [[UIView alloc] initWithFrame:[_layoutManager contentViewRectForCell:self]];
+        _contentView = [[UIView alloc] init];
+        _contentView.frame = [_layoutManager contentViewRectForCell:self];
     }
     [self addSubview:_contentView];
 }
@@ -165,6 +153,7 @@ static Class kUIButtonClass;
 	if (nil != (self = [super initWithFrame:frame])) {
         [self _commonInitForUITableViewCell];
         [self _configureContentViewAndLayoutManager];
+        
 	}
 	return self;
 }
@@ -388,7 +377,7 @@ static Class kUIButtonClass;
 - (void) layoutSubviews
 {
 	[super layoutSubviews];
-
+        
 	if (_accessoryView) {
         _accessoryView.frame = [_layoutManager accessoryViewRectForCell:self];
 	}
@@ -612,6 +601,10 @@ static Class kUIButtonClass;
 - (void) _detailDisclosurePressed:(id)sender
 {   
     [(UITableView*)[self superview] _accessoryButtonTappedForTableViewCell:self];
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    //TODO:later
 }
 
 @end

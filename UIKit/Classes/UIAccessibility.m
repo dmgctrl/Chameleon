@@ -28,6 +28,7 @@
  */
 
 #import "UIAccessibility.h"
+#import <objc/runtime.h>
 
 UIAccessibilityTraits UIAccessibilityTraitNone = 0;
 UIAccessibilityTraits UIAccessibilityTraitButton = 1;
@@ -48,33 +49,70 @@ UIAccessibilityNotifications UIAccessibilityAnnouncementNotification = 1002;
 UIAccessibilityNotifications UIAccessibilityPageScrolledNotification = 1003;
 
 
+static NSString * const kUIAccessibilityIsAccessibilityElement = @"____kUIAccessibilityIsAccessibilityElement";
+static NSString * const kUIAccessibilityAccessibilityLabel = @"____kUIAccessibilityAccessibilityLabel";
+static NSString * const kUIAccessibilityTraits = @"____kUIAccessibilityTraits";
+static NSString * const kUIAccessibilityAccessibilityHint = @"____kUIAccessibilityAccessibilityHint";
+static NSString * const kUIAccessibilityAccessibilityValue = @"____kUIAccessibilityAccessibilityValue";
+
 @implementation NSObject (UIAccessibility)
 - (BOOL)isAccessibilityElement
 {
+    NSNumber *boolval = objc_getAssociatedObject(self,  &kUIAccessibilityIsAccessibilityElement);
+    if (boolval) 
+        return [boolval boolValue];
+    
     return NO;
 }
 
 - (void)setIsAccessibilityElement:(BOOL)isElement
 {
+    objc_setAssociatedObject(self, &kUIAccessibilityIsAccessibilityElement, [NSNumber numberWithBool:isElement], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSString *)accessibilityLabel
 {
-    return nil;
+    return objc_getAssociatedObject(self,  &kUIAccessibilityAccessibilityLabel);
 }
 
 - (void)setAccessibilityLabel:(NSString *)label
 {
+    objc_setAssociatedObject(self, &kUIAccessibilityAccessibilityLabel, label, OBJC_ASSOCIATION_COPY);
 }
 
 - (UIAccessibilityTraits)accessibilityTraits
 {
-    return UIAccessibilityTraitNone; // STUB
+    NSNumber *val = objc_getAssociatedObject(self,  &kUIAccessibilityTraits);
+    if (val) 
+        return (UIAccessibilityTraits)[val unsignedLongLongValue];
+    
+    return UIAccessibilityTraitNone; 
 }
 
 - (void)setAccessibilityTraits:(UIAccessibilityTraits)traits
 {
-    // STUB
+     objc_setAssociatedObject(self, &kUIAccessibilityTraits, [NSNumber numberWithUnsignedLongLong:traits], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSString *)accessibilityHint {
+    return objc_getAssociatedObject(self,  &kUIAccessibilityAccessibilityHint);
+}
+- (void)setAccessibilityHint:(NSString *)hint {
+    objc_setAssociatedObject(self, &kUIAccessibilityAccessibilityValue, hint, OBJC_ASSOCIATION_COPY);
+}
+- (NSString *)accessibilityValue {
+    return objc_getAssociatedObject(self,  &kUIAccessibilityAccessibilityValue);
+}
+- (void)setAccessibilityValue:(NSString *)value {
+    objc_setAssociatedObject(self, &kUIAccessibilityAccessibilityValue, value, OBJC_ASSOCIATION_COPY);
+}
+
+
+- (CGRect)accessibilityFrame {
+    return CGRectZero;//  objc_getAssociatedObject(self,  &kUIAccessibilityAccessibilityFrame);
+}
+- (void)setAccessibilityFrame:(CGRect)frame {
+    //objc_setAssociatedObject(self, &kUIAccessibilityAccessibilityValue, value, OBJC_ASSOCIATION_COPY);
 }
 
 @end

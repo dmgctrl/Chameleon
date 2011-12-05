@@ -50,20 +50,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 @end
 
 
-@implementation UITextView {
-    UITextLayer *_textLayer;
-    
-    struct {
-        BOOL shouldBeginEditing : 1;
-        BOOL didBeginEditing : 1;
-        BOOL shouldEndEditing : 1;
-        BOOL didEndEditing : 1;
-        BOOL shouldChangeText : 1;
-        BOOL didChange : 1;
-        BOOL didChangeSelection : 1;
-        BOOL doCommandBySelector : 1;
-    } _delegateHas;
-}
+@implementation UITextView
 @synthesize dataDetectorTypes = _dataDetectorTypes;
 @synthesize inputAccessoryView = _inputAccessoryView;
 @synthesize inputView = _inputView;
@@ -367,6 +354,10 @@ static NSString* const kUIEditableKey = @"UIEditable";
             break;
     }
     return [NSString stringWithFormat:@"<%@: %p; textAlignment = %@; selectedRange = %@; editable = %@; textColor = %@; font = %@; delegate = %@>", [self className], self, textAlignment, NSStringFromRange(self.selectedRange), (self.editable ? @"YES" : @"NO"), self.textColor, self.font, self.delegate];
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    //TODO:later
 }
 
 @end

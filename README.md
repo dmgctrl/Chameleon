@@ -1,3 +1,5 @@
+<h1> This fork contains new unreleased iOS 5 features. It has diveraged internally from BigZaphod's version a bit but should remain compatible. </h1>
+
 # Chameleon
 
 Chameleon is a port of Apple's UIKit (and some minimal related frameworks) to Mac OS X. It is meant to be as much of a drop-in replacement for the real UIKit as possible. It also adapts some iOS user interface conventions to the Mac (such as UIAlertView being represented by NSAlert) so that apps built using Chameleon have as much chance as possible of feeling at home on the desktop with relatively little porting effort.
@@ -44,9 +46,15 @@ Right now there's hardly any demos or examples or documentation. There's a simpl
 
 ## Authors
 
-The Chameleon project was created by Sean Heber (Twitter: [@BigZaphod](http://twitter.com/BigZaphod/)) of The Iconfactory and he wrote nearly all of the initial version over several months. Craig Hockenberry (Twitter: [@chockenberry](http://twitter.com/chockenberry/)) was the first user/tester of Chameleon and found many holes and edge cases in the first implementation.
+The Chameleon project was created by Sean Heber (Twitter: [@BigZaphod](http://twitter.com/BigZaphod/)) of The Iconfactory and he wrsssote nearly all of the initial version over several months. Craig Hockenberry (Twitter: [@chockenberry](http: changesss//twitter.com/chockenberry/)) was the first user/tester of Chameleon and found many holes and edge cases in the first implementation.
 
-## License
+iOS 5 features were added by Zac Bowling (Twitter: [@zbowling](http://twitter.com/zbowling)) of SeatMe, Inc. 
+
+Many other great contributors can be found in the source control history.
+
+## Licenses
+
+### The Iconfactory (original)
 
 Copyright (c) 2011, The Iconfactory. All rights reserved.
 
@@ -76,3 +84,23 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+### SeatMe, Inc (contributor)
+
+Copyright (c) 2011 SeatMe, Inc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of 
+this software and associated documentation files (the "Software"), to deal in the
+Software without restriction, including without limitation the rights to use, 
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+Software, and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

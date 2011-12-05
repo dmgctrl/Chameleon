@@ -46,7 +46,7 @@ typedef enum MFMailComposeResult MFMailComposeResult;
 
 @interface MFMailComposeViewController : UINavigationController {
 @private
-    id<MFMailComposeViewControllerDelegate> _mailComposeDelegate;
+    __weak id<MFMailComposeViewControllerDelegate> _mailComposeDelegate;
 }
 
 + (BOOL)canSendMail;

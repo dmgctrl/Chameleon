@@ -1,3 +1,33 @@
+//
+// UIView.m
+//
+// Original Author:
+//  The IconFactory
+//
+// Contributor: 
+//	Zac Bowling <zac@seatme.com>
+//
+// Copyright (C) 2011 SeatMe, Inc http://www.seatme.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
@@ -42,6 +72,7 @@
 #import "UIScreen.h"
 #import "UIGeometry.h"
 #import <QuartzCore/CALayer.h>
+#include <tgmath.h>
 
 NSString *const UIViewFrameDidChangeNotification = @"UIViewFrameDidChangeNotification";
 NSString *const UIViewBoundsDidChangeNotification = @"UIViewBoundsDidChangeNotification";
@@ -67,23 +98,8 @@ static NSString* const kUISubviewsKey = @"UISubviews";
 static NSMutableArray *_animationGroups;
 static BOOL _animationsEnabled = YES;
 
-@implementation UIView {
-    BOOL _needsDidAppearOrDisappear;
+@implementation UIView 
 
-    NSMutableSet *_subviews;
-    UIViewController *_viewController;
-    NSMutableSet *_gestureRecognizers;
-    IMP ourDrawRect_;
-    
-    struct {
-        BOOL overridesDisplayLayer : 1;
-        BOOL clearsContextBeforeDrawing : 1;
-        BOOL multipleTouchEnabled : 1;
-        BOOL exclusiveTouch : 1;
-        BOOL userInteractionEnabled : 1;
-        BOOL autoresizesSubviews : 1;
-    } _flags;
-}
 @synthesize layer = _layer;
 @synthesize superview = _superview;
 @synthesize tag = _tag;
@@ -147,11 +163,11 @@ static IMP defaultImplementationOfDisplayLayer;
     return self;
 }
 
-- (id)initWithFrame:(CGRect)theFrame
+- (id)initWithFrame:(CGRect)frame
 {
     if (nil != (self = [super init])) {
         [self _commonInitForUIView];
-        self.frame = theFrame;
+        self.frame = frame;
     }
     return self;
 }
@@ -161,7 +177,7 @@ static IMP defaultImplementationOfDisplayLayer;
     if (nil != (self = [super init])) {
         [self _commonInitForUIView];
         if ([coder containsValueForKey:kUIAlphaKey]) {
-            self.alpha = [coder decodeFloatForKey:kUIAlphaKey];
+            self.alpha = [coder decodeDoubleForKey:kUIAlphaKey];
         }
         if ([coder containsValueForKey:kUIAutoresizeSubviewsKey]) {
             self.autoresizesSubviews = [coder decodeBoolForKey:kUIAutoresizeSubviewsKey];
@@ -329,7 +345,7 @@ static IMP defaultImplementationOfDisplayLayer;
         [subview didMoveToSuperview];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewDidMoveToSuperviewNotification object:subview];
-        
+
         [self didAddSubview:subview];
     }
 }
@@ -644,41 +660,41 @@ static IMP defaultImplementationOfDisplayLayer;
          */
 
         if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin)) {
-            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
-            frame.size.height = floorf(frame.size.height + (frame.size.height / oldSize.height * delta.height));
+            frame.origin.y = floor(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
+            frame.size.height = floor(frame.size.height + (frame.size.height / oldSize.height * delta.height));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight)) {
             const CGFloat t = frame.origin.y + frame.size.height;
-            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / t * delta.height));
-            frame.size.height = floorf(frame.size.height + (frame.size.height / t * delta.height));
+            frame.origin.y = floor(frame.origin.y + (frame.origin.y / t * delta.height));
+            frame.size.height = floor(frame.size.height + (frame.size.height / t * delta.height));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight)) {
-            frame.size.height = floorf(frame.size.height + (frame.size.height / (oldSize.height - frame.origin.y) * delta.height));
+            frame.size.height = floor(frame.size.height + (frame.size.height / (oldSize.height - frame.origin.y) * delta.height));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin)) {
-            frame.origin.y = floorf(frame.origin.y + (delta.height / 2.f));
+            frame.origin.y = floor(frame.origin.y + (delta.height / 2.f));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleHeight)) {
-            frame.size.height = floorf(frame.size.height + delta.height);
+            frame.size.height = floor(frame.size.height + delta.height);
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin)) {
-            frame.origin.y = floorf(frame.origin.y + delta.height);
+            frame.origin.y = floor(frame.origin.y + delta.height);
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin)) {
-            frame.origin.y = floorf(frame.origin.y);
+            frame.origin.y = floor(frame.origin.y);
         }
 
         if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin)) {
-            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / oldSize.width * delta.width));
-            frame.size.width = floorf(frame.size.width + (frame.size.width / oldSize.width * delta.width));
+            frame.origin.x = floor(frame.origin.x + (frame.origin.x / oldSize.width * delta.width));
+            frame.size.width = floor(frame.size.width + (frame.size.width / oldSize.width * delta.width));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth)) {
             const CGFloat t = frame.origin.x + frame.size.width;
-            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / t * delta.width));
-            frame.size.width = floorf(frame.size.width + (frame.size.width / t * delta.width));
+            frame.origin.x = floor(frame.origin.x + (frame.origin.x / t * delta.width));
+            frame.size.width = floor(frame.size.width + (frame.size.width / t * delta.width));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth)) {
-            frame.size.width = floorf(frame.size.width + (frame.size.width / (oldSize.width - frame.origin.x) * delta.width));
+            frame.size.width = floor(frame.size.width + (frame.size.width / (oldSize.width - frame.origin.x) * delta.width));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin)) {
-            frame.origin.x = floorf(frame.origin.x + (delta.width / 2.f));
+            frame.origin.x = floor(frame.origin.x + (delta.width / 2.f));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleWidth)) {
-            frame.size.width = floorf(frame.size.width + delta.width);
+            frame.size.width = floor(frame.size.width + delta.width);
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin)) {
-            frame.origin.x = floorf(frame.origin.x + delta.width);
+            frame.origin.x = floor(frame.origin.x + delta.width);
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin)) {
-            frame.origin.x = floorf(frame.origin.x);
+            frame.origin.x = floor(frame.origin.x);
         }
 
         self.frame = frame;
