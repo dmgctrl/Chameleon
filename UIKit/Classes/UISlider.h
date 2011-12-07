@@ -37,7 +37,7 @@
 
 @class UIImageView, UIImage;
 
-@interface UISlider : UIControl 
+@interface UISlider : UIControl
 
 @property (nonatomic) float value;
 @property (nonatomic) float minimumValue;

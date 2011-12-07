@@ -293,6 +293,7 @@
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		A249874A13EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2606E6D13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png in Resources */ = {isa = PBXBuildFile; fileRef = A2606E6C13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png */; };
+		A2DA17601490271000E8F202 /* <UISlider> thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = A2DA175F1490271000E8F202 /* <UISlider> thumb.png */; };
 		A2E9946F13C78C1000B7D49F /* UIViewAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E9946D13C78C1000B7D49F /* UIViewAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2E9947013C78C1000B7D49F /* UIViewAppKitIntegration.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E9946E13C78C1000B7D49F /* UIViewAppKitIntegration.m */; };
 		A2E9947713C79DBE00B7D49F /* UIWindowAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E9947513C79DBE00B7D49F /* UIWindowAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -647,6 +648,7 @@
 		8DC2EF5B0486A6940098B216 /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPopoverControllerAppKitIntegration.h; sourceTree = "<group>"; };
 		A2606E6C13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableViewCell> accessoryDisclosureIndicator.png"; path = "Resources/<UITableViewCell> accessoryDisclosureIndicator.png"; sourceTree = "<group>"; };
+		A2DA175F1490271000E8F202 /* <UISlider> thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UISlider> thumb.png"; path = "Resources/<UISlider> thumb.png"; sourceTree = "<group>"; };
 		A2E9946D13C78C1000B7D49F /* UIViewAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewAppKitIntegration.h; path = Classes/UIViewAppKitIntegration.h; sourceTree = "<group>"; };
 		A2E9946E13C78C1000B7D49F /* UIViewAppKitIntegration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewAppKitIntegration.m; path = Classes/UIViewAppKitIntegration.m; sourceTree = "<group>"; };
 		A2E9947513C79DBE00B7D49F /* UIWindowAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIWindowAppKitIntegration.h; path = Classes/UIWindowAppKitIntegration.h; sourceTree = "<group>"; };
@@ -767,12 +769,12 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				66BAC4AA1362035200724D64 /* <UIBarButtonItemStylePlain>.png */,
-				66BAC4A91362035200724D64 /* <UIBarButtonItemStylePlain> hi.png */,
-				66BAC4AB1362035200724D64 /* <UIBarButtonItemStyleDone>.png */,
 				66BAC4AC1362035200724D64 /* <UIBarButtonItemStyleDone> hi.png */,
-				66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */,
+				66BAC4AB1362035200724D64 /* <UIBarButtonItemStyleDone>.png */,
+				66BAC4A91362035200724D64 /* <UIBarButtonItemStylePlain> hi.png */,
+				66BAC4AA1362035200724D64 /* <UIBarButtonItemStylePlain>.png */,
 				66371E4313675020007B9873 /* <UIBarButtonSystemItem> action.png */,
+				66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */,
 				669E5E72136897D500293194 /* <UIBarButtonSystemItem> bookmarks.png */,
 				669E5E73136897D500293194 /* <UIBarButtonSystemItem> camera.png */,
 				66371E451367502C007B9873 /* <UIBarButtonSystemItem> compose.png */,
@@ -788,8 +790,8 @@
 				669E5E6A1368977900293194 /* <UIBarButtonSystemItem> trash.png */,
 				F95416E313C91D22000A9282 /* <UIButton> detailDisclosureButton.png */,
 				F95416E113C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png */,
-				1464960811FF7AE500ECEC7A /* <UINavigationBar> back.png */,
 				1464960711FF7AE500ECEC7A /* <UINavigationBar> back-highlighted.png */,
+				1464960811FF7AE500ECEC7A /* <UINavigationBar> back.png */,
 				F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */,
 				F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */,
 				F9D9774013B7958E0086F226 /* <UINavigationBarBackground> default.png */,
@@ -802,6 +804,7 @@
 				14CC842E11EFA8BA005988CC /* <UIRoundedRectButton> normal.png */,
 				14CC842F11EFA8BA005988CC /* <UIScreen> grabber.png */,
 				882C32C51368DD03007B6E4B /* <UISearchBar> search-icon.png */,
+				A2DA175F1490271000E8F202 /* <UISlider> thumb.png */,
 				F9D9774413B7959E0086F226 /* <UITabBar> background.png */,
 				F9D9774513B7959E0086F226 /* <UITabBar> item.png */,
 				F95416D813C90AD4000A9282 /* <UITableView> groupTableViewBackground.png */,
@@ -1434,6 +1437,7 @@
 				F95416E013C9137B000A9282 /* <UITableViewCell> accessoryCheckmark.png in Resources */,
 				F95416E213C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png in Resources */,
 				F95416E413C91D22000A9282 /* <UIButton> detailDisclosureButton.png in Resources */,
+				A2DA17601490271000E8F202 /* <UISlider> thumb.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

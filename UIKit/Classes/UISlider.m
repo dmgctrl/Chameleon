@@ -1,9 +1,3 @@
-//
-//  UISlider.m
-//  UIKit
-//
-//  Created by Peter Steinberger on 24.03.11.
-//
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
@@ -34,15 +28,100 @@
  */
 
 #import "UISlider.h"
+#import "UIImage+UIPrivate.h"
+#import "UIButton.h"
+#import "UIColor.h"
+#import "UITouch.h"
+#import <QuartzCore/QuartzCore.h>
 
 
-@implementation UISlider 
+@implementation UISlider {
+    CALayer* _trackLayer;
+    UIButton* _thumbView;
+}
 @synthesize value = _value;
 @synthesize minimumValue = _minimumValue;
 @synthesize maximumValue = _maximumValue;
 @synthesize continuous = _continuous;
 
-- (NSString *)description
+- (void) _commonInitForUISlider
+{
+    _minimumValue = 0.0;
+    _maximumValue = 1.0;
+    CALayer* layer = self.layer;
+    layer.backgroundColor = [[UIColor clearColor] CGColor];
+    
+    _trackLayer = [CALayer layer];
+    _trackLayer.frame = CGRectMake(2, 7, layer.frame.size.width - 4, 9);
+    _trackLayer.backgroundColor = [[UIColor grayColor] CGColor];
+    _trackLayer.cornerRadius = 4;
+    [layer addSublayer:_trackLayer];
+    
+    _thumbView = [UIButton buttonWithType:UIButtonTypeCustom];
+    _thumbView.userInteractionEnabled = NO;
+    [_thumbView setBackgroundImage:[UIImage _sliderThumbImage] forState:UIControlStateNormal];
+    _thumbView.frame = CGRectMake(0, 0, 23, 23);
+    [self addSubview:_thumbView];
+}
+
+- (id) initWithFrame:(CGRect)frame
+{
+    if (nil != (self = [super initWithFrame:frame])) {
+        [self _commonInitForUISlider];
+	}
+    return self;
+}
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super initWithCoder:coder])) {
+        [self _commonInitForUISlider];
+	}
+    return self;
+}
+
+- (void) layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGRect thumbRect = _thumbView.frame;
+    thumbRect.origin.x = MIN(self.bounds.size.width - thumbRect.size.width, MAX(0, ((_value / (_maximumValue - _minimumValue)) * self.bounds.size.width) - thumbRect.size.width / 2));
+    _thumbView.frame = thumbRect;
+}
+
+- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+	[super touchesBegan:touches withEvent:event];
+    
+    UITouch* touch = [touches anyObject];
+    CGPoint point = [touch locationInView:_thumbView];
+	if ([_thumbView pointInside:point withEvent:event]) {
+        _thumbView.highlighted = YES;
+    }
+}
+
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
+{
+	[super touchesMoved:touches withEvent:event];
+    
+	if (_thumbView.highlighted) {
+        UITouch* touch = [touches anyObject];
+        CGPoint point = [touch locationInView:self];
+        CGFloat xValue = MAX(0, point.x);
+        CGFloat percentage = MIN(xValue, self.bounds.size.width) / self.bounds.size.width;
+        _value = _minimumValue + ((_maximumValue - _minimumValue) * percentage);
+        [self setNeedsLayout];
+    }
+}
+
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesEnded:touches withEvent:event];
+	
+    _thumbView.highlighted = NO;
+}
+
+- (NSString*) description
 {
     return [NSString stringWithFormat:@"<%@: %p; frame = (%.0f %.0f; %.0f %.0f); opaque = %@; layer = %@; value = %f>", [self className], self, self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, (self.opaque ? @"YES" : @"NO"), self.layer, self.value];
 }

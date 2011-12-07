@@ -344,5 +344,10 @@ NSMutableDictionary *imageCache = nil;
 	return [self _frameworkImageWithName:@"<UINavigationBarBackground> blackOpaque.png" leftCapWidth:0 topCapHeight:0];
 }
 
++ (UIImage *)_sliderThumbImage
+{
+	return [self _frameworkImageWithName:@"<UISlider> thumb.png" leftCapWidth:0 topCapHeight:0];
+}
+
 
 @end
