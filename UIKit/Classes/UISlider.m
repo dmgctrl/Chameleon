@@ -46,6 +46,7 @@
 
 - (void) _commonInitForUISlider
 {
+    _continuous = YES;
     _minimumValue = 0.0;
     _maximumValue = 1.0;
     CALayer* layer = self.layer;
@@ -109,7 +110,11 @@
         CGPoint point = [touch locationInView:self];
         CGFloat xValue = MAX(0, point.x);
         CGFloat percentage = MIN(xValue, self.bounds.size.width) / self.bounds.size.width;
+        float oldValue = _value;
         _value = _minimumValue + ((_maximumValue - _minimumValue) * percentage);
+        if (_continuous && _value != oldValue) {
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
+        }
         [self setNeedsLayout];
     }
 }
