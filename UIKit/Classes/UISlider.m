@@ -86,7 +86,8 @@
     [super layoutSubviews];
     
     CGRect thumbRect = _thumbView.frame;
-    thumbRect.origin.x = MIN(self.bounds.size.width - thumbRect.size.width, MAX(0, ((_value / (_maximumValue - _minimumValue)) * self.bounds.size.width) - thumbRect.size.width / 2));
+    CGFloat percentage = (_value - _minimumValue) / (_maximumValue - _minimumValue);
+    thumbRect.origin.x = MIN(self.bounds.size.width - thumbRect.size.width, MAX(0, (percentage * self.bounds.size.width) - thumbRect.size.width / 2));
     _thumbView.frame = thumbRect;
 }
 
