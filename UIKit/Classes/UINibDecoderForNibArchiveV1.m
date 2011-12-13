@@ -1,6 +1,7 @@
 #import "UINibDecoderForNibArchiveV1.h"
 #import "UIProxyObject.h"
 #import "UIImageNibPlaceholder.h"
+#import "UIGeometry.h"
 
 
 typedef struct {
@@ -61,6 +62,7 @@ static inline double decodeFloat64(void const** pp);
 - (CGRect) _extractCGRectFromValue:(UINibDecoderValueEntry*)value;
 - (CGPoint) _extractCGPointFromValue:(UINibDecoderValueEntry*)value;
 - (CGSize) _extractCGSizeFromValue:(UINibDecoderValueEntry*)value;
+- (UIEdgeInsets) _extractUIEdgeInsetsFromValue:(UINibDecoderValueEntry*)value;
 
 - (void) _cannotDecodeObjCType:(const char *)objcType;
 - (void) _cannotDecodeType:(NSInteger)type asObjCType:(char const*)objcType;
@@ -551,6 +553,16 @@ static Class kClassForUIImageNibPlaceholder;
     return [self _extractCGSizeFromValue:value];
 }
 
+- (UIEdgeInsets) decodeUIEdgeInsetsForKey:(NSString*)key
+{
+    assert(key);
+    UINibDecoderValueEntry* value = [self _valueEntryForKey:key];
+    if (!value) {
+        return UIEdgeInsetsZero;
+    }
+    return [self _extractUIEdgeInsetsFromValue:value];
+}
+
 - (NSString*) description
 {
     NSMutableString* s = [[NSMutableString alloc] init];
@@ -916,6 +928,40 @@ static Class kClassForUIImageNibPlaceholder;
     
     [self _cannotDecodeType:value->type asObjCType:"CGSize"];
     return CGSizeZero;
+}
+
+- (UIEdgeInsets) _extractUIEdgeInsetsFromValue:(UINibDecoderValueEntry*)value
+{
+    void const* vp = value->data;
+    switch (value->type) {
+        case kValueTypeData: {
+            uint32_t lengthOfData = decodeVariableLengthInteger(&vp);
+            if (lengthOfData != 0x11) {
+                break;
+            }
+            
+            switch (decodeByte(&vp)) {
+                case kValueTypeFloat32: {
+                    CGFloat top = decodeFloat32(&vp);
+                    CGFloat left = decodeFloat32(&vp);
+                    CGFloat bottom = decodeFloat32(&vp);
+                    CGFloat right = decodeFloat32(&vp);
+                    return UIEdgeInsetsMake(top, left, bottom, right);
+                }
+                    
+                case kValueTypeFloat64: {
+                    CGFloat top = decodeFloat64(&vp);
+                    CGFloat left = decodeFloat64(&vp);
+                    CGFloat bottom = decodeFloat64(&vp);
+                    CGFloat right = decodeFloat64(&vp);
+                    return UIEdgeInsetsMake(top, left, bottom, right);
+                }
+            }
+        }
+    }
+    
+    [self _cannotDecodeType:value->type asObjCType:"UIEdgeInsets"];
+    return UIEdgeInsetsZero;
 }
 
 - (void) _cannotDecodeObjCType:(const char *)objcType 
