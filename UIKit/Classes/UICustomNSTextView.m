@@ -71,6 +71,7 @@ static const CGFloat LargeNumberForText = 1.0e7; // Any larger dimensions and th
             [self setHorizontallyResizable:NO];
             [self setVerticallyResizable:YES];
             [self setAutoresizingMask:NSViewWidthSizable];
+            [self setTextContainerInset:NSMakeSize(4, 9)];
         }
 
         [self setMaxSize:maxSize];
@@ -310,6 +311,7 @@ static const CGFloat LargeNumberForText = 1.0e7; // Any larger dimensions and th
     NSLayoutManager *layout = [self layoutManager];
     
     NSRange checkRange = NSMakeRange(0,[[self string] length]);
+    NSSize containerInset = [self textContainerInset];
     
     while (checkRange.length > 0) {
         NSRange effectiveRange = NSMakeRange(checkRange.location,0);
@@ -324,7 +326,7 @@ static const CGFloat LargeNumberForText = 1.0e7; // Any larger dimensions and th
                 
                 for (NSUInteger i=0; i<count; i++) {
                     if (NSIntersectsRect(rects[i], rect)) {
-                        [underlinePath moveToPoint:NSMakePoint(rects[i].origin.x, rects[i].origin.y+rects[i].size.height-1.5)];
+                        [underlinePath moveToPoint:NSMakePoint(rects[i].origin.x + containerInset.width, rects[i].origin.y+containerInset.height+rects[i].size.height-1.5)];
                         [underlinePath relativeLineToPoint:NSMakePoint(rects[i].size.width,0)];
                     }
                 }
