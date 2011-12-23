@@ -34,6 +34,10 @@
 #import "UITouch.h"
 #import <QuartzCore/QuartzCore.h>
 
+static NSString* const kUIValueKey = @"UIValue";
+static NSString* const kUIMinValueKey = @"UIMinValue";
+static NSString* const kUIMaxValueKey = @"UIMaxValue";
+
 
 @implementation UISlider {
     CALayer* _trackLayer;
@@ -78,6 +82,15 @@
 {
     if (nil != (self = [super initWithCoder:coder])) {
         [self _commonInitForUISlider];
+        if ([coder containsValueForKey:kUIValueKey]) {
+            self.value = [coder decodeFloatForKey:kUIValueKey];
+        }
+        if ([coder containsValueForKey:kUIMinValueKey]) {
+            self.minimumValue = [coder decodeFloatForKey:kUIMinValueKey];
+        }
+        if ([coder containsValueForKey:kUIMaxValueKey]) {
+            self.maximumValue = [coder decodeFloatForKey:kUIMaxValueKey];
+        }
 	}
     return self;
 }
