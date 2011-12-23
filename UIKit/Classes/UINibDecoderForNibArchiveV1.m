@@ -18,6 +18,7 @@ typedef struct {
 
 enum {
     kValueTypeByte                  = 0x00,
+    kValueTypeShort                 = 0x01,
     kValueTypeConstantEqualsZero    = 0x04,
     kValueTypeConstantEqualsOne     = 0x05,
     kValueTypeFloat32               = 0x06,
@@ -37,6 +38,7 @@ static NSString* const kIBFirstResponderKey = @"IBFirstResponder";
 
 static inline uint32_t decodeVariableLengthInteger(void const** pp);
 static inline uint8_t decodeByte(void const** pp);
+static inline uint16_t decodeShort(void const** pp);
 static inline uint32_t decodeInt32(void const** pp);
 static inline float decodeFloat32(void const** p);
 static inline double decodeFloat64(void const** pp);
@@ -260,6 +262,12 @@ static inline double decodeFloat64(void const** pp);
                     break;
                 }
                     
+                case kValueTypeShort: {
+                    data = vp;
+                    vp += 2;
+                    break;
+                }
+                
                 case kValueTypeConstantEqualsZero:
                 case kValueTypeConstantEqualsOne: {
                     /*  No additional storage  */
@@ -614,6 +622,7 @@ static Class kClassForUIImageNibPlaceholder;
 
 - (uint32_t) _extractInt32FromValue:(UINibDecoderValueEntry*)value
 {
+    void const* vp = value->data;
     switch (value->type) {
         case kValueTypeConstantEqualsZero: {
             return 0;
@@ -624,7 +633,11 @@ static Class kClassForUIImageNibPlaceholder;
         }
             
         case kValueTypeByte: {
-            return *((uint8_t*)value->data);
+            return decodeByte(&vp);
+        }
+            
+        case kValueTypeShort: {
+            return decodeShort(&vp);
         }
     }
 
@@ -634,6 +647,7 @@ static Class kClassForUIImageNibPlaceholder;
 
 - (uint64_t) _extractInt64FromValue:(UINibDecoderValueEntry*)value
 {
+    void const* vp = value->data;
     switch (value->type) {
         case kValueTypeConstantEqualsZero: {
             return 0;
@@ -644,7 +658,11 @@ static Class kClassForUIImageNibPlaceholder;
         }
             
         case kValueTypeByte: {
-            return *((uint8_t*)value->data);
+            return decodeByte(&vp);
+        }
+
+        case kValueTypeShort: {
+            return decodeShort(&vp);
         }
     }
     
@@ -665,7 +683,11 @@ static Class kClassForUIImageNibPlaceholder;
         }
             
         case kValueTypeByte: {
-            return *((uint8_t*)vp);
+            return decodeByte(&vp);
+        }
+            
+        case kValueTypeShort: {
+            return decodeShort(&vp);
         }
             
         case kValueTypeFloat32: {
@@ -694,7 +716,11 @@ static Class kClassForUIImageNibPlaceholder;
         }
             
         case kValueTypeByte: {
-            return *((uint8_t*)vp);
+            return decodeByte(&vp);
+        }
+            
+        case kValueTypeShort: {
+            return decodeShort(&vp);
         }
             
         case kValueTypeFloat32: {
@@ -806,6 +832,11 @@ static Class kClassForUIImageNibPlaceholder;
         case kValueTypeByte: {
             uint8_t v = decodeByte(&vp);
             return [[NSNumber alloc] initWithInt:v];
+        }
+            
+        case kValueTypeShort: {
+            uint16_t v = decodeShort(&vp);
+            return [[NSNumber alloc] initWithShort:v];
         }
             
         case kValueTypeConstantEqualsZero: {
@@ -1000,6 +1031,13 @@ uint8_t decodeByte(void const** pp)
     uint8_t const* p = *pp;
     uint8_t v = *p++;
     *pp = p;
+    return v;
+}
+
+uint16_t decodeShort(void const** pp)
+{
+    uint16_t v = OSReadLittleInt16(*pp, 0);
+    *pp += 2;
     return v;
 }
 
