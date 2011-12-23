@@ -49,6 +49,7 @@
     _continuous = YES;
     _minimumValue = 0.0;
     _maximumValue = 1.0;
+    _value = 0.5;
     CALayer* layer = self.layer;
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     
