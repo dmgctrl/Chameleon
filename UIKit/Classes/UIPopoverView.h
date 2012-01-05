@@ -28,6 +28,7 @@
  */
 
 #import "UIView.h"
+#import "UIPopoverControllerAppKitIntegration.h"
 
 @class UIImageView, UIPopoverController;
 
@@ -47,5 +48,6 @@
 
 @property (nonatomic, retain) UIView *contentView;
 @property (nonatomic, assign) CGSize contentSize;
+@property (nonatomic, assign) UIPopoverTheme theme;
 
 @end

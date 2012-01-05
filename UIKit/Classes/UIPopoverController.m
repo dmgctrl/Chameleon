@@ -28,7 +28,6 @@
  */
 
 #import "UIPopoverController+UIPrivate.h"
-#import "UIPopoverControllerAppKitIntegration.h"
 #import "UIViewController.h"
 #import "UIWindow.h"
 #import "UIScreen+UIPrivate.h"
@@ -172,6 +171,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     id _popoverWindow;
     id _overlayWindow;
     UIWindow* _windowToReactivate;
+    UIPopoverTheme _theme;
     
     struct {
         BOOL popoverControllerDidDismissPopover : 1;
@@ -270,6 +270,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         // now build the actual popover view which represents the popover's chrome, and since it's a UIView, we need to build a UIKitView 
         // as well to put it in our NSWindow...
         _popoverView = [[UIPopoverView alloc] initWithContentView:_contentViewController.view size:_contentViewController.contentSizeForViewInPopover popoverController:self];
+        _popoverView.theme = _theme;
 
         UIKitView *hostingView = [[UIKitView alloc] initWithFrame:NSRectFromCGRect([_popoverView bounds])];
         [[hostingView UIScreen] _setPopoverController:self];
@@ -456,24 +457,77 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     }
 }
 
-+ (UIImage *)backgroundImage {
-	return [UIImage _popoverBackgroundImage];
++ (UIImage *)backgroundImageForTheme:(UIPopoverTheme)theme {
+    switch (theme) {
+        case UIPopoverThemeDefault:
+            return [UIImage _popoverBackgroundImage];
+            break;
+        case UIPopoverThemeLion:
+            return [UIImage _popoverLionBackgroundImage];
+            break;
+    }
+	return nil;
 }
 
-+ (UIImage *)leftArrowImage {
-	return [UIImage _leftPopoverArrowImage];
++ (UIImage *)leftArrowImageForTheme:(UIPopoverTheme)theme {
+    switch (theme) {
+        case UIPopoverThemeDefault:
+            return [UIImage _leftPopoverArrowImage];
+            break;
+        case UIPopoverThemeLion:
+            return [UIImage _leftLionPopoverArrowImage];
+            break;
+    }
+	return nil;
 }
 
-+ (UIImage *)rightArrowImage {
-	return [UIImage _rightPopoverArrowImage];
++ (UIImage *)rightArrowImageForTheme:(UIPopoverTheme)theme {
+    switch (theme) {
+        case UIPopoverThemeDefault:
+            return [UIImage _rightPopoverArrowImage];
+            break;
+        case UIPopoverThemeLion:
+            return [UIImage _rightLionPopoverArrowImage];
+            break;
+    }
+	return nil;
 }
 
-+ (UIImage *)topArrowImage {
-	return [UIImage _topPopoverArrowImage];
++ (UIImage *)topArrowImageForTheme:(UIPopoverTheme)theme {
+    switch (theme) {
+        case UIPopoverThemeDefault:
+            return [UIImage _topPopoverArrowImage];
+            break;
+        case UIPopoverThemeLion:
+            return [UIImage _topLionPopoverArrowImage];
+            break;
+    }
+	return nil;
 }
 
-+ (UIImage *)bottomArrowImage {
-	return [UIImage _bottomPopoverArrowImage];
++ (UIImage *)bottomArrowImageForTheme:(UIPopoverTheme)theme {
+    switch (theme) {
+        case UIPopoverThemeDefault:
+            return [UIImage _bottomPopoverArrowImage];
+            break;
+        case UIPopoverThemeLion:
+            return [UIImage _bottomLionPopoverArrowImage];
+            break;
+    }
+	return nil;
+}
+
+- (void) setTheme:(UIPopoverTheme)theme
+{
+    if (_theme != theme) {
+        _theme = theme;
+        _popoverView.theme = _theme;
+    }
+}
+
+- (UIPopoverTheme) theme
+{
+    return _theme;
 }
 
 @end

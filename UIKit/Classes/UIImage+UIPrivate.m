@@ -162,6 +162,31 @@ NSMutableDictionary *imageCache = nil;
     return [self _frameworkImageWithName:@"<UIPopoverView> background.png" leftCapWidth:23 topCapHeight:23];
 }
 
++ (UIImage *)_leftLionPopoverArrowImage
+{
+    return [self _frameworkImageWithName:@"<UIPopoverView> lion-arrow-left.png" leftCapWidth:0 topCapHeight:0];
+}
+
++ (UIImage *)_rightLionPopoverArrowImage
+{
+    return [self _frameworkImageWithName:@"<UIPopoverView> lion-arrow-right.png" leftCapWidth:0 topCapHeight:0];
+}
+
++ (UIImage *)_topLionPopoverArrowImage
+{
+    return [self _frameworkImageWithName:@"<UIPopoverView> lion-arrow-top.png" leftCapWidth:0 topCapHeight:0];
+}
+
++ (UIImage *)_bottomLionPopoverArrowImage
+{
+    return [self _frameworkImageWithName:@"<UIPopoverView> lion-arrow-bottom.png" leftCapWidth:0 topCapHeight:0];
+}
+
++ (UIImage *)_popoverLionBackgroundImage
+{
+    return [self _frameworkImageWithName:@"<UIPopoverView> lion-background.png" leftCapWidth:23 topCapHeight:23];
+}
+
 + (UIImage *)_roundedRectButtonImage
 {
     return [self _frameworkImageWithName:@"<UIRoundedRectButton> normal.png" leftCapWidth:12 topCapHeight:9];

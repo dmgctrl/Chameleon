@@ -47,6 +47,11 @@
 + (UIImage *)_topPopoverArrowImage;
 + (UIImage *)_bottomPopoverArrowImage;
 + (UIImage *)_popoverBackgroundImage;
++ (UIImage *)_leftLionPopoverArrowImage;
++ (UIImage *)_rightLionPopoverArrowImage;
++ (UIImage *)_topLionPopoverArrowImage;
++ (UIImage *)_bottomLionPopoverArrowImage;
++ (UIImage *)_popoverLionBackgroundImage;
 + (UIImage *)_roundedRectButtonImage;
 + (UIImage *)_highlightedRoundedRectButtonImage;
 + (UIImage *)_windowResizeGrabberImage;

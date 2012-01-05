@@ -293,6 +293,11 @@
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		A249874A13EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2606E6D13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png in Resources */ = {isa = PBXBuildFile; fileRef = A2606E6C13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png */; };
+		A2D0C2AD14B5FC6C00E111DE /* <UIPopoverView> lion-background.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2A814B5FC6C00E111DE /* <UIPopoverView> lion-background.png */; };
+		A2D0C2AE14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2A914B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png */; };
+		A2D0C2AF14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-left.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2AA14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-left.png */; };
+		A2D0C2B014B5FC6C00E111DE /* <UIPopoverView> lion-arrow-right.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2AB14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-right.png */; };
+		A2D0C2B114B5FC6C00E111DE /* <UIPopoverView> lion-arrow-top.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2AC14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-top.png */; };
 		A2DA17601490271000E8F202 /* <UISlider> thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = A2DA175F1490271000E8F202 /* <UISlider> thumb.png */; };
 		A2E9946F13C78C1000B7D49F /* UIViewAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E9946D13C78C1000B7D49F /* UIViewAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2E9947013C78C1000B7D49F /* UIViewAppKitIntegration.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E9946E13C78C1000B7D49F /* UIViewAppKitIntegration.m */; };
@@ -648,6 +653,11 @@
 		8DC2EF5B0486A6940098B216 /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPopoverControllerAppKitIntegration.h; sourceTree = "<group>"; };
 		A2606E6C13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableViewCell> accessoryDisclosureIndicator.png"; path = "Resources/<UITableViewCell> accessoryDisclosureIndicator.png"; sourceTree = "<group>"; };
+		A2D0C2A814B5FC6C00E111DE /* <UIPopoverView> lion-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-background.png"; path = "Resources/<UIPopoverView> lion-background.png"; sourceTree = "<group>"; };
+		A2D0C2A914B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-arrow-bottom.png"; path = "Resources/<UIPopoverView> lion-arrow-bottom.png"; sourceTree = "<group>"; };
+		A2D0C2AA14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-arrow-left.png"; path = "Resources/<UIPopoverView> lion-arrow-left.png"; sourceTree = "<group>"; };
+		A2D0C2AB14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-arrow-right.png"; path = "Resources/<UIPopoverView> lion-arrow-right.png"; sourceTree = "<group>"; };
+		A2D0C2AC14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-arrow-top.png"; path = "Resources/<UIPopoverView> lion-arrow-top.png"; sourceTree = "<group>"; };
 		A2DA175F1490271000E8F202 /* <UISlider> thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UISlider> thumb.png"; path = "Resources/<UISlider> thumb.png"; sourceTree = "<group>"; };
 		A2E9946D13C78C1000B7D49F /* UIViewAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewAppKitIntegration.h; path = Classes/UIViewAppKitIntegration.h; sourceTree = "<group>"; };
 		A2E9946E13C78C1000B7D49F /* UIViewAppKitIntegration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewAppKitIntegration.m; path = Classes/UIViewAppKitIntegration.m; sourceTree = "<group>"; };
@@ -800,6 +810,11 @@
 				14F56F3A12664D350045EC82 /* <UIPopoverView> arrow-right.png */,
 				14F56F3B12664D350045EC82 /* <UIPopoverView> arrow-top.png */,
 				14F56F3C12664D350045EC82 /* <UIPopoverView> background.png */,
+				A2D0C2A814B5FC6C00E111DE /* <UIPopoverView> lion-background.png */,
+				A2D0C2A914B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png */,
+				A2D0C2AA14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-left.png */,
+				A2D0C2AB14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-right.png */,
+				A2D0C2AC14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-top.png */,
 				14CC842D11EFA8BA005988CC /* <UIRoundedRectButton> highlighted.png */,
 				14CC842E11EFA8BA005988CC /* <UIRoundedRectButton> normal.png */,
 				14CC842F11EFA8BA005988CC /* <UIScreen> grabber.png */,
@@ -1438,6 +1453,11 @@
 				F95416E213C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png in Resources */,
 				F95416E413C91D22000A9282 /* <UIButton> detailDisclosureButton.png in Resources */,
 				A2DA17601490271000E8F202 /* <UISlider> thumb.png in Resources */,
+				A2D0C2AD14B5FC6C00E111DE /* <UIPopoverView> lion-background.png in Resources */,
+				A2D0C2AE14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png in Resources */,
+				A2D0C2AF14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-left.png in Resources */,
+				A2D0C2B014B5FC6C00E111DE /* <UIPopoverView> lion-arrow-right.png in Resources */,
+				A2D0C2B114B5FC6C00E111DE /* <UIPopoverView> lion-arrow-top.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

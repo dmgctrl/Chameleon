@@ -30,7 +30,7 @@
 #import "UIPopoverView.h"
 #import "UIImageView.h"
 #import "UIImage+UIPrivate.h"
-#import "UIPopoverController.h"
+#import "UIPopoverController+UIPrivate.h"
 #import "UIView+UIPrivate.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -99,6 +99,7 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 
 @implementation UIPopoverView
 @synthesize contentView=_contentView;
+@synthesize theme = _theme;
 
 - (id)initWithContentView:(UIView *)aView size:(CGSize)aSize popoverController:(UIPopoverController *)controller
 {	
@@ -107,7 +108,8 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 		
 		_popoverController = [controller retain];
         
-        _backgroundView = [[UIImageView alloc] initWithImage:[[_popoverController class] backgroundImage]];
+        _theme = UIPopoverThemeDefault;
+        _backgroundView = [[UIImageView alloc] initWithImage:[[_popoverController class] backgroundImageForTheme:_theme]];
         
         _arrowView = [(UIImageView *)[UIImageView alloc] initWithFrame:CGRectZero];
         
@@ -229,19 +231,19 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     
     if (closestEdge == CGRectMaxXEdge) {
         // right side
-        _arrowView.image = [[_popoverController class] rightArrowImage];
+        _arrowView.image = [[_popoverController class] rightArrowImageForTheme:_theme];
         clampVertical = YES;
     } else if (closestEdge == CGRectMaxYEdge) {
         // bottom side
-        _arrowView.image = [[_popoverController class] bottomArrowImage];
+        _arrowView.image = [[_popoverController class] bottomArrowImageForTheme:_theme];
         clampVertical = NO;
     } else if (closestEdge == CGRectMinYEdge) {
         // top side
-        _arrowView.image = [[_popoverController class] topArrowImage];
+        _arrowView.image = [[_popoverController class] topArrowImageForTheme:_theme];
         clampVertical = NO;
     } else {
         // left side
-        _arrowView.image = [[_popoverController class] leftArrowImage];
+        _arrowView.image = [[_popoverController class] leftArrowImageForTheme:_theme];
         clampVertical = YES;
     }
 
@@ -306,6 +308,14 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 - (void)setContentSize:(CGSize)newSize
 {
     [self setContentSize:newSize animated:NO];
+}
+
+- (void) setTheme:(UIPopoverTheme)theme
+{
+    if (_theme != theme) {
+        _theme = theme;
+        _backgroundView.image = [[_popoverController class] backgroundImageForTheme:_theme];
+    }
 }
 
 @end

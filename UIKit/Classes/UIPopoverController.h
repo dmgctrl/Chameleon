@@ -64,12 +64,6 @@ typedef NSUInteger UIPopoverArrowDirection;
 + (CGRect)contentRectForBounds:(CGRect)bounds withNavigationBar:(BOOL)hasNavBar;
 + (CGSize)frameSizeForContentSize:(CGSize)contentSize withNavigationBar:(BOOL)hasNavBar;
 
-+ (UIImage *)backgroundImage;
-+ (UIImage *)leftArrowImage;
-+ (UIImage *)rightArrowImage;
-+ (UIImage *)topArrowImage;
-+ (UIImage *)bottomArrowImage;
-
 @property (nonatomic, assign) id <UIPopoverControllerDelegate> delegate;
 @property (nonatomic, retain) UIViewController *contentViewController;
 @property (nonatomic, readonly, getter=isPopoverVisible) BOOL popoverVisible;

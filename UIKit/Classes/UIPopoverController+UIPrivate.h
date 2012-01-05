@@ -28,7 +28,14 @@
  */
 
 #import "UIPopoverController.h"
+#import "UIPopoverControllerAppKitIntegration.h"
 
 @interface UIPopoverController (UIPrivate)
 - (void)_closePopoverWindowIfPossible;
+
++ (UIImage *)backgroundImageForTheme:(UIPopoverTheme)theme;
++ (UIImage *)leftArrowImageForTheme:(UIPopoverTheme)theme;
++ (UIImage *)rightArrowImageForTheme:(UIPopoverTheme)theme;
++ (UIImage *)topArrowImageForTheme:(UIPopoverTheme)theme;
++ (UIImage *)bottomArrowImageForTheme:(UIPopoverTheme)theme;
 @end
