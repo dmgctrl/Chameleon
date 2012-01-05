@@ -374,28 +374,36 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         _windowToReactivate = nil;
         _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
         
-        [UIView animateWithDuration:!animated ? 0.0 : 0.2 
-            animations:^{
-                popoverView.alpha = 0;
-            }
-            completion:^(BOOL finished){
-                NSWindow *parentWindow = [overlayWindow parentWindow];
-                
-                [overlayWindow orderOut:nil];
-                [popoverWindow orderOut:nil];
-
-                [overlayWindow removeChildWindow:popoverWindow];
-                [parentWindow removeChildWindow:overlayWindow];
-                
-                [parentWindow makeKeyWindow];
-                [windowToReactivate makeKeyAndVisible];
-
-                [popoverView release];
-                [popoverWindow release];
-                [overlayWindow release];
-                [windowToReactivate release];
-            }
-        ];
+        void(^animationBlock)(void) = ^{
+            popoverView.alpha = 0;
+        };
+        void(^completionBlock)(BOOL) = ^(BOOL finished) {
+            NSWindow *parentWindow = [overlayWindow parentWindow];
+            
+            [overlayWindow orderOut:nil];
+            [popoverWindow orderOut:nil];
+            
+            [overlayWindow removeChildWindow:popoverWindow];
+            [parentWindow removeChildWindow:overlayWindow];
+            
+            [parentWindow makeKeyWindow];
+            [windowToReactivate makeKeyAndVisible];
+            
+            [popoverView release];
+            [popoverWindow release];
+            [overlayWindow release];
+            [windowToReactivate release];
+        };
+        
+        if (animated) {
+            [UIView animateWithDuration:0.2 
+                animations:animationBlock
+                completion:completionBlock
+            ];
+        } else {
+            animationBlock();
+            completionBlock(YES);
+        }
     }
 }
 
