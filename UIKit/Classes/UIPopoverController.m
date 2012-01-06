@@ -247,7 +247,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     [_windowToReactivate release], _windowToReactivate = [view.window retain];
     
     NSWindow *viewNSWindow = [[view.window.screen UIKitView] window];
-
+    
     // only create new stuff if the popover isn't already visible
     if (![self isPopoverVisible]) {
 
@@ -296,6 +296,19 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         [_popoverWindow makeFirstResponder:hostingView];
 
         [hostingView release];
+    }
+    
+    if (!CGSizeEqualToSize(_popoverView.contentSize, _contentViewController.contentSizeForViewInPopover)) {
+        _popoverView.hidden = YES;
+        [_popoverView removeFromSuperview];
+        CGSize newContentSize = _contentViewController.contentSizeForViewInPopover;
+        CGRect newPopoverBounds = _popoverView.bounds;
+        newPopoverBounds.size = [[self class] frameSizeForContentSize:newContentSize withNavigationBar:NO];
+        UIKitView* hostingView = (UIKitView*)[(NSWindow *)_popoverWindow contentView];
+        [hostingView setFrame:NSRectFromCGRect(newPopoverBounds)];
+        [[hostingView UIWindow] addSubview:_popoverView];
+        [(NSWindow *)_popoverWindow setContentSize:hostingView.bounds.size];
+        [_popoverView setContentSize:newContentSize];
     }
 
     // cancel current touches (if any) to prevent the main window from losing track of events (such as if the user was holding down the mouse

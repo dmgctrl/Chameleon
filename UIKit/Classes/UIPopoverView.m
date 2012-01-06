@@ -293,11 +293,16 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     CGRect frame = self.frame;
     frame.size = [[_popoverController class] frameSizeForContentSize:aSize withNavigationBar:NO];
 
-    [UIView animateWithDuration:!animated ? 0.0 : 0.2
-        animations:^{
-            self.frame = frame;
-        }
-    ];
+    void(^animationBlock)(void) = ^ {
+        self.frame = frame;
+    };
+    if (animated) {
+        [UIView animateWithDuration:0.2
+            animations:animationBlock
+        ];
+    } else {
+        animationBlock();
+    }
 }
 
 - (CGSize)contentSize
