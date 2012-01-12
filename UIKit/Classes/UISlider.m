@@ -60,12 +60,14 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     
     _minimumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMinimumTrackImage]];
-    _minimumTrackView.frame = CGRectMake(0, 7, 18, 9);
+    _minimumTrackView.frame = CGRectMake(3, 7, 18, 9);
     [self addSubview:_minimumTrackView];
+    [_minimumTrackView release];
     
     _maximumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMaximumTrackImage]];
     _maximumTrackView.frame = CGRectMake(0, 7, 18, 9);
     [self addSubview:_maximumTrackView];
+    [_maximumTrackView release];
     
     _thumbView = [UIButton buttonWithType:UIButtonTypeCustom];
     _thumbView.userInteractionEnabled = NO;
@@ -99,6 +101,29 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     return self;
 }
 
+- (void) setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state
+{
+    CGRect minimumTrackRect = _minimumTrackView.frame;
+    minimumTrackRect.size.height = MIN(9, image.size.height);
+    minimumTrackRect.origin.y = floor(0.5*(23 - minimumTrackRect.size.height));
+    _minimumTrackView.frame = minimumTrackRect;
+    _minimumTrackView.image = image;
+}
+
+- (void) setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state
+{
+    CGRect maximumTrackRect = _maximumTrackView.frame;
+    maximumTrackRect.size.height = MIN(9, image.size.height);
+    maximumTrackRect.origin.y = floor(0.5*(23 - maximumTrackRect.size.height));
+    _maximumTrackView.frame = maximumTrackRect;
+    _maximumTrackView.image = image;
+}
+
+- (void) setThumbImage:(UIImage*)image forState:(UIControlState)state
+{
+    [_thumbView setBackgroundImage:image forState:state];
+}
+
 - (void) layoutSubviews
 {
     [super layoutSubviews];
@@ -114,7 +139,7 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     
     CGRect maximumTrackRect = _maximumTrackView.frame;
     maximumTrackRect.origin.x = minimumTrackRect.size.width;
-    maximumTrackRect.size.width = MAX(1, self.bounds.size.width - maximumTrackRect.origin.x);
+    maximumTrackRect.size.width = MAX(1, self.bounds.size.width - maximumTrackRect.origin.x) - 3;
     _maximumTrackView.frame = maximumTrackRect;
 }
 

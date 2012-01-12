@@ -44,4 +44,8 @@
 @property (nonatomic) float maximumValue;
 @property (nonatomic, getter=isContinuous) BOOL continuous;
 
+- (void) setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state;
+- (void) setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state;
+- (void) setThumbImage:(UIImage*)image forState:(UIControlState)state;
+
 @end
