@@ -292,6 +292,8 @@
 		88D0B2A613674EF2008A073F /* <UITextField> roundedRectBackgroundImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 88D0B2A513674EF2008A073F /* <UITextField> roundedRectBackgroundImage.png */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		A249874A13EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A253F25614BF80D0009568C6 /* <UISlider> maximumTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = A253F25414BF80D0009568C6 /* <UISlider> maximumTrack.png */; };
+		A253F25714BF80D0009568C6 /* <UISlider> minimumTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = A253F25514BF80D0009568C6 /* <UISlider> minimumTrack.png */; };
 		A2606E6D13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png in Resources */ = {isa = PBXBuildFile; fileRef = A2606E6C13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png */; };
 		A2D0C2AD14B5FC6C00E111DE /* <UIPopoverView> lion-background.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2A814B5FC6C00E111DE /* <UIPopoverView> lion-background.png */; };
 		A2D0C2AE14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = A2D0C2A914B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png */; };
@@ -652,6 +654,8 @@
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPopoverControllerAppKitIntegration.h; sourceTree = "<group>"; };
+		A253F25414BF80D0009568C6 /* <UISlider> maximumTrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UISlider> maximumTrack.png"; path = "Resources/<UISlider> maximumTrack.png"; sourceTree = "<group>"; };
+		A253F25514BF80D0009568C6 /* <UISlider> minimumTrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UISlider> minimumTrack.png"; path = "Resources/<UISlider> minimumTrack.png"; sourceTree = "<group>"; };
 		A2606E6C13C7B71300DB10A3 /* <UITableViewCell> accessoryDisclosureIndicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableViewCell> accessoryDisclosureIndicator.png"; path = "Resources/<UITableViewCell> accessoryDisclosureIndicator.png"; sourceTree = "<group>"; };
 		A2D0C2A814B5FC6C00E111DE /* <UIPopoverView> lion-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-background.png"; path = "Resources/<UIPopoverView> lion-background.png"; sourceTree = "<group>"; };
 		A2D0C2A914B5FC6C00E111DE /* <UIPopoverView> lion-arrow-bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIPopoverView> lion-arrow-bottom.png"; path = "Resources/<UIPopoverView> lion-arrow-bottom.png"; sourceTree = "<group>"; };
@@ -819,6 +823,8 @@
 				14CC842E11EFA8BA005988CC /* <UIRoundedRectButton> normal.png */,
 				14CC842F11EFA8BA005988CC /* <UIScreen> grabber.png */,
 				882C32C51368DD03007B6E4B /* <UISearchBar> search-icon.png */,
+				A253F25414BF80D0009568C6 /* <UISlider> maximumTrack.png */,
+				A253F25514BF80D0009568C6 /* <UISlider> minimumTrack.png */,
 				A2DA175F1490271000E8F202 /* <UISlider> thumb.png */,
 				F9D9774413B7959E0086F226 /* <UITabBar> background.png */,
 				F9D9774513B7959E0086F226 /* <UITabBar> item.png */,
@@ -1458,6 +1464,8 @@
 				A2D0C2AF14B5FC6C00E111DE /* <UIPopoverView> lion-arrow-left.png in Resources */,
 				A2D0C2B014B5FC6C00E111DE /* <UIPopoverView> lion-arrow-right.png in Resources */,
 				A2D0C2B114B5FC6C00E111DE /* <UIPopoverView> lion-arrow-top.png in Resources */,
+				A253F25614BF80D0009568C6 /* <UISlider> maximumTrack.png in Resources */,
+				A253F25714BF80D0009568C6 /* <UISlider> minimumTrack.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

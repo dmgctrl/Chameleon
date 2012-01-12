@@ -32,6 +32,7 @@
 #import "UIButton.h"
 #import "UIColor.h"
 #import "UITouch.h"
+#import "UIImageView.h"
 #import <QuartzCore/QuartzCore.h>
 
 static NSString* const kUIValueKey = @"UIValue";
@@ -40,7 +41,8 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
 
 
 @implementation UISlider {
-    CALayer* _trackLayer;
+    UIImageView* _minimumTrackView;
+    UIImageView* _maximumTrackView;
     UIButton* _thumbView;
 }
 @synthesize value = _value;
@@ -57,11 +59,13 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     CALayer* layer = self.layer;
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     
-    _trackLayer = [CALayer layer];
-    _trackLayer.frame = CGRectMake(2, 7, layer.frame.size.width - 4, 9);
-    _trackLayer.backgroundColor = [[UIColor grayColor] CGColor];
-    _trackLayer.cornerRadius = 4;
-    [layer addSublayer:_trackLayer];
+    _minimumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMinimumTrackImage]];
+    _minimumTrackView.frame = CGRectMake(0, 7, 18, 9);
+    [self addSubview:_minimumTrackView];
+    
+    _maximumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMaximumTrackImage]];
+    _maximumTrackView.frame = CGRectMake(0, 7, 18, 9);
+    [self addSubview:_maximumTrackView];
     
     _thumbView = [UIButton buttonWithType:UIButtonTypeCustom];
     _thumbView.userInteractionEnabled = NO;
@@ -103,6 +107,15 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     CGFloat percentage = (_value - _minimumValue) / (_maximumValue - _minimumValue);
     thumbRect.origin.x = MIN(self.bounds.size.width - thumbRect.size.width, MAX(0, (percentage * self.bounds.size.width) - thumbRect.size.width / 2));
     _thumbView.frame = thumbRect;
+    
+    CGRect minimumTrackRect = _minimumTrackView.frame;
+    minimumTrackRect.size.width = MAX(12, MIN(self.bounds.size.width * percentage, self.bounds.size.width - 12));
+    _minimumTrackView.frame = minimumTrackRect;
+    
+    CGRect maximumTrackRect = _maximumTrackView.frame;
+    maximumTrackRect.origin.x = minimumTrackRect.size.width;
+    maximumTrackRect.size.width = MAX(1, self.bounds.size.width - maximumTrackRect.origin.x);
+    _maximumTrackView.frame = maximumTrackRect;
 }
 
 - (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event

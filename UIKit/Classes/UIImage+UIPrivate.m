@@ -369,6 +369,16 @@ NSMutableDictionary *imageCache = nil;
 	return [self _frameworkImageWithName:@"<UINavigationBarBackground> blackOpaque.png" leftCapWidth:0 topCapHeight:0];
 }
 
++ (UIImage *)_sliderMinimumTrackImage
+{
+	return [self _frameworkImageWithName:@"<UISlider> minimumTrack.png" leftCapWidth:5 topCapHeight:5];
+}
+
++ (UIImage *)_sliderMaximumTrackImage
+{
+	return [self _frameworkImageWithName:@"<UISlider> maximumTrack.png" leftCapWidth:5 topCapHeight:5];
+}
+
 + (UIImage *)_sliderThumbImage
 {
 	return [self _frameworkImageWithName:@"<UISlider> thumb.png" leftCapWidth:0 topCapHeight:0];
