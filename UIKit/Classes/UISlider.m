@@ -121,6 +121,11 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
 
 - (void) setThumbImage:(UIImage*)image forState:(UIControlState)state
 {
+    CGRect thumbRect = _thumbView.frame;
+    thumbRect.size.width = MIN(23, image.size.width);
+    thumbRect.size.height = MIN(23, image.size.height);
+    thumbRect.origin.y = floor(0.5*(23 - thumbRect.size.height));
+    _thumbView.frame = thumbRect;
     [_thumbView setBackgroundImage:image forState:state];
 }
 
@@ -130,11 +135,13 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     
     CGRect thumbRect = _thumbView.frame;
     CGFloat percentage = (_value - _minimumValue) / (_maximumValue - _minimumValue);
-    thumbRect.origin.x = MIN(self.bounds.size.width - thumbRect.size.width, MAX(0, (percentage * self.bounds.size.width) - thumbRect.size.width / 2));
+    CGFloat offset = thumbRect.size.width / 2.0;
+    CGFloat maxX = self.bounds.size.width - (offset * 2.0);
+    thumbRect.origin.x = MIN(maxX, MAX(0, percentage * maxX));
     _thumbView.frame = thumbRect;
     
     CGRect minimumTrackRect = _minimumTrackView.frame;
-    minimumTrackRect.size.width = MAX(12, MIN(self.bounds.size.width * percentage, self.bounds.size.width - 12));
+    minimumTrackRect.size.width = MAX(offset, MIN(self.bounds.size.width * percentage, self.bounds.size.width - offset));
     _minimumTrackView.frame = minimumTrackRect;
     
     CGRect maximumTrackRect = _maximumTrackView.frame;
@@ -161,8 +168,10 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
 	if (_thumbView.highlighted) {
         UITouch* touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
-        CGFloat xValue = MAX(0, point.x);
-        CGFloat percentage = MIN(xValue, self.bounds.size.width) / self.bounds.size.width;
+        CGFloat offset = _thumbView.frame.size.width / 2.0;
+        CGFloat xValue = MAX(offset, point.x) - offset;
+        CGFloat maxX = self.bounds.size.width - (offset * 2);
+        CGFloat percentage = MIN(xValue, maxX) / maxX;
         float oldValue = _value;
         _value = _minimumValue + ((_maximumValue - _minimumValue) * percentage);
         if (_continuous && _value != oldValue) {
