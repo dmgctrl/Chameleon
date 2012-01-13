@@ -124,7 +124,6 @@ static IMP defaultImplementationOfDisplayLayer;
     }
     
     _flags.clearsContextBeforeDrawing = YES;
-    _flags.autoresizesSubviews = YES;
     _flags.userInteractionEnabled = YES;
     
     _subviews = [[NSMutableSet alloc] init];
@@ -152,6 +151,7 @@ static IMP defaultImplementationOfDisplayLayer;
     if (nil != (self = [super init])) {
         [self _commonInitForUIView];
         self.frame = theFrame;
+        _flags.autoresizesSubviews = YES;
     }
     return self;
 }
