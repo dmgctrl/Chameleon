@@ -333,7 +333,9 @@ static NSString* const kUIStyleKey = @"UIStyle";
         height += _tableFooterView.frame.size.height;
     }
     
-    self.contentSize = CGSizeMake(0,height);	
+    // We subtract 1 here to cut off the last separator line, this should
+    // probably be done a better way but this works for now
+    self.contentSize = CGSizeMake(0,height - 1);	
 }
 
 - (UITableViewCell*) _ensureCellExistsAtIndexPath:(NSIndexPath*)indexPath
