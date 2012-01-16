@@ -222,8 +222,14 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         if ([self isPopoverVisible]) {
             [_popoverView setContentView:controller.view animated:animated];
         }
+        if (_contentViewController) {
+            [_contentViewController removeObserver:self forKeyPath:@"contentSizeForViewInPopover"];
+        }
         [_contentViewController release];
         _contentViewController = [controller retain];
+        if (_contentViewController) {
+            [_contentViewController addObserver:self forKeyPath:@"contentSizeForViewInPopover" options:NSKeyValueObservingOptionNew context:NULL];
+        }
     }
 }
 
@@ -463,18 +469,30 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
 - (void)setPopoverContentSize:(CGSize)popoverContentSize
 {
     assert(_contentViewController != nil);
-    if(CGSizeEqualToSize(_contentViewController.contentSizeForViewInPopover, popoverContentSize)) return;
-    
-    _contentViewController.contentSizeForViewInPopover = popoverContentSize;
-    
-    if ([self isPopoverVisible])
-    {
-        // if the popover is visible, show the animation
-        [_popoverView setContentSize:popoverContentSize animated:YES];
+    if (!CGSizeEqualToSize(_popoverView.contentSize, popoverContentSize)) {
+        CGRect newPopoverBounds = _popoverView.bounds;
+        newPopoverBounds.size = [[self class] frameSizeForContentSize:popoverContentSize withNavigationBar:NO];
+        CGFloat yDelta = newPopoverBounds.size.height - _popoverView.frame.size.height;
+        CGRect popoverRect = _popoverView.frame;
+        popoverRect.origin.y += yDelta / 2.0;
+        _popoverView.frame = popoverRect;
+        UIKitView* hostingView = (UIKitView*)[(NSWindow *)_popoverWindow contentView];
+        [hostingView setFrame:NSRectFromCGRect(newPopoverBounds)];
+        [(NSWindow*)_popoverWindow setContentSize:hostingView.bounds.size];
+        NSPoint frameOrigin = [(NSWindow*)_popoverWindow frame].origin;
+        frameOrigin.y -= yDelta / 2.0;
+        [(NSWindow*)_popoverWindow setFrameOrigin:frameOrigin];
+        _popoverView.frame = newPopoverBounds;
     }
-    else
-    {
-        [_popoverView setContentSize:popoverContentSize animated:NO];
+}
+
+- (void) observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
+{
+    if (object == _contentViewController) {
+        if ([keyPath isEqualToString:@"contentSizeForViewInPopover"]) {
+            CGSize size = [[change objectForKey:NSKeyValueChangeNewKey] sizeValue];
+            [self setPopoverContentSize:size];
+        }
     }
 }
 
