@@ -170,7 +170,6 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     UIPopoverView *_popoverView;
     id _popoverWindow;
     id _overlayWindow;
-    UIWindow* _windowToReactivate;
     UIPopoverTheme _theme;
     
     struct {
@@ -249,8 +248,6 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     assert(arrowDirections != UIPopoverArrowDirectionUnknown);
     assert(!CGRectIsNull(rect));
     assert(!CGRectEqualToRect(rect,CGRectZero));
-
-    [_windowToReactivate release], _windowToReactivate = [view.window retain];
     
     NSWindow *viewNSWindow = [[view.window.screen UIKitView] window];
     
@@ -298,7 +295,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         [_popoverWindow setOpaque:NO];
         [(NSWindow *)_popoverWindow setBackgroundColor:[NSColor clearColor]];
         [_popoverWindow setContentView:hostingView];
-        [_overlayWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
+        [viewNSWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
         [_popoverWindow makeFirstResponder:hostingView];
 
         [hostingView release];
@@ -385,12 +382,10 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         id overlayWindow = _overlayWindow;
         id popoverWindow = _popoverWindow;
         UIView* popoverView = _popoverView;
-        UIWindow* windowToReactivate = _windowToReactivate; 
         
         _overlayWindow = nil;
         _popoverWindow = nil;
         _popoverView = nil;
-        _windowToReactivate = nil;
         _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
         
         void(^animationBlock)(void) = ^{
@@ -402,16 +397,12 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
             [overlayWindow orderOut:nil];
             [popoverWindow orderOut:nil];
             
-            [overlayWindow removeChildWindow:popoverWindow];
+            [parentWindow removeChildWindow:popoverWindow];
             [parentWindow removeChildWindow:overlayWindow];
-            
-            [parentWindow makeKeyWindow];
-            [windowToReactivate makeKeyAndVisible];
             
             [popoverView release];
             [popoverWindow release];
             [overlayWindow release];
-            [windowToReactivate release];
         };
         
         if (animated) {
