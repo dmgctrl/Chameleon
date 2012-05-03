@@ -302,7 +302,6 @@
 		EF2DD1001364DE5400B866AF /* UITabBarButtonBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2DD0FE1364DE5400B866AF /* UITabBarButtonBadge.m */; };
 		EF5C2F4D1364118000FA1BC7 /* UITabBarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = EF5C2F4B1364117F00FA1BC7 /* UITabBarButton.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		EF5C2F4E1364118000FA1BC7 /* UITabBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5C2F4C1364118000FA1BC7 /* UITabBarButton.m */; };
-		EF5C2F5513643C3400FA1BC7 /* <UITabBar> background.png in Resources */ = {isa = PBXBuildFile; fileRef = EF5C2F5313643C3000FA1BC7 /* <UITabBar> background.png */; };
 		EF5C2F5613643C3400FA1BC7 /* <UITabBar> button.png in Resources */ = {isa = PBXBuildFile; fileRef = EF5C2F5413643C3100FA1BC7 /* <UITabBar> button.png */; };
 		EF756802136477780043079B /* <UITabBarButtonImage> highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = EF756801136477780043079B /* <UITabBarButtonImage> highlighted.png */; };
 		EFC0455F1370B35B006FB9DC /* UITabBarController+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = EFC0455D1370B35B006FB9DC /* UITabBarController+UIPrivate.h */; };
@@ -1461,7 +1460,6 @@
 				F95416E013C9137B000A9282 /* <UITableViewCell> accessoryCheckmark.png in Resources */,
 				F95416E213C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png in Resources */,
 				F95416E413C91D22000A9282 /* <UIButton> detailDisclosureButton.png in Resources */,
-				EF5C2F5513643C3400FA1BC7 /* <UITabBar> background.png in Resources */,
 				EF5C2F5613643C3400FA1BC7 /* <UITabBar> button.png in Resources */,
 				EF756802136477780043079B /* <UITabBarButtonImage> highlighted.png in Resources */,
 				EF2DD0E01364D80B00B866AF /* <UITabBarButtonBadge> background.png in Resources */,
@@ -1623,7 +1621,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = UIKit_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = UIKit;
@@ -1642,7 +1640,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = UIKit_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = UIKit;
@@ -1653,7 +1651,7 @@
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = "";
@@ -1669,7 +1667,7 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;

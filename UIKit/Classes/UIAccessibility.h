@@ -57,18 +57,18 @@ extern UIAccessibilityNotifications UIAccessibilityPageScrolledNotification;
 - (void)setIsAccessibilityElement:(BOOL)isElement;
 - (NSString *)accessibilityLabel;
 - (void)setAccessibilityLabel:(NSString *)label;
-/*
+
 - (NSString *)accessibilityHint;
 - (void)setAccessibilityHint:(NSString *)hint;
 - (NSString *)accessibilityValue;
 - (void)setAccessibilityValue:(NSString *)value;
-*/
+
 - (UIAccessibilityTraits)accessibilityTraits;
 - (void)setAccessibilityTraits:(UIAccessibilityTraits)traits;
-/*
+
 - (CGRect)accessibilityFrame;
 - (void)setAccessibilityFrame:(CGRect)frame;
- */
+
 @end
 
 /*

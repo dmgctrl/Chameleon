@@ -66,7 +66,6 @@
 + (UIImage *)_buttonBarSystemItemRewind;
 + (UIImage *)_buttonBarSystemItemFastForward;
 + (UIImage *)_tabBarBackgroundImage;
-+ (UIImage *)_tabBarItemImage;
 + (UIImage *)_textFieldRoundedRectBackground;
 + (UIImage *)_searchBarIcon;
 + (UIImage *)_buttonBarSystemItemDone;
