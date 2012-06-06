@@ -90,6 +90,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     UIActivityIndicatorViewStyle _activityIndicatorViewStyle;
     BOOL _hidesWhenStopped;
     BOOL _animating;
+    CALayer* _imageLayer;
 }
 
 - (void) commonInitForUIActivityIndicatorView
@@ -97,6 +98,10 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     _animating = NO;
     self.hidesWhenStopped = YES;
     self.opaque = NO;
+    
+    _imageLayer = [CALayer layer];
+    [self.layer addSublayer:_imageLayer];
+    [self _updateImageForStyle];
 }
 
 - (id)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style
@@ -154,13 +159,22 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     @synchronized (self) {
         if (_activityIndicatorViewStyle != style) {
             _activityIndicatorViewStyle = style;
-            [self setNeedsDisplay];
+            
+            [self _updateImageForStyle];
             
             if (_animating) {
                 [self startAnimating];	// this will reset the images in the animation if it was already animating
             }
         }
     }
+}
+
+- (void) _updateImageForStyle
+{
+    CGRect imageFrame = _imageLayer.frame;
+    imageFrame.size = UIActivityIndicatorViewStyleSize(_activityIndicatorViewStyle);
+    _imageLayer.frame = imageFrame;
+    _imageLayer.contents = (__bridge id)UIActivityIndicatorViewFrameImage(_activityIndicatorViewStyle, 0, 12).CGImage;
 }
 
 - (UIActivityIndicatorViewStyle)activityIndicatorViewStyle
@@ -203,6 +217,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     @synchronized (self) {
         _animating = YES;
         self.hidden = NO;
+        _imageLayer.hidden = YES;
         
         const NSInteger numberOfFrames = 12;
         const CFTimeInterval animationDuration = 0.8;
@@ -229,6 +244,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
 {
     @synchronized (self) {
         _animating = NO;
+        _imageLayer.hidden = NO;
         [self.layer removeAnimationForKey:@"contents"];
         
         if (self.hidesWhenStopped) {
@@ -246,17 +262,6 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     }
 
     return animating;
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    UIActivityIndicatorViewStyle style;
-
-    @synchronized (self) {
-        style = _activityIndicatorViewStyle;
-    }
-    
-    [UIActivityIndicatorViewFrameImage(style, 0, 1) drawInRect:self.bounds];
 }
 
 @end
