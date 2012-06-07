@@ -171,6 +171,7 @@ inline static NSNumber* _keyForState(NSInteger state)
         }
         if ([coder containsValueForKey:kUIButtonStatefulContentKey]) {
             [_content release], _content = [[coder decodeObjectForKey:kUIButtonStatefulContentKey] retain];
+            [self _updateContent];
         }
         if ([coder containsValueForKey:kUIButtonTypeKey]) {
             _buttonFlags.buttonType = [coder decodeIntegerForKey:kUIButtonTypeKey];
