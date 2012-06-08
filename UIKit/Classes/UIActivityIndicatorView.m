@@ -264,4 +264,13 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     return animating;
 }
 
+- (void) setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    if (_animating) {
+        [self stopAnimating];
+        [self startAnimating];
+    }
+}
+
 @end
