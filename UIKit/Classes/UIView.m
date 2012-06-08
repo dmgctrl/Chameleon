@@ -58,6 +58,7 @@ static NSString* const kUIClearsContextBeforeDrawingKey = @"UIClearsContextBefor
 static NSString* const kUIClipsToBoundsKey = @"UIClipsToBounds";
 static NSString* const kUIContentModeKey = @"UIContentMode";
 static NSString* const kUIContentStretchKey = @"UIContentStretch";
+static NSString* const kUIHiddenKey = @"UIHidden";
 static NSString* const kUIMultipleTouchEnabledKey = @"UIMultipleTouchEnabled";
 static NSString* const kUIOpaqueKey = @"UIOpaque";
 static NSString* const kUITagKey = @"UITag";
@@ -189,6 +190,9 @@ static IMP defaultImplementationOfDisplayLayer;
         }
         if ([coder containsValueForKey:kUIContentStretchKey]) {
             self.contentStretch = [coder decodeCGRectForKey:kUIContentStretchKey];
+        }
+        if ([coder containsValueForKey:kUIHiddenKey]) {
+            self.hidden = [coder decodeBoolForKey:kUIHiddenKey];
         }
         if ([coder containsValueForKey:kUIMultipleTouchEnabledKey]) {
             self.multipleTouchEnabled = [coder decodeBoolForKey:kUIMultipleTouchEnabledKey];
