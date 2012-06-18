@@ -203,8 +203,8 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
 - (void)dealloc
 {
     [self dismissPopoverAnimated:NO];
+    [self setContentViewController:nil];
     [_passthroughViews release];
-    [_contentViewController release];
     [super dealloc];
 }
 
