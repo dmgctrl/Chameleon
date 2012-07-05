@@ -432,10 +432,19 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     }
 }
 
+- (void) _sendLeftClickWithEvent:(NSEvent *)theNSEvent
+{
+    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    if ([self _isPassthroughViewAtLocation:screenLocation]) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    } else {
+        [self _closePopoverWindowIfPossible];
+    }
+}
+
 - (void) _sendRightClickWithEvent:(NSEvent *)theNSEvent
 {
     CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
-    NSLog(@"Test: %d", [self _isPassthroughViewAtLocation:screenLocation]);
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
     }

@@ -52,7 +52,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    [_popoverController _closePopoverWindowIfPossible];
+    [_popoverController _sendLeftClickWithEvent:theEvent];
 }
 
 - (void) rightMouseDown:(NSEvent *)theEvent
