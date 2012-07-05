@@ -68,7 +68,7 @@ const NSTimeInterval UIMinimumKeepAliveTimeout = 0;
 
 static UIApplication *_theApplication = nil;
 
-static CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent)
+CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent)
 {
     CGPoint screenLocation = NSPointToCGPoint([[theScreen UIKitView] convertPoint:[theNSEvent locationInWindow] fromView:nil]);
     if (![[theScreen UIKitView] isFlipped]) {

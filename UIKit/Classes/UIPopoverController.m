@@ -168,6 +168,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
 
 @implementation UIPopoverController {
     UIPopoverView *_popoverView;
+    UIWindow* _presentingWindow;
     id _popoverWindow;
     id _overlayWindow;
     UIPopoverTheme _theme;
@@ -253,7 +254,8 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     
     // only create new stuff if the popover isn't already visible
     if (![self isPopoverVisible]) {
-
+        _presentingWindow = view.window;
+        
         // build an overlay window which will capture any clicks on the main window the popover is being presented from and then dismiss it.
         // this overlay can also be used to implement the pass-through views of the popover, but I'm not going to do that right now since
         // we don't need it. attach the overlay window to the "main" window.
@@ -428,6 +430,36 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
             [_delegate popoverControllerDidDismissPopover:self];
         }
     }
+}
+
+- (void) _sendLeftClickWithEvent:(NSEvent *)theNSEvent
+{
+    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    if ([self _isPassthroughViewAtLocation:screenLocation]) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    } else {
+        [self _closePopoverWindowIfPossible];
+    }
+}
+
+- (void) _sendRightClickWithEvent:(NSEvent *)theNSEvent
+{
+    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    if ([self _isPassthroughViewAtLocation:screenLocation]) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    }
+}
+
+- (BOOL) _isPassthroughViewAtLocation:(CGPoint)location
+{
+    UIView* view = [_presentingWindow hitTest:location withEvent:nil];
+    while (view && view != _presentingWindow) {
+        if ([_passthroughViews containsObject:view]) {
+            return YES;
+        }
+        view = [view superview];
+    }
+    return NO;
 }
 
 + (UIEdgeInsets)insetForArrows
