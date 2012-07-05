@@ -30,8 +30,11 @@
 #import "UIPopoverController.h"
 #import "UIPopoverControllerAppKitIntegration.h"
 
+@class NSEvent;
+
 @interface UIPopoverController (UIPrivate)
 - (void)_closePopoverWindowIfPossible;
+- (void)_sendRightClickWithEvent:(NSEvent*)event;
 
 + (UIImage *)backgroundImageForTheme:(UIPopoverTheme)theme;
 + (UIImage *)leftArrowImageForTheme:(UIPopoverTheme)theme;

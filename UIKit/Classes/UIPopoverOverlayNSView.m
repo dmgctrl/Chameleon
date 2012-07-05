@@ -55,4 +55,9 @@
     [_popoverController _closePopoverWindowIfPossible];
 }
 
+- (void) rightMouseDown:(NSEvent *)theEvent
+{
+    [_popoverController _sendRightClickWithEvent:theEvent];
+}
+
 @end
