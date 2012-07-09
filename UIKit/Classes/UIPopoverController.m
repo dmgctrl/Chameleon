@@ -169,6 +169,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
 @implementation UIPopoverController {
     UIPopoverView *_popoverView;
     UIWindow* _presentingWindow;
+    BOOL _isTouchValid;
     id _popoverWindow;
     id _overlayWindow;
     UIPopoverTheme _theme;
@@ -432,22 +433,54 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     }
 }
 
-- (void) _sendLeftClickWithEvent:(NSEvent *)theNSEvent
+- (void) _sendLeftMouseDownWithEvent:(NSEvent *)theNSEvent
 {
     CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+        _isTouchValid = YES;
     } else {
         [self _closePopoverWindowIfPossible];
     }
 }
 
-- (void) _sendRightClickWithEvent:(NSEvent *)theNSEvent
+- (void)_sendLeftMouseDraggedWithEvent:(NSEvent *)theNSEvent
+{
+    if (_isTouchValid) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    }
+}
+
+- (void)_sendLeftMouseUpWithEvent:(NSEvent *)theNSEvent
+{
+    if (_isTouchValid) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    }
+    _isTouchValid = NO;
+}
+
+- (void) _sendRightMouseDownWithEvent:(NSEvent *)theNSEvent
 {
     CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+        _isTouchValid = YES;
     }
+}
+
+- (void)_sendRightMouseDraggedWithEvent:(NSEvent *)theNSEvent
+{
+    if (_isTouchValid) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    }
+}
+
+- (void)_sendRightMouseUpWithEvent:(NSEvent *)theNSEvent
+{
+    if (_isTouchValid) {
+        [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
+    }
+    _isTouchValid = NO;
 }
 
 - (BOOL) _isPassthroughViewAtLocation:(CGPoint)location

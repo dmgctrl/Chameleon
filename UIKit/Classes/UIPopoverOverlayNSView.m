@@ -52,12 +52,32 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    [_popoverController _sendLeftClickWithEvent:theEvent];
+    [_popoverController _sendLeftMouseDownWithEvent:theEvent];
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    [_popoverController _sendLeftMouseDraggedWithEvent:theEvent];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+    [_popoverController _sendLeftMouseUpWithEvent:theEvent];
 }
 
 - (void) rightMouseDown:(NSEvent *)theEvent
 {
-    [_popoverController _sendRightClickWithEvent:theEvent];
+    [_popoverController _sendRightMouseDownWithEvent:theEvent];
+}
+
+- (void) rightMouseDragged:(NSEvent *)theEvent
+{
+    [_popoverController _sendRightMouseDraggedWithEvent:theEvent];
+}
+
+- (void) rightMouseUp:(NSEvent *)theEvent
+{
+    [_popoverController _sendRightMouseUpWithEvent:theEvent];
 }
 
 @end

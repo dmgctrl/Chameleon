@@ -34,8 +34,12 @@
 
 @interface UIPopoverController (UIPrivate)
 - (void)_closePopoverWindowIfPossible;
-- (void)_sendLeftClickWithEvent:(NSEvent*)event;
-- (void)_sendRightClickWithEvent:(NSEvent*)event;
+- (void)_sendLeftMouseDownWithEvent:(NSEvent*)event;
+- (void)_sendLeftMouseDraggedWithEvent:(NSEvent *)theNSEvent;
+- (void)_sendLeftMouseUpWithEvent:(NSEvent *)theNSEvent;
+- (void)_sendRightMouseDownWithEvent:(NSEvent*)event;
+- (void)_sendRightMouseDraggedWithEvent:(NSEvent *)theNSEvent;
+- (void)_sendRightMouseUpWithEvent:(NSEvent *)theNSEvent;
 
 + (UIImage *)backgroundImageForTheme:(UIPopoverTheme)theme;
 + (UIImage *)leftArrowImageForTheme:(UIPopoverTheme)theme;
