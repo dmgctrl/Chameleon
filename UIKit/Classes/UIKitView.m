@@ -46,21 +46,31 @@
     return (id)[NSNull null];
 }
 
-- (void)configureLayers
+- (void)setScreenLayer
 {
     [self setWantsLayer:YES];
+    
+    CALayer *myLayer = [self layer];
+    myLayer.delegate = self;
+    
+    CALayer *screenLayer = [_screen _layer];
+    screenLayer.frame = myLayer.bounds;
+    screenLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
 
-    self.layer.delegate = self;
-    [[self layer] insertSublayer:[_screen _layer] atIndex:0];
-    [_screen _layer].frame = [self layer].bounds;
-    [_screen _layer].autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+    CALayer* geometryAdapterLayer = [CALayer layer];
+    geometryAdapterLayer.frame = myLayer.bounds;
+    geometryAdapterLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+    geometryAdapterLayer.geometryFlipped = YES;
+
+    [myLayer addSublayer:geometryAdapterLayer];
+    [geometryAdapterLayer addSublayer:screenLayer];
 }
 
 - (id)initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
         _screen = [[UIScreen alloc] init];
-        [self configureLayers];
+        [self setScreenLayer];
     }
     return self;
 }
@@ -69,7 +79,13 @@
 {
     [_screen release];
     [_mainWindow release];
+    [_trackingArea release];
     [super dealloc];
+}
+
+- (void)awakeFromNib
+{
+    [self setScreenLayer];
 }
 
 - (UIWindow *)UIWindow
@@ -83,28 +99,26 @@
     return _mainWindow;
 }
 
-- (void)awakeFromNib
-{
-    [self configureLayers];
-}
-
 - (BOOL)isFlipped
 {
     return YES;
 }
 
-- (void)viewDidMoveToSuperview
-{	
-    [_screen _setUIKitView:self.superview? self : nil];
+- (void)updateUIKitView
+{
+    [_screen _setUIKitView:(self.superview && self.window)? self : nil];
 }
 
-- (void)viewDidMoveToWindow 
+- (void)viewDidMoveToSuperview
 {
-    if(self.window != nil) {
-		[[self layer] insertSublayer:[_screen _layer] atIndex:0];
-		[_screen _layer].frame = [self layer].bounds;
-		[_screen _layer].autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
-    }
+    [super viewDidMoveToSuperview];
+    [self updateUIKitView];
+}
+
+- (void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [self updateUIKitView];
 }
 
 - (BOOL)acceptsFirstResponder
