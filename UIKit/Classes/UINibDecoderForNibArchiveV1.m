@@ -327,7 +327,7 @@ static inline double decodeFloat64(void const** pp);
             NSUInteger length = decodeVariableLengthInteger(&cp);
             NSUInteger unknownValue = decodeVariableLengthInteger(&cp);
             #pragma unused (unknownValue)
-            NSString* className = [[NSString alloc] initWithBytes:cp length:length encoding:NSUTF8StringEncoding];
+            NSString* className = [[NSString alloc] initWithBytes:cp length:length - 1 encoding:NSUTF8StringEncoding];
             Class class = NSClassFromString(className);
             if (!class) {
                 [self release];
