@@ -38,7 +38,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-@implementation UIKitView 
+@implementation UIKitView
 @synthesize UIScreen=_screen;
 
 - (id<CAAction>)actionForLayer:(CALayer *)layer forKey:(NSString *)event
@@ -57,13 +57,16 @@
     screenLayer.frame = myLayer.bounds;
     screenLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
 
-    CALayer* geometryAdapterLayer = [CALayer layer];
-    geometryAdapterLayer.frame = myLayer.bounds;
-    geometryAdapterLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
-    geometryAdapterLayer.geometryFlipped = YES;
-
-    [myLayer addSublayer:geometryAdapterLayer];
-    [geometryAdapterLayer addSublayer:screenLayer];
+    if (myLayer.geometryFlipped == screenLayer.geometryFlipped) {
+        CALayer* geometryAdapterLayer = [CALayer layer];
+        geometryAdapterLayer.frame = myLayer.bounds;
+        geometryAdapterLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+        geometryAdapterLayer.geometryFlipped = YES;
+        [geometryAdapterLayer addSublayer:screenLayer];
+        [myLayer addSublayer:geometryAdapterLayer];
+    } else {
+        [myLayer addSublayer:screenLayer];
+    }
 }
 
 - (id)initWithFrame:(NSRect)frame
