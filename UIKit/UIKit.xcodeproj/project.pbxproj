@@ -345,7 +345,7 @@
 		F97BE01215AFD43B0081F45A /* UIImageRep.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01015AFD43B0081F45A /* UIImageRep.h */; };
 		F97BE01315AFD43B0081F45A /* UIImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01115AFD43B0081F45A /* UIImageRep.m */; };
 		F97BE01515AFD6590081F45A /* UIImageAppKitIntegration.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01415AFD6590081F45A /* UIImageAppKitIntegration.m */; };
-		F97BE01D15AFD6E00081F45A /* UIAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01615AFD6E00081F45A /* UIAppearance.h */; };
+		F97BE01D15AFD6E00081F45A /* UIAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01615AFD6E00081F45A /* UIAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F97BE01E15AFD6E00081F45A /* UIAppearanceInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01715AFD6E00081F45A /* UIAppearanceInstance.h */; };
 		F97BE01F15AFD6E00081F45A /* UIAppearanceInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01815AFD6E00081F45A /* UIAppearanceInstance.m */; };
 		F97BE02015AFD6E00081F45A /* UIAppearanceProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01915AFD6E00081F45A /* UIAppearanceProperty.h */; };
