@@ -323,7 +323,18 @@ BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString *videoPath)
 
 NSData *UIImageJPEGRepresentation(UIImage *image, CGFloat compressionQuality)
 {
-    return [[image _NSBitmapImageRep] representationUsingType:NSJPEGFileType properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:compressionQuality] forKey:NSImageCompressionFactor]];
+    CFMutableDataRef data = CFDataCreateMutable(NULL, 0);
+    CGImageDestinationRef dest = CGImageDestinationCreateWithData(data, kUTTypeJPEG, 1, NULL);
+    CFNumberRef quality = CFNumberCreate(NULL, kCFNumberCGFloatType, &compressionQuality);
+    CFStringRef keys[] = { kCGImageDestinationLossyCompressionQuality };
+    CFTypeRef values[] = { quality };
+    CFDictionaryRef properties = CFDictionaryCreate(NULL, (const void **)&keys, (const void **)&values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CGImageDestinationAddImage(dest, image.CGImage, properties);
+    CGImageDestinationFinalize(dest);
+    CFRelease(properties);
+    CFRelease(quality);
+    CFRelease(dest);
+    return [(__bridge NSData *)data autorelease];
 }
 
 NSData *UIImagePNGRepresentation(UIImage *image)
