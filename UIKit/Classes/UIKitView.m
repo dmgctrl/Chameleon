@@ -123,6 +123,9 @@
 - (void)viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
+    if (self.window) {
+        [self setScreenLayer];
+    }
     [self updateUIKitView];
 }
 
