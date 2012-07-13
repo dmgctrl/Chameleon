@@ -397,7 +397,7 @@ static const CGFloat ToolbarHeight = 28;
                     },
                     .size = {
                         .width = oldUserViewFrame.size.width,
-                        .height = oldUserViewFrame.size.height - yDelta
+                        .height = MIN(self.view.bounds.size.height, oldUserViewFrame.size.height - yDelta)
                     }
                 };
                 
