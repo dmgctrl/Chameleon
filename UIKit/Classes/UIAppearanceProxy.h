@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2012, The Iconfactory. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,46 +27,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+#import "UIAppearance.h"
+#import <UIKit/UIAppearanceProperty.h>
 
-@class UIImage;
+@interface UIAppearanceProxy : NSObject {
+    Class<UIAppearance> _targetClass;
+    NSMutableDictionary *_settings;
+}
 
-@interface UIColor : NSObject <NSCoding>
-
-+ (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithCGColor:(CGColorRef)ref;
-+ (UIColor *)colorWithPatternImage:(UIImage *)patternImage;
-
-+ (UIColor *)blackColor;
-+ (UIColor *)darkGrayColor;
-+ (UIColor *)lightGrayColor;
-+ (UIColor *)whiteColor;
-+ (UIColor *)grayColor;
-+ (UIColor *)redColor;
-+ (UIColor *)greenColor;
-+ (UIColor *)blueColor;
-+ (UIColor *)cyanColor;
-+ (UIColor *)yellowColor;
-+ (UIColor *)magentaColor;
-+ (UIColor *)orangeColor;
-+ (UIColor *)purpleColor;
-+ (UIColor *)brownColor;
-+ (UIColor *)clearColor;
-
-- (id)initWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
-- (id)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
-- (id)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-- (id)initWithCGColor:(CGColorRef)ref;
-- (id)initWithPatternImage:(UIImage *)patternImage;
-
-- (UIColor *)colorWithAlphaComponent:(CGFloat)alpha;
-
-- (void)set;
-- (void)setFill;
-- (void)setStroke;
-
-@property (nonatomic, readonly) CGColorRef CGColor;
+- (id)initWithClass:(Class<UIAppearance>)k;
+- (NSDictionary *)_appearancePropertiesAndValues;
 
 @end

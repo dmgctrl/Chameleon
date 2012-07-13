@@ -36,15 +36,15 @@ extern NSString *const UIScreenModeDidChangeNotification;
 
 @class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
 
-@interface UIScreen : NSObject 
+@interface UIScreen : NSObject
 
 + (UIScreen *)mainScreen;
 + (NSArray *)screens;
 
 @property (nonatomic, readonly) CGRect bounds;
 @property (nonatomic, readonly) CGRect applicationFrame;
-@property (nonatomic, readonly, copy) NSArray *availableModes;	// only ever returns the currentMode
-@property (nonatomic, retain) UIScreenMode *currentMode;		// ignores any attempt to set this (for now)
-@property (nonatomic, readonly) CGFloat scale;					// always returns 1 for now
+@property (nonatomic, readonly, copy) NSArray *availableModes;      // only ever returns the currentMode
+@property (nonatomic, retain) UIScreenMode *currentMode;            // ignores any attempt to set this
+@property (nonatomic, readonly) CGFloat scale;
 
 @end

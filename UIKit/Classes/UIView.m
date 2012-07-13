@@ -37,10 +37,14 @@
 #import "UIViewAnimationGroup.h"
 #import "UIViewBlockAnimationDelegate.h"
 #import "UIViewController.h"
+#import "UIAppearanceInstance.h"
 #import "UIApplication+UIPrivate.h"
 #import "UIGestureRecognizer+UIPrivate.h"
 #import "UIScreen.h"
 #import "UIGeometry.h"
+#import "UIColor+UIPrivate.h"
+#import "UIColorRep.h"
+
 #import <QuartzCore/CALayer.h>
 
 NSString *const UIViewFrameDidChangeNotification = @"UIViewFrameDidChangeNotification";
@@ -125,6 +129,7 @@ static IMP defaultImplementationOfDisplayLayer;
     }
     
     _flags.clearsContextBeforeDrawing = YES;
+    _flags.autoresizesSubviews = YES;
     _flags.userInteractionEnabled = YES;
     
     _subviews = [[NSMutableSet alloc] init];
@@ -152,7 +157,6 @@ static IMP defaultImplementationOfDisplayLayer;
     if (nil != (self = [super init])) {
         [self _commonInitForUIView];
         self.frame = theFrame;
-        _flags.autoresizesSubviews = YES;
     }
     return self;
 }
@@ -220,11 +224,17 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (void)dealloc
 {
-    [_subviews makeObjectsPerformSelector:@selector(_setNilSuperview)];
+    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    _layer.layoutManager = nil;
+    _layer.delegate = nil;
+    [_layer removeFromSuperlayer];
+
     [_subviews release];
     [_layer release];
     [_backgroundColor release];
     [_gestureRecognizers release];
+    
     [super dealloc];
 }
 
@@ -248,6 +258,11 @@ static IMP defaultImplementationOfDisplayLayer;
     return (UIResponder *)[self _viewController] ?: (UIResponder *)_superview;
 }
 
+- (id)_appearanceContainer
+{
+    return self.superview;
+}
+
 - (NSArray *)subviews
 {
     NSArray *sublayers = _layer.sublayers;
@@ -266,7 +281,6 @@ static IMP defaultImplementationOfDisplayLayer;
     return subviews;
 }
 
-
 - (void)_willMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
 {
     if (fromWindow != toWindow) {
@@ -279,11 +293,25 @@ static IMP defaultImplementationOfDisplayLayer;
         }
         
         [_viewController viewWillMoveToWindow:toWindow];
+        [self _setAppearanceNeedsUpdate];
         [self willMoveToWindow:toWindow];
 
         for (UIView *subview in self.subviews) {
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }
+    }
+}
+
+- (void)_didMoveToScreen
+{
+    if (ourDrawRect_ && self.contentScaleFactor != self.window.screen.scale) {
+        self.contentScaleFactor = self.window.screen.scale;
+    } else {
+        [self setNeedsDisplay];
+    }
+    
+    for (UIView *subview in self.subviews) {
+        [subview _didMoveToScreen];
     }
 }
 
@@ -301,6 +329,8 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (void)addSubview:(UIView *)subview
 {
+    NSAssert((!subview || [subview isKindOfClass:[UIView class]]), @"the subview must be a UIView");
+
     if (subview && subview.superview != self) {
         UIWindow *oldWindow = subview.window;
         UIWindow *newWindow = self.window;
@@ -327,9 +357,14 @@ static IMP defaultImplementationOfDisplayLayer;
             [subview release];
         }
         
+        if (oldWindow.screen != newWindow.screen) {
+            [subview _didMoveToScreen];
+        }
+        
         if (newWindow) {
             [subview _didMoveFromWindow:oldWindow toWindow:newWindow];
         }
+
         [subview didMoveToSuperview];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewDidMoveToSuperviewNotification object:subview];
@@ -368,13 +403,6 @@ static IMP defaultImplementationOfDisplayLayer;
     if (subview.superview == self) {
         [_layer insertSublayer:subview.layer atIndex:0];
     }
-}
-
-- (void)_setNilSuperview
-{
-    [self willChangeValueForKey:@"superview"];
-    _superview = nil;
-    [self didChangeValueForKey:@"superview"];
 }
 
 - (void)removeFromSuperview
@@ -530,10 +558,6 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (void)displayLayer:(CALayer *)theLayer
 {
-}
-
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
     // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
     // specified in the UIView's subview. This nicely prevents a ton of useless memory usage and likley improves performance a lot on iPhone.
     // It took great pains to discover this trick and I think I'm doing this right. By having this method empty here, it means that it overrides
@@ -558,7 +582,14 @@ static IMP defaultImplementationOfDisplayLayer;
     // whole bitmap the size of view just to hold the backgroundColor, this allows a lot of views to simply act as containers and not waste
     // a bunch of unnecessary memory in those cases - but you can still use background colors because CALayer manages that effeciently.
     
-    // Clever, huh?
+    // note that the last time I checked this, the layer's background color was being set immediately on call to -setBackgroundColor:
+    // when there was no -drawRect: implementation, but I needed to change this to work around issues with pattern image colors in HiDPI.
+    _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
+    // For notes about why this is done, see displayLayer: above.
     if (aSelector == @selector(drawLayer:inContext:)) {
         return nil != ourDrawRect_;
     } else if (aSelector == @selector(displayLayer:)) { 
@@ -620,8 +651,8 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (id)actionForLayer:(CALayer *)theLayer forKey:(NSString *)event
 {
-    if (_animationsEnabled && [_animationGroups lastObject]) {
-        return [[_animationGroups lastObject] actionForLayer:theLayer forKey:event] ?: (id)[NSNull null];
+    if (_animationsEnabled && [_animationGroups lastObject] && theLayer == _layer) {
+        return [[_animationGroups lastObject] actionForView:self forKey:event] ?: (id)[NSNull null];
     } else {
         return [NSNull null];
     }
@@ -862,14 +893,33 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (void)setContentStretch:(CGRect)rect
 {
-    if (!CGRectEqualToRect(rect,_layer.contentsRect)) {
-        _layer.contentsRect = rect;
+    if (!CGRectEqualToRect(rect,_layer.contentsCenter)) {
+        _layer.contentsCenter = rect;
     }
 }
 
 - (CGRect)contentStretch
 {
-    return _layer.contentsRect;
+    return _layer.contentsCenter;
+}
+
+- (void)setContentScaleFactor:(CGFloat)scale
+{
+    if (scale <= 0 && ourDrawRect_) {
+        scale = [UIScreen mainScreen].scale;
+    }
+    
+    if (scale > 0 && scale != self.contentScaleFactor) {
+        if ([_layer respondsToSelector:@selector(setContentsScale:)]) {
+            [_layer setContentsScale:scale];
+            [self setNeedsDisplay];
+        }
+    }
+}
+
+- (CGFloat)contentScaleFactor
+{
+    return [_layer respondsToSelector:@selector(contentsScale)]? [_layer contentsScale] : 1;
 }
 
 - (void)setHidden:(BOOL)h
@@ -897,6 +947,14 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (void)layoutSubviews
 {
+}
+
+- (void)_layoutSubviews
+{
+    [self _updateAppearanceIfNeeded];
+    [[self _viewController] viewWillLayoutSubviews];
+    [self layoutSubviews];
+    [[self _viewController] viewDidLayoutSubviews];
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event

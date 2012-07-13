@@ -202,6 +202,14 @@
 {
 }
 
+- (void)viewWillLayoutSubviews
+{
+}
+
+- (void)viewDidLayoutSubviews
+{
+}
+
 - (UIInterfaceOrientation)interfaceOrientation
 {
     return (UIInterfaceOrientation) UIDeviceOrientationPortrait;
@@ -318,6 +326,10 @@
 {
 }
 
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+{
+}
+
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
 }
@@ -356,11 +368,6 @@
             [toViewController _endAppearanceTransition];
         }
      ];
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
-                                         duration:(NSTimeInterval)duration
-{    
 }
 
 - (id)_nearestParentViewControllerThatIsKindOf:(Class)c

@@ -29,8 +29,12 @@
 
 #import "UIImage+UIPrivate.h"
 
-@interface UINinePartImage : UIImage 
+@interface UINinePartImage : UIImage {
+@private
+    NSInteger _leftCapWidth;
+    NSInteger _topCapHeight;
+}
 
-- (id)initWithCGImage:(CGImageRef)theImage leftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
+- (id)initWithRepresentations:(NSArray *)reps leftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
 
 @end

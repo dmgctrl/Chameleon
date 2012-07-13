@@ -31,6 +31,7 @@
 #import "UIImageAppKitIntegration.h"
 #import "UIColor.h"
 #import "UIGraphics.h"
+#import "UIImageRep.h"
 #import <AppKit/NSImage.h>
 
 NSMutableDictionary *imageCache = nil;
@@ -48,7 +49,7 @@ NSMutableDictionary *imageCache = nil;
     NSString *filename = [path lastPathComponent];
     NSString *extension = [filename pathExtension];
     NSString *bareFilename = [filename stringByDeletingPathExtension];
-
+    
     return [home stringByAppendingPathComponent:[[bareFilename stringByAppendingString:@"@mac"] stringByAppendingPathExtension:extension]];
 }
 
@@ -317,41 +318,14 @@ NSMutableDictionary *imageCache = nil;
 	return [self _frameworkImageWithName:@"<UITableView> selectionGray.png" leftCapWidth:0 topCapHeight:0];
 }
 
-- (UIImage *)_toolbarImage
-{
-    // NOTE.. I don't know where to put this, really, but it seems like the real UIKit reduces image size by 75% if they are too
-    // big for a toolbar. That seems funky, but I guess here is as good a place as any to do that? I don't really know...
-
-    CGSize imageSize = self.size;
-    CGSize size = CGSizeZero;
-    
-    if (imageSize.width > 24 || imageSize.height > 24) {
-        size.height = imageSize.height * 0.75f;
-        size.width = imageSize.width / imageSize.height * size.height;
-    } else {
-        size = imageSize;
-    }
-    
-    CGRect rect = CGRectMake(0,0,size.width,size.height);
-    
-    UIGraphicsBeginImageContext(size);
-    [[UIColor colorWithRed:101/255.f green:104/255.f blue:121/255.f alpha:1] setFill];
-    UIRectFill(rect);
-    [self drawInRect:rect blendMode:kCGBlendModeDestinationIn alpha:1];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
 + (UIImage *)_tabBarBackgroundImage
 {
-  return [self _frameworkImageWithName:@"<UITabBar> background.png" leftCapWidth:6 topCapHeight:0];
+    return [self _frameworkImageWithName:@"<UITabBar> background.png" leftCapWidth:6 topCapHeight:0];
 }
 
 + (UIImage *)_tabBarItemImage
 {
-  return [self _frameworkImageWithName:@"<UITabBar> item.png" leftCapWidth:8 topCapHeight:0];
+    return [self _frameworkImageWithName:@"<UITabBar> item.png" leftCapWidth:8 topCapHeight:0];
 }
 
 + (UIImage *)_defaultNavigationBarBackgroundImage
@@ -384,5 +358,78 @@ NSMutableDictionary *imageCache = nil;
 	return [self _frameworkImageWithName:@"<UISlider> thumb.png" leftCapWidth:0 topCapHeight:0];
 }
 
+- (id)_initWithRepresentations:(NSArray *)reps
+{
+    if ([reps count] == 0) {
+        [self release];
+        self = nil;
+    } else if ((self=[super init])) {
+        _representations = [reps copy];
+    }
+    
+    return self;
+}
 
+- (NSArray *)_representations
+{
+    return _representations;
+}
+
+- (UIImageRep *)_bestRepresentationForProposedScale:(CGFloat)scale
+{
+    UIImageRep *bestRep = nil;
+    
+    for (UIImageRep *rep in [self _representations]) {
+        if (rep.scale > scale) {
+            break;
+        } else {
+            bestRep = rep;
+        }
+    }
+    
+    return bestRep ?: [[self _representations] lastObject];
+}
+
+- (BOOL)_isOpaque
+{
+    for (UIImageRep *rep in [self _representations]) {
+        if (!rep.opaque) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (void)_drawRepresentation:(UIImageRep *)rep inRect:(CGRect)rect
+{
+    [rep drawInRect:rect fromRect:CGRectNull];
+}
+
+- (UIImage *)_toolbarImage
+{
+    // NOTE.. I don't know where to put this, really, but it seems like the real UIKit reduces image size by 75% if they are too
+    // big for a toolbar. That seems funky, but I guess here is as good a place as any to do that? I don't really know...
+    
+    CGSize imageSize = self.size;
+    CGSize size = CGSizeZero;
+    
+    if (imageSize.width > 24 || imageSize.height > 24) {
+        size.height = imageSize.height * 0.75f;
+        size.width = imageSize.width / imageSize.height * size.height;
+    } else {
+        size = imageSize;
+    }
+    
+    CGRect rect = CGRectMake(0,0,size.width,size.height);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    [[UIColor colorWithRed:101/255.f green:104/255.f blue:121/255.f alpha:1] setFill];
+    UIRectFill(rect);
+    [self drawInRect:rect blendMode:kCGBlendModeDestinationIn alpha:1];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+    
 @end

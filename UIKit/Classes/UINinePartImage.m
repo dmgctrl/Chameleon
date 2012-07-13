@@ -28,188 +28,72 @@
  */
 
 #import "UINinePartImage.h"
-#import "UIGraphics.h"
+#import "UIImageRep.h"
 
-@implementation UINinePartImage {
-    CGFloat _tch;
-    CGFloat _lcw;
-    CGFloat _bch;
-    CGFloat _rcw;
+@implementation UINinePartImage
 
-    CGImageRef _topLeftCorner;
-    CGImageRef _topEdgeFill;
-    CGImageRef _topRightCorner;
-    CGImageRef _leftEdgeFill;
-    CGImageRef _centerFill;
-    CGImageRef _rightEdgeFill;
-    CGImageRef _bottomLeftCorner;
-    CGImageRef _bottomEdgeFill;
-    CGImageRef _bottomRightCorner;
-}
-
-- (void) dealloc
+- (id)initWithRepresentations:(NSArray *)reps leftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight
 {
-    if (_topLeftCorner) {
-        CGImageRelease(_topLeftCorner);
-    }
-    if (_topEdgeFill) {
-        CGImageRelease(_topEdgeFill);
-    }
-    if (_topRightCorner) {
-        CGImageRelease(_topRightCorner);
-    }
-    if (_leftEdgeFill) {
-        CGImageRelease(_leftEdgeFill);
-    }
-    if (_centerFill) {
-        CGImageRelease(_centerFill);
-    }
-    if (_rightEdgeFill) {
-        CGImageRelease(_rightEdgeFill);
-    }
-    if (_bottomLeftCorner) {
-        CGImageRelease(_bottomLeftCorner);
-    }
-    if (_bottomEdgeFill) {
-        CGImageRelease(_bottomEdgeFill);
-    }
-    if (_bottomRightCorner) {
-        CGImageRelease(_bottomRightCorner);
-    }
-    [super dealloc];
-}
-
-- (id)initWithCGImage:(CGImageRef)image leftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight
-{
-    assert(image);
-    assert(leftCapWidth > 0);
-    assert(topCapHeight > 0);
-    if (nil != (self = [super initWithCGImage:image])) {
-        CGFloat w = CGImageGetWidth(image);
-        CGFloat h = CGImageGetHeight(image);
-        
-        _tch = MIN(topCapHeight, h);
-        _lcw = MIN(leftCapWidth, w);
-        
-        NSInteger x;
-        if (w > leftCapWidth + 1.0) {
-            x = 2;
-            _rcw = w - 1.0 - leftCapWidth;
-        } else if (w == leftCapWidth + 1.0) {
-            x = 1;
-        } else {
-            x = 0;
-        }
-        
-        NSInteger y;
-        if (h >= topCapHeight + 1.0) {
-            y = 2;
-            _bch = h - 1.0 - topCapHeight;
-        } else if (h == topCapHeight + 1.0) {
-            y = 1;
-        } else {
-            y = 0;
-        }
-        
-        static NSUInteger const TABLE[3][3] = {
-            { 0001, 0011, 0111 },
-            { 0003, 0033, 0333 },
-            { 0007, 0077, 0777 },
-        };
-        NSUInteger const bits = TABLE[x][y];
-
-        if (bits & 0001) {
-            _topLeftCorner = CGImageCreateWithImageInRect(image, CGRectMake(0.0, 0.0, _lcw, _tch));
-        }
-        if (bits & 0010) {
-            _topEdgeFill = CGImageCreateWithImageInRect(image, CGRectMake(_lcw, 0.0, 1.0, _tch));
-        }
-        if (bits & 0100) {
-            _topRightCorner = CGImageCreateWithImageInRect(image, CGRectMake(_lcw + 1.0, 0.0, _rcw, _tch));
-        }
-        
-        if (bits & 0002) {
-            _leftEdgeFill = CGImageCreateWithImageInRect(image, CGRectMake(0, _tch, _lcw, 1.0));
-        }
-        if (bits & 0020) {
-            _centerFill = CGImageCreateWithImageInRect(image, CGRectMake(_tch, _lcw, 1.0, 1.0));
-        }
-        if (bits & 0200) {
-            _rightEdgeFill = CGImageCreateWithImageInRect(image, CGRectMake(w - _rcw, _tch, _rcw, 1.0));
-        }
-        
-        if (bits & 0004) {
-            _bottomLeftCorner = CGImageCreateWithImageInRect(image, CGRectMake(0.0, h - _bch, _lcw, _bch));
-        }
-        if (bits & 0040) {
-            _bottomEdgeFill = CGImageCreateWithImageInRect(image, CGRectMake(_lcw, h - _bch, 1.0, _bch));
-        }
-        if (bits & 0400) {
-            _bottomRightCorner = CGImageCreateWithImageInRect(image, CGRectMake(_lcw + 1.0, h - _bch, _rcw, _bch));
-        }
+    if ((self=[super _initWithRepresentations:reps])) {
+        _leftCapWidth = leftCapWidth;
+        _topCapHeight = topCapHeight;
     }
     return self;
 }
 
-- (NSInteger) leftCapWidth
+- (NSInteger)leftCapWidth
 {
-    return _lcw;
+    return _leftCapWidth;
 }
 
-- (NSInteger) topCapHeight
+- (NSInteger)topCapHeight
 {
-    return _tch;
+    return _topCapHeight;
 }
 
-- (void) drawInRect:(CGRect)rect
+- (void)_drawRepresentation:(UIImageRep *)rep inRect:(CGRect)rect
 {
-    CGContextRef c = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(c);
-    CGContextTranslateCTM(c, rect.origin.x, rect.origin.y + rect.size.height);
-    CGContextScaleCTM(c, 1.0, -1.0);
+    const CGSize size = self.size;
+    const CGFloat stretchyWidth = (_leftCapWidth < size.width)? 1 : 0;
+    const CGFloat stretchyHeight = (_topCapHeight < size.height)? 1 : 0;
+    const CGFloat bottomCapHeight = size.height - _topCapHeight - stretchyHeight;
+    const CGFloat rightCapWidth = size.width - _leftCapWidth - stretchyWidth;
+    
+    //topLeftCorner
+    [rep drawInRect:CGRectMake(CGRectGetMinX(rect), CGRectGetMinY(rect), _leftCapWidth, _topCapHeight)
+           fromRect:CGRectMake(0, 0, _leftCapWidth, _topCapHeight)];
 
-    CGFloat const cw = rect.size.width - (_lcw + _rcw);
-    CGFloat const ch = rect.size.height - (_tch + _bch);
-    
-    CGFloat const ty = rect.origin.y + rect.size.height - _tch;
-    CGFloat const cy = rect.origin.y + _bch;
-    CGFloat const by = rect.origin.y;
+    //topEdgeFill
+    [rep drawInRect:CGRectMake(CGRectGetMinX(rect)+_leftCapWidth, CGRectGetMinY(rect), rect.size.width-rightCapWidth-_leftCapWidth, _topCapHeight)
+           fromRect:CGRectMake(_leftCapWidth, 0, stretchyWidth, _topCapHeight)];
 
-    CGFloat const lx = rect.origin.x;
-    CGFloat const cx = rect.origin.x + _lcw;
-    CGFloat const rx = rect.origin.x + rect.size.width - _rcw;
+    //topRightCorner
+    [rep drawInRect:CGRectMake(CGRectGetMaxX(rect)-rightCapWidth, CGRectGetMinY(rect), rightCapWidth, _topCapHeight)
+           fromRect:CGRectMake(size.width-rightCapWidth, 0, rightCapWidth, _topCapHeight)];
     
-    if (_topLeftCorner) {
-        CGContextDrawImage(c, CGRectMake(lx, ty, _lcw, _tch), _topLeftCorner);
-    }
-    if (_topEdgeFill) {
-        CGContextDrawImage(c, CGRectMake(cx, ty, cw, _tch), _topEdgeFill);
-    }
-    if (_topRightCorner) {
-        CGContextDrawImage(c, CGRectMake(rx, ty, _rcw, _tch), _topRightCorner);
-    }
-
-    if (_leftEdgeFill) {
-        CGContextDrawImage(c, CGRectMake(lx, cy, _lcw, ch), _leftEdgeFill);
-    }
-    if (_centerFill) {
-        CGContextDrawImage(c, CGRectMake(cx, cy, cw, ch), _centerFill);
-    }
-    if (_rightEdgeFill) {
-        CGContextDrawImage(c, CGRectMake(rx, cy, _rcw, ch), _rightEdgeFill);
-    }
+    //bottomLeftCorner
+    [rep drawInRect:CGRectMake(CGRectGetMinX(rect), CGRectGetMaxY(rect)-bottomCapHeight, _leftCapWidth, bottomCapHeight)
+           fromRect:CGRectMake(0, size.height-bottomCapHeight, _leftCapWidth, bottomCapHeight)];
     
-    if (_bottomLeftCorner) {
-        CGContextDrawImage(c, CGRectMake(lx, by, _lcw, _bch), _bottomLeftCorner);
-    }
-    if (_bottomEdgeFill) {
-        CGContextDrawImage(c, CGRectMake(cx, by, cw, _bch), _bottomEdgeFill);
-    }
-    if (_bottomRightCorner) {
-        CGContextDrawImage(c, CGRectMake(rx, by, _rcw, _bch), _bottomRightCorner);
-    }
+    //bottomEdgeFill
+    [rep drawInRect:CGRectMake(CGRectGetMinX(rect)+_leftCapWidth, CGRectGetMaxY(rect)-bottomCapHeight, rect.size.width-rightCapWidth-_leftCapWidth, bottomCapHeight)
+           fromRect:CGRectMake(_leftCapWidth, size.height-bottomCapHeight, stretchyWidth, bottomCapHeight)];
     
-    CGContextRestoreGState(c);
+    //bottomRightCorner
+    [rep drawInRect:CGRectMake(CGRectGetMaxX(rect)-rightCapWidth, CGRectGetMaxY(rect)-bottomCapHeight, rightCapWidth, bottomCapHeight)
+           fromRect:CGRectMake(size.width-rightCapWidth, size.height-bottomCapHeight, rightCapWidth, bottomCapHeight)];
+    
+    //leftEdgeFill
+    [rep drawInRect:CGRectMake(CGRectGetMinX(rect), CGRectGetMinY(rect)+_topCapHeight, _leftCapWidth, rect.size.height-bottomCapHeight-_topCapHeight)
+           fromRect:CGRectMake(0, _topCapHeight, _leftCapWidth, stretchyHeight)];
+    
+    //rightEdgeFill
+    [rep drawInRect:CGRectMake(CGRectGetMaxX(rect)-rightCapWidth, CGRectGetMinY(rect)+_topCapHeight, rightCapWidth, rect.size.height-bottomCapHeight-_topCapHeight)
+           fromRect:CGRectMake(size.width-rightCapWidth, _topCapHeight, rightCapWidth, stretchyHeight)];
+    
+    //centerFill
+    [rep drawInRect:CGRectMake(CGRectGetMinX(rect)+_leftCapWidth, CGRectGetMinY(rect)+_topCapHeight, rect.size.width-rightCapWidth-_leftCapWidth, rect.size.height-bottomCapHeight-_topCapHeight)
+           fromRect:CGRectMake(_leftCapWidth, _topCapHeight, stretchyWidth, stretchyHeight)];
 }
 
 @end

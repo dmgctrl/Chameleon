@@ -72,7 +72,7 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
 + (UIFont *)fontWithNSFont:(NSFont *)aFont
 {
     if (aFont) {
-        CTFontRef newFont = CTFontCreateWithName((CFStringRef)[aFont fontName], [aFont pointSize], NULL);
+        CTFontRef newFont = CTFontCreateWithName((__bridge CFStringRef)[aFont fontName], [aFont pointSize], NULL);
         if (newFont) {
             UIFont *theFont = [self _fontWithCTFont:newFont];
             CFRelease(newFont);
@@ -118,7 +118,7 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
                 CFTypeRef name = CTFontDescriptorCopyAttribute(descriptor, nameAttr);
                 if(name) {
                     if (CFGetTypeID(name) == CFStringGetTypeID()) {
-                        [names addObject: (NSString*) name];
+                        [names addObject:(__bridge NSString*)name];
                     }
                     CFRelease(name);
                 }
@@ -142,7 +142,7 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
 + (NSArray *)fontNamesForFamilyName:(NSString *)familyName
 {
     NSArray *names = nil;
-    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((CFDictionaryRef)
+    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((__bridge CFDictionaryRef)
         [NSDictionary dictionaryWithObjectsAndKeys: familyName, (NSString*)kCTFontFamilyNameAttribute, nil, nil]);
     if (descriptor) {
         CFArrayRef descriptors = CFArrayCreate(NULL, (CFTypeRef*) &descriptor, 1, &kCFTypeArrayCallBacks);
@@ -182,7 +182,7 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
 
 - (void)dealloc
 {
-    CFRelease(_font);
+    if (_font) CFRelease(_font);
     [super dealloc];
 }
 

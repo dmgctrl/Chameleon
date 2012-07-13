@@ -64,6 +64,9 @@ typedef enum {
 - (void)viewWillDisappear:(BOOL)animated;
 - (void)viewDidDisappear:(BOOL)animated;
 
+- (void)viewWillLayoutSubviews;
+- (void)viewDidLayoutSubviews;
+
 - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated;		// works, but not exactly correctly.
 - (void)dismissModalViewControllerAnimated:(BOOL)animated;												// see comments in dismissModalViewController
 
@@ -75,6 +78,7 @@ typedef enum {
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration;
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation;
 
 - (void)addChildViewController:(UIViewController *)childController;
