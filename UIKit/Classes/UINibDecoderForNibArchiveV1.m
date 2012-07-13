@@ -236,6 +236,7 @@ static inline double decodeFloat64(void const** pp);
                 keyForEmpty = i;
             }
             [keys addObject:key];
+            [key release];
             kp += length;
         }
         
@@ -328,8 +329,13 @@ static inline double decodeFloat64(void const** pp);
             NSUInteger unknownValue = decodeVariableLengthInteger(&cp);
             #pragma unused (unknownValue)
             NSString* className = [[NSString alloc] initWithBytes:cp length:length - 1 encoding:NSUTF8StringEncoding];
+            if (!className) {
+                [self release];
+                return nil;
+            }
             Class class = NSClassFromString(className);
             if (!class) {
+                [className release];
                 [self release];
                 return nil;
             }
