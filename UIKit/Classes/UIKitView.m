@@ -40,6 +40,7 @@
 
 @implementation UIKitView
 @synthesize UIScreen=_screen;
+@synthesize usingGeometryAdapter = _usingGeometryAdapter;
 
 - (id<CAAction>)actionForLayer:(CALayer *)layer forKey:(NSString *)event
 {
@@ -64,6 +65,7 @@
         geometryAdapterLayer.geometryFlipped = YES;
         [geometryAdapterLayer addSublayer:screenLayer];
         [myLayer addSublayer:geometryAdapterLayer];
+        _usingGeometryAdapter = YES;
     } else {
         [myLayer addSublayer:screenLayer];
     }

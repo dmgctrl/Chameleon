@@ -63,4 +63,6 @@
 // [UIScreen screens], etc.
 @property (nonatomic, retain, readonly) UIScreen *UIScreen;
 
+@property (nonatomic, readonly, getter = isUsingGeometryAdapter) BOOL usingGeometryAdapter;
+
 @end
