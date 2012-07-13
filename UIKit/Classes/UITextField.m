@@ -31,10 +31,11 @@
 #import "UITextLayer.h"
 #import "UIColor.h"
 #import "UIFont.h"
-#import "UIImage.h"
 #import "UIImage+UIPrivate.h"
 #import "UIBezierPath.h"
 #import "UIGraphics.h"
+
+#import <AppKit/NSCursor.h>
 
 NSString *const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
 NSString *const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
@@ -352,17 +353,15 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 
 - (CGRect)leftViewRectForBounds:(CGRect)bounds
 {
-    const CGRect frame = _leftView.frame;
-    bounds.origin.x = [self borderRectForBounds:bounds].origin.x;
-	
-	if(self.borderStyle == UITextBorderStyleRoundedRect) {
-		bounds.origin.x += 6.0f;
-		bounds.origin.y -= 3.0f;
-	}
-	
-    bounds.origin.y = (bounds.size.height / 2.f) - (frame.size.height/2.f);
-    bounds.size = frame.size;
-    return CGRectIntegral(bounds);
+    if (_leftView) {
+        const CGRect frame = _leftView.frame;
+        bounds.origin.x = 0;
+        bounds.origin.y = (bounds.size.height / 2.f) - (frame.size.height/2.f);
+        bounds.size = frame.size;
+        return CGRectIntegral(bounds);
+    } else {
+        return CGRectZero;
+    }
 }
 
 - (CGRect)placeholderRectForBounds:(CGRect)bounds
@@ -372,11 +371,15 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 
 - (CGRect)rightViewRectForBounds:(CGRect)bounds
 {
-    const CGRect frame = _rightView.frame;
-    bounds.origin.x = bounds.size.width - frame.size.width;
-    bounds.origin.y = (bounds.size.height / 2.f) - (frame.size.height/2.f);
-    bounds.size = frame.size;
-    return CGRectIntegral(bounds);
+    if (_rightView) {
+        const CGRect frame = _rightView.frame;
+        bounds.origin.x = bounds.size.width - frame.size.width;
+        bounds.origin.y = (bounds.size.height / 2.f) - (frame.size.height/2.f);
+        bounds.size = frame.size;
+        return CGRectIntegral(bounds);
+    } else {
+        return CGRectZero;
+    }
 }
 
 - (CGRect)textRectForBounds:(CGRect)bounds
@@ -733,5 +736,9 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     return [NSString stringWithFormat:@"<%@: %p; textAlignment = %@; editing = %@; textColor = %@; font = %@; delegate = %@>", [self className], self, textAlignment, (self.editing ? @"YES" : @"NO"), self.textColor, self.font, self.delegate];
 }
 
+- (id)mouseCursorForEvent:(UIEvent *)event
+{
+    return [NSCursor IBeamCursor];
+}
 
 @end

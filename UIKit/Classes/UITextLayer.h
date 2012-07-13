@@ -76,7 +76,6 @@
     UIColor *textColor;
     UIFont *font;
     BOOL changingResponderStatus;
-    UITextAlignment textAlignment;
 
     struct {
         unsigned int didChange : 1;

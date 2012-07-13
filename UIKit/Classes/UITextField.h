@@ -63,7 +63,7 @@ typedef enum {
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
 @end
 
-@interface UITextField : UIControl <UITextInputTraits> 
+@interface UITextField : UIControl <UITextInputTraits>
 
 - (CGRect)borderRectForBounds:(CGRect)bounds;
 - (CGRect)clearButtonRectForBounds:(CGRect)bounds;

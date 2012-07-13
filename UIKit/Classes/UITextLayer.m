@@ -46,16 +46,14 @@
 @end
 
 @implementation UITextLayer
-@synthesize textColor, font, editable, secureTextEntry, textAlignment;
+@synthesize textColor, font, editable, secureTextEntry;
 
 - (id)initWithContainer:(UIView <UITextLayerContainerViewProtocol, UITextLayerTextDelegate> *)aView isField:(BOOL)isField
 {
     if ((self=[super init])) {
-        self.geometryFlipped = YES;
         self.masksToBounds = NO;
-        
+
         containerView = aView;
-        textAlignment = UITextAlignmentLeft;
 
         textDelegateHas.didChange = [containerView respondsToSelector:@selector(_textDidChange)];
         textDelegateHas.didChangeSelection = [containerView respondsToSelector:@selector(_textDidChangeSelection)];
@@ -68,11 +66,13 @@
             && [containerView respondsToSelector:@selector(contentSize)]
             && [containerView respondsToSelector:@selector(isScrollEnabled)];
         
-        clipView = [[UICustomNSClipView alloc] initWithFrame:NSMakeRect(0,0,100,100) layerParent:self behaviorDelegate:self];
-        textView = [[UICustomNSTextView alloc] initWithFrame:[clipView frame] secureTextEntry:secureTextEntry isField:isField];
+        clipView = [(UICustomNSClipView *)[UICustomNSClipView alloc] initWithFrame:NSMakeRect(0,0,100,100)];
+        textView = [(UICustomNSTextView *)[UICustomNSTextView alloc] initWithFrame:[clipView frame] secureTextEntry:secureTextEntry isField:isField];
+
         [textView setDelegate:self];
         [clipView setDocumentView:textView];
-        
+
+        self.textAlignment = UITextAlignmentLeft;
         [self setNeedsLayout];
     }
     return self;
@@ -103,6 +103,9 @@
         [clipView scrollToPoint:NSZeroPoint];
     }
 
+    clipView.parentLayer = self;
+    clipView.behaviorDelegate = self;
+
     [[[containerView window].screen UIKitView] addSubview:clipView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateScrollViewContentOffset) name:NSViewBoundsDidChangeNotification object:clipView];
@@ -118,6 +121,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewBoundsDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewDidMoveToSuperviewNotification object:nil];
     
+    clipView.parentLayer = nil;
+    clipView.behaviorDelegate = nil;
+
     [clipView removeFromSuperview];
 }
 
@@ -258,6 +264,33 @@
 - (void)setSelectedRange:(NSRange)range
 {
     [textView setSelectedRange:range];
+}
+
+- (void)setTextAlignment:(UITextAlignment)textAlignment
+{
+    switch (textAlignment) {
+        case UITextAlignmentLeft:
+            [textView setAlignment:NSLeftTextAlignment];
+            break;
+        case UITextAlignmentCenter:
+            [textView setAlignment:NSCenterTextAlignment];
+            break;
+        case UITextAlignmentRight:
+            [textView setAlignment:NSRightTextAlignment];
+            break;
+    }
+}
+
+- (UITextAlignment)textAlignment
+{
+    switch ([textView alignment]) {
+        case NSCenterTextAlignment:
+            return UITextAlignmentCenter;
+        case NSRightTextAlignment:
+            return UITextAlignmentRight;
+        default:
+            return UITextAlignmentLeft;
+    }
 }
 
 // this is used to fake out AppKit when the UIView that owns this layer/editor stuff is actually *behind* another UIView. Since the NSViews are

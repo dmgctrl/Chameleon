@@ -89,7 +89,7 @@ NSMutableArray *_allScreens = nil;
         // in trying to track that down I noticed that I'm using at least one 10.6-only NSImage method in there already, so I decided it wasn't
         // worth the effort right now to bother with 10.5 support since there'd be a couple changes there and who knows what other things are
         // lurking around that only works on 10.6. Got bigger fish to fry right now.
-        _layer.geometryFlipped = YES;
+        //_layer.geometryFlipped = YES;
         //_layer.sublayerTransform = CATransform3DMakeScale(1,-1,1);
         
         _grabber = [[UIImageView alloc] initWithImage:[UIImage _windowResizeGrabberImage]];
