@@ -217,9 +217,9 @@ NSData *UIImageJPEGRepresentation(UIImage *image, CGFloat compressionQuality)
     CFTypeRef values[] = { quality };
     CFDictionaryRef properties = CFDictionaryCreate(NULL, (const void **)&keys, (const void **)&values, 1, NULL, NULL);
     CGImageDestinationAddImage(dest, image.CGImage, properties);
+    CGImageDestinationFinalize(dest);
     CFRelease(properties);
     CFRelease(quality);
-    CGImageDestinationFinalize(dest);
     CFRelease(dest);
     return [(__bridge NSData *)data autorelease];
 }
