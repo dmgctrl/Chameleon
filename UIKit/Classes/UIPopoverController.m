@@ -41,131 +41,6 @@
 #import "UIImage+UIPrivate.h"
 
 
-static BOOL SizeIsLessThanOrEqualSize(NSSize size1, NSSize size2)
-{
-    return (size1.width <= size2.width) && (size1.height <= size2.height);
-}
-
-static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *popoverSize, UIPopoverArrowDirection arrowDirections, NSPoint *pointTo, UIPopoverArrowDirection *arrowDirection)
-{
-    // 1) define a set of possible quads around fromRect that the popover could appear in
-    // 2) eliminate quads based on arrow direction restrictions and sizes
-    // 3) the first quad that is large enough "wins"
-    
-    NSRect screenRect = [[inWindow screen] visibleFrame];
-    
-    NSSize bottomQuad = NSMakeSize(screenRect.size.width, fromRect.origin.y - screenRect.origin.y);
-    NSSize topQuad = NSMakeSize(screenRect.size.width, screenRect.size.height - (fromRect.origin.y - screenRect.origin.y + fromRect.size.height));
-    NSSize leftQuad = NSMakeSize(fromRect.origin.x - screenRect.origin.x, screenRect.size.height);
-    NSSize rightQuad = NSMakeSize(screenRect.size.width - (fromRect.origin.x - screenRect.origin.x + fromRect.size.width), screenRect.size.height);
-    
-    pointTo->x = fromRect.origin.x + (fromRect.size.width/2.f);
-    pointTo->y = fromRect.origin.y + (fromRect.size.height/2.f);
-    
-    NSPoint origin;
-    origin.x = fromRect.origin.x + (fromRect.size.width/2.f) - (popoverSize->width/2.f);
-    origin.y = fromRect.origin.y + (fromRect.size.height/2.f) - (popoverSize->height/2.f);
-    
-    const CGFloat minimumPadding = 40;
-    const BOOL allowTopOrBottom = (pointTo->x >= NSMinX(screenRect)+minimumPadding && pointTo->x <= NSMaxX(screenRect)-minimumPadding);
-    const BOOL allowLeftOrRight = (pointTo->y >= NSMinY(screenRect)+minimumPadding && pointTo->y <= NSMaxY(screenRect)-minimumPadding);
-    
-    const BOOL allowTopQuad = ((arrowDirections & UIPopoverArrowDirectionDown) != 0) && topQuad.width > 0 && topQuad.height > 0 && allowTopOrBottom;
-    const BOOL allowBottomQuad = ((arrowDirections & UIPopoverArrowDirectionUp) != 0) && bottomQuad.width > 0 && bottomQuad.height > 0 && allowTopOrBottom;
-    const BOOL allowLeftQuad = ((arrowDirections & UIPopoverArrowDirectionRight) != 0) && leftQuad.width > 0 && leftQuad.height > 0 && allowLeftOrRight;
-    const BOOL allowRightQuad = ((arrowDirections & UIPopoverArrowDirectionLeft) != 0) && rightQuad.width > 0 && rightQuad.height > 0 && allowLeftOrRight;
-    
-    const CGFloat arrowPadding = 8;		// the arrow images are slightly larger to account for shadows, but the arrow point needs to be up against the rect exactly so this helps with that
-        
-    if (allowBottomQuad && SizeIsLessThanOrEqualSize(*popoverSize,bottomQuad)) {
-        pointTo->y = fromRect.origin.y;
-        origin.y = fromRect.origin.y - popoverSize->height + arrowPadding;
-        *arrowDirection = UIPopoverArrowDirectionUp;
-    } else if (allowRightQuad && SizeIsLessThanOrEqualSize(*popoverSize,rightQuad)) {
-        pointTo->x = fromRect.origin.x + fromRect.size.width;
-        origin.x = pointTo->x - arrowPadding;
-        *arrowDirection = UIPopoverArrowDirectionLeft;
-    } else if (allowLeftQuad && SizeIsLessThanOrEqualSize(*popoverSize,leftQuad)) {
-        pointTo->x = fromRect.origin.x;
-        origin.x = fromRect.origin.x - popoverSize->width + arrowPadding;
-        *arrowDirection = UIPopoverArrowDirectionRight;
-    } else if (allowTopQuad && SizeIsLessThanOrEqualSize(*popoverSize,topQuad)) {
-        pointTo->y = fromRect.origin.y + fromRect.size.height;
-        origin.y = pointTo->y - arrowPadding;
-        *arrowDirection = UIPopoverArrowDirectionDown;
-    } else {
-        CGFloat maxArea = -1;
-        CGFloat popoverWidthDelta = -1;
-        if (allowBottomQuad) {
-            // TODO: need to handle bottom quad
-        }
-        if (allowRightQuad) {
-            CGFloat area = rightQuad.height * rightQuad.width;
-            if (area > maxArea) {
-                popoverWidthDelta = -1;
-                maxArea = area;
-                NSInteger quadWidth = rightQuad.width + fromRect.size.width/2.f;
-                NSInteger popoverWidth = popoverSize->width + arrowPadding;
-                if (popoverWidth <= quadWidth) {
-                    pointTo->x = fromRect.origin.x + fromRect.size.width/2.f + (quadWidth - popoverWidth);
-                } else {
-                    popoverWidthDelta = popoverWidth - quadWidth;
-                }
-                origin.x = pointTo->x - arrowPadding;
-                *arrowDirection = UIPopoverArrowDirectionLeft;
-            }
-        }
-        if (allowLeftQuad) {
-            CGFloat area = leftQuad.height * leftQuad.width;
-            if (area > maxArea) {
-                popoverWidthDelta = -1;
-                maxArea = area;
-                NSInteger quadWidth = leftQuad.width + fromRect.size.width/2.f;
-                NSInteger popoverWidth = popoverSize->width + arrowPadding;
-                if (popoverWidth <= quadWidth) {
-                    pointTo->x = fromRect.origin.x + fromRect.size.width/2.f - (quadWidth - popoverWidth);
-                } else {
-                    popoverWidthDelta = popoverWidth - quadWidth;
-                }
-                origin.x = pointTo->x - popoverSize->width + arrowPadding;
-                *arrowDirection = UIPopoverArrowDirectionRight;
-            }
-        }
-        if (allowTopQuad) {
-            // TODO: need to handle top quad
-        }
-        if (-1 != popoverWidthDelta) {
-            popoverSize->width -= popoverWidthDelta;
-        }
-        if (-1 == maxArea) {
-            *arrowDirection = UIPopoverArrowDirectionUnknown;
-        }
-    }
-    
-    NSRect windowRect;
-    windowRect.origin = origin;
-    windowRect.size = *popoverSize;
-    
-    if (NSMaxX(windowRect) > NSMaxX(screenRect)) {
-        windowRect.origin.x = NSMaxX(screenRect) - popoverSize->width;
-    }
-    if (NSMinX(windowRect) < NSMinX(screenRect)) {
-        windowRect.origin.x = NSMinX(screenRect);
-    }
-    if (NSMaxY(windowRect) > NSMaxY(screenRect)) {
-        windowRect.origin.y = NSMaxY(screenRect) - popoverSize->height;
-    }
-    if (NSMinY(windowRect) < NSMinY(screenRect)) {
-        windowRect.origin.y = NSMinY(screenRect);
-    }
-    
-    windowRect.origin.x = roundf(windowRect.origin.x);
-    windowRect.origin.y = roundf(windowRect.origin.y);
-    
-    return windowRect.origin;
-}
-
-
 @implementation UIPopoverController {
     UIPopoverView *_popoverView;
     UIWindow* _presentingWindow;
@@ -498,6 +373,30 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     return frameSize;
 }
 
+const CGFloat kMinimumPadding = 40;
+const CGFloat kArrowPadding = 8;		
+
+static BOOL SizeIsLessThanOrEqualSize(NSSize size1, NSSize size2)
+{
+    return (size1.width <= size2.width) && (size1.height <= size2.height);
+}
+
+static inline CGPoint CGPointForCenterOfRect(CGRect r)
+{
+    return (CGPoint){
+        .x = CGRectGetMidX(r),
+        .y = CGRectGetMidY(r),
+    };
+}
+
+static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
+{
+    return (CGPoint){
+        .x = p.x + xOffset,
+        .y = p.y + yOffset
+    };
+}
+
 - (void)setPopoverContentSize:(CGSize)popoverContentSize
 {
     if (![self isPopoverVisible]) {
@@ -505,14 +404,110 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
     }
     assert(_contentViewController != nil);
     
-    NSPoint pointTo = NSMakePoint(0,0);
     NSSize popoverSize = [[self class] frameSizeForContentSize:popoverContentSize withNavigationBar:NO];
-    NSRect frame = {
-        .origin = PopoverWindowOrigin(_overlayWindow, NSRectFromCGRect(_desktopScreenRect), &popoverSize, _arrowDirections, &pointTo, &_popoverArrowDirection),
+    
+    NSRect screenRect = [[_overlayWindow screen] visibleFrame];
+    
+    NSSize bq = NSMakeSize(screenRect.size.width, _desktopScreenRect.origin.y - screenRect.origin.y);
+    NSSize tq = NSMakeSize(screenRect.size.width, screenRect.size.height - (_desktopScreenRect.origin.y - screenRect.origin.y + _desktopScreenRect.size.height));
+    NSSize lq = NSMakeSize(_desktopScreenRect.origin.x - screenRect.origin.x, screenRect.size.height);
+    NSSize rq = NSMakeSize(screenRect.size.width - (_desktopScreenRect.origin.x - screenRect.origin.x + _desktopScreenRect.size.width), screenRect.size.height);
+    
+    NSPoint pointTo = CGPointForCenterOfRect(_desktopScreenRect);
+    NSPoint origin = CGPointOffset(pointTo, -popoverSize.width / 2.f, -popoverSize.height / 2.f);
+    
+    const BOOL allowTopOrBottom = (pointTo.x >= NSMinX(screenRect) + kMinimumPadding) && (pointTo.x <= NSMaxX(screenRect) - kMinimumPadding);
+    const BOOL allowLeftOrRight = (pointTo.y >= NSMinY(screenRect) + kMinimumPadding) && (pointTo.y <= NSMaxY(screenRect) - kMinimumPadding);
+    
+    const BOOL allowTopQuad     = (_arrowDirections & UIPopoverArrowDirectionDown)  && tq.width > 0 && tq.height > 0 && allowTopOrBottom;
+    const BOOL allowBottomQuad  = (_arrowDirections & UIPopoverArrowDirectionUp)    && bq.width > 0 && bq.height > 0 && allowTopOrBottom;
+    const BOOL allowLeftQuad    = (_arrowDirections & UIPopoverArrowDirectionRight) && lq.width > 0 && lq.height > 0 && allowLeftOrRight;
+    const BOOL allowRightQuad   = (_arrowDirections & UIPopoverArrowDirectionLeft)  && rq.width > 0 && rq.height > 0 && allowLeftOrRight;
+    
+    if (allowBottomQuad && SizeIsLessThanOrEqualSize(popoverSize, bq)) {
+        pointTo.y = _desktopScreenRect.origin.y;
+        origin.y = _desktopScreenRect.origin.y - popoverSize.height + kArrowPadding;
+        _popoverArrowDirection = UIPopoverArrowDirectionUp;
+    } else if (allowRightQuad && SizeIsLessThanOrEqualSize(popoverSize, rq)) {
+        pointTo.x = _desktopScreenRect.origin.x + _desktopScreenRect.size.width;
+        origin.x = pointTo.x - kArrowPadding;
+        _popoverArrowDirection = UIPopoverArrowDirectionLeft;
+    } else if (allowLeftQuad && SizeIsLessThanOrEqualSize(popoverSize, lq)) {
+        pointTo.x = _desktopScreenRect.origin.x;
+        origin.x = _desktopScreenRect.origin.x - popoverSize.width + kArrowPadding;
+        _popoverArrowDirection = UIPopoverArrowDirectionRight;
+    } else if (allowTopQuad && SizeIsLessThanOrEqualSize(popoverSize, tq)) {
+        pointTo.y = _desktopScreenRect.origin.y + _desktopScreenRect.size.height;
+        origin.y = pointTo.y - kArrowPadding;
+        _popoverArrowDirection = UIPopoverArrowDirectionDown;
+    } else {
+        CGFloat maxArea = -1;
+        CGFloat popoverWidthDelta = -1;
+        if (allowBottomQuad) {
+            // TODO: need to handle bottom quad
+        }
+        if (allowRightQuad) {
+            CGFloat area = rq.height * rq.width;
+            if (area > maxArea) {
+                popoverWidthDelta = -1;
+                maxArea = area;
+                NSInteger quadWidth = rq.width + _desktopScreenRect.size.width / 2.f;
+                NSInteger popoverWidth = popoverSize.width + kArrowPadding;
+                if (popoverWidth <= quadWidth) {
+                    pointTo.x = _desktopScreenRect.origin.x + _desktopScreenRect.size.width / 2.f + (quadWidth - popoverWidth);
+                } else {
+                    popoverWidthDelta = popoverWidth - quadWidth;
+                }
+                origin.x = pointTo.x - kArrowPadding;
+                _popoverArrowDirection = UIPopoverArrowDirectionLeft;
+            }
+        }
+        if (allowLeftQuad) {
+            CGFloat area = lq.height * lq.width;
+            if (area > maxArea) {
+                popoverWidthDelta = -1;
+                maxArea = area;
+                NSInteger quadWidth = lq.width + _desktopScreenRect.size.width/2.f;
+                NSInteger popoverWidth = popoverSize.width + kArrowPadding;
+                if (popoverWidth <= quadWidth) {
+                    pointTo.x = _desktopScreenRect.origin.x + _desktopScreenRect.size.width/2.f - (quadWidth - popoverWidth);
+                } else {
+                    popoverWidthDelta = popoverWidth - quadWidth;
+                }
+                origin.x = pointTo.x - popoverSize.width + kArrowPadding;
+                _popoverArrowDirection = UIPopoverArrowDirectionRight;
+            }
+        }
+        if (allowTopQuad) {
+            // TODO: need to handle top quad
+        }
+        if (-1 != popoverWidthDelta) {
+            popoverSize.width -= popoverWidthDelta;
+        }
+        if (-1 == maxArea) {
+            _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
+        }
+    }
+    
+    NSRect windowRect = {
+        .origin = origin,
         .size = popoverSize
     };
     
-    if (!CGRectEqualToRect(frame, [_popoverWindow frame])) {
+    if (NSMaxX(windowRect) > NSMaxX(screenRect)) {
+        windowRect.origin.x = NSMaxX(screenRect) - popoverSize.width;
+    }
+    if (NSMinX(windowRect) < NSMinX(screenRect)) {
+        windowRect.origin.x = NSMinX(screenRect);
+    }
+    if (NSMaxY(windowRect) > NSMaxY(screenRect)) {
+        windowRect.origin.y = NSMaxY(screenRect) - popoverSize.height;
+    }
+    if (NSMinY(windowRect) < NSMinY(screenRect)) {
+        windowRect.origin.y = NSMinY(screenRect);
+    }
+    
+    if (!CGRectEqualToRect(windowRect, [_popoverWindow frame])) {
         CGRect popoverFrame = _popoverView.frame;
         popoverFrame.size = popoverSize;
         
@@ -521,7 +516,7 @@ static NSPoint PopoverWindowOrigin(NSWindow *inWindow, NSRect fromRect, NSSize *
         
         UIKitView* hostingView = [_popoverWindow contentView];
         [hostingView setFrame:(CGRect){ .size = popoverSize }];    
-        [_popoverWindow setFrame:frame display:NO animate:NO];
+        [_popoverWindow setFrame:windowRect display:NO animate:NO];
         
         _popoverContentSize = _contentViewController.view.bounds.size;
     }
