@@ -717,7 +717,7 @@
 		F97BE00B15AFD3920081F45A /* UIColorRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIColorRep.m; sourceTree = "<group>"; };
 		F97BE01015AFD43B0081F45A /* UIImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageRep.h; sourceTree = "<group>"; };
 		F97BE01115AFD43B0081F45A /* UIImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageRep.m; sourceTree = "<group>"; };
-		F97BE01415AFD6590081F45A /* UIImageAppKitIntegration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageAppKitIntegration.m; sourceTree = "<group>"; };
+		F97BE01415AFD6590081F45A /* UIImageAppKitIntegration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageAppKitIntegration.m; path = Classes/UIImageAppKitIntegration.m; sourceTree = "<group>"; };
 		F97BE01615AFD6E00081F45A /* UIAppearance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearance.h; sourceTree = "<group>"; };
 		F97BE01715AFD6E00081F45A /* UIAppearanceInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearanceInstance.h; sourceTree = "<group>"; };
 		F97BE01815AFD6E00081F45A /* UIAppearanceInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceInstance.m; sourceTree = "<group>"; };
@@ -1052,7 +1052,6 @@
 				145335701226F2720005644F /* UICustomNSTextView.m */,
 				8842BC751387316400D148FF /* UIGradient.h */,
 				8842BC761387316400D148FF /* UIGradient.m */,
-				F97BE01415AFD6590081F45A /* UIImageAppKitIntegration.m */,
 				F97BE01015AFD43B0081F45A /* UIImageRep.h */,
 				F97BE01115AFD43B0081F45A /* UIImageRep.m */,
 				14FA8C47121DA4A000C4264B /* UINinePartImage.h */,
@@ -1197,6 +1196,7 @@
 				1489851F12EE2CFE003D4751 /* UIKitView.h */,
 				1489852012EE2CFE003D4751 /* UIKitView.m */,
 				1489851712EE2CFE003D4751 /* UIImageAppKitIntegration.h */,
+				F97BE01415AFD6590081F45A /* UIImageAppKitIntegration.m */,
 				38615C68133A54DF00841EEA /* UINSCellControl.h */,
 				38615C69133A54DF00841EEA /* UINSCellControl.m */,
 				A249874913EC7EBB0011DB73 /* UIPopoverControllerAppKitIntegration.h */,
