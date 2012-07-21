@@ -30,16 +30,38 @@
 #import "UITableViewSection.h"
 
 @implementation UITableViewSection
-@synthesize rowsHeight, headerHeight, footerHeight, rowHeights, numberOfRows, headerView, footerView, headerTitle, footerTitle;
+@synthesize rowsHeight;
+@synthesize headerHeight;
+@synthesize footerHeight;
+@synthesize rowOffsets = _rowOffsets;
+@synthesize numberOfRows;
+@synthesize headerView;
+@synthesize footerView;
+@synthesize headerTitle;
+@synthesize footerTitle;
 
-- (CGFloat)sectionHeight
+- (CGFloat) sectionHeight
 {
     return rowsHeight + headerHeight + footerHeight;
 }
 
+- (CGFloat) heightForRowAtIndex:(NSInteger)index
+{
+    NSAssert(index <= numberOfRows, @"???");
+    NSAssert(index >= 0, @"???");
+    return _rowOffsets[index+1] - _rowOffsets[index];
+}
+
+- (CGFloat) offsetForRowAtIndex:(NSInteger)index
+{
+    NSAssert(index <= numberOfRows, @"???");
+    NSAssert(index >= 0, @"???");
+    return _rowOffsets[index];
+}
+
 - (void)dealloc
 {
-	if(rowHeights != NULL) free(rowHeights);
+    [self setRowOffsets:nil];
     [headerView release];
     [footerView release];
     [headerTitle release];
@@ -47,13 +69,14 @@
     [super dealloc];
 }
 
-- (void)setRowHeights:(CGFloat *)newHeights {
-	if(rowHeights != NULL) {
-		free(rowHeights);
-		rowHeights = NULL;
+- (void) setRowOffsets:(CGFloat*)rowOffsets
+{
+	if (_rowOffsets != rowOffsets) {
+        if (_rowOffsets) {
+            free(_rowOffsets);
+        }
+		_rowOffsets = rowOffsets;
 	}
-	
-	rowHeights = newHeights;
 }
 
 @end

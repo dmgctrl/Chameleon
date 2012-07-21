@@ -70,8 +70,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
     NSMutableArray *_selectedRows;
     UITableViewStyle _style;
     BOOL _needsReload;
-    NSInteger _modificationCount;
-    NSInteger _modificationCountAtLastLayout;
     
     struct {
         BOOL heightForRowAtIndexPath : 1;
@@ -146,7 +144,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
         self.backgroundColor = [UIColor whiteColor];
     }
     
-    _modificationCountAtLastLayout = -1;
     [self _setNeedsReload];
 }
 
@@ -288,17 +285,17 @@ static NSString* const kUIStyleKey = @"UIStyle";
                 sectionRecord.footerHeight = 0;
             }
             
-			CGFloat *rowHeights = (CGFloat *) malloc(sizeof(CGFloat) * numberOfRowsInSection);
-            CGFloat totalRowsHeight = 0;
-            
-            for (NSInteger row=0; row<numberOfRowsInSection; row++) {
+			CGFloat* rowOffsets = malloc(sizeof(CGFloat) * (numberOfRowsInSection + 1));
+            CGFloat lastOffset = 0;
+            for (NSInteger row = 0; row < numberOfRowsInSection; row++) {
                 const CGFloat rowHeight = _delegateHas.heightForRowAtIndexPath? [self.delegate tableView:self heightForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]] : defaultRowHeight;
-				rowHeights[row] = rowHeight;
-                totalRowsHeight += rowHeight;
+				rowOffsets[row] = lastOffset;
+                lastOffset += rowHeight;
             }
+            rowOffsets[numberOfRowsInSection] = lastOffset;
             
-            sectionRecord.rowsHeight = totalRowsHeight;
-            sectionRecord.rowHeights = rowHeights;
+            sectionRecord.rowsHeight = lastOffset;
+            sectionRecord.rowOffsets = rowOffsets;
             
             [_sections addObject:sectionRecord];
             [sectionRecord release];
@@ -384,11 +381,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (void)_layoutTableView
 {
-    if (_modificationCountAtLastLayout == _modificationCount) {
-        return;
-    }
-    _modificationCountAtLastLayout = _modificationCount;
-    
     // lays out headers and rows that are visible at the time. this should also do cell
     // dequeuing and keep a list of all existing cells that are visible and those
     // that exist but are not visible and are reusable
@@ -432,9 +424,9 @@ static NSString* const kUIStyleKey = @"UIStyle";
                 const NSInteger numberOfRows = sectionRecord.numberOfRows;
                 
                 for (NSInteger row = 0; row < numberOfRows; row++) {
-                    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:row inSection:section];
-                    CGRect rowRect = [self rectForRowAtIndexPath:indexPath];
+                    CGRect rowRect = [self _rectForRowAtIndex:row inSection:section];
                     if (CGRectIntersectsRect(rowRect, visibleBounds) && rowRect.size.height > 0) {
+                        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:row inSection:section];
                         UITableViewCell* cell = [self _ensureCellExistsAtIndexPath:indexPath];
                         cell.frame = rowRect;
                         [usedCells setObject:cell forKey:indexPath];
@@ -483,20 +475,20 @@ static NSString* const kUIStyleKey = @"UIStyle";
     }
 }
 
-- (CGRect)_CGRectFromVerticalOffset:(CGFloat)offset height:(CGFloat)height
+- (CGRect) _CGRectFromVerticalOffset:(CGFloat)offset height:(CGFloat)height
 {
-	if(self.style==UITableViewStylePlain)
-    return CGRectMake(0,offset,self.bounds.size.width,height);
-	else
-    return CGRectMake(9,offset,self.bounds.size.width-29,height);
-	
+	if (self.style == UITableViewStylePlain) {
+        return CGRectMake(0, offset, self.bounds.size.width, height);
+	} else {
+        return CGRectMake(9, offset, self.bounds.size.width - 29, height);
+	}
 }
 
 - (CGFloat)_offsetForSection:(NSInteger)index
 {
     CGFloat offset = _tableHeaderView? _tableHeaderView.frame.size.height : 0;
     
-    for (NSInteger s=0; s<index; s++) {
+    for (NSInteger s = 0; s < index; s++) {
         offset += [[_sections objectAtIndex:s] sectionHeight];
     }
     
@@ -525,27 +517,28 @@ static NSString* const kUIStyleKey = @"UIStyle";
     return [self _CGRectFromVerticalOffset:offset height:sectionRecord.footerHeight];
 }
 
-- (CGRect)rectForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGRect) _rectForRowAtIndex:(NSUInteger)index inSection:(NSUInteger)section
+{
+    UITableViewSection* sectionRecord = [_sections objectAtIndex:section];
+    CGFloat offset = [self _offsetForSection:section] + [sectionRecord headerHeight] + [sectionRecord offsetForRowAtIndex:index];
+    CGFloat height = [sectionRecord heightForRowAtIndex:index];
+    return [self _CGRectFromVerticalOffset:offset height:height];
+}
+
+- (CGRect) rectForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     [self _updateSectionsCacheIfNeeded];
 
-    if (indexPath && indexPath.section < [_sections count]) {
-        UITableViewSection *sectionRecord = [_sections objectAtIndex:indexPath.section];
-        
-        if (indexPath.row < sectionRecord.numberOfRows) {
-            CGFloat offset = [self _offsetForSection:indexPath.section];
-            offset += sectionRecord.headerHeight;
-            
-            CGFloat* rowHeights = sectionRecord.rowHeights;
-            for (NSInteger row = indexPath.row - 1; row >= 0; row--) {
-				offset += rowHeights[row];
-            }
-            
-            return [self _CGRectFromVerticalOffset:offset height:sectionRecord.rowHeights[indexPath.row]];
-        }
+    if (!indexPath || indexPath.section >= [_sections count]) {
+        return CGRectZero;
     }
     
-    return CGRectZero;
+    UITableViewSection* sectionRecord = [_sections objectAtIndex:indexPath.section];
+    if (indexPath.row >= sectionRecord.numberOfRows) {
+        return CGRectZero;
+    }
+    
+    return [self _rectForRowAtIndex:indexPath.row inSection:indexPath.section];
 }
 
 - (void)beginUpdates
@@ -589,7 +582,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
         if (offset + sectionRecord.rowsHeight >= rect.origin.y) {
             for (NSInteger row=0; row<numberOfRows; row++) {
-                const CGFloat height = sectionRecord.rowHeights[row];
+                const CGFloat height = [sectionRecord heightForRowAtIndex:row];
                 CGRect simpleRowRect = CGRectMake(rect.origin.x, offset, rect.size.width, height);
                 
                 if (CGRectIntersectsRect(rect,simpleRowRect)) {
@@ -700,7 +693,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
     [self _setContentSize];
     
     _needsReload = NO;
-    _modificationCount++;
 }
 
 - (void)_reloadDataIfNeeded
@@ -1105,18 +1097,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void) pageDown:(id)sender
 {
     [self scrollRectToVisible:CGRectMake(0.0f, MIN(self.contentOffset.y + self.bounds.size.height, self.contentSize.height), self.bounds.size.width, self.bounds.size.height) animated:YES];
-}
-
-- (void) setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated
-{
-    _modificationCount++;
-    [super setContentOffset:contentOffset animated:animated];
-}
-
-- (void) setContentSize:(CGSize)contentSize
-{
-    _modificationCount++;
-    [super setContentSize:contentSize];
 }
 
 @end
