@@ -58,17 +58,11 @@ static NSString* const kUISeparatorColorKey = @"UISeparatorColor";
 static NSString* const kUISeparatorStyleKey = @"UISeparatorStyle";
 static NSString* const kUIStyleKey = @"UIStyle";
 
-@interface UITableView ()
-- (void)_setNeedsReload;
-- (NSIndexPath *)_selectRowAtIndexPath:(NSIndexPath *)indexPath exclusively:(BOOL)exclusively sendDelegateMessages:(BOOL)sendDelegateMessage animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition;
-@end
-
 @implementation UITableView {
-    NSMutableDictionary *_cachedCells;
-    NSMutableSet *_reusableCells;
-    NSMutableArray *_sections;
-    NSMutableArray *_selectedRows;
-    UITableViewStyle _style;
+    NSMutableDictionary* _cachedCells;
+    NSMutableSet* _reusableCells;
+    NSMutableArray* _sections;
+    NSMutableArray* _selectedRows;
     BOOL _needsReload;
     
     struct {
@@ -710,9 +704,9 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
     [self _reloadDataIfNeeded];
     [self _layoutTableView];
-    [super layoutSubviews];
 }
 
 - (void)setFrame:(CGRect)frame
