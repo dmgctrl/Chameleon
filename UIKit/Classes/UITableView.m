@@ -1107,6 +1107,12 @@ static NSString* const kUIStyleKey = @"UIStyle";
     [self scrollRectToVisible:CGRectMake(0.0f, MIN(self.contentOffset.y + self.bounds.size.height, self.contentSize.height), self.bounds.size.width, self.bounds.size.height) animated:YES];
 }
 
+- (void) setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated
+{
+    _modificationCount++;
+    [super setContentOffset:contentOffset animated:animated];
+}
+
 - (void) setContentSize:(CGSize)contentSize
 {
     _modificationCount++;
