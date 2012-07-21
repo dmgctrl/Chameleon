@@ -209,19 +209,18 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void)setDelegate:(id<UITableViewDelegate>)newDelegate
 {
     [super setDelegate:newDelegate];
-    if (newDelegate) {
-        _delegateHas.heightForRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)];
-        _delegateHas.heightForHeaderInSection = [newDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)];
-        _delegateHas.heightForFooterInSection = [newDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)];
-        _delegateHas.viewForHeaderInSection = [newDelegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)];
-        _delegateHas.viewForFooterInSection = [newDelegate respondsToSelector:@selector(tableView:viewForFooterInSection:)];
-        _delegateHas.willSelectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)];
-        _delegateHas.didSelectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)];
-        _delegateHas.didDoubleClickRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:didDoubleClickRowAtIndexPath:)];
-        _delegateHas.willDeselectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)];
-        _delegateHas.didDeselectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)];
-        _delegateHas.accessoryButtonTappedForRowWithIndexPath = [newDelegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)];
-    }
+
+    _delegateHas.heightForRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)];
+    _delegateHas.heightForHeaderInSection = [newDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)];
+    _delegateHas.heightForFooterInSection = [newDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)];
+    _delegateHas.viewForHeaderInSection = [newDelegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)];
+    _delegateHas.viewForFooterInSection = [newDelegate respondsToSelector:@selector(tableView:viewForFooterInSection:)];
+    _delegateHas.willSelectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)];
+    _delegateHas.didSelectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)];
+    _delegateHas.didDoubleClickRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:didDoubleClickRowAtIndexPath:)];
+    _delegateHas.willDeselectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)];
+    _delegateHas.didDeselectRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)];
+    _delegateHas.accessoryButtonTappedForRowWithIndexPath = [newDelegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)];
 }
 
 - (void)setRowHeight:(CGFloat)newHeight
