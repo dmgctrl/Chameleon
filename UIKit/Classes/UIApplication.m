@@ -29,14 +29,14 @@
 
 #import "UIApplication+UIPrivate.h"
 #import "UIScreen+UIPrivate.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIKitView.h"
 #import "UIEvent+UIPrivate.h"
 #import "UITouch+UIPrivate.h"
 #import "UIWindow+UIPrivate.h"
 #import "UIPopoverController+UIPrivate.h"
-#import "UIResponderAppKitIntegration.h"
-#import "UIApplicationAppKitIntegration.h"
+#import "UIResponder+AppKit.h"
+#import "UIApplication+AppKit.h"
 #import "UIKey+UIPrivate.h"
 #import "UIBackgroundTask.h"
 #import <Cocoa/Cocoa.h>

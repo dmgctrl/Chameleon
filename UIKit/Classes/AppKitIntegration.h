@@ -27,17 +27,17 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIColorAppKitIntegration.h"
-#import "UIFontAppKitIntegration.h"
-#import "UIImageAppKitIntegration.h"
-#import "UIResponderAppKitIntegration.h"
-#import "UIScreenAppKitIntegration.h"
-#import "UIActionSheetAppKitIntegration.h"
-#import "UIApplicationAppKitIntegration.h"
-#import "UIViewAppKitIntegration.h"
-#import "UIWindowAppKitIntegration.h"
-#import "UITableViewAppKitIntegration.h"
-#import "UIPopoverControllerAppKitIntegration.h"
+#import "UIColor+AppKit.h"
+#import "UIFont+AppKit.h"
+#import "UIImage+AppKit.h"
+#import "UIResponder+AppKit.h"
+#import "UIScreen+AppKit.h"
+#import "UIActionSheet+AppKit.h"
+#import "UIApplication+AppKit.h"
+#import "UIView+AppKit.h"
+#import "UIWindow+AppKit.h"
+#import "UITableView+AppKit.h"
+#import "UIPopoverController+AppKit.h"
 
 #import "UIViewAdapter.h"
 #import "UINSCellControl.h"

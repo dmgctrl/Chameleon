@@ -34,13 +34,13 @@
 #import "UITouch.h"
 #import "UITableViewSection.h"
 #import "UITableViewSectionLabel.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIWindow.h"
 #import "UIKitView.h"
 #import "UIApplication+UIPrivate.h"
 #import "UIKey.h"
-#import "UIResponderAppKitIntegration.h"
-#import "UITableViewAppKitIntegration.h"
+#import "UIResponder+AppKit.h"
+#import "UITableView+AppKit.h"
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSMenuItem.h>
 #import <AppKit/NSEvent.h>
