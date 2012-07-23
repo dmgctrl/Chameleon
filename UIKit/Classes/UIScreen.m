@@ -28,7 +28,7 @@
  */
 
 #import "UIScreen.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIImage+UIPrivate.h"
 #import "UIImageView.h"
 #import "UIApplication.h"

@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIResponderAppKitIntegration.h"
+#import "UIResponder+AppKit.h"
 #import "UIEvent+UIPrivate.h"
 #import "UIKey.h"
 #import "UIApplication.h"

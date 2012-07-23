@@ -1,6 +1,6 @@
-#import "UIWindowAppKitIntegration.h"
+#import "UIWindow+AppKit.h"
 #import "UIWindow+UIPrivate.h"
-#import "UIViewAppKitIntegration.h"
+#import "UIView+AppKit.h"
 
 @implementation UIWindow (UIWindowAppKitIntegration)
 

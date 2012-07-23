@@ -28,7 +28,7 @@
  */
 
 #import "UIView.h"
-#import "UIPopoverControllerAppKitIntegration.h"
+#import "UIPopoverController+AppKit.h"
 
 @class UIImageView, UIPopoverController;
 

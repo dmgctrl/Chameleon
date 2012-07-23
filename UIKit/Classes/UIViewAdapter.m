@@ -33,7 +33,7 @@
 #import "UIKitView.h"
 #import "UIScrollView+UIPrivate.h"
 #import "UIScreen+UIPrivate.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIView+UIPrivate.h"
 #import "UIApplication.h"
 #import <AppKit/NSView.h>

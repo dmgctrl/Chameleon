@@ -35,7 +35,7 @@
 #import "UITouch.h"
 #import "UIImageView.h"
 #import "UIImage+UIPrivate.h"
-#import "UIResponderAppKitIntegration.h"
+#import "UIResponder+AppKit.h"
 #import "UIScrollViewAnimationScroll.h"
 #import "UIScrollViewAnimationDeceleration.h"
 #import "UIPanGestureRecognizer.h"

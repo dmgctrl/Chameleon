@@ -30,7 +30,7 @@
 #import "UIMenuController.h"
 #import "UIApplication+UIPrivate.h"
 #import "UIWindow+UIPrivate.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIKitView.h"
 #import "UIMenuItem.h"
 #import <AppKit/NSMenu.h>

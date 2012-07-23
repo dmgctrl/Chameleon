@@ -31,7 +31,7 @@
 #import "UIImage.h"
 #import "UIGraphics.h"
 #import "UIColor.h"
-#import "UIImageAppKitIntegration.h"
+#import "UIImage+AppKit.h"
 #import "UIWindow.h"
 #import "UIImage+UIPrivate.h"
 #import "UIScreen.h"
