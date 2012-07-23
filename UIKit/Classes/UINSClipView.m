@@ -31,7 +31,7 @@
 #import "UIScrollView+UIPrivate.h"
 #import "UIWindow.h"
 #import "UIScreen+UIPrivate.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import <AppKit/NSEvent.h>
 
 

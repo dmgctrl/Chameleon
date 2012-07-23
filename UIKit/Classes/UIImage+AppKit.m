@@ -28,7 +28,7 @@
  */
 
 #import "UIImage+UIPrivate.h"
-#import "UIImageAppKitIntegration.h"
+#import "UIImage+AppKit.h"
 #import "UIImageRep.h"
 #import <AppKit/NSImage.h>
 #import <objc/runtime.h>

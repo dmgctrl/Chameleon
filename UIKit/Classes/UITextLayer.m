@@ -33,7 +33,7 @@
 #import "UICustomNSClipView.h"
 #import "UIWindow.h"
 #import "UIScreen+UIPrivate.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIApplication+UIPrivate.h"
 #import "AppKitIntegration.h"
 #import "UIView+UIPrivate.h"

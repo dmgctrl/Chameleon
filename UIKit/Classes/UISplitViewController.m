@@ -32,7 +32,7 @@
 #import "UIView.h"
 #import "UITouch.h"
 #import "UIColor.h"
-#import "UIResponderAppKitIntegration.h"
+#import "UIResponder+AppKit.h"
 #import <AppKit/AppKit.h>
 
 

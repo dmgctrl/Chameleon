@@ -28,8 +28,8 @@
  */
 
 #import "UIPasteboard.h"
-#import "UIImageAppKitIntegration.h"
-#import "UIColorAppKitIntegration.h"
+#import "UIImage+AppKit.h"
+#import "UIColor+AppKit.h"
 #import <AppKit/NSPasteboard.h>
 #import <AppKit/NSImage.h>
 #import <AppKit/NSColor.h>
