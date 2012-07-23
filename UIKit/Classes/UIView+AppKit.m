@@ -1,4 +1,4 @@
-#import "UIViewAppKitIntegration.h"
+#import "UIView+AppKit.h"
 #import "UIView+UIPrivate.h"
 
 @implementation UIView (AppKitIntegration)

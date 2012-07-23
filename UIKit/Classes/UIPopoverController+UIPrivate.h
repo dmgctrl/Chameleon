@@ -28,7 +28,7 @@
  */
 
 #import "UIPopoverController.h"
-#import "UIPopoverControllerAppKitIntegration.h"
+#import "UIPopoverController+AppKit.h"
 
 @class NSEvent;
 

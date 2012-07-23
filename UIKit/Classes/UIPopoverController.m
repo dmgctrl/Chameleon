@@ -31,7 +31,7 @@
 #import "UIViewController.h"
 #import "UIWindow.h"
 #import "UIScreen+UIPrivate.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIKitView.h"
 #import "UITouch.h"
 #import "UIApplication+UIPrivate.h"

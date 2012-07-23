@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIScreen+UIPrivate.h"
 #import "UIKitView.h"
 #import <AppKit/AppKit.h>

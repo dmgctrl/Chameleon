@@ -29,7 +29,7 @@
 
 #import "UIView+UIPrivate.h"
 #import "UIViewController+UIPrivate.h"
-#import "UIViewAppKitIntegration.h"
+#import "UIView+AppKit.h"
 #import "UIWindow.h"
 #import "UIGraphics.h"
 #import "UIColor.h"

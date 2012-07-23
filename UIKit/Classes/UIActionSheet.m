@@ -29,7 +29,7 @@
 
 #import "UIActionSheet.h"
 #import "UIWindow.h"
-#import "UIScreenAppKitIntegration.h"
+#import "UIScreen+AppKit.h"
 #import "UIKitView.h"
 #import "UIApplication+UIPrivate.h"
 #import "UIBarButtonItem.h"
