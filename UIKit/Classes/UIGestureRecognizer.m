@@ -33,16 +33,15 @@
 #import "UIAction.h"
 #import "UIApplication.h"
 
-
 @implementation UIGestureRecognizer {
     NSMutableArray *_registeredActions;
     NSMutableArray *_trackingTouches;
-
+    
     struct {
         BOOL shouldBegin : 1;
         BOOL shouldReceiveTouch : 1;
         BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
-    } _delegateHas;	
+    } _delegateHas;
 }
 @synthesize delegate = _delegate;
 @synthesize delaysTouchesBegan = _delaysTouchesBegan;
@@ -57,6 +56,7 @@
     if ((self=[super init])) {
         _state = UIGestureRecognizerStatePossible;
         _cancelsTouchesInView = YES;
+        _delaysTouchesBegan = NO;
         _delaysTouchesEnded = YES;
         _enabled = YES;
 
@@ -157,7 +157,7 @@
 
     typedef struct { UIGestureRecognizerState fromState, toState; BOOL shouldNotify, shouldReset; } StateTransition;
 
-    #define NumberOfStateTransitions 10
+    #define NumberOfStateTransitions 9
     static const StateTransition allowedTransitions[NumberOfStateTransitions] = {
         // discrete gestures
         {UIGestureRecognizerStatePossible,		UIGestureRecognizerStateRecognized,     YES,    YES},
@@ -170,8 +170,7 @@
         {UIGestureRecognizerStateBegan,			UIGestureRecognizerStateEnded,          YES,    YES},
         {UIGestureRecognizerStateChanged,		UIGestureRecognizerStateChanged,        YES,    NO },
         {UIGestureRecognizerStateChanged,		UIGestureRecognizerStateCancelled,      YES,    YES},
-        {UIGestureRecognizerStateChanged,		UIGestureRecognizerStateEnded,          YES,    YES},
-        {UIGestureRecognizerStateChanged,		UIGestureRecognizerStateFailed,         NO,     YES}
+        {UIGestureRecognizerStateChanged,		UIGestureRecognizerStateEnded,          YES,    YES}
     };
     
     const StateTransition *transition = NULL;
@@ -241,6 +240,22 @@
 {
 }
 
+- (void)_gesturesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+}
+
+- (void)_gesturesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+}
+
+- (void)_gesturesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+}
+
+- (void)_discreteGestures:(NSSet *)touches withEvent:(UIEvent *)event
+{
+}
+
 - (BOOL)_shouldAttemptToRecognize
 {
     return (self.enabled &&
@@ -257,23 +272,35 @@
         for (UITouch *touch in _trackingTouches) {
             switch (touch.phase) {
                 case UITouchPhaseBegan:
-                case _UITouchPhaseGestureBegan:
-                case _UITouchPhaseDiscreteGesture:
                     [self touchesBegan:touches withEvent:event];
                     break;
-                    
+
                 case UITouchPhaseMoved:
-                case _UITouchPhaseGestureChanged:
                     [self touchesMoved:touches withEvent:event];
                     break;
-                    
+                                    
                 case UITouchPhaseEnded:
-                case _UITouchPhaseGestureEnded:
                     [self touchesEnded:touches withEvent:event];
                     break;
                     
                 case UITouchPhaseCancelled:
                     [self touchesCancelled:touches withEvent:event];
+                    break;
+
+                case _UITouchPhaseGestureBegan:
+                    [self _gesturesBegan:touches withEvent:event];
+                    break;
+
+                case _UITouchPhaseGestureChanged:
+                    [self _gesturesMoved:touches withEvent:event];
+                    break;
+
+                case _UITouchPhaseGestureEnded:
+                    [self _gesturesEnded:touches withEvent:event];
+                    break;
+                    
+                case _UITouchPhaseDiscreteGesture:
+                    [self _discreteGestures:touches withEvent:event];
                     break;
                     
                 default:

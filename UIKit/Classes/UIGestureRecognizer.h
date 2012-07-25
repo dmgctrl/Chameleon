@@ -48,7 +48,7 @@ typedef enum {
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 @end
 
-@interface UIGestureRecognizer : NSObject 
+@interface UIGestureRecognizer : NSObject
 
 - (id)initWithTarget:(id)target action:(SEL)action;
 
