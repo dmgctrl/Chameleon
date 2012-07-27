@@ -1,6 +1,4 @@
-#import <Foundation/Foundation.h>
-
-extern int UIApplicationMain(int argc, char *argv[], NSString *principalClassName, NSString *delegateClassName);
+#import <UIKit/UIKit.h>
 
 int main(int argc, char *argv[])
 {
