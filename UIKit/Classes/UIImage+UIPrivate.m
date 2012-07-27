@@ -34,13 +34,13 @@
 #import "UIImageRep.h"
 #import <AppKit/NSImage.h>
 
-NSMutableDictionary *imageCache = nil;
-
 @implementation UIImage (UIPrivate)
+
+static NSCache* imageCache = nil;
 
 + (void)load
 {
-    imageCache = [[NSMutableDictionary alloc] init];
+    imageCache = [[NSCache alloc] init];
 }
 
 + (NSString *)_macPathForFile:(NSString *)path
