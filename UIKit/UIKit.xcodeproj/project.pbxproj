@@ -332,6 +332,20 @@
 		F95416E213C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F95416E113C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png */; };
 		F95416E413C91D22000A9282 /* <UIButton> detailDisclosureButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F95416E313C91D22000A9282 /* <UIButton> detailDisclosureButton.png */; };
 		F95416F013C9FC9D000A9282 /* UITableView+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F95416EF13C9FC9D000A9282 /* UITableView+UIPrivate.h */; };
+		F95F641B15C34CF100F3523B /* libKiwi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F641A15C34CF100F3523B /* libKiwi.a */; };
+		F95F642D15C34E3800F3523B /* UIImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F642C15C34E3700F3523B /* UIImageSpec.m */; };
+		F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F642C15C34E3700F3523B /* UIImageSpec.m */; };
+		F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
+		F95F643115C34E8C00F3523B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
+		F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643215C34E9100F3523B /* Foundation.framework */; };
+		F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643415C34E9700F3523B /* libKiwi-OSX.a */; };
+		F95F643F15C34FD200F3523B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
+		F95F644F15C3504000F3523B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
+		F95F645215C3504000F3523B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F645015C3504000F3523B /* Foundation.framework */; };
+		F95F645315C3504000F3523B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F645115C3504000F3523B /* UIKit.framework */; };
+		F95F645415C3505700F3523B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F645015C3504000F3523B /* Foundation.framework */; };
+		F95F645615C3522100F3523B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F644615C34FD200F3523B /* main.m */; };
+		F95F645715C3528800F3523B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F645115C3504000F3523B /* UIKit.framework */; };
 		F9647ED013B90D560040B2D6 /* <UITableView> selection.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECD13B90D560040B2D6 /* <UITableView> selection.png */; };
 		F9647ED113B90D560040B2D6 /* <UITableView> selectionGray.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECE13B90D560040B2D6 /* <UITableView> selectionGray.png */; };
 		F9647ED213B90D560040B2D6 /* <UITableView> selectionGrayBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECF13B90D560040B2D6 /* <UITableView> selectionGrayBlue.png */; };
@@ -705,6 +719,24 @@
 		F95416E113C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIButton> detailDisclosureButtonPressed.png"; path = "Resources/<UIButton> detailDisclosureButtonPressed.png"; sourceTree = "<group>"; };
 		F95416E313C91D22000A9282 /* <UIButton> detailDisclosureButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIButton> detailDisclosureButton.png"; path = "Resources/<UIButton> detailDisclosureButton.png"; sourceTree = "<group>"; };
 		F95416EF13C9FC9D000A9282 /* UITableView+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+UIPrivate.h"; sourceTree = "<group>"; };
+		F95F640415C34C6100F3523B /* UIKit Specs (iOS).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIKit Specs (iOS).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F95F640615C34C6100F3523B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		F95F640815C34C6100F3523B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		F95F640A15C34C6100F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F95F640E15C34C6100F3523B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F95F641515C34C6100F3523B /* UIKitSpecs.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIKitSpecs.pch; sourceTree = "<group>"; };
+		F95F641A15C34CF100F3523B /* libKiwi.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libKiwi.a; path = "../../Kiwi/build/Release-iphoneos/libKiwi.a"; sourceTree = "<group>"; };
+		F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIKit Specs (OSX).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F95F642C15C34E3700F3523B /* UIImageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageSpec.m; sourceTree = "<group>"; };
+		F95F642F15C34E8800F3523B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		F95F643215C34E9100F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F95F643415C34E9700F3523B /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
+		F95F643A15C34FD200F3523B /* Test Harness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Test Harness.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F95F643E15C34FD200F3523B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F95F644215C34FD200F3523B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F95F644615C34FD200F3523B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F95F645015C3504000F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F95F645115C3504000F3523B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		F9647ECD13B90D560040B2D6 /* <UITableView> selection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableView> selection.png"; path = "Resources/<UITableView> selection.png"; sourceTree = "<group>"; };
 		F9647ECE13B90D560040B2D6 /* <UITableView> selectionGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableView> selectionGray.png"; path = "Resources/<UITableView> selectionGray.png"; sourceTree = "<group>"; };
 		F9647ECF13B90D560040B2D6 /* <UITableView> selectionGrayBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableView> selectionGrayBlue.png"; path = "Resources/<UITableView> selectionGrayBlue.png"; sourceTree = "<group>"; };
@@ -761,6 +793,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F95F640015C34C6100F3523B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F95F645215C3504000F3523B /* Foundation.framework in Frameworks */,
+				F95F645315C3504000F3523B /* UIKit.framework in Frameworks */,
+				F95F644F15C3504000F3523B /* SenTestingKit.framework in Frameworks */,
+				F95F641B15C34CF100F3523B /* libKiwi.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F95F641E15C34D6900F3523B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */,
+				F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */,
+				F95F643115C34E8C00F3523B /* UIKit.framework in Frameworks */,
+				F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F95F643715C34FD200F3523B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F95F645715C3528800F3523B /* UIKit.framework in Frameworks */,
+				F95F645415C3505700F3523B /* Foundation.framework in Frameworks */,
+				F95F643F15C34FD200F3523B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -768,6 +832,9 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* UIKit.framework */,
+				F95F640415C34C6100F3523B /* UIKit Specs (iOS).octest */,
+				F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */,
+				F95F643A15C34FD200F3523B /* Test Harness.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -782,6 +849,9 @@
 				089C1665FE841158C02AAC07 /* Resources */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				F95F640C15C34C6100F3523B /* Specs */,
+				F95F644015C34FD200F3523B /* Test Harness */,
+				F95F640515C34C6100F3523B /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = UIKit;
@@ -1214,6 +1284,61 @@
 			name = "AppKit Integration";
 			sourceTree = "<group>";
 		};
+		F95F640515C34C6100F3523B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F95F645015C3504000F3523B /* Foundation.framework */,
+				F95F645115C3504000F3523B /* UIKit.framework */,
+				F95F643415C34E9700F3523B /* libKiwi-OSX.a */,
+				F95F643215C34E9100F3523B /* Foundation.framework */,
+				F95F642F15C34E8800F3523B /* SenTestingKit.framework */,
+				F95F641A15C34CF100F3523B /* libKiwi.a */,
+				F95F640615C34C6100F3523B /* SenTestingKit.framework */,
+				F95F640815C34C6100F3523B /* UIKit.framework */,
+				F95F640A15C34C6100F3523B /* Foundation.framework */,
+				F95F643E15C34FD200F3523B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F95F640C15C34C6100F3523B /* Specs */ = {
+			isa = PBXGroup;
+			children = (
+				F95F642C15C34E3700F3523B /* UIImageSpec.m */,
+				F95F640D15C34C6100F3523B /* Supporting Files */,
+			);
+			path = Specs;
+			sourceTree = "<group>";
+		};
+		F95F640D15C34C6100F3523B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F95F640E15C34C6100F3523B /* Info.plist */,
+				F95F641515C34C6100F3523B /* UIKitSpecs.pch */,
+			);
+			name = "Supporting Files";
+			path = ../Specs;
+			sourceTree = "<group>";
+		};
+		F95F644015C34FD200F3523B /* Test Harness */ = {
+			isa = PBXGroup;
+			children = (
+				F95F644115C34FD200F3523B /* Supporting Files */,
+			);
+			name = "Test Harness";
+			path = TestHarness;
+			sourceTree = "<group>";
+		};
+		F95F644115C34FD200F3523B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F95F644215C34FD200F3523B /* Info.plist */,
+				F95F644615C34FD200F3523B /* main.m */,
+			);
+			name = "Supporting Files";
+			path = ../TestHarness;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1416,13 +1541,66 @@
 			productReference = 8DC2EF5B0486A6940098B216 /* UIKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		F95F640315C34C6100F3523B /* UIKit Specs (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F95F641815C34C6100F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (iOS)" */;
+			buildPhases = (
+				F95F63FF15C34C6100F3523B /* Sources */,
+				F95F640015C34C6100F3523B /* Frameworks */,
+				F95F640115C34C6100F3523B /* Resources */,
+				F95F640215C34C6100F3523B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "UIKit Specs (iOS)";
+			productName = UIKitSpecs;
+			productReference = F95F640415C34C6100F3523B /* UIKit Specs (iOS).octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		F95F641C15C34D6900F3523B /* UIKit Specs (OSX) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F95F642615C34D6900F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */;
+			buildPhases = (
+				F95F641D15C34D6900F3523B /* Sources */,
+				F95F641E15C34D6900F3523B /* Frameworks */,
+				F95F642315C34D6900F3523B /* Resources */,
+				F95F642515C34D6900F3523B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "UIKit Specs (OSX)";
+			productName = UIKitSpecs;
+			productReference = F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		F95F643915C34FD200F3523B /* Test Harness */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F95F644C15C34FD300F3523B /* Build configuration list for PBXNativeTarget "Test Harness" */;
+			buildPhases = (
+				F95F643615C34FD200F3523B /* Sources */,
+				F95F643715C34FD200F3523B /* Frameworks */,
+				F95F643815C34FD200F3523B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Test Harness";
+			productName = "Test Harness";
+			productReference = F95F643A15C34FD200F3523B /* Test Harness.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "UIKit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1433,6 +1611,7 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* UIKit */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1440,6 +1619,9 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* UIKit */,
+				F95F641C15C34D6900F3523B /* UIKit Specs (OSX) */,
+				F95F643915C34FD200F3523B /* Test Harness */,
+				F95F640315C34C6100F3523B /* UIKit Specs (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -1508,7 +1690,57 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F95F640115C34C6100F3523B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F95F642315C34D6900F3523B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F95F643815C34FD200F3523B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F95F640215C34C6100F3523B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		F95F642515C34D6900F3523B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DC2EF540486A6940098B216 /* Sources */ = {
@@ -1651,6 +1883,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F95F63FF15C34C6100F3523B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F95F642D15C34E3800F3523B /* UIImageSpec.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F95F641D15C34D6900F3523B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F95F643615C34FD200F3523B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F95F645615C3522100F3523B /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -1658,12 +1914,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = UIKit_Prefix.pch;
@@ -1680,11 +1936,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = UIKit_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1723,6 +1979,170 @@
 			};
 			name = Release;
 		};
+		F95F641615C34C6100F3523B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = "/tmp/$(PROJECT_NAME)-iOS.dst";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = Specs/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				USE_HEADERMAP = NO;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		F95F641715C34C6100F3523B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = "/tmp/$(PROJECT_NAME)-iOS.dst";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = Specs/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				USE_HEADERMAP = NO;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		F95F642715C34D6900F3523B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = Specs/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "UIKit Specs (OSX)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		F95F642815C34D6900F3523B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = Specs/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "UIKit Specs (OSX)";
+				SDKROOT = macosx;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		F95F644D15C34FD300F3523B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = "/tmp/$(PROJECT_NAME)-iOS.dst";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = TestHarness/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F95F644E15C34FD300F3523B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = "/tmp/$(PROJECT_NAME)-iOS.dst";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = TestHarness/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1743,6 +2163,30 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		F95F641815C34C6100F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F95F641615C34C6100F3523B /* Debug */,
+				F95F641715C34C6100F3523B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F95F642615C34D6900F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F95F642715C34D6900F3523B /* Debug */,
+				F95F642815C34D6900F3523B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F95F644C15C34FD300F3523B /* Build configuration list for PBXNativeTarget "Test Harness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F95F644D15C34FD300F3523B /* Debug */,
+				F95F644E15C34FD300F3523B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
