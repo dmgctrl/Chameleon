@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8DC2EF4F0486A6940098B216"
-               BuildableName = "UIKit.framework"
-               BlueprintName = "UIKit"
+               BlueprintIdentifier = "F95F643915C34FD200F3523B"
+               BuildableName = "Test Harness.app"
+               BlueprintName = "Test Harness"
                ReferencedContainer = "container:UIKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,13 +32,22 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F95F641C15C34D6900F3523B"
-               BuildableName = "UIKit Specs (OSX).octest"
-               BlueprintName = "UIKit Specs (OSX)"
+               BlueprintIdentifier = "F95F640315C34C6100F3523B"
+               BuildableName = "UIKit Specs (iOS).octest"
+               BlueprintName = "UIKit Specs (iOS)"
                ReferencedContainer = "container:UIKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "F95F643915C34FD200F3523B"
+            BuildableName = "Test Harness.app"
+            BlueprintName = "Test Harness"
+            ReferencedContainer = "container:UIKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -49,6 +58,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "F95F643915C34FD200F3523B"
+            BuildableName = "Test Harness.app"
+            BlueprintName = "Test Harness"
+            ReferencedContainer = "container:UIKit.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -58,6 +76,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "F95F643915C34FD200F3523B"
+            BuildableName = "Test Harness.app"
+            BlueprintName = "Test Harness"
+            ReferencedContainer = "container:UIKit.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

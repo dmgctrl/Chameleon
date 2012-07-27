@@ -68,6 +68,9 @@
 
 - (id)initWithContentsOfFile:(NSString *)imagePath
 {
+    if (!imagePath) {
+        return nil;
+    }
     return [self _initWithRepresentations:[UIImageRep imageRepsWithContentsOfFile:imagePath]];
 }
 
