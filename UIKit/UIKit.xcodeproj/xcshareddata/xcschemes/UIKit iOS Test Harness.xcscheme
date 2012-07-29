@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F95F643915C34FD200F3523B"
-               BuildableName = "Test Harness.app"
+               BuildableName = "TestHarness.app"
                BlueprintName = "Test Harness"
                ReferencedContainer = "container:UIKit.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F95F643915C34FD200F3523B"
-            BuildableName = "Test Harness.app"
+            BuildableName = "TestHarness.app"
             BlueprintName = "Test Harness"
             ReferencedContainer = "container:UIKit.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F95F643915C34FD200F3523B"
-            BuildableName = "Test Harness.app"
+            BuildableName = "TestHarness.app"
             BlueprintName = "Test Harness"
             ReferencedContainer = "container:UIKit.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F95F643915C34FD200F3523B"
-            BuildableName = "Test Harness.app"
+            BuildableName = "TestHarness.app"
             BlueprintName = "Test Harness"
             ReferencedContainer = "container:UIKit.xcodeproj">
          </BuildableReference>

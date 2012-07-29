@@ -36,7 +36,8 @@
     CGImageRef _image;
 }
 
-+ (NSArray *)imageRepsWithContentsOfFile:(NSString *)file;
++ (NSArray*) imageRepsWithContentsOfFile:(NSString*)file;
++ (NSArray*) imageRepsWithContentsOfFile:(NSString*)file and2xVariant:(NSString*)fileAt2x;
 
 - (id)initWithCGImageSource:(CGImageSourceRef)source imageIndex:(NSUInteger)index scale:(CGFloat)scale;
 - (id)initWithCGImage:(CGImageRef)image scale:(CGFloat)scale;
