@@ -147,15 +147,15 @@
     }
 }
 
-- (CGSize)size
+- (CGSize) size
 {
-    CGSize size = CGSizeZero;
-    UIImageRep *rep = [_representations lastObject];
+    UIImageRep* rep = [_representations lastObject];
     const CGSize repSize = rep.imageSize;
     const CGFloat scale = rep.scale;
-    size.width = repSize.width / scale;
-    size.height = repSize.height / scale;
-    return size;
+    return (CGSize) {
+        .width = repSize.width / scale,
+        .height = repSize.height / scale,
+    };
 }
 
 - (NSInteger)leftCapWidth
