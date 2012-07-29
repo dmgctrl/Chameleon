@@ -76,18 +76,6 @@ static NSCache* imageCache = nil;
     return [imageCache objectForKey:name];
 }
 
-+ (NSString *)_nameForCachedImage:(UIImage *)image
-{
-    __block NSString * result = nil;
-    [imageCache enumerateKeysAndObjectsUsingBlock: ^(id key, id obj, BOOL *stop) {
-        if ( obj == image ) {
-            result = [key copy];
-            *stop = YES;
-        }
-    }];
-    return [result autorelease];
-}
-
 + (UIImage *)_imageFromNSImage:(NSImage *)ns
 {
     // if the NSImage isn't named, we can't optimize

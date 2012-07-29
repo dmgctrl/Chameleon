@@ -34,7 +34,6 @@
 @interface UIImage (UIPrivate)
 + (NSString *)_macPathForFile:(NSString *)path;		// inserts "@mac" into the filename of the file in the given path and returns the result
 + (NSString *)_pathForFile:(NSString *)path;
-+ (NSString *)_nameForCachedImage:(UIImage *)image;
 
 + (void)_cacheImage:(UIImage *)image forName:(NSString *)name;
 + (UIImage *)_cachedImageForName:(NSString *)name;

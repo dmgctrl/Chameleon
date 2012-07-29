@@ -225,16 +225,7 @@
 
 - (void)setImage:(UIImage *)image
 {
-    NSImage *ns = nil;
-    NSString *name = [UIImage _nameForCachedImage:image];
-    if (name != nil)
-        ns = [NSImage imageNamed:name];
-    
-    if (ns == nil) {
-        ns = [[[NSImage alloc] initWithCGImage:image.CGImage size:NSSizeFromCGSize(image.size)] autorelease];
-    }
-    
-    [_cell setImage:ns];
+    [_cell setImage:[[[NSImage alloc] initWithCGImage:image.CGImage size:NSSizeFromCGSize(image.size)] autorelease]];
     [_cell calcDrawInfo: NSRectFromCGRect(self.bounds)];
     [self _stateDidChange];
 }
