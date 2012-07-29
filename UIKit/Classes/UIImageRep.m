@@ -39,40 +39,104 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 @implementation UIImageRep
 @synthesize scale=_scale;
 
-+ (NSArray *)_imageRepsWithContentsOfMultiResolutionFile:(NSString *)imagePath
++ (NSArray*) imageRepsWithContentsOfFile:(NSString*)file
 {
-    // Note - not currently supported, but it should be easy to add in multi-resolution TIFF support here
-    // just check the file type initially and if it's a TIFF with multiple scale images in there, build the
-    // representations from that and return them, otherwise return nil and +imageRepsWithContentsOfFile: will
-    // try looking for the old-school multi-files.
-    return nil;
-}
+    NSAssert(file != nil, @"???");
+    NSMutableArray* reps = [NSMutableArray arrayWithCapacity:2];
 
-+ (NSArray *)_imageRepsWithContentsOfFiles:(NSString *)imagePath
-{
-    NSMutableArray *reps = [NSMutableArray arrayWithCapacity:2];
-    CGImageSourceRef src1X = CreateCGImageSourceWithFile(imagePath);
-    CGImageSourceRef src2X = CreateCGImageSourceWithFile([[[imagePath stringByDeletingPathExtension] stringByAppendingString:@"@2x"] stringByAppendingPathExtension:[imagePath pathExtension]]);
+    CGImageSourceRef source = CreateCGImageSourceWithFile(file);
+    if (source) {
+        /*  Roll through the various images contained within the source, looking
+         *  at the properties of each for the lowest dpi in the X and Y 
+         *  directions.  If this information is unavailable, then stop.
+         */
+        BOOL dpiInfoPresent = NO;
+        CGFloat dotsPerInchXAt1x = INFINITY;
+        CGFloat dotsPerInchYAt1x = INFINITY;
+        for (NSInteger i = 0, iMax = CGImageSourceGetCount(source); i < iMax; i++) {
+            NSDictionary* properties = (NSDictionary*)CGImageSourceCopyPropertiesAtIndex(source, i, NULL);
+            if (!properties) {
+                continue;
+            }
 
-    if (src1X) {
-        UIImageRep *rep = [[UIImageRep alloc] initWithCGImageSource:src1X imageIndex:0 scale:1];
-        if (rep) [reps addObject:rep];
-        [rep release];
-        CFRelease(src1X);
-    }
-    if (src2X) {
-        UIImageRep *rep = [[UIImageRep alloc] initWithCGImageSource:src2X imageIndex:0 scale:2];
-        if (rep) [reps addObject:rep];
-        [rep release];
-        CFRelease(src2X);
+            CGFloat dotsPerInchX = [[properties objectForKey:(id)kCGImagePropertyDPIWidth] floatValue];
+            CGFloat dotsPerInchY = [[properties objectForKey:(id)kCGImagePropertyDPIHeight] floatValue];
+            [properties release];
+
+            if (dotsPerInchX == 0 || dotsPerInchY == 0) {
+                continue;
+            }
+            
+            dotsPerInchXAt1x = MIN(dotsPerInchX, dotsPerInchXAt1x);
+            dotsPerInchYAt1x = MIN(dotsPerInchY, dotsPerInchYAt1x);
+            dpiInfoPresent = YES;
+        }
+        
+        if (dpiInfoPresent) {
+            for (NSInteger i = 0, iMax = CGImageSourceGetCount(source); i < iMax; i++) {
+                NSDictionary* properties = (NSDictionary*)CGImageSourceCopyPropertiesAtIndex(source, i, NULL);
+                if (!properties) {
+                    continue;
+                }
+
+                CGFloat scaleX = [[properties objectForKey:(id)kCGImagePropertyDPIWidth] floatValue] / dotsPerInchXAt1x;
+                CGFloat scaleY = [[properties objectForKey:(id)kCGImagePropertyDPIHeight] floatValue] / dotsPerInchYAt1x;
+                [properties release];
+
+                if (fabs(scaleX - scaleY) < 0.01) {
+                    UIImageRep* rep = [[UIImageRep alloc] initWithCGImageSource:source imageIndex:i scale:scaleX];
+                    if (rep) {
+                        [reps addObject:rep];
+                        [rep release];
+                    }
+                }
+            }
+        } else {
+            UIImageRep* rep = [[UIImageRep alloc] initWithCGImageSource:source imageIndex:0 scale:1.0];
+            if (rep) {
+                [reps addObject:rep];
+                [rep release];
+            }
+        }
+        
+        CFRelease(source);
     }
     
     return ([reps count] > 0)? reps : nil;
 }
 
-+ (NSArray *)imageRepsWithContentsOfFile:(NSString *)imagePath
++ (NSArray*) imageRepsWithContentsOfFile:(NSString*)file and2xVariant:(NSString*)fileAt2x
 {
-    return [self _imageRepsWithContentsOfMultiResolutionFile:imagePath] ?: [self _imageRepsWithContentsOfFiles:imagePath];
+    NSMutableArray* reps = [NSMutableArray array];
+    
+    if (file) {
+        UIImageRep* repAt1x = [[self alloc] initWithContentsOfFile:file scale:1.0];
+        if (repAt1x) {
+            [reps addObject:repAt1x];
+            [repAt1x release];
+        }
+    }
+    if (fileAt2x) {
+        UIImageRep* repAt2x = [[self alloc] initWithContentsOfFile:fileAt2x scale:2.0];
+        if (repAt2x) {
+            [reps addObject:repAt2x];
+            [repAt2x release];
+        }
+    }
+
+    return ([reps count] > 0)? reps : nil;
+}
+
+- (id) initWithContentsOfFile:(NSString*)file scale:(CGFloat)scale
+{
+    NSAssert(file != nil, @"???");
+    NSAssert(scale > 0, @"???");
+    CGImageSourceRef source = CreateCGImageSourceWithFile(file);
+    if (source) {
+        self = [self initWithCGImageSource:source imageIndex:0 scale:scale];
+        CFRelease(source);
+    }
+    return self;
 }
 
 - (id)initWithCGImageSource:(CGImageSourceRef)source imageIndex:(NSUInteger)index scale:(CGFloat)scale

@@ -346,6 +346,14 @@
 		F95F645415C3505700F3523B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F645015C3504000F3523B /* Foundation.framework */; };
 		F95F645615C3522100F3523B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F644615C34FD200F3523B /* main.m */; };
 		F95F645715C3528800F3523B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F645115C3504000F3523B /* UIKit.framework */; };
+		F95F645F15C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */; };
+		F95F646015C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */; };
+		F95F646215C36A7500F3523B /* white-noalpha-100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646115C36A7500F3523B /* white-noalpha-100x100.png */; };
+		F95F646615C37EF500F3523B /* image_with_underscores.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646415C37EF400F3523B /* image_with_underscores.png */; };
+		F95F646715C37EF500F3523B /* image_with_underscores.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646415C37EF400F3523B /* image_with_underscores.png */; };
+		F95F646815C37EF500F3523B /* image-with-hyphens.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646515C37EF500F3523B /* image-with-hyphens.png */; };
+		F95F646915C37EF500F3523B /* image-with-hyphens.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646515C37EF500F3523B /* image-with-hyphens.png */; };
+		F95F64B115C4377E00F3523B /* white-noalpha-100x100@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */; };
 		F9647ED013B90D560040B2D6 /* <UITableView> selection.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECD13B90D560040B2D6 /* <UITableView> selection.png */; };
 		F9647ED113B90D560040B2D6 /* <UITableView> selectionGray.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECE13B90D560040B2D6 /* <UITableView> selectionGray.png */; };
 		F9647ED213B90D560040B2D6 /* <UITableView> selectionGrayBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECF13B90D560040B2D6 /* <UITableView> selectionGrayBlue.png */; };
@@ -386,7 +394,19 @@
 		F9D9774313B7958E0086F226 /* <UINavigationBarBackground> default.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9774013B7958E0086F226 /* <UINavigationBarBackground> default.png */; };
 		F9D9774613B7959E0086F226 /* <UITabBar> background.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9774413B7959E0086F226 /* <UITabBar> background.png */; };
 		F9D9774713B7959E0086F226 /* <UITabBar> item.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9774513B7959E0086F226 /* <UITabBar> item.png */; };
+		F9FFDDE115C5A4D7000EDAA0 /* white-noalpha-100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646115C36A7500F3523B /* white-noalpha-100x100.png */; };
+		F9FFDDE215C5A4D7000EDAA0 /* white-noalpha-100x100@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F95F645B15C3654B00F3523B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F95F643915C34FD200F3523B;
+			remoteInfo = "Test Harness";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		03E591A913E863E100C6D194 /* UITableView+AppKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+AppKit.h"; path = "Classes/UITableView+AppKit.h"; sourceTree = "<group>"; };
@@ -725,18 +745,24 @@
 		F95F640A15C34C6100F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F95F640E15C34C6100F3523B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F95F641515C34C6100F3523B /* UIKitSpecs.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIKitSpecs.pch; sourceTree = "<group>"; };
-		F95F641A15C34CF100F3523B /* libKiwi.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libKiwi.a; path = "../../Kiwi/build/Release-iphoneos/libKiwi.a"; sourceTree = "<group>"; };
+		F95F641A15C34CF100F3523B /* libKiwi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libKiwi.a; path = "../../Kiwi/build/Release-iphoneos/libKiwi.a"; sourceTree = "<group>"; };
 		F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIKit Specs (OSX).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F95F642C15C34E3700F3523B /* UIImageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageSpec.m; sourceTree = "<group>"; };
 		F95F642F15C34E8800F3523B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		F95F643215C34E9100F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		F95F643415C34E9700F3523B /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
-		F95F643A15C34FD200F3523B /* Test Harness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Test Harness.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F95F643415C34E9700F3523B /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
+		F95F643A15C34FD200F3523B /* TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F95F643E15C34FD200F3523B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F95F644215C34FD200F3523B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F95F644615C34FD200F3523B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F95F645015C3504000F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F95F645115C3504000F3523B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		F95F645D15C366BB00F3523B /* NSBundle+TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestUtilities.h"; sourceTree = "<group>"; };
+		F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestUtilities.m"; sourceTree = "<group>"; };
+		F95F646115C36A7500F3523B /* white-noalpha-100x100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-noalpha-100x100.png"; sourceTree = "<group>"; };
+		F95F646415C37EF400F3523B /* image_with_underscores.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image_with_underscores.png; sourceTree = "<group>"; };
+		F95F646515C37EF500F3523B /* image-with-hyphens.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-with-hyphens.png"; sourceTree = "<group>"; };
+		F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-noalpha-100x100@2x.png"; sourceTree = "<group>"; };
 		F9647ECD13B90D560040B2D6 /* <UITableView> selection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableView> selection.png"; path = "Resources/<UITableView> selection.png"; sourceTree = "<group>"; };
 		F9647ECE13B90D560040B2D6 /* <UITableView> selectionGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableView> selectionGray.png"; path = "Resources/<UITableView> selectionGray.png"; sourceTree = "<group>"; };
 		F9647ECF13B90D560040B2D6 /* <UITableView> selectionGrayBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableView> selectionGrayBlue.png"; path = "Resources/<UITableView> selectionGrayBlue.png"; sourceTree = "<group>"; };
@@ -834,7 +860,7 @@
 				8DC2EF5B0486A6940098B216 /* UIKit.framework */,
 				F95F640415C34C6100F3523B /* UIKit Specs (iOS).octest */,
 				F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */,
-				F95F643A15C34FD200F3523B /* Test Harness.app */,
+				F95F643A15C34FD200F3523B /* TestHarness.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1304,7 +1330,7 @@
 		F95F640C15C34C6100F3523B /* Specs */ = {
 			isa = PBXGroup;
 			children = (
-				F95F642C15C34E3700F3523B /* UIImageSpec.m */,
+				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				F95F640D15C34C6100F3523B /* Supporting Files */,
 			);
 			path = Specs;
@@ -1315,6 +1341,8 @@
 			children = (
 				F95F640E15C34C6100F3523B /* Info.plist */,
 				F95F641515C34C6100F3523B /* UIKitSpecs.pch */,
+				F95F645D15C366BB00F3523B /* NSBundle+TestUtilities.h */,
+				F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */,
 			);
 			name = "Supporting Files";
 			path = ../Specs;
@@ -1337,6 +1365,18 @@
 			);
 			name = "Supporting Files";
 			path = ../TestHarness;
+			sourceTree = "<group>";
+		};
+		F9FFDDE315C5A8C5000EDAA0 /* UIImage */ = {
+			isa = PBXGroup;
+			children = (
+				F95F642C15C34E3700F3523B /* UIImageSpec.m */,
+				F95F646415C37EF400F3523B /* image_with_underscores.png */,
+				F95F646515C37EF500F3523B /* image-with-hyphens.png */,
+				F95F646115C36A7500F3523B /* white-noalpha-100x100.png */,
+				F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */,
+			);
+			name = UIImage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1553,6 +1593,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F95F645C15C3654B00F3523B /* PBXTargetDependency */,
 			);
 			name = "UIKit Specs (iOS)";
 			productName = UIKitSpecs;
@@ -1591,7 +1632,7 @@
 			);
 			name = "Test Harness";
 			productName = "Test Harness";
-			productReference = F95F643A15C34FD200F3523B /* Test Harness.app */;
+			productReference = F95F643A15C34FD200F3523B /* TestHarness.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1694,6 +1735,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F95F646715C37EF500F3523B /* image_with_underscores.png in Resources */,
+				F95F646915C37EF500F3523B /* image-with-hyphens.png in Resources */,
+				F9FFDDE115C5A4D7000EDAA0 /* white-noalpha-100x100.png in Resources */,
+				F9FFDDE215C5A4D7000EDAA0 /* white-noalpha-100x100@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1701,6 +1746,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F95F646215C36A7500F3523B /* white-noalpha-100x100.png in Resources */,
+				F95F646615C37EF500F3523B /* image_with_underscores.png in Resources */,
+				F95F646815C37EF500F3523B /* image-with-hyphens.png in Resources */,
+				F95F64B115C4377E00F3523B /* white-noalpha-100x100@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1888,6 +1937,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F95F642D15C34E3800F3523B /* UIImageSpec.m in Sources */,
+				F95F646015C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1896,6 +1946,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */,
+				F95F645F15C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1908,6 +1959,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F95F645C15C3654B00F3523B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F95F643915C34FD200F3523B /* Test Harness */;
+			targetProxy = F95F645B15C3654B00F3523B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1DEB91AE08733DA50010E9CD /* Debug */ = {
@@ -2004,6 +2063,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = Specs/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				USE_HEADERMAP = NO;
@@ -2030,6 +2090,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = Specs/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				USE_HEADERMAP = NO;
@@ -2045,7 +2106,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
@@ -2062,6 +2122,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = Specs/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "UIKit Specs (OSX)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
@@ -2075,7 +2136,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
@@ -2086,6 +2146,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = Specs/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "UIKit Specs (OSX)";
 				SDKROOT = macosx;
 				VALIDATE_PRODUCT = YES;
@@ -2113,7 +2174,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = TestHarness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TestHarness;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USE_HEADERMAP = NO;
@@ -2136,7 +2197,7 @@
 				INFOPLIST_FILE = TestHarness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TestHarness;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USE_HEADERMAP = NO;
@@ -2173,6 +2234,7 @@
 				F95F641715C34C6100F3523B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F95F642615C34D6900F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */ = {
 			isa = XCConfigurationList;
@@ -2181,6 +2243,7 @@
 				F95F642815C34D6900F3523B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F95F644C15C34FD300F3523B /* Build configuration list for PBXNativeTarget "Test Harness" */ = {
 			isa = XCConfigurationList;
@@ -2189,6 +2252,7 @@
 				F95F644E15C34FD300F3523B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
