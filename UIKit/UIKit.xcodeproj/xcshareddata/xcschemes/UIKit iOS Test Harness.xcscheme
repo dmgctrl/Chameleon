@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F95F643915C34FD200F3523B"
+               BlueprintIdentifier = "F9FFDE1C15C6E88A000EDAA0"
                BuildableName = "TestHarness.app"
                BlueprintName = "Test Harness"
                ReferencedContainer = "container:UIKit.xcodeproj">
@@ -32,8 +32,8 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F95F640315C34C6100F3523B"
-               BuildableName = "UIKit Specs (iOS).octest"
+               BlueprintIdentifier = "F9FFDE3215C6E88A000EDAA0"
+               BuildableName = "TestHarnessTests.octest"
                BlueprintName = "UIKit Specs (iOS)"
                ReferencedContainer = "container:UIKit.xcodeproj">
             </BuildableReference>
@@ -42,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F95F643915C34FD200F3523B"
+            BlueprintIdentifier = "F9FFDE1C15C6E88A000EDAA0"
             BuildableName = "TestHarness.app"
             BlueprintName = "Test Harness"
             ReferencedContainer = "container:UIKit.xcodeproj">
@@ -61,7 +61,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F95F643915C34FD200F3523B"
+            BlueprintIdentifier = "F9FFDE1C15C6E88A000EDAA0"
             BuildableName = "TestHarness.app"
             BlueprintName = "Test Harness"
             ReferencedContainer = "container:UIKit.xcodeproj">
@@ -79,7 +79,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F95F643915C34FD200F3523B"
+            BlueprintIdentifier = "F9FFDE1C15C6E88A000EDAA0"
             BuildableName = "TestHarness.app"
             BlueprintName = "Test Harness"
             ReferencedContainer = "container:UIKit.xcodeproj">
