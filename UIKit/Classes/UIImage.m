@@ -98,7 +98,7 @@
 
 - (id)initWithCGImage:(CGImageRef)imageRef
 {
-    return [self initWithCGImage:imageRef scale:1 orientation:UIImageOrientationUp];
+    return [self initWithCGImage:imageRef scale:1.0 orientation:UIImageOrientationUp];
 }
 
 - (id)initWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation
