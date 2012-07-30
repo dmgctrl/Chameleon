@@ -3,7 +3,7 @@ SPEC_BEGIN(UIImageSpec)
 describe(@"UIImage", ^{
     context(@"+imageNamed", ^{
         beforeAll(^{
-            [NSBundle pushMainBundle:[NSBundle bundleForClass:self]];
+            [NSBundle pushMainBundle:[NSBundle bundleForClass:[UIImageSpec class]]];
         });
         
         afterAll(^{
@@ -30,15 +30,12 @@ describe(@"UIImage", ^{
             [image shouldNotBeNil];
         });
 
-#if 0 //  The unit-test-simulator fails this, but running the test harness app
-      //  on the simulator passes?!?  Chameleon passes.
         if ([[UIScreen mainScreen] scale] == 2.0) context(@"on a retina device", ^{
             it(@"should load @2x variants", ^{
                 UIImage* image = [UIImage imageNamed:@"white-noalpha-100x100"];
                 [[theValue([image scale]) should] equal:theValue(2.0)];
             });
         });
-#endif
     });
 
     
@@ -48,13 +45,15 @@ describe(@"UIImage", ^{
             [image shouldBeNil];
         });
         
-        it(@"should not load @2x variants", ^{
-            NSString* file = [[NSBundle bundleForClass:self] pathForResource:@"white-noalpha-100x100" ofType:@"png"];
-            if (file) {
-                UIImage* image = [UIImage imageWithContentsOfFile:file];
-                [image shouldNotBeNil];
-                [[theValue([image scale]) should] equal:theValue(1.0)];
-            }
+        if ([[UIScreen mainScreen] scale] == 2.0) context(@"on a retina device", ^{
+            it(@"should not load @2x variants", ^{
+                NSString* file = [[NSBundle bundleForClass:self] pathForResource:@"white-noalpha-100x100" ofType:@"png"];
+                if (file) {
+                    UIImage* image = [UIImage imageWithContentsOfFile:file];
+                    [image shouldNotBeNil];
+                    [[theValue([image scale]) should] equal:theValue(2.0)];
+                }
+            });
         });
     });
 
