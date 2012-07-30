@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F9FFDE3215C6E88A000EDAA0"
-               BuildableName = "TestHarnessTests.octest"
+               BuildableName = "UIKit Specs (iOS).octest"
                BlueprintName = "UIKit Specs (iOS)"
                ReferencedContainer = "container:UIKit.xcodeproj">
             </BuildableReference>
