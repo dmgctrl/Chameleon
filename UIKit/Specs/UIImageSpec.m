@@ -33,7 +33,7 @@ describe(@"UIImage", ^{
         if ([[UIScreen mainScreen] scale] == 2.0) context(@"on a retina device", ^{
             it(@"should load @2x variants", ^{
                 UIImage* image = [UIImage imageNamed:@"white-noalpha-100x100"];
-                [[theValue([image scale]) should] equal:theValue(2.0)];
+                [[@([image scale]) should] equal:@2.0];
             });
         });
     });
@@ -51,7 +51,7 @@ describe(@"UIImage", ^{
                 if (file) {
                     UIImage* image = [UIImage imageWithContentsOfFile:file];
                     [image shouldNotBeNil];
-                    [[theValue([image scale]) should] equal:theValue(2.0)];
+                    [[@([image scale]) should] equal:@2.0];
                 }
             });
         });
