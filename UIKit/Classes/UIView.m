@@ -1119,10 +1119,12 @@ static IMP defaultImplementationOfDisplayLayer;
     [UIView setAnimationRepeatCount:(repeatAnimation? FLT_MAX : 0)];
     [UIView setAnimationRepeatAutoreverses:autoreverseRepeat];
     
-    animations();
-    
-    [UIView commitAnimations];
-    [delegate release];
+    @try {
+        animations();
+    } @finally {
+        [UIView commitAnimations];
+        [delegate release];
+    }
 }
 
 + (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
