@@ -427,7 +427,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
         return nil;
     }
     
-    NSString *key = [NSString stringWithFormat:@"%i", index];
+    NSString *key = [NSString stringWithFormat:@"%li", index];
     return [_segmentMeta objectForKey:key];
 }
 
@@ -452,7 +452,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
         _segmentMeta = [[NSMutableDictionary alloc] init];
     }
     
-    [_segmentMeta setValue:meta forKey:[NSString stringWithFormat:@"%i", index]];
+    [_segmentMeta setValue:meta forKey:[NSString stringWithFormat:@"%li", index]];
     [self setNeedsDisplay];
 }
 
