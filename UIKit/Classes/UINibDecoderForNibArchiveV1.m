@@ -580,7 +580,7 @@ static Class kClassForUIImageNibPlaceholder;
 - (NSString*) description
 {
     NSMutableString* s = [[NSMutableString alloc] init];
-    [s appendFormat:@"<%@:%p class=%@, %d values:{", NSStringFromClass([self class]), self, NSStringFromClass(archiveData_->classes[objectEntry_->indexOfClass]), objectEntry_->numberOfValues];
+    [s appendFormat:@"<%@:%p class=%@, %ld values:{", NSStringFromClass([self class]), self, NSStringFromClass(archiveData_->classes[objectEntry_->indexOfClass]), objectEntry_->numberOfValues];
     UINibDecoderValueEntry* value = archiveData_->values + objectEntry_->indexOfFirstValue;
     UINibDecoderValueEntry* lastValue = value + (objectEntry_->numberOfValues - 1);
     while (value <= lastValue) {
@@ -1008,7 +1008,7 @@ static Class kClassForUIImageNibPlaceholder;
 
 - (void) _cannotDecodeType:(NSInteger)type asObjCType:(char const*)objcType 
 {
-    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot decode type-code %d as %s", type, objcType];
+    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot decode type-code %ld as %s", type, objcType];
 }
 
 @end
