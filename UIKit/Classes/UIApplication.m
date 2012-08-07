@@ -672,7 +672,11 @@ static BOOL TouchIsActive(UITouch *touch)
     } else if (![self isIgnoringInteractionEvents]) {
         switch ([theNSEvent type]) {
             case NSLeftMouseDown:
-                [touch _setPhase:UITouchPhaseBegan screenLocation:screenLocation tapCount:[theNSEvent clickCount] timestamp:timestamp];
+                if ([theNSEvent modifierFlags] & NSControlKeyMask) {
+                    [touch _setDiscreteGesture:_UITouchDiscreteGestureRightClick screenLocation:screenLocation tapCount:[theNSEvent clickCount] delta:CGPointZero timestamp:timestamp];
+                } else {
+                    [touch _setPhase:UITouchPhaseBegan screenLocation:screenLocation tapCount:[theNSEvent clickCount] timestamp:timestamp];
+                }
                 [self _setCurrentEventTouchedViewWithNSEvent:theNSEvent fromScreen:theScreen];
                 [self sendEvent:_currentEvent];
                 break;
