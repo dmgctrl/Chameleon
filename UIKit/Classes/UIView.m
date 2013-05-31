@@ -87,6 +87,7 @@ static BOOL _animationsEnabled = YES;
         BOOL exclusiveTouch : 1;
         BOOL userInteractionEnabled : 1;
         BOOL autoresizesSubviews : 1;
+        BOOL layerHasContentScale : 1;
     } _flags;
 }
 @synthesize layer = _layer;
@@ -138,7 +139,8 @@ static IMP defaultImplementationOfDisplayLayer;
     _layer = [[[[self class] layerClass] alloc] init];
     _layer.delegate = self;
     _layer.layoutManager = [UIViewLayoutManager layoutManager];
-
+    _flags.layerHasContentScale = [_layer respondsToSelector:@selector(setContentsScale:)];
+    
     self.alpha = 1;
     self.opaque = YES;
     [self setNeedsDisplay];
@@ -658,6 +660,12 @@ static IMP defaultImplementationOfDisplayLayer;
     }
 }
 
+- (BOOL) layer:(CALayer*)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
+{
+    [self setNeedsDisplay];
+    return YES;
+}
+
 - (void)_superviewSizeDidChangeFrom:(CGSize)oldSize to:(CGSize)newSize
 {
     if (_autoresizingMask != UIViewAutoresizingNone) {
@@ -910,7 +918,7 @@ static IMP defaultImplementationOfDisplayLayer;
     }
     
     if (scale > 0 && scale != self.contentScaleFactor) {
-        if ([_layer respondsToSelector:@selector(setContentsScale:)]) {
+        if (_flags.layerHasContentScale) {
             [_layer setContentsScale:scale];
             [self setNeedsDisplay];
         }
@@ -919,7 +927,7 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (CGFloat)contentScaleFactor
 {
-    return [_layer respondsToSelector:@selector(contentsScale)]? [_layer contentsScale] : 1;
+    return _flags.layerHasContentScale ? [_layer contentsScale] : 1;
 }
 
 - (void)setHidden:(BOOL)h
