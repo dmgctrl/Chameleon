@@ -634,8 +634,13 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 
 - (void)setText:(NSString *)newText
 {
-    _textLayer.text = newText;
-	
+    [self setAttributedText:[[NSAttributedString alloc] initWithString:newText]];
+}
+
+- (void) setAttributedText:(NSAttributedString *)attributedText
+{
+    _attributedText = attributedText;
+    _textLayer.text = [attributedText string];
 	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
 }
 
