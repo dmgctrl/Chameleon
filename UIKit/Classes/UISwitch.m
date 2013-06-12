@@ -34,7 +34,8 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    if ((self=[super initWithFrame:frame])) {		// this should enforce the proper size, etc. blah blah...
+    if ((self=[super initWithFrame:frame])) {
+        // UIView's initWithFrame: calls setFrame:, so we'll enforce UISwitch's size invariant down there (see below)
     }
     return self;
 }

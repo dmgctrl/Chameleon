@@ -28,6 +28,7 @@
  */
 
 #import "UIBarItem.h"
+#import "UIImage.h"
 
 @implementation UIBarItem
 @synthesize enabled = _enabled;
@@ -50,6 +51,15 @@
     [_image release];
     [_title release];
     [super dealloc];
+}
+
+- (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
+{
+}
+
+- (NSDictionary *)titleTextAttributesForState:(UIControlState)state
+{
+    return nil;
 }
 
 @end

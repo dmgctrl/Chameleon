@@ -65,7 +65,7 @@
 {
     NSAssert(CGPath != NULL, @"CGPath must not be NULL");
     UIBezierPath *bezierPath = [[self alloc] init];
-    bezierPath->_path = CGPath;
+    bezierPath.CGPath = CGPath;
     return [bezierPath autorelease];
 }
 

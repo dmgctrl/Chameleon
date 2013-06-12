@@ -30,7 +30,13 @@
 #import "UIView.h"
 #import "UIInterface.h"
 
-@interface UIToolbar : UIView 
+typedef enum {
+    UIToolbarPositionAny = 0,
+    UIToolbarPositionBottom = 1,
+    UIToolbarPositionTop = 2,
+} UIToolbarPosition;
+
+@interface UIToolbar : UIView
 
 - (void)setItems:(NSArray *)items animated:(BOOL)animated;
 

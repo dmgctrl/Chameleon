@@ -35,7 +35,6 @@
 #import "UIScreen+UIPrivate.h"
 #import "UIScreen+AppKit.h"
 #import "UIApplication+UIPrivate.h"
-#import "AppKitIntegration.h"
 #import "UIView+UIPrivate.h"
 #import "UIKitView.h"
 #import <AppKit/NSLayoutManager.h>
