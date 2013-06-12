@@ -80,6 +80,7 @@ typedef enum {
 @property (nonatomic, assign) UITextAlignment textAlignment;
 @property (nonatomic, copy) NSString *placeholder;
 @property (nonatomic, copy) NSString *text;
+@property (nonatomic, copy) NSAttributedString* attributedText;
 @property (nonatomic, retain) UIFont *font;
 @property (nonatomic) UITextBorderStyle borderStyle;
 @property (nonatomic, retain) UIColor *textColor;
