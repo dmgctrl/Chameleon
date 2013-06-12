@@ -38,7 +38,7 @@
 #import "UIView+UIPrivate.h"
 #import "UIKitView.h"
 #import "UIFont+UIPrivate.h"
-#import "UIColor+UIPrivate.h"
+#import "UIColor+AppKit.h"
 #import <AppKit/NSLayoutManager.h>
 #import <AppKit/NSWindow.h>
 
