@@ -32,6 +32,7 @@
 @class NSImage, UIImageRep;
 
 @interface UIImage (UIPrivate)
+
 + (NSString *)_macPathForFile:(NSString *)path;		// inserts "@mac" into the filename of the file in the given path and returns the result
 + (NSString *)_pathForFile:(NSString *)path;
 
@@ -92,6 +93,11 @@
 - (NSArray *)_representations;
 - (BOOL)_isOpaque;
 
+- (id)_initWithRepresentations:(NSArray *)reps;
+- (UIImageRep *)_bestRepresentationForProposedScale:(CGFloat)scale;
+- (void)_drawRepresentation:(UIImageRep *)rep inRect:(CGRect)rect;
+- (NSArray *)_representations;
+- (BOOL)_isOpaque;
+
 - (UIImage *)_toolbarImage;		// returns a new image which is modified as required for toolbar buttons (turned into a solid color)
-+ (UIImage *)_imageFromNSImage:(NSImage *)ns;
 @end

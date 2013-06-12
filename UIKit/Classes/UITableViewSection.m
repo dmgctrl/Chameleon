@@ -61,7 +61,9 @@
 
 - (void)dealloc
 {
-    [self setRowOffsets:nil];
+    if (_rowOffsets) {
+        free(_rowOffsets);
+    }
     [headerView release];
     [footerView release];
     [headerTitle release];

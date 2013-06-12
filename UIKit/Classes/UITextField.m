@@ -35,6 +35,7 @@
 #import "UIBezierPath.h"
 #import "UIGraphics.h"
 
+#import "UIImage.h"
 #import <AppKit/NSCursor.h>
 
 NSString *const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";

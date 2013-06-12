@@ -44,8 +44,9 @@
 #import "UIGeometry.h"
 #import "UIColor+UIPrivate.h"
 #import "UIColorRep.h"
-
 #import <QuartzCore/CALayer.h>
+
+@class NSWindow;
 
 NSString *const UIViewFrameDidChangeNotification = @"UIViewFrameDidChangeNotification";
 NSString *const UIViewBoundsDidChangeNotification = @"UIViewBoundsDidChangeNotification";
@@ -875,14 +876,10 @@ static IMP defaultImplementationOfDisplayLayer;
         [_backgroundColor release];
         _backgroundColor = [newColor retain];
 
-        CGColorRef color = [_backgroundColor CGColor];
-
-        if (color) {
-            self.opaque = (CGColorGetAlpha(color) == 1);
-        }
+        self.opaque = [_backgroundColor _isOpaque];
         
         if (!ourDrawRect_) {
-            _layer.backgroundColor = color;
+            _layer.backgroundColor = [newColor CGColor];
         }
     }
 }

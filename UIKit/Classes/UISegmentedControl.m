@@ -14,11 +14,13 @@
 #import "UIGraphics.h"
 
 static NSString *kSSSegmentedControlEnabledKey = @"enabled";
+
 static NSString* const kUISegmentsKey = @"UISegments";
 static NSString* const kUISegmentedControlStyleKey = @"UISegmentedControlStyle";
 static NSString* const kUISegmentedControlTintColorKey = @"UISegmentedControlTintColor";
 static NSString* const kUISelectedSegmentIndexKey = @"UISelectedSegmentIndex";
 static NSString* const kUIMomentaryKey = @"UIMomentary";
+
 
 @interface UISegmentedControl ()
 @property (nonatomic, retain) UIImage *buttonImage;
@@ -32,7 +34,9 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 @property (nonatomic, retain) UIColor *textShadowColor;
 @property (nonatomic, assign) CGSize textShadowOffset;
 @property (nonatomic, assign) UIEdgeInsets textEdgeInsets;
+
 - (void)_commonInitForUISegmentedControl;
+
 - (NSMutableDictionary *)_metaForSegmentIndex:(NSUInteger)index;
 - (id)_metaValueForKey:(NSString *)key segmentIndex:(NSUInteger)index;
 - (void)_setMetaValue:(id)value forKey:(NSString *)key segmentIndex:(NSUInteger)index;
@@ -470,6 +474,17 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
     }
     
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+#pragma mark Appearance
+
+- (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
+{
+}
+
+- (NSDictionary *)titleTextAttributesForState:(UIControlState)state
+{
+    return nil;
 }
 
 @end

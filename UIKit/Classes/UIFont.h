@@ -29,13 +29,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface UIFont : NSObject <NSCoding>
+@interface UIFont : NSObject
 
 + (UIFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize;
 + (NSArray *)familyNames;
 + (NSArray *)fontNamesForFamilyName:(NSString *)familyName;
 
-// Some convenience methods to create system fonts
 + (UIFont *)systemFontOfSize:(CGFloat)fontSize;
 + (UIFont *)boldSystemFontOfSize:(CGFloat)fontSize;
 + (UIFont *)italicSystemFontOfSize:(CGFloat)fontSize;

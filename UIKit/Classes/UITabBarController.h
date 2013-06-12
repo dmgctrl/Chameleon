@@ -41,7 +41,7 @@
 @end
 
 @class UITabBar;
-@interface UITabBarController : UIViewController 
+@interface UITabBarController : UIViewController
 
 - (void)setViewControllers:(NSArray *)viewController animated:(BOOL)animated;
 

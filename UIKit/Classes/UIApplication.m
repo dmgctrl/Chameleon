@@ -158,6 +158,9 @@ static BOOL TouchIsActive(UITouch *touch)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillResignActive:) name:NSWorkspaceScreensDidSleepNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:NSWorkspaceScreensDidWakeNotification object:nil];
 
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_applicationWillResignActive:) name:NSWorkspaceScreensDidSleepNotification object:nil];
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:NSWorkspaceScreensDidWakeNotification object:nil];
+
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_computerWillSleep:) name:NSWorkspaceWillSleepNotification object:nil];
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_computerDidWakeUp:) name:NSWorkspaceDidWakeNotification object:nil];
     }
@@ -341,7 +344,7 @@ static BOOL TouchIsActive(UITouch *touch)
 - (void)_cancelBackgroundTasks
 {
     // if there's any remaining tasks, run their expiration handlers
-    for (UIBackgroundTask *task in _backgroundTasks) {
+    for (UIBackgroundTask *task in [[_backgroundTasks copy] autorelease]) {
         if (task.expirationHandler) {
             task.expirationHandler();
         }
@@ -557,13 +560,12 @@ static BOOL TouchIsActive(UITouch *touch)
 
 - (BOOL)openURL:(NSURL *)url
 {
-    return [[NSWorkspace sharedWorkspace] openURL:url];
+    return url? [[NSWorkspace sharedWorkspace] openURL:url] : NO;
 }
 
 - (BOOL)canOpenURL:(NSURL *)url
 {
-    NSURL *appURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:url];
-    return (appURL != nil);
+    return (url? [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:url] : nil) != nil;
 }
 
 - (BOOL)_sendGlobalKeyboardNSEvent:(NSEvent *)theNSEvent fromScreen:(UIScreen *)theScreen
@@ -628,7 +630,17 @@ static BOOL TouchIsActive(UITouch *touch)
     const NSTimeInterval timestamp = [theNSEvent timestamp];
     const CGPoint screenLocation = ScreenLocationFromNSEvent(theScreen, theNSEvent);
 
-    if (TouchIsActiveNonGesture(touch)) {
+    if (TouchIsActiveGesture(touch) && ([theNSEvent type] == NSLeftMouseDown || [theNSEvent type] == NSRightMouseDown)) {
+        // this is a special case to cancel any existing gestures (as far as the client code is concerned) if a mouse
+        // button is pressed mid-gesture. the reason is that sometimes when using a magic mouse a user will intend to
+        // click but if their finger moves against the surface ever so slightly, it will trigger a touch gesture to
+        // begin instead. without this, the fact that we're in a touch gesture phase effectively overrules everything
+        // else and clicks end up not getting registered. I don't think it's right to allow clicks to pass through when
+        // we're in a gesture state since that'd be somewhat like a multitouch scenerio on a real iOS device and we're
+        // not supporting anything like that at the moment.
+        [touch _updatePhase:_UITouchPhaseGestureEnded screenLocation:screenLocation timestamp:timestamp];
+        [self sendEvent:_currentEvent];
+    } else if (TouchIsActiveNonGesture(touch)) {
         switch ([theNSEvent type]) {
             case NSLeftMouseUp:
                 [touch _updatePhase:UITouchPhaseEnded screenLocation:screenLocation timestamp:timestamp];
@@ -647,9 +659,9 @@ static BOOL TouchIsActive(UITouch *touch)
                 [self sendEvent:_currentEvent];
                 break;
 
+            case NSScrollWheel:
                 // when captured here, the scroll wheel event had to have been part of a gesture - in other words it is a
                 // touch device scroll event and is therefore mapped to UIPanGestureRecognizer.
-            case NSScrollWheel:
                 [touch _updateGesture:_UITouchGesturePan screenLocation:screenLocation delta:ScrollDeltaFromNSEvent(theNSEvent) rotation:0 magnification:0 timestamp:timestamp];
                 [self sendEvent:_currentEvent];
                 break;
@@ -687,10 +699,10 @@ static BOOL TouchIsActive(UITouch *touch)
                 [self sendEvent:_currentEvent];
                 break;
 
+            case NSScrollWheel:
                 // we should only get a scroll wheel event down here if it was done on a non-touch device or was the result of a momentum
                 // scroll, so they are treated differently so we can tell them apart later in UIPanGestureRecognizer and UIScrollWheelGestureRecognizer
                 // which are both used by UIScrollView.
-            case NSScrollWheel:
                 [touch _setDiscreteGesture:_UITouchDiscreteGestureScrollWheel screenLocation:screenLocation tapCount:0 delta:ScrollDeltaFromNSEvent(theNSEvent) timestamp:timestamp];
                 [self _setCurrentEventTouchedViewWithNSEvent:theNSEvent fromScreen:theScreen];
                 [self sendEvent:_currentEvent];
