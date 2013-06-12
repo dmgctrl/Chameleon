@@ -19,7 +19,6 @@
 		1426FFDE129ADEA300BD31E5 /* UIControlAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1426FFDC129ADEA300BD31E5 /* UIControlAction.m */; };
 		144156DB1284A22200532FE2 /* UIToolbarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 144156D91284A22200532FE2 /* UIToolbarButton.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		144156DC1284A22200532FE2 /* UIToolbarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 144156DA1284A22200532FE2 /* UIToolbarButton.m */; };
-		1443B06C13E06081001D7EC1 /* UIBackgroundTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 1443B06A13E06081001D7EC1 /* UIBackgroundTask.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1443B06D13E06081001D7EC1 /* UIBackgroundTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 1443B06B13E06081001D7EC1 /* UIBackgroundTask.m */; };
 		1443DF24121F0D5A00E07C4A /* UIScreenMode+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1443DF23121F0D5A00E07C4A /* UIScreenMode+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1444318E137D7FEE00B81304 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1444318D137D7FEE00B81304 /* IOKit.framework */; };
@@ -1592,7 +1591,6 @@
 				1489860A12EE2DDC003D4751 /* UIPanGestureRecognizer.h in Headers */,
 				149148BC12EE45ED00F7C34E /* UIGestureRecognizerSubclass.h in Headers */,
 				7011107C133BE0F400C86512 /* UIDatePicker.h in Headers */,
-				1443B06C13E06081001D7EC1 /* UIBackgroundTask.h in Headers */,
 				537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */,
 				14541DB21360D6F300C1006D /* UIPhotosAlbum.h in Headers */,
 				882B8EF6136636C8002E8F21 /* UISearchField.h in Headers */,
@@ -1620,7 +1618,6 @@
 				F935331D13DF0733003C7D3A /* UINibDecoder.h in Headers */,
 				F92CB50F13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h in Headers */,
 				F92CB51413E06D9500A50B9F /* UINibDecoderForKeyedArchive.h in Headers */,
-				1443B06C13E06081001D7EC1 /* UIBackgroundTask.h in Headers */,
 				F900793013E7405600DFAF19 /* UISegment.h in Headers */,
 				A249874A13EC7EBB0011DB73 /* UIPopoverController+AppKit.h in Headers */,
 				F97BE00C15AFD3920081F45A /* UIColor+UIPrivate.h in Headers */,
@@ -2144,8 +2141,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = NO;
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
