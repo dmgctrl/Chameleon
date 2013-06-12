@@ -365,17 +365,24 @@ static NSCache* imageCache = nil;
 
 - (UIImageRep *)_bestRepresentationForProposedScale:(CGFloat)scale
 {
-    UIImageRep *bestRep = nil;
-    
-    for (UIImageRep *rep in [self _representations]) {
-        if (rep.scale > scale) {
-            break;
-        } else {
-            bestRep = rep;
+    NSArray* reps = [self _representations];
+    NSUInteger count = [reps count];
+    if (count == 0) {
+        return nil;
+    } else if (count == 1) {
+        return [reps objectAtIndex:0];
+    } else {
+        CGFloat bestEpsilon = INFINITY;
+        UIImageRep* bestRep = nil;
+        for (UIImageRep *rep in [self _representations]) {
+            CGFloat epsilon = fabs([rep scale] - scale);
+            if (epsilon < bestEpsilon) {
+                bestEpsilon = epsilon;
+                bestRep = rep;
+            }
         }
+        return bestRep;
     }
-    
-    return bestRep ?: [[self _representations] lastObject];
 }
 
 - (BOOL)_isOpaque
