@@ -93,11 +93,5 @@
 - (NSArray *)_representations;
 - (BOOL)_isOpaque;
 
-- (id)_initWithRepresentations:(NSArray *)reps;
-- (UIImageRep *)_bestRepresentationForProposedScale:(CGFloat)scale;
-- (void)_drawRepresentation:(UIImageRep *)rep inRect:(CGRect)rect;
-- (NSArray *)_representations;
-- (BOOL)_isOpaque;
-
 - (UIImage *)_toolbarImage;		// returns a new image which is modified as required for toolbar buttons (turned into a solid color)
 @end
