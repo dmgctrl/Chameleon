@@ -106,10 +106,10 @@
 #import "UIRotationGestureRecognizer.h"
 #import "UISwipeGestureRecognizer.h"
 #import "UIDatePicker.h"
-#import "UITextInput.h"
-#import <UIKit/UINib.h>
 
 // non-standard imports
+#import "UITextInput.h"
+#import <UIKit/UINib.h>
 #import "UIAppearance.h"
 
 // non-standard imports

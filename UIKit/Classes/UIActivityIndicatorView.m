@@ -49,7 +49,7 @@ static CGSize UIActivityIndicatorViewStyleSize(UIActivityIndicatorViewStyle styl
     }
 }
 
-static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle style, NSInteger frame, NSInteger numberOfFrames)
+static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle style, NSInteger frame, NSInteger numberOfFrames, CGFloat scale)
 {
     const CGSize frameSize = UIActivityIndicatorViewStyleSize(style);
     const CGFloat radius = frameSize.width / 2.f;
@@ -59,7 +59,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
 
     UIColor *toothColor = (style == UIActivityIndicatorViewStyleGray)? [UIColor grayColor] : [UIColor whiteColor];
     
-    UIGraphicsBeginImageContext(frameSize);
+    UIGraphicsBeginImageContextWithOptions(frameSize, NO, scale);
     CGContextRef c = UIGraphicsGetCurrentContext();
 
     // first put the origin in the center of the frame. this makes things easier later
@@ -101,7 +101,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     
     _imageLayer = [CALayer layer];
     [self.layer addSublayer:_imageLayer];
-    [self _updateImageForStyle];
+    [self setNeedsDisplay];
 }
 
 - (id)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style
@@ -159,22 +159,13 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     @synchronized (self) {
         if (_activityIndicatorViewStyle != style) {
             _activityIndicatorViewStyle = style;
-            
-            [self _updateImageForStyle];
+            [self setNeedsDisplay];
             
             if (_animating) {
                 [self startAnimating];	// this will reset the images in the animation if it was already animating
             }
         }
     }
-}
-
-- (void) _updateImageForStyle
-{
-    CGRect imageFrame = _imageLayer.frame;
-    imageFrame.size = UIActivityIndicatorViewStyleSize(_activityIndicatorViewStyle);
-    _imageLayer.frame = imageFrame;
-    _imageLayer.contents = (__bridge id)UIActivityIndicatorViewFrameImage(_activityIndicatorViewStyle, 0, 12).CGImage;
 }
 
 - (UIActivityIndicatorViewStyle)activityIndicatorViewStyle
@@ -212,31 +203,45 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     return hides;
 }
 
+- (void)_startAnimation
+{
+    const NSInteger numberOfFrames = 12;
+    const CFTimeInterval animationDuration = 0.8;
+    
+    NSMutableArray *images = [[NSMutableArray alloc] initWithCapacity:numberOfFrames];
+    
+    for (NSInteger frameNumber=0; frameNumber<numberOfFrames; frameNumber++) {
+        [images addObject:(__bridge id)UIActivityIndicatorViewFrameImage(_activityIndicatorViewStyle, frameNumber, numberOfFrames, self.contentScaleFactor).CGImage];
+    }
+    
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
+    animation.calculationMode = kCAAnimationDiscrete;
+    animation.duration = animationDuration;
+    animation.repeatCount = HUGE_VALF;
+    animation.values = images;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeBoth;
+    
+    [self.layer addAnimation:animation forKey:@"contents"];
+    
+    [images release];
+}
+
+- (void)_stopAnimation
+{
+    [self.layer removeAnimationForKey:@"contents"];
+    
+    if (self.hidesWhenStopped) {
+        self.hidden = YES;
+    }
+}
+
 - (void)startAnimating
 {
     @synchronized (self) {
         _animating = YES;
         self.hidden = NO;
-        _imageLayer.hidden = YES;
-        
-        const NSInteger numberOfFrames = 12;
-        const CFTimeInterval animationDuration = 0.8;
-        
-        NSMutableArray *images = [[NSMutableArray alloc] initWithCapacity:numberOfFrames];
-        
-        for (NSInteger frameNumber=0; frameNumber<numberOfFrames; frameNumber++) {
-            [images addObject:(id)UIActivityIndicatorViewFrameImage(_activityIndicatorViewStyle, frameNumber, numberOfFrames).CGImage];
-        }
-        
-        CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
-        animation.calculationMode = kCAAnimationDiscrete;
-        animation.duration = animationDuration;
-        animation.repeatCount = HUGE_VALF;
-        animation.values = images;
-        
-        [self.layer addAnimation:animation forKey:@"contents"];
-        
-        [images release];
+        [self performSelectorOnMainThread:@selector(_startAnimation) withObject:nil waitUntilDone:NO];
     }
 }
 
@@ -244,12 +249,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
 {
     @synchronized (self) {
         _animating = NO;
-        _imageLayer.hidden = NO;
-        [self.layer removeAnimationForKey:@"contents"];
-        
-        if (self.hidesWhenStopped) {
-            self.hidden = YES;
-        }
+        [self performSelectorOnMainThread:@selector(_stopAnimation) withObject:nil waitUntilDone:NO];
     }
 }
 
@@ -264,13 +264,10 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     return animating;
 }
 
-- (void) setFrame:(CGRect)frame
+- (void)drawRect:(CGRect)rect
 {
-    [super setFrame:frame];
-    if (_animating) {
-        [self stopAnimating];
-        [self startAnimating];
-    }
+    UIActivityIndicatorViewStyle style = _activityIndicatorViewStyle;
+    [UIActivityIndicatorViewFrameImage(style, 0, 1, self.contentScaleFactor) drawInRect:self.bounds];
 }
 
 @end

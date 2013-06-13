@@ -30,9 +30,8 @@
         viewController = [newViewController retain];
 
         if (viewController) {
-            viewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            viewController.view.frame = self.UIWindow.bounds;
-            [self.UIWindow addSubview:viewController.view];
+            [[self UIWindow] setRootViewController:viewController];
+            [[self UIWindow] makeKeyAndVisible];
         }
     }
 }

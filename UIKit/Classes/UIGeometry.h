@@ -97,6 +97,7 @@ NSString *NSStringFromUIOffset(UIOffset offset);
 @interface NSCoder (NSCoderUIGeometryExtensions)
 - (void) encodeCGPoint:(CGPoint)point forKey:(NSString*)key;
 - (CGPoint) decodeCGPointForKey:(NSString*)key;
+- (void) encodeCGRect:(CGRect)rect forKey:(NSString *)key;
 - (CGRect) decodeCGRectForKey:(NSString*)key;
 - (CGSize) decodeCGSizeForKey:(NSString*)key;
 - (UIEdgeInsets) decodeUIEdgeInsetsForKey:(NSString*)key;

@@ -40,7 +40,6 @@
 #import "UIPopoverController+AppKit.h"
 
 #import "UIViewAdapter.h"
-#import "UINSCellControl.h"
 #import "UIKey.h"
 #import "UIScrollWheelGestureRecognizer.h"
 

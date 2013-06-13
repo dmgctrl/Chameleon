@@ -1,11 +1,5 @@
-//
-//  UINSCellControl.h
-//  UIKit
-//
-//  Created by Jim Dovey on 11-03-23.
-//
 /*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2012, The Iconfactory. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,23 +28,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "UIControl.h"
 
-@class NSCell, UIImage, UIFont;
-
-@interface UINSCellControl : UIControl {
-@private
-    NSCell *		_cell;
-}
-
-+ (UINSCellControl *)checkboxWithFrame:(CGRect)frame;
-
-- (id)initWithFrame:(CGRect)frame cell:(NSCell *)cell;
-
-@property (nonatomic, readonly) NSCell * cell;
-
-@property (nonatomic, copy) NSString * title;
-@property (nonatomic, copy) UIImage * image;
-@property (nonatomic, copy) UIFont * font;
-
+@interface ALAssetsFilter : NSObject
 @end
