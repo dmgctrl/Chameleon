@@ -271,7 +271,7 @@ static UIColor *ClearColor = nil;
     // so there isn't any easy way to emulate it.
     CGColorSpaceRef colorSpaceRef = CGColorGetColorSpace(self.CGColor);
 	CFStringRef colorSpaceName = CGColorSpaceCopyName(colorSpaceRef);
-    NSString *colorSpace = [NSString stringWithFormat:@"%@", (NSString *) colorSpaceName];
+    NSString *colorSpace = [NSString stringWithFormat:@"%@", (__bridge NSString*) colorSpaceName];
 	CFRelease(colorSpaceName);
 
     const size_t numberOfComponents = CGColorGetNumberOfComponents(self.CGColor);
