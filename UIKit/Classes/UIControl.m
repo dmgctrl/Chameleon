@@ -34,15 +34,8 @@
 #import "UIControlAction.h"
 
 @implementation UIControl {
-    NSMutableArray *_registeredActions;
+    NSMutableArray* _registeredActions;
 }
-@synthesize tracking = _tracking;
-@synthesize touchInside = _touchInside;
-@synthesize selected = _selected;
-@synthesize enabled = _enabled;
-@synthesize highlighted = _highlighted;
-@synthesize contentHorizontalAlignment = _contentHorizontalAlignment;
-@synthesize contentVerticalAlignment = _contentVerticalAlignment;
 
 - (void) _commonInitForUIControl
 {
