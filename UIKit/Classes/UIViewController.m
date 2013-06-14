@@ -333,7 +333,13 @@
     [fromViewController beginAppearanceTransition:NO animated:duration > 0];
     [toViewController beginAppearanceTransition:YES animated:duration > 0];
     [UIView animateWithDuration:duration
-        animations:animations
+        animations:^{
+            [[fromViewController view] removeFromSuperview];
+            [[self view] addSubview:[toViewController view]];
+            if (animations) {
+                animations();
+            }
+        }
         completion:^(BOOL finished){
             if (completion) {
                 completion(finished);
