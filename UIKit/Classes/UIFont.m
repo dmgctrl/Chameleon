@@ -139,8 +139,9 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
 + (NSArray *)fontNamesForFamilyName:(NSString *)familyName
 {
     NSArray *names = nil;
-    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((__bridge CFDictionaryRef)
-        [NSDictionary dictionaryWithObjectsAndKeys: familyName, (NSString*)kCTFontFamilyNameAttribute, nil, nil]);
+    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((__bridge CFDictionaryRef)@{
+        (NSString*)kCTFontFamilyNameAttribute: familyName,
+    });
     if (descriptor) {
         CFArrayRef descriptors = CFArrayCreate(NULL, (CFTypeRef*) &descriptor, 1, &kCFTypeArrayCallBacks);
         if (descriptors) {
