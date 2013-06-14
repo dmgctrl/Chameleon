@@ -59,7 +59,7 @@
 		[cgColors addObject:(id) color.CGColor];
 	}
 	
-	_gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef) cgColors, locations);
+	_gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) cgColors, locations);
 	CGColorSpaceRelease(colorSpace);
 	
 	return self;
