@@ -7,11 +7,7 @@ static NSString* const kUISourceKey = @"UISource";
 
 
 @implementation UIRuntimeOutletConnection 
-@synthesize target = _target;
-@synthesize value = _value;
-@synthesize key = _key;
 
-    
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
