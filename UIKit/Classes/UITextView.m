@@ -65,9 +65,6 @@ static NSString* const kUIEditableKey = @"UIEditable";
         BOOL doCommandBySelector : 1;
     } _delegateHas;
 }
-@synthesize dataDetectorTypes = _dataDetectorTypes;
-@synthesize inputAccessoryView = _inputAccessoryView;
-@synthesize inputView = _inputView;
 @dynamic delegate;
 
 - (void) dealloc
