@@ -72,9 +72,6 @@ typedef enum {
         unsigned __RESERVED__ : 31;
     } _navigationBarFlags;
 }
-@synthesize tintColor = _tintColor;
-@synthesize delegate = _delegate;
-@synthesize items = _navStack;
 
 + (void)_setBarButtonSize:(UIView *)view
 {
