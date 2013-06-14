@@ -30,7 +30,6 @@
 #import "UITransitionView.h"
 
 @implementation UITransitionView
-@synthesize view=_view, transition=_transition, delegate=_delegate;
 
 - (id)initWithFrame:(CGRect)frame view:(UIView *)aView
 {
