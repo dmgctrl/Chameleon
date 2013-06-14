@@ -46,21 +46,6 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
     NSMutableArray *_segments;
     NSMutableDictionary *_segmentMeta;
 }
-@synthesize numberOfSegments = _numberOfSegments;
-@synthesize selectedSegmentIndex = _selectedSegmentIndex;
-@synthesize momentary = _momentary;
-@synthesize buttonImage = _buttonImage;
-@synthesize highlightedButtonImage = _highlightedButtonImage;
-@synthesize dividerImage = _dividerImage;
-@synthesize highlightedDividerImage = _highlightedDividerImage;
-@synthesize font = _font;
-@synthesize textColor = _textColor;
-@synthesize disabledTextColor = _disabledTextColor;
-@synthesize textShadowColor = _textShadowColor;
-@synthesize textShadowOffset = _textShadowOffset;
-@synthesize textEdgeInsets = _textEdgeInsets;
-@synthesize segmentedControlStyle = _segmentedControlStyle;
-@synthesize tintColor = _tintColor;
 
 #pragma mark NSObject
 
