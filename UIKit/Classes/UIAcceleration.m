@@ -30,8 +30,4 @@
 #import "UIAcceleration.h"
 
 @implementation UIAcceleration
-@synthesize x = _x;
-@synthesize y = _y;
-@synthesize z = _z;
-@synthesize timestamp = _timestamp;
 @end
