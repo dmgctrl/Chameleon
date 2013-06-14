@@ -86,7 +86,7 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat sc
             stack = [[NSMutableArray alloc] initWithCapacity:10];
             [threadDictionary setObject:stack forKey:kUIGraphicsContextImageStackKey];
         }
-        [stack addObject:[NSNumber numberWithFloat:scale]];
+        [stack addObject:@(scale)];
 
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4*width, colorSpace, (opaque? kCGImageAlphaNoneSkipFirst : kCGImageAlphaPremultipliedFirst));
