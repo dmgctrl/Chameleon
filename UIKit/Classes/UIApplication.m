@@ -396,7 +396,7 @@ static BOOL TouchIsActive(UITouch *touch)
     [self performSelectorOnMainThread:@selector(_runBackgroundTasks:)
                            withObject:[taskFinisher copy]
                         waitUntilDone:NO
-                                modes:[NSArray arrayWithObjects:NSModalPanelRunLoopMode, NSRunLoopCommonModes, nil]];
+                                modes:@[NSModalPanelRunLoopMode, NSRunLoopCommonModes]];
     
     return NSTerminateLater;
 }
@@ -460,7 +460,7 @@ static BOOL TouchIsActive(UITouch *touch)
 - (NSArray *)windows
 {
     NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"windowLevel" ascending:YES];
-    return [[_visibleWindows valueForKey:@"nonretainedObjectValue"] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+    return [[_visibleWindows valueForKey:@"nonretainedObjectValue"] sortedArrayUsingDescriptors:@[sort]];
 }
 
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event
