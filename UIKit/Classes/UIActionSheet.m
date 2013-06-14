@@ -51,12 +51,6 @@
         BOOL actionSheetCancel : 1;
     } _delegateHas;
 }
-@synthesize delegate = _delegate;
-@synthesize destructiveButtonIndex = _destructiveButtonIndex;
-@synthesize cancelButtonIndex = _cancelButtonIndex;
-@synthesize title = _title;
-@synthesize firstOtherButtonIndex = _firstOtherButtonIndex;
-@synthesize actionSheetStyle = _actionSheetStyle;
 
 - (id)initWithFrame:(CGRect)frame
 {
