@@ -31,17 +31,11 @@
 #import "UIGraphics.h"
 
 @implementation UIBezierPath {
-    CGFloat *_lineDashPattern;
+    CGFloat* _lineDashPattern;
     NSInteger _lineDashCount;
     CGFloat _lineDashPhase;
+    CGPathRef _path;
 }
-@synthesize lineWidth = _lineWidth;
-@synthesize lineCapStyle = _lineCapStyle;
-@synthesize lineJoinStyle = _lineJoinStyle;
-@synthesize miterLimit = _miterLimit;
-@synthesize flatness = _flatness;
-@synthesize usesEvenOddFillRule = _usesEvenOddFillRule;
-@synthesize CGPath = _path;
 
 - (id)init
 {
@@ -57,7 +51,9 @@
 
 - (void)dealloc
 {
-    if (_path) CGPathRelease(_path);
+    if (_path) {
+        CGPathRelease(_path);
+    }
 }
 
 + (UIBezierPath *)bezierPathWithCGPath:(CGPathRef)CGPath
@@ -370,5 +366,9 @@
     CGPathRelease(mutablePath);
 }
 
+- (CGPathRef) CGPath
+{
+    return _path;
+}
 
 @end
