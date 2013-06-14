@@ -9,12 +9,6 @@ static NSString* const kUITitleKey = @"UITitle";
 static NSString* const kUITitleColorKey = @"UITitleColor";
 
 @implementation UIButtonContent
-@synthesize shadowColor = _shadowColor;
-@synthesize titleColor = _titleColor;
-@synthesize backgroundImage = _backgroundImage;
-@synthesize image = _image;
-@synthesize title = _title;
-
 
 - (id) initWithCoder:(NSCoder*)coder
 {
