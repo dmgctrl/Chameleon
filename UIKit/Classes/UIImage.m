@@ -92,7 +92,7 @@
 
 - (id)initWithData:(NSData *)data
 {
-    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[UIImageRep alloc] initWithData:data], nil]];
+    return [self _initWithRepresentations:@[[[UIImageRep alloc] initWithData:data]]];
 }
 
 - (id)initWithCGImage:(CGImageRef)imageRef
@@ -102,7 +102,7 @@
 
 - (id)initWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation
 {
-    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[UIImageRep alloc] initWithCGImage:imageRef scale:scale], nil]];
+    return [self _initWithRepresentations:@[[[UIImageRep alloc] initWithCGImage:imageRef scale:scale]]];
 }
 
 
