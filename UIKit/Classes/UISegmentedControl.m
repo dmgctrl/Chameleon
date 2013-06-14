@@ -23,15 +23,15 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 
 
 @interface UISegmentedControl ()
-@property (nonatomic, retain) UIImage *buttonImage;
-@property (nonatomic, retain) UIImage *highlightedButtonImage;
-@property (nonatomic, retain) UIImage *dividerImage;
-@property (nonatomic, retain) UIImage *highlightedDividerImage;
+@property (nonatomic, strong) UIImage *buttonImage;
+@property (nonatomic, strong) UIImage *highlightedButtonImage;
+@property (nonatomic, strong) UIImage *dividerImage;
+@property (nonatomic, strong) UIImage *highlightedDividerImage;
 
-@property (nonatomic, retain) UIFont *font;
-@property (nonatomic, retain) UIColor *textColor;
-@property (nonatomic, retain) UIColor *disabledTextColor;
-@property (nonatomic, retain) UIColor *textShadowColor;
+@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, strong) UIColor *disabledTextColor;
+@property (nonatomic, strong) UIColor *textShadowColor;
 @property (nonatomic, assign) CGSize textShadowOffset;
 @property (nonatomic, assign) UIEdgeInsets textEdgeInsets;
 
@@ -46,39 +46,9 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
     NSMutableArray *_segments;
     NSMutableDictionary *_segmentMeta;
 }
-@synthesize numberOfSegments = _numberOfSegments;
-@synthesize selectedSegmentIndex = _selectedSegmentIndex;
-@synthesize momentary = _momentary;
-@synthesize buttonImage = _buttonImage;
-@synthesize highlightedButtonImage = _highlightedButtonImage;
-@synthesize dividerImage = _dividerImage;
-@synthesize highlightedDividerImage = _highlightedDividerImage;
-@synthesize font = _font;
-@synthesize textColor = _textColor;
-@synthesize disabledTextColor = _disabledTextColor;
-@synthesize textShadowColor = _textShadowColor;
-@synthesize textShadowOffset = _textShadowOffset;
-@synthesize textEdgeInsets = _textEdgeInsets;
-@synthesize segmentedControlStyle = _segmentedControlStyle;
-@synthesize tintColor = _tintColor;
 
 #pragma mark NSObject
 
-- (void)dealloc
-{
-    [_segments release];
-    [_buttonImage release];
-    [_highlightedButtonImage release];
-    [_dividerImage release];
-    [_highlightedDividerImage release];
-    [_font release];
-    [_textColor release];
-    [_disabledTextColor release];
-    [_textShadowColor release];
-    [_segmentMeta release];
-    [_tintColor release];
-    [super dealloc];
-}
 
 - (id) initWithCoder:(NSCoder*)coder
 {
@@ -170,10 +140,10 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
     self.highlightedDividerImage = [UIImage imageNamed:@"UISegmentBarDividerHighlighted.png"];
     self.selectedSegmentIndex = UISegmentedControlNoSegment;
     
-    _font = [[UIFont boldSystemFontOfSize:12.0f] retain];
-    _textColor = [[UIColor whiteColor] retain];
-    _disabledTextColor = [[UIColor colorWithWhite:0.561f alpha:1.0f] retain];
-    _textShadowColor = [[UIColor colorWithWhite:0.0f alpha:0.5f] retain];
+    _font = [UIFont boldSystemFontOfSize:12.0f];
+    _textColor = [UIColor whiteColor];
+    _disabledTextColor = [UIColor colorWithWhite:0.561f alpha:1.0f];
+    _textShadowColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
     _textShadowOffset = CGSizeMake(0.0f, -1.0f);
     _textEdgeInsets = UIEdgeInsetsMake(-1.0f, 0.0f, 0.0f, 0.0f);
 }
@@ -394,7 +364,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 
 - (void)setEnabled:(BOOL)enabled forSegmentAtIndex:(NSUInteger)segment
 {
-    [self _setMetaValue:[NSNumber numberWithBool:enabled] forKey:kSSSegmentedControlEnabledKey segmentIndex:segment];
+    [self _setMetaValue:@(enabled) forKey:kSSSegmentedControlEnabledKey segmentIndex:segment];
     
 }
 

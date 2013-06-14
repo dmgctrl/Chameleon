@@ -41,7 +41,7 @@
     label.textColor = [UIColor whiteColor];
     label.shadowColor = [UIColor colorWithRed:100/255.f green:105/255.f blue:110/255.f alpha:1];
     label.shadowOffset = CGSizeMake(0,1);
-    return [label autorelease];
+    return label;
 }
 
 - (void)drawRect:(CGRect)rect
@@ -55,7 +55,7 @@
     UIColor *endColor = [UIColor colorWithRed:185/255.f green:193/255.f blue:201/255.f alpha:1];
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGFloat locations[2] = {0.f, 1.f};
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)@[(id)startColor.CGColor, (id)endColor.CGColor], locations);
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)@[(id)startColor.CGColor, (id)endColor.CGColor], locations);
     CGColorSpaceRelease(colorSpace);
     CGContextDrawLinearGradient(UIGraphicsGetCurrentContext(), gradient, CGPointMake(0.f, 1.f), CGPointMake(0.f, size.height - 1.f), 0);
     CGGradientRelease(gradient);

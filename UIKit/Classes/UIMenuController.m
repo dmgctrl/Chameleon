@@ -53,8 +53,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     BOOL _rightAlignMenu;
     UIWindow *_window;
 }
-@synthesize menuItems = _menuItems;
-@synthesize menuFrame = _menuFrame;
 
 + (UIMenuController *)sharedMenuController
 {
@@ -67,14 +65,14 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     static NSArray *items = nil;
 
     if (!items) {
-        items = [[NSArray alloc] initWithObjects:
-                 [[[UIMenuItem alloc] initWithTitle:@"Cut" action:@selector(cut:)] autorelease],
-                 [[[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copy:)] autorelease],
-                 [[[UIMenuItem alloc] initWithTitle:@"Paste" action:@selector(paste:)] autorelease],
-                 [[[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(delete:)] autorelease],
-                 [[[UIMenuItem alloc] initWithTitle:@"Select" action:@selector(select:)] autorelease],
-                 [[[UIMenuItem alloc] initWithTitle:@"Select All" action:@selector(selectAll:)] autorelease],
-                 nil];
+        items = @[
+            [[UIMenuItem alloc] initWithTitle:@"Cut" action:@selector(cut:)],
+            [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copy:)],
+            [[UIMenuItem alloc] initWithTitle:@"Paste" action:@selector(paste:)],
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(delete:)],
+            [[UIMenuItem alloc] initWithTitle:@"Select" action:@selector(select:)],
+            [[UIMenuItem alloc] initWithTitle:@"Select All" action:@selector(selectAll:)],
+        ];
     }
 
     return items;
@@ -91,11 +89,7 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
 
 - (void)dealloc
 {
-    [_menuItems release];
-    [_enabledMenuItems release];
     [_menu cancelTracking];		// this should never really happen since the controller is pretty much always a singleton, but... whatever.
-    [_menu release];
-    [super dealloc];
 }
 
 - (BOOL)isMenuVisible
@@ -121,7 +115,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
                 [theItem setTarget:self];
                 [theItem setRepresentedObject:item];
                 [_menu addItem:theItem];
-                [theItem release];
             }
 
             _menuFrame.size = NSSizeToCGSize([_menu size]);
@@ -148,7 +141,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
         } else {
             [_menu cancelTrackingWithoutAnimation];
         }
-        [_menu release];
         _menu = nil;
     }
 }
@@ -251,7 +243,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
 - (void)menuDidClose:(NSMenu *)menu
 {
     if (menu == _menu) {
-        [_menu release];
         _menu = nil;
     }
 }

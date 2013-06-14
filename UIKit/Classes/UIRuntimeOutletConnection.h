@@ -3,9 +3,9 @@
 
 @interface UIRuntimeOutletConnection : NSObject <NSCoding>
 
-@property (retain, nonatomic) id target;
-@property (retain, nonatomic) id value;
-@property (retain, nonatomic) NSString* key;
+@property (strong, nonatomic) id target;
+@property (strong, nonatomic) id value;
+@property (strong, nonatomic) NSString* key;
 
 - (void) connect;
 

@@ -42,7 +42,7 @@
 @interface UISearchBar : UIView 
 
 @property (nonatomic, copy) NSString *text;
-@property (nonatomic,assign) id<UISearchBarDelegate> delegate;
+@property (nonatomic, assign) id<UISearchBarDelegate> delegate;
 @property (nonatomic) BOOL showsCancelButton;
 @property (nonatomic,copy) NSString *placeholder;
 

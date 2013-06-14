@@ -29,23 +29,19 @@
 
 #import "UIAppearanceProperty.h"
 
-@implementation UIAppearanceProperty
-@synthesize axisValues;
+@implementation UIAppearanceProperty {
+    SEL _selector;
+}
 
-- (id)initWithSelector:(SEL)sel axisValues:(NSArray *)values
+- (id)initWithSelector:(SEL)selector axisValues:(NSArray *)values
 {
     if ((self=[super init])) {
-        cmd = sel;
-        axisValues = [values copy];
+        _selector = selector;
+        _axisValues = [values copy];
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [axisValues release];
-    [super dealloc];
-}
 
 - (BOOL)isEqual:(id)object
 {
@@ -53,7 +49,7 @@
         return YES;
     } else if ([object isKindOfClass:[UIAppearanceProperty class]]) {
         UIAppearanceProperty *entry = (UIAppearanceProperty *)object;
-        return cmd == entry->cmd && [axisValues isEqual:entry->axisValues];
+        return _selector == entry->_selector && [_axisValues isEqual:entry->_axisValues];
     } else {
         return NO;
     }
@@ -61,25 +57,25 @@
 
 - (NSUInteger)hash
 {
-    return [NSStringFromSelector(cmd) hash] ^ [axisValues hash];
+    return [NSStringFromSelector(_selector) hash] ^ [_axisValues hash];
 }
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    return [[UIAppearanceProperty alloc] initWithSelector:cmd axisValues:axisValues];
+    return [[UIAppearanceProperty alloc] initWithSelector:_selector axisValues:_axisValues];
 }
 
 - (void)invokeSetterUsingTarget:(id)target withValue:(NSValue *)value
 {
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:cmd]];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:_selector]];
 
     for (int i=0; i<[[invocation methodSignature] numberOfArguments]; i++) {
         if (i == 0) {
             [invocation setTarget:target];
         } else if (i == 1) {
-            [invocation setSelector:cmd];
+            [invocation setSelector:_selector];
         } else {
-            NSValue *v = (i == 2)? value : [axisValues objectAtIndex:i-3];
+            NSValue *v = (i == 2)? value : [_axisValues objectAtIndex:i-3];
             
             NSUInteger bufferSize = 0;
             NSGetSizeAndAlignment([v objCType], &bufferSize, NULL);

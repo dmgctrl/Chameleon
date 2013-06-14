@@ -61,45 +61,21 @@ static CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIVi
     return self;
 }
 
-- (void)dealloc
-{
-    [_name release];
-    [_animationDelegate release];
-    [_animatingViews release];
-    [super dealloc];
-}
 
 + (id)animationGroupWithName:(NSString *)theName context:(void *)theContext
 {
-    return [[[self alloc] initWithGroupName:theName context:theContext] autorelease];
+    return [[self alloc] initWithGroupName:theName context:theContext];
 }
 
 - (void)notifyAnimationsDidStopIfNeededUsingStatus:(BOOL)animationsDidFinish
 {
     if (_waitingAnimations == 0) {
         if ([_animationDelegate respondsToSelector:_animationDidStopSelector]) {
-            NSMethodSignature *signature = [_animationDelegate methodSignatureForSelector:_animationDidStopSelector];
-            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-            [invocation setSelector:_animationDidStopSelector];
-            NSInteger remaining = [signature numberOfArguments] - 2;
-            
-            NSNumber *finishedArgument = [NSNumber numberWithBool:animationsDidFinish];
-            
-            if (remaining > 0) {
-                [invocation setArgument:&_name atIndex:2];
-                remaining--;
+            typedef void (*Method)(id, SEL, NSString*, NSNumber*);
+            Method method = (Method)[_animationDelegate methodForSelector:_animationDidStopSelector];
+            if (method) {
+                method(_animationDelegate, _animationDidStopSelector, _name, @(animationsDidFinish));
             }
-
-            if (remaining > 0) {
-                [invocation setArgument:&finishedArgument atIndex:3];
-                remaining--;
-            }
-
-            if (remaining > 0) {
-                [invocation setArgument:&_context atIndex:4];
-            }
-            
-            [invocation invokeWithTarget:_animationDelegate];
         }
         [_animatingViews removeAllObjects];
     }
@@ -109,21 +85,11 @@ static CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIVi
 {
     if (!_didSendStartMessage) {
         if ([_animationDelegate respondsToSelector:_animationWillStartSelector]) {
-            NSMethodSignature *signature = [_animationDelegate methodSignatureForSelector:_animationWillStartSelector];
-            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-            [invocation setSelector:_animationWillStartSelector];
-            NSInteger remaining = [signature numberOfArguments] - 2;
-            
-            if (remaining > 0) {
-                [invocation setArgument:&_name atIndex:2];
-                remaining--;
+            typedef void (*Method)(id, SEL, NSString*, void*);
+            Method method = (Method)[_animationDelegate methodForSelector:_animationWillStartSelector];
+            if (method) {
+                method(_animationDelegate, _animationWillStartSelector, _name, _context);
             }
-            
-            if (remaining > 0) {
-                [invocation setArgument:&_context atIndex:3];
-            }
-            
-            [invocation invokeWithTarget:_animationDelegate];
         }
         _didSendStartMessage = YES;
     }
@@ -176,8 +142,7 @@ static CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIVi
 - (void)setAnimationDelegate:(id)delegate
 {
     if (delegate != _animationDelegate) {
-        [_animationDelegate release];
-        _animationDelegate = [delegate retain];
+        _animationDelegate = delegate;
     }
 }
 

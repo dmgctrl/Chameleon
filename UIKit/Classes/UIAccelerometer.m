@@ -30,8 +30,6 @@
 #import "UIAccelerometer.h"
 
 @implementation UIAccelerometer
-@synthesize updateInterval = _updateInterval;
-@synthesize delegate = _delegate;
 
 + (UIAccelerometer *)sharedAccelerometer
 {

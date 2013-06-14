@@ -15,7 +15,6 @@ static NSString* const kUIOriginalClassNameKey = @"UIOriginalClassName";
         NSString* originalClassName = [coder decodeObjectForKey:kUIClassNameKey];
         class = NSClassFromString(originalClassName);
     }
-    [self release];
     return [[class alloc] initWithCoder:coder];
 }
 

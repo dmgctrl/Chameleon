@@ -41,9 +41,6 @@
         BOOL didFinishLoad : 1;
     } _delegateHas;
 }
-@synthesize request = _request;
-@synthesize delegate = _delegate;
-@synthesize dataDetectorTypes = _dataDetectorTypes;
 @synthesize scalesPageToFit = _scalesPageToFit;
 
 - (id)initWithFrame:(CGRect)frame
@@ -72,9 +69,6 @@
     [_webView setPolicyDelegate:nil];
     [_webView setFrameLoadDelegate:nil];
     [_webView setUIDelegate:nil];
-    [_webViewAdapter release];
-    [_webView release];
-    [super dealloc];
 }
 
 - (void)layoutSubviews
@@ -99,8 +93,7 @@
 - (void)loadRequest:(NSURLRequest *)request
 {
     if (request != _request) {
-        [_request release];
-        _request = [request retain];
+        _request = request;
     }
 
     [[_webView mainFrame] loadRequest:_request];

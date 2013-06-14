@@ -40,32 +40,21 @@
 #import "NSIndexPath+UITableView.h"
 
 @implementation NSFetchedResultsController 
-@synthesize delegate = _delegate;
-@synthesize fetchRequest = _fetchRequest;
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize fetchedObjects = _fetchedObjects;
-@synthesize cacheName = _cacheName;
-@synthesize sectionNameKeyPath = _sectionNameKeyPath;
 
 - (id)initWithFetchRequest:(NSFetchRequest *)fetchRequest managedObjectContext: (NSManagedObjectContext *)context sectionNameKeyPath:(NSString *)sectionNameKeyPath cacheName:(NSString *)name {
   if ((self = [super init])) {
-    _fetchRequest = [fetchRequest retain];
-    _managedObjectContext = [context retain];
+    _fetchRequest = fetchRequest;
+    _managedObjectContext = context;
   }
   return self;
 }
 
 - (void)dealloc {
   _delegate = nil;
-  [_fetchRequest release];
-  [_managedObjectContext release];
-  [_fetchedObjects release];
-  [super dealloc];
 }
 
 - (BOOL)performFetch:(NSError **)error {
-  [_fetchedObjects release];
-  _fetchedObjects = [[_managedObjectContext executeFetchRequest:_fetchRequest error:error] retain];
+  _fetchedObjects = [_managedObjectContext executeFetchRequest:_fetchRequest error:error];
 
   return YES;
 }
@@ -92,12 +81,12 @@
 
 - (NSArray *)sectionIndexTitles {
   // stub
-  return [NSArray array];
+  return @[];
 }
 
 - (NSArray *)sections {
   // stub
-  return [NSArray array];
+  return @[];
 }
 
 - (NSInteger)sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)sectionIndex {

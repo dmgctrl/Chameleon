@@ -33,7 +33,6 @@
     UITableViewStyle _style;
     BOOL _hasReloaded;
 }
-@synthesize clearsSelectionOnViewWillAppear = _clearsSelectionOnViewWillAppear;
 
 - (id)init
 {
@@ -50,7 +49,7 @@
 
 - (void)loadView
 {
-    self.tableView = [[[UITableView alloc] initWithFrame:CGRectMake(0,0,320,480) style:_style] autorelease];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,320,480) style:_style];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
 }

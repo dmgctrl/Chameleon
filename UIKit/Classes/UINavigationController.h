@@ -52,12 +52,12 @@
 - (void)setToolbarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @property (nonatomic, copy) NSArray *viewControllers;
-@property (nonatomic, readonly, retain) UIViewController *visibleViewController;
+@property (nonatomic, readonly, strong) UIViewController *visibleViewController;
 @property (nonatomic, readonly) UINavigationBar *navigationBar;
 @property (nonatomic, readonly) UIToolbar *toolbar;
 @property (nonatomic, assign) id<UINavigationControllerDelegate> delegate;
-@property (nonatomic, readonly, retain) UIViewController *topViewController;
+@property (nonatomic, readonly, strong) UIViewController *topViewController;
 @property (nonatomic,getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property (nonatomic,getter=isToolbarHidden) BOOL toolbarHidden;
+@property (nonatomic, getter=isToolbarHidden) BOOL toolbarHidden;
 
 @end

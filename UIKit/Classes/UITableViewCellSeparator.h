@@ -34,5 +34,5 @@
 
 @interface UITableViewCellSeparator : UIView 
 @property (nonatomic, assign) UITableViewCellSeparatorStyle style;
-@property (nonatomic, retain) UIColor* color;
+@property (nonatomic, strong) UIColor* color;
 @end

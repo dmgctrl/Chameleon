@@ -33,8 +33,6 @@
 #import "UIBezierPath.h"
 
 @implementation UIProgressView
-@synthesize progressViewStyle = _progressViewStyle;
-@synthesize progress = _progress;
 
 - (id)initWithProgressViewStyle:(UIProgressViewStyle)style
 {

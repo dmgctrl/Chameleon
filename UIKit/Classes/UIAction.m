@@ -30,7 +30,6 @@
 #import "UIAction.h"
 
 @implementation UIAction
-@synthesize target=_target, action=_action;
 
 - (BOOL)isEqual:(id)object
 {

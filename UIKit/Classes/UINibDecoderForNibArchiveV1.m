@@ -76,11 +76,6 @@ static inline double decodeFloat64(void const** pp);
     UINibArchiveDataV1* archiveData_;
 }
 
-- (void) dealloc
-{
-    [archiveData_ release];
-    [super dealloc];
-}
 
 - (id) initWithData:(NSData*)data encoderVersion:(NSUInteger)encoderVersion
 {
@@ -88,7 +83,6 @@ static inline double decodeFloat64(void const** pp);
     if (nil != (self = [super init])) {
         archiveData_ = [[UINibArchiveDataV1 alloc] initWithData:data];
         if (!archiveData_) {
-            [self release];
             return nil;
         }
     }
@@ -97,7 +91,7 @@ static inline double decodeFloat64(void const** pp);
 
 - (NSCoder*) instantiateCoderWithBundle:(NSBundle*)bundle owner:(id)owner externalObjects:(NSDictionary*)externalObjects
 {
-    return [[[UINibArchiveDecoderV1 alloc] initWithNibArchiveData:archiveData_ bundle:bundle owner:owner externalObjects:externalObjects] autorelease];
+    return [[UINibArchiveDecoderV1 alloc] initWithNibArchiveData:archiveData_ bundle:bundle owner:owner externalObjects:externalObjects];
 }
 
 @end
@@ -119,7 +113,7 @@ static inline double decodeFloat64(void const** pp);
     UINibDecoderValueEntry* values;
     
     uint32_t numberOfClasses;
-    Class* classes;
+    NSMutableArray* classes;
 }
 
 - (void) dealloc
@@ -127,30 +121,21 @@ static inline double decodeFloat64(void const** pp);
     if (objects) {
         free(objects);
     }
-    if (keys) {
-        free(keys);
-    }
     if (values) {
         free(values);
     }
-    if (classes) {
-        free(classes);
-    }
-    [data_ release];
-    [super dealloc];
 }
 
 - (id) initWithData:(NSData*)data
 {
     assert(data);
     if (nil != (self = [super init])) {
-        data_ = [data retain];
+        data_ = data;
         
         /*  Is the data large enough to accommodate the header?
          */
         NSUInteger length = [data length];
         if (length <= 0x32) {
-            [self release];
             return nil;
         }
         void const* base = [data bytes];
@@ -167,7 +152,6 @@ static inline double decodeFloat64(void const** pp);
          || !numberOfValues
          || !numberOfClasses
         ) {
-            [self release];
             return nil;
         }
         
@@ -183,7 +167,6 @@ static inline double decodeFloat64(void const** pp);
          || (offsetOfValues >= length)
          || (offsetOfClasses >= length)
         ) {
-            [self release];
             return nil;
         }
         
@@ -191,7 +174,6 @@ static inline double decodeFloat64(void const** pp);
          */
         objects = malloc(sizeof(UINibDecoderObjectEntry) * numberOfObjects);
         if (!objects) {
-            [self release];
             return nil;
         }
         void const* op = base + offsetOfObjects;
@@ -204,7 +186,6 @@ static inline double decodeFloat64(void const** pp);
              || (indexOfFirstValue > numberOfValues)
              || ((indexOfFirstValue + count) > numberOfValues)
             ) {
-                [self release];
                 return nil;
             }
             
@@ -217,7 +198,6 @@ static inline double decodeFloat64(void const** pp);
          */
         keys = [[NSMutableArray alloc] initWithCapacity:numberOfKeys];
         if (!keys) {
-            [self release];
             return nil;
         }
         void const* kp = base + offsetOfKeys;
@@ -227,7 +207,6 @@ static inline double decodeFloat64(void const** pp);
             NSUInteger length = decodeVariableLengthInteger(&kp);
             NSString* key = [[NSString alloc] initWithBytes:kp length:length encoding:NSUTF8StringEncoding];
             if (!key) {
-                [self release];
                 return nil;
             }
             if (length == (sizeof(kNSInlinedValueKey)-1) && 0 == memcmp(kNSInlinedValueKey, kp, length)) {
@@ -236,7 +215,6 @@ static inline double decodeFloat64(void const** pp);
                 keyForEmpty = i;
             }
             [keys addObject:key];
-            [key release];
             kp += length;
         }
         
@@ -244,14 +222,12 @@ static inline double decodeFloat64(void const** pp);
          */
         values = malloc(sizeof(UINibDecoderValueEntry) * numberOfValues);
         if (!values) {
-            [self release];
             return nil;
         }
         void const* vp = base + offsetOfValues;
         for (UINibDecoderValueEntry* entry = values, *lastEntry = entry + (numberOfValues - 1); entry <= lastEntry; entry++) {
             uint32_t indexOfKey = decodeVariableLengthInteger(&vp);
             if (indexOfKey > numberOfKeys) {
-                [self release];
                 return nil;
             }
             void const* data = NULL;
@@ -298,7 +274,6 @@ static inline double decodeFloat64(void const** pp);
                     data = vp;
                     uint32_t indexOfObject = decodeInt32(&vp);
                     if (indexOfObject > numberOfObjects) {
-                        [self release];
                         return nil;
                     }
                     break;
@@ -306,7 +281,6 @@ static inline double decodeFloat64(void const** pp);
                     
                 default: {
                     NSLog(@"%@ - Unknown type code value 0x%02x; Unable to proceed.", [self class], type);
-                    [self release];
                     return nil;
                 }
             }
@@ -318,9 +292,8 @@ static inline double decodeFloat64(void const** pp);
         
         /*  Read in the classes table.
          */
-        classes = malloc(sizeof(Class) * numberOfClasses);
+        classes = [[NSMutableArray alloc] initWithCapacity:numberOfClasses];
         if (!classes) {
-            [self release];
             return nil;
         }
         void const* cp = base + offsetOfClasses;
@@ -330,17 +303,13 @@ static inline double decodeFloat64(void const** pp);
             #pragma unused (unknownValue)
             NSString* className = [[NSString alloc] initWithBytes:cp length:length - 1 encoding:NSUTF8StringEncoding];
             if (!className) {
-                [self release];
                 return nil;
             }
             Class class = NSClassFromString(className);
             if (!class) {
-                [className release];
-                [self release];
                 return nil;
             }
-            classes[i] = class;
-            [className release];
+            [classes addObject:class];
             cp += length;
         }
     }
@@ -400,31 +369,22 @@ static Class kClassForUIImageNibPlaceholder;
     assert(kClassForUIImageNibPlaceholder);
 }
 
-- (void) dealloc
-{
-    [archiveData_ release];
-    [bundle_ release];
-    [owner_ release];
-    [externalObjects_ release];
-    [objects_ release];
-    [super dealloc];
-}
 
 - (id) initWithNibArchiveData:(UINibArchiveDataV1*)archiveData bundle:(NSBundle*)bundle owner:(id)owner externalObjects:(NSDictionary*)externalObjects;
 {
     assert(archiveData);
     assert(owner);
     if (nil != (self = [super init])) {
-        archiveData_ = [archiveData retain];
-        bundle_ = [bundle retain];
-        owner_ = [owner retain];
-        externalObjects_ = [externalObjects retain];
+        archiveData_ = archiveData;
+        bundle_ = bundle;
+        owner_ = owner;
+        externalObjects_ = externalObjects;
         
         objectEntry_ = archiveData_->objects;
         nextGenericValue_ = archiveData_->values + objectEntry_->indexOfFirstValue;
         lastValue_ = nextGenericValue_ + (objectEntry_->numberOfValues - 1);
         
-        objects_ = [[NSPointerArray pointerArrayWithStrongObjects] retain];
+        objects_ = [NSPointerArray pointerArrayWithStrongObjects];
         [objects_ setCount:archiveData_->numberOfObjects];
     }
     return self;
@@ -591,7 +551,7 @@ static Class kClassForUIImageNibPlaceholder;
         [s appendString:@"\n"];
     }
     [s appendString:@"}>"];
-    return [s autorelease];
+    return s;
 }
 
 
@@ -762,7 +722,6 @@ static Class kClassForUIImageNibPlaceholder;
                     while (value <= lastValue) {
                         id object = [self _extractObjectFromValue:value++];
                         [array addObject:object];
-                        [object release];
                     }
                     object = array;
                 } else if (class == kClassForNSSet || class == kClassForNSMutableSet) {
@@ -773,7 +732,6 @@ static Class kClassForUIImageNibPlaceholder;
                     while (value <= lastValue) {
                         id object = [self _extractObjectFromValue:value++];
                         [set addObject:object];
-                        [object release];
                     }
                     object = set;
                 } else if (class == kClassForNSDictionary || class == kClassForNSDMutableDictionary) {
@@ -789,8 +747,6 @@ static Class kClassForUIImageNibPlaceholder;
                         assert(value->indexOfKey == archiveData_->keyForEmpty);
                         id v = [self _extractObjectFromValue:value++];
                         [dict setObject:v forKey:k];
-                        [v release];
-                        [k release];
                     }
                     object = dict;
                 } else if (class == kClassForNSNumber) {
@@ -816,51 +772,49 @@ static Class kClassForUIImageNibPlaceholder;
                 
                 if (class == kClassForUIProxyObject) {
                     NSString* proxiedObjectIdentifier = [object proxiedObjectIdentifier];
-                    [object release];
                     if ([proxiedObjectIdentifier isEqualToString:kIBFilesOwnerKey]) {
-                        object = [owner_ retain]; 
+                        object = owner_; 
                     } else if ([proxiedObjectIdentifier isEqualToString:kIBFirstResponderKey]) {
-                        object = [[NSNull null] retain];
+                        object = [NSNull null];
                     } else {
-                        object = [[externalObjects_ objectForKey:proxiedObjectIdentifier] retain];
+                        object = [externalObjects_ objectForKey:proxiedObjectIdentifier];
                     }
                 } else if (class == kClassForUIImageNibPlaceholder) {
                     NSString* resourceName = [object resourceName];
-                    [object release];
-                    object = [[UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]] retain];
+                    object = [UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]];
                 }
 
-                [objects_ replacePointerAtIndex:indexOfObject withPointer:object];
+                [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(object)];
             }
             return object;
         }
             
         case kValueTypeByte: {
             uint8_t v = decodeByte(&vp);
-            return [[NSNumber alloc] initWithInt:v];
+            return @(v);
         }
             
         case kValueTypeShort: {
             uint16_t v = decodeShort(&vp);
-            return [[NSNumber alloc] initWithShort:v];
+            return @(v);
         }
             
         case kValueTypeConstantEqualsZero: {
-            return [[NSNumber alloc] initWithInt:0];
+            return @(0);
         }
             
         case kValueTypeConstantEqualsOne: {
-            return [[NSNumber alloc] initWithInt:1];
+            return @(1);
         }
 
         case kValueTypeFloat32: {
             float v = decodeFloat32(&vp);
-            return [[NSNumber alloc] initWithFloat:v];
+            return @(v);
         }
 
         case kValueTypeFloat64: {
             float v = decodeFloat64(&vp);
-            return [[NSNumber alloc] initWithDouble:v];
+            return @(v);
         }
 
         case kValueTypeData: {

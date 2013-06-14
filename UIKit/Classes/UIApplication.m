@@ -117,12 +117,6 @@ static BOOL TouchIsActiveNonGesture(UITouch *touch)
     NSDate *_backgroundTasksExpirationDate;
     NSMutableArray *_backgroundTasks;
 }
-@synthesize keyWindow = _keyWindow;
-@synthesize delegate = _delegate;
-@synthesize idleTimerDisabled = _idleTimerDisabled;
-@synthesize applicationSupportsShakeToEdit = _applicationSupportsShakeToEdit;
-@synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
-@synthesize applicationState = _applicationState;
 
 static BOOL TouchIsActive(UITouch *touch)
 {
@@ -145,7 +139,7 @@ static BOOL TouchIsActive(UITouch *touch)
 {
     if ((self=[super init])) {
         _currentEvent = [[UIEvent alloc] initWithEventType:UIEventTypeTouches];
-        [_currentEvent _setTouch:[[[UITouch alloc] init] autorelease]];
+        [_currentEvent _setTouch:[[UITouch alloc] init]];
         _visibleWindows = [[NSMutableSet alloc] init];
         _backgroundTasks = [[NSMutableArray alloc] init];
         _applicationState = UIApplicationStateActive;
@@ -171,11 +165,6 @@ static BOOL TouchIsActive(UITouch *touch)
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-    [_currentEvent release];
-    [_visibleWindows release];
-    [_backgroundTasks release];
-    [_backgroundTasksExpirationDate release];
-    [super dealloc];
 }
 
 - (NSTimeInterval)statusBarOrientationAnimationDuration
@@ -275,7 +264,7 @@ static BOOL TouchIsActive(UITouch *touch)
 
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void(^)(void))handler
 {
-    UIBackgroundTask *task = [[[UIBackgroundTask alloc] initWithExpirationHandler:handler] autorelease];
+    UIBackgroundTask *task = [[UIBackgroundTask alloc] initWithExpirationHandler:handler];
     [_backgroundTasks addObject:task];
     return task.taskIdentifier;
 }
@@ -344,7 +333,7 @@ static BOOL TouchIsActive(UITouch *touch)
 - (void)_cancelBackgroundTasks
 {
     // if there's any remaining tasks, run their expiration handlers
-    for (UIBackgroundTask *task in [[_backgroundTasks copy] autorelease]) {
+    for (UIBackgroundTask *task in [_backgroundTasks copy]) {
         if (task.expirationHandler) {
             task.expirationHandler();
         }
@@ -367,8 +356,7 @@ static BOOL TouchIsActive(UITouch *touch)
         return NSTerminateNow;
     }
     
-    [_backgroundTasksExpirationDate release];
-    _backgroundTasksExpirationDate = [timeoutDate retain];
+    _backgroundTasksExpirationDate = timeoutDate;
     
     void (^taskFinisher)(void) = ^{
         if ([_backgroundTasks count] > 0) {
@@ -390,14 +378,12 @@ static BOOL TouchIsActive(UITouch *touch)
             
             [NSApp endModalSession:session];
             
-            [alert release];
         }
         
         // if there's any remaining tasks, run their expiration handlers
         [self _cancelBackgroundTasks];
         
         // and reset our timer since we're done
-        [_backgroundTasksExpirationDate release];
         _backgroundTasksExpirationDate = nil;
 
         // tell the real NSApp we're all done here
@@ -408,9 +394,9 @@ static BOOL TouchIsActive(UITouch *touch)
     // because we're probably in that run loop mode due to how -applicationShouldTerminate: does things. I don't
     // know if I could do this same thing with a couple of simple GCD calls, but whatever, this works too. :)
     [self performSelectorOnMainThread:@selector(_runBackgroundTasks:)
-                           withObject:[[taskFinisher copy] autorelease]
+                           withObject:[taskFinisher copy]
                         waitUntilDone:NO
-                                modes:[NSArray arrayWithObjects:NSModalPanelRunLoopMode, NSRunLoopCommonModes, nil]];
+                                modes:@[NSModalPanelRunLoopMode, NSRunLoopCommonModes]];
     
     return NSTerminateLater;
 }
@@ -425,7 +411,6 @@ static BOOL TouchIsActive(UITouch *touch)
         // the machine is about to go to sleep.. so we'll just do things in a blocking way in this case while still handling
         // any pending background tasks.
 
-        [_backgroundTasksExpirationDate release];
         _backgroundTasksExpirationDate = [[NSDate alloc] initWithTimeIntervalSinceNow:29];
 
         for (;;) {
@@ -437,7 +422,6 @@ static BOOL TouchIsActive(UITouch *touch)
         [self _cancelBackgroundTasks];
 
         // and reset our timer since we're done
-        [_backgroundTasksExpirationDate release];
         _backgroundTasksExpirationDate = nil;
     }
 }
@@ -475,8 +459,8 @@ static BOOL TouchIsActive(UITouch *touch)
 
 - (NSArray *)windows
 {
-    NSSortDescriptor *sort = [[[NSSortDescriptor alloc] initWithKey:@"windowLevel" ascending:YES] autorelease];
-    return [[_visibleWindows valueForKey:@"nonretainedObjectValue"] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"windowLevel" ascending:YES];
+    return [[_visibleWindows valueForKey:@"nonretainedObjectValue"] sortedArrayUsingDescriptors:@[sort]];
 }
 
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event
@@ -574,7 +558,7 @@ static BOOL TouchIsActive(UITouch *touch)
         return YES;
     }
     
-    UIKey *key = [[[UIKey alloc] initWithNSEvent:theNSEvent] autorelease];
+    UIKey *key = [[UIKey alloc] initWithNSEvent:theNSEvent];
     if (key.type == UIKeyTypeEnter || (key.commandKeyPressed && key.type == UIKeyTypeReturn)) {
         if ([self _firstResponderCanPerformAction:@selector(commit:) withSender:key fromScreen:theScreen]) {
             return [self _sendActionToFirstResponder:@selector(commit:) withSender:key fromScreen:theScreen];
@@ -594,8 +578,8 @@ static BOOL TouchIsActive(UITouch *touch)
         UIResponder *firstResponder = [self _firstResponderForScreen:theScreen];
         
         if (firstResponder) {
-            UIKey *key = [[[UIKey alloc] initWithNSEvent:theNSEvent] autorelease];
-            UIEvent *event = [[[UIEvent alloc] initWithEventType:UIEventTypeKeyPress] autorelease];
+            UIKey *key = [[UIKey alloc] initWithNSEvent:theNSEvent];
+            UIEvent *event = [[UIEvent alloc] initWithEventType:UIEventTypeKeyPress];
             [event _setTimestamp:[theNSEvent timestamp]];
             
             return [firstResponder keyPressed:key withEvent:event];
@@ -609,7 +593,7 @@ static BOOL TouchIsActive(UITouch *touch)
 {
     const CGPoint screenLocation = ScreenLocationFromNSEvent(theScreen, theNSEvent);
     UITouch *touch = [[_currentEvent allTouches] anyObject];
-    UIView *previousView = [touch.view retain];
+    UIView *previousView = touch.view;
 
     [touch _setTouchedView:[theScreen _hitTest:screenLocation event:_currentEvent]];
     
@@ -618,7 +602,6 @@ static BOOL TouchIsActive(UITouch *touch)
         [touch.view mouseExitedView:previousView enteredView:touch.view withEvent:_currentEvent];
     }
     
-    [previousView release];
 }
 
 - (void)_sendMouseNSEvent:(NSEvent *)theNSEvent fromScreen:(UIScreen *)theScreen

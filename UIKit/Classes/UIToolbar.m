@@ -38,10 +38,7 @@
 
 
 
-@interface UIToolbarItem : NSObject {
-    UIBarButtonItem *item;
-    UIView *view;
-}
+@interface UIToolbarItem : NSObject
 
 - (id)initWithBarButtonItem:(UIBarButtonItem *)anItem;
 
@@ -52,37 +49,29 @@
 @end
 
 @implementation UIToolbarItem 
-@synthesize item, view;
 
 - (id)initWithBarButtonItem:(UIBarButtonItem *)anItem
 {
     if ((self=[super init])) {
         NSAssert((anItem != nil), @"the bar button item must not be nil");
         
-        item = [anItem retain];
+        _item = anItem;
         
-        if (!item->_isSystemItem && item.customView) {
-            view = [item.customView retain];
-        } else if (!item->_isSystemItem || (item->_systemItem != UIBarButtonSystemItemFixedSpace && item->_systemItem != UIBarButtonSystemItemFlexibleSpace)) {
-            view = [[UIToolbarButton alloc] initWithBarButtonItem:item];
+        if (!_item->_isSystemItem && _item.customView) {
+            _view = _item.customView;
+        } else if (!_item->_isSystemItem || (_item->_systemItem != UIBarButtonSystemItemFixedSpace && _item->_systemItem != UIBarButtonSystemItemFlexibleSpace)) {
+            _view = [[UIToolbarButton alloc] initWithBarButtonItem:_item];
         }
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [item release];
-    [view release];
-    [super dealloc];
-}
-
 - (CGFloat)width
 {
-    if (view) {
-        return view.frame.size.width;
-    } else if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFixedSpace) {
-        return item.width;
+    if (_view) {
+        return _view.frame.size.width;
+    } else if (_item->_isSystemItem && _item->_systemItem == UIBarButtonSystemItemFixedSpace) {
+        return _item.width;
     } else {
         return -1;
     }
@@ -91,18 +80,9 @@
 @end
 
 
-
-
-
-
-
-
 @implementation UIToolbar {
     NSMutableArray *_toolbarItems;
 }
-@synthesize barStyle = _barStyle;
-@synthesize tintColor = _tintColor;
-@synthesize translucent = _translucent;
 
 - (id)init
 {
@@ -120,12 +100,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_tintColor release];
-    [_toolbarItems release];
-    [super dealloc];
-}
 
 - (void)setBarStyle:(UIBarStyle)newStyle
 {
@@ -258,7 +232,6 @@
                     }
                 ];
             }
-            [toolbarItem release];
         }
     }
 }

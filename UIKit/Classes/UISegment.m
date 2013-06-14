@@ -4,7 +4,6 @@ static NSString* const kUISegmentInfoKey = @"UISegmentInfo";
 static NSString* const kUISegmentPositionKey = @"UISegmentPosition";
 
 @implementation UISegment
-@synthesize title = _title, position = _position;
 
 - (id) initWithCoder:(NSCoder*)coder
 {
@@ -24,9 +23,4 @@ static NSString* const kUISegmentPositionKey = @"UISegmentPosition";
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)dealloc
-{
-    [_title release];
-    [super dealloc];
-}
 @end

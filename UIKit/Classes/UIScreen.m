@@ -52,8 +52,6 @@ NSMutableArray *_allScreens = nil;
     CALayer *_layer;
     UIPopoverController *_popoverController;
 }
-@synthesize currentMode = _currentMode;
-@synthesize UIKitView = _UIKitView;
 
 + (void)initialize
 {
@@ -81,7 +79,7 @@ NSMutableArray *_allScreens = nil;
 - (id)init
 {
     if ((self = [super init])) {
-        _layer = [[CALayer layer] retain];
+        _layer = [CALayer layer];
         _layer.delegate = self;		// required to get the magic of the UIViewLayoutManager...
         _layer.layoutManager = [UIViewLayoutManager layoutManager];
         
@@ -103,11 +101,7 @@ NSMutableArray *_allScreens = nil;
     [_grabber.layer removeFromSuperlayer];
     [_layer removeFromSuperlayer];
 
-    [_grabber release];
-    [_layer release];
-    [_currentMode release];
     
-    [super dealloc];
 }
 
 - (CGFloat)scale
@@ -187,7 +181,7 @@ NSMutableArray *_allScreens = nil;
 
 - (void)_UIKitViewFrameDidChange
 {
-    NSDictionary *userInfo = (self.currentMode)? [NSDictionary dictionaryWithObject:self.currentMode forKey:@"_previousMode"] : nil;
+    NSDictionary *userInfo = (self.currentMode)? @{ @"_previousMode": self.currentMode } : nil;
     self.currentMode = [UIScreenMode screenModeWithNSView:_UIKitView];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIScreenModeDidChangeNotification object:self userInfo:userInfo];
 }
@@ -196,7 +190,7 @@ NSMutableArray *_allScreens = nil;
 {
     for (UIWindow *window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
         if (window.screen == self) {
-            [window _didMoveToScreen];
+            [window _didMoveToScreenWithScale:[self scale]];
         }
     }
 }
@@ -224,7 +218,7 @@ NSMutableArray *_allScreens = nil;
 
 - (NSArray *)availableModes
 {
-    return (self.currentMode)? [NSArray arrayWithObject:self.currentMode] : nil;
+    return (self.currentMode)? @[self.currentMode] : nil;
 }
 
 - (UIView *)_hitTest:(CGPoint)clickPoint event:(UIEvent *)theEvent

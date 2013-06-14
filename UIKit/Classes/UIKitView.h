@@ -57,11 +57,11 @@
 
 // this is an optional property to make it quick and easy to get a window to start adding views to.
 // created on-demand to be the size of the UIScreen.bounds, flexible width/height, and calls makeKeyAndVisible when it is first created
-@property (nonatomic, retain, readonly) UIWindow *UIWindow;
+@property (nonatomic, strong, readonly) UIWindow *UIWindow;
 
 // a UIKitView owns a single UIScreen. when the UIKitView is part of an NSWindow hierarchy, the UIScreen appears as a connected screen in
 // [UIScreen screens], etc.
-@property (nonatomic, retain, readonly) UIScreen *UIScreen;
+@property (nonatomic, strong, readonly) UIScreen *UIScreen;
 
 @property (nonatomic, readonly, getter = isUsingGeometryAdapter) BOOL usingGeometryAdapter;
 

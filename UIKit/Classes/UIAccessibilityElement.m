@@ -30,25 +30,12 @@
 #import "UIAccessibilityElement.h"
 
 @implementation UIAccessibilityElement
-@synthesize accessibilityLabel = _accessibilityLabel;
-@synthesize accessibilityHint = _accessibilityHint;
-@synthesize accessibilityValue = _accessibilityValue;
-@synthesize accessibilityFrame = _accessibilityFrame;
-@synthesize accessibilityTraits = _accessibilityTraits;
 
 - (id)initWithAccessibilityContainer:(id)container
 {
     if ((self=[super init])) {
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [_accessibilityLabel release];
-    [_accessibilityHint release];
-    [_accessibilityValue release];
-    [super dealloc];
 }
 
 @end

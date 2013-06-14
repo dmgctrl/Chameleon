@@ -34,7 +34,7 @@
 @interface UIBarItem : NSObject
 
 @property (nonatomic, getter=isEnabled) BOOL enabled;
-@property (nonatomic, retain) UIImage *image;
+@property (nonatomic, strong) UIImage *image;
 @property (nonatomic, assign) UIEdgeInsets imageInsets;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic) NSInteger tag;

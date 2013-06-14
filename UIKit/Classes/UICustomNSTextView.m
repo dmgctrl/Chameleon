@@ -106,7 +106,7 @@ static const CGFloat LargeNumberForText = 1.0e7; // Any larger dimensions and th
         [self setSmartInsertDeleteEnabled:NO];
         [self setUsesFindPanel:NO];
         [self setAllowsUndo:NO];
-        [[self layoutManager] setGlyphGenerator:[[[UIBulletGlyphGenerator alloc] init] autorelease]];
+        [[self layoutManager] setGlyphGenerator:[[UIBulletGlyphGenerator alloc] init]];
         [style setLineBreakMode:NSLineBreakByCharWrapping];
     } else {
         [self setAllowsUndo:YES];
@@ -121,7 +121,6 @@ static const CGFloat LargeNumberForText = 1.0e7; // Any larger dimensions and th
     }
     
     [self setDefaultParagraphStyle:style];
-    [style release];
 }
 
 - (void)setSecureTextEntry:(BOOL)isSecure
@@ -173,7 +172,7 @@ static const CGFloat LargeNumberForText = 1.0e7; // Any larger dimensions and th
     // it's possible that various key combos could still allow things like searching in spotlight which
     // then would revel the actual value of the password field, but at least those are sorta obscure :)
     if (secureTextEntry) {
-        NSArray *items = [[[menu itemArray] copy] autorelease];
+        NSArray *items = [[menu itemArray] copy];
         for (NSMenuItem *item in items) {
             if ([item action] != @selector(paste:)) {
                 [menu removeItem:item];
