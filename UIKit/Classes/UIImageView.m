@@ -52,13 +52,6 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 @implementation UIImageView {
     NSInteger _drawMode;
 }
-@synthesize image = _image;
-@synthesize animationImages = _animationImages;
-@synthesize animationDuration = _animationDuration;
-@synthesize highlightedImage = _highlightedImage;
-@synthesize highlighted = _highlighted;
-@synthesize animationRepeatCount = _animationRepeatCount;
-@synthesize highlightedAnimationImages = _highlightedAnimationImages;
 
 + (BOOL)_instanceImplementsDrawRect
 {
