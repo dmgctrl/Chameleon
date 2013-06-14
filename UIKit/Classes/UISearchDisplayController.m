@@ -38,28 +38,15 @@
 #import "UIViewController.h"
 
 
-@implementation UISearchDisplayController 
-@synthesize searchContentsController = _viewController;
-@synthesize searchBar = _searchBar;
-@synthesize searchResultsTableView = _tableView;
-@synthesize searchResultsDataSource = _tableViewDataSource;
-@synthesize searchResultsDelegate = _tableViewDelegate;
-@synthesize delegate = _delegate;
+@implementation UISearchDisplayController
 
 - (id)initWithSearchBar:(UISearchBar *)searchBar contentsController:(UIViewController *)viewController
 {
     if ((self = [super init])) {
         _searchBar = searchBar;
-        _viewController = viewController;
+        _searchContentsController = viewController;
     }
     return self;
-}
-
-- (void)dealloc
-{
-    _delegate = nil;
-    _tableViewDataSource = nil;
-    _tableViewDelegate = nil;
 }
 
 - (BOOL)isActive
