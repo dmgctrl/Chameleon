@@ -81,7 +81,7 @@ static BOOL UIAppearanceInstanceNeedsUpdate(id object)
 
 static void UIAppearanceInstanceSetNeedsUpdate(id object, BOOL needsUpdate)
 {
-    [UIAppearanceInstanceDictionaryCreateIfNeeded(object) setObject:[NSNumber numberWithBool:needsUpdate] forKey:UIAppearanceInstanceNeedsUpdateKey];
+    [UIAppearanceInstanceDictionaryCreateIfNeeded(object) setObject:@(needsUpdate) forKey:UIAppearanceInstanceNeedsUpdateKey];
 }
 
 static NSArray *UIAppearanceHierarchyForClass(Class klass)
