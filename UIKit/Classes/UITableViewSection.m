@@ -31,31 +31,22 @@
 #import "UIView.h"
 
 @implementation UITableViewSection
-@synthesize rowsHeight;
-@synthesize headerHeight;
-@synthesize footerHeight;
-@synthesize rowOffsets = _rowOffsets;
-@synthesize numberOfRows;
-@synthesize headerView;
-@synthesize footerView;
-@synthesize headerTitle;
-@synthesize footerTitle;
 
 - (CGFloat) sectionHeight
 {
-    return rowsHeight + headerHeight + footerHeight;
+    return _rowsHeight + _headerHeight + _footerHeight;
 }
 
 - (CGFloat) heightForRowAtIndex:(NSInteger)index
 {
-    NSAssert(index <= numberOfRows, @"???");
+    NSAssert(index <= _numberOfRows, @"???");
     NSAssert(index >= 0, @"???");
     return _rowOffsets[index+1] - _rowOffsets[index];
 }
 
 - (CGFloat) offsetForRowAtIndex:(NSInteger)index
 {
-    NSAssert(index <= numberOfRows, @"???");
+    NSAssert(index <= _numberOfRows, @"???");
     NSAssert(index >= 0, @"???");
     return _rowOffsets[index];
 }
