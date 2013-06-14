@@ -37,7 +37,6 @@
 #import "UIImage.h"
 
 @implementation UITabBarItem 
-@synthesize badgeValue=_badgeValue;
 
 - (id)initWithTitle:(NSString *)title image:(UIImage *)image tag:(NSInteger)tag
 {
@@ -54,6 +53,5 @@
     }
     return self;
 }
-
 
 @end
