@@ -167,7 +167,7 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 
 - (id)initWithData:(NSData *)data
 {
-    CGImageSourceRef src = data? CGImageSourceCreateWithData((CFDataRef)data, NULL) : NULL;
+    CGImageSourceRef src = data? CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL) : NULL;
     if (src) {
         self = [self initWithCGImageSource:src imageIndex:0 scale:1];
         CFRelease(src);
