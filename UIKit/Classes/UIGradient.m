@@ -30,7 +30,7 @@
 	CGFloat locations[2];
 	locations[0] = 1.0f;
 	locations[1] = 0.0f;
-	_gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) [NSArray arrayWithObjects:(id) starting.CGColor, (id) ending.CGColor, nil], locations);
+	_gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)@[(id)starting.CGColor, (id)ending.CGColor], locations);
 	CGColorSpaceRelease(colorSpace);
 	
 	return self;
