@@ -30,11 +30,6 @@
 #import "UIAccessibilityElement.h"
 
 @implementation UIAccessibilityElement
-@synthesize accessibilityLabel = _accessibilityLabel;
-@synthesize accessibilityHint = _accessibilityHint;
-@synthesize accessibilityValue = _accessibilityValue;
-@synthesize accessibilityFrame = _accessibilityFrame;
-@synthesize accessibilityTraits = _accessibilityTraits;
 
 - (id)initWithAccessibilityContainer:(id)container
 {
@@ -42,6 +37,5 @@
     }
     return self;
 }
-
 
 @end
