@@ -37,7 +37,6 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 }
 
 @implementation UIImageRep
-@synthesize scale=_scale;
 
 + (NSArray*) imageRepsWithContentsOfFile:(NSString*)file
 {
