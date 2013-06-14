@@ -177,8 +177,6 @@ static const CGFloat SplitterPadding = 3;
         BOOL willShowViewController : 1;
     } _delegateHas;
 }
-@synthesize delegate = _delegate;
-@synthesize viewControllers = _viewControllers;
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
