@@ -79,7 +79,6 @@
 
         if (image) {
             [self _cacheImage:image forName:name];
-            [image autorelease];
         }
     }
 
