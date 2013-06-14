@@ -42,7 +42,7 @@ static UIColor* groupTableViewBackgroundColor;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSBundle* bundle = [NSBundle bundleForClass:[self class]];
-        groupTableViewBackgroundColor = [[UIColor colorWithPatternImage:[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableView> groupTableViewBackground"]]] retain];
+        groupTableViewBackgroundColor = [UIColor colorWithPatternImage:[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableView> groupTableViewBackground"]]];
     });
 }
 

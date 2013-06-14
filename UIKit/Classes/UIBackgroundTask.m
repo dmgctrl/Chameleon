@@ -30,7 +30,6 @@
 #import "UIBackgroundTask.h"
 
 @implementation UIBackgroundTask
-@synthesize expirationHandler=_expirationHandler, taskIdentifier=_taskIdentifier;
 
 - (id)initWithExpirationHandler:(void(^)(void))handler
 {
@@ -40,12 +39,6 @@
     }
 
     return self;
-}
-
-- (void)dealloc
-{
-    [_expirationHandler release];
-    [super dealloc];
 }
 
 @end

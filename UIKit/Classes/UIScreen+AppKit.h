@@ -30,7 +30,7 @@
 #import "UIScreen.h"
 
 @interface UIScreen ()
-@property (nonatomic, readonly) UIKitView *UIKitView;
+@property (assign, nonatomic, readonly) UIKitView *UIKitView;
 @end
 
 @interface UIScreen (AppKitIntegration)

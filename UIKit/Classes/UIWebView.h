@@ -60,12 +60,12 @@ typedef NSUInteger UIWebViewNavigationType;
 
 - (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
 
-@property (nonatomic, assign) id<UIWebViewDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id<UIWebViewDelegate> delegate;
 @property (nonatomic, readonly, getter=isLoading) BOOL loading;
 @property (nonatomic, readonly, getter=canGoBack) BOOL canGoBack;
 @property (nonatomic, readonly, getter=canGoForward) BOOL canGoForward;
 @property (nonatomic, assign) BOOL scalesPageToFit; // not implemented
-@property (nonatomic, readonly, retain) NSURLRequest *request;
+@property (nonatomic, readonly, strong) NSURLRequest *request;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
 
 @end

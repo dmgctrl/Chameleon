@@ -39,8 +39,6 @@
 
 
 @implementation UIKitView
-@synthesize UIScreen=_screen;
-@synthesize usingGeometryAdapter = _usingGeometryAdapter;
 
 - (id<CAAction>)actionForLayer:(CALayer *)layer forKey:(NSString *)event
 {
@@ -80,13 +78,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_screen release];
-    [_mainWindow release];
-    [_trackingArea release];
-    [super dealloc];
-}
 
 - (void)awakeFromNib
 {
@@ -96,7 +87,7 @@
 - (UIWindow *)UIWindow
 {
     if (!_mainWindow) {
-        _mainWindow = [(UIWindow *)[UIWindow alloc] initWithFrame:_screen.bounds];
+        _mainWindow = [[UIWindow alloc] initWithFrame:_screen.bounds];
         _mainWindow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _mainWindow.screen = _screen;
     }
@@ -221,7 +212,6 @@
 {
     [super updateTrackingAreas];
     [self removeTrackingArea:_trackingArea];
-    [_trackingArea release];
     _trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds options:NSTrackingCursorUpdate|NSTrackingMouseMoved|NSTrackingInVisibleRect|NSTrackingActiveInKeyWindow|NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
     [self addTrackingArea:_trackingArea];
 }
@@ -319,7 +309,7 @@
 
     if (delay) {
         UIImage *defaultImage = [UIImage imageNamed:@"Default-Landscape.png"];
-        UIImageView *defaultImageView = [[[UIImageView alloc] initWithImage:defaultImage] autorelease];
+        UIImageView *defaultImageView = [[UIImageView alloc] initWithImage:defaultImage];
         defaultImageView.contentMode = UIViewContentModeCenter;
         
         UIWindow *defaultWindow = [(UIWindow *)[UIWindow alloc] initWithFrame:_screen.bounds];
@@ -330,7 +320,6 @@
         [defaultWindow addSubview:defaultImageView];
         [defaultWindow makeKeyAndVisible];
         [self performSelector:@selector(_launchApplicationWithDefaultWindow:) withObject:defaultWindow afterDelay:delay];
-        [defaultWindow release];
     } else {
         [self _launchApplicationWithDefaultWindow:nil];
     }

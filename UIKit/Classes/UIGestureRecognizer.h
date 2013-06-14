@@ -66,6 +66,6 @@ typedef enum {
 @property (nonatomic) BOOL cancelsTouchesInView;
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, readonly) UIGestureRecognizerState state;
-@property (nonatomic, readonly) UIView *view;
+@property (assign, nonatomic, readonly) UIView *view;
 
 @end

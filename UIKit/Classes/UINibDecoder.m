@@ -33,9 +33,9 @@ static NSString* const kUINibVisibleWindowsKey = @"UINibVisibleWindowsKey";
             return nil;
         }
         
-        return [[[decoderClass alloc] initWithData:data encoderVersion:encoderVersion] autorelease];
+        return [[decoderClass alloc] initWithData:data encoderVersion:encoderVersion];
     } else {
-        return [[[UINibDecoderForKeyedArchive alloc] initWithData:data] autorelease];
+        return [[UINibDecoderForKeyedArchive alloc] initWithData:data];
     }
 }
 
@@ -78,8 +78,7 @@ static NSString* const kUINibVisibleWindowsKey = @"UINibVisibleWindowsKey";
         if (!referencedOwner) {
             [mutableTopLevel removeObjectAtIndex:0];
         }
-        topLevelObjects = [NSArray arrayWithArray:mutableTopLevel];
-        [mutableTopLevel release];
+        topLevelObjects = @[mutableTopLevel];
     }
     return topLevelObjects;
 }

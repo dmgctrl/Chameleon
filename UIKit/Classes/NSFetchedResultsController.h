@@ -52,9 +52,9 @@
 
 @property (nonatomic, readonly) NSFetchRequest *fetchRequest;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, readonly) NSString *sectionNameKeyPath;
-@property (nonatomic, readonly) NSString *cacheName;
-@property(nonatomic, assign) id <NSFetchedResultsControllerDelegate> delegate;
+@property (unsafe_unretained, nonatomic, readonly) NSString *sectionNameKeyPath;
+@property (unsafe_unretained, nonatomic, readonly) NSString *cacheName;
+@property(nonatomic, unsafe_unretained) id <NSFetchedResultsControllerDelegate> delegate;
 + (void)deleteCacheWithName:(NSString *)name;
 
 // accessing objects
@@ -63,8 +63,8 @@
 - (NSIndexPath *)indexPathForObject:(id)object;
 
 - (NSString *)sectionIndexTitleForSectionName:(NSString *)sectionName;
-@property (nonatomic, readonly) NSArray *sectionIndexTitles;
-@property (nonatomic, readonly) NSArray *sections;
+@property (unsafe_unretained, nonatomic, readonly) NSArray *sectionIndexTitles;
+@property (unsafe_unretained, nonatomic, readonly) NSArray *sections;
 - (NSInteger)sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)sectionIndex;
 
 @end

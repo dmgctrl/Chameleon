@@ -66,9 +66,6 @@
 		BOOL doCommandBySelector : 1;
     } _delegateHas;
 }
-@synthesize delegate = _delegate;
-@synthesize showsCancelButton = _showsCancelButton;
-@synthesize placeholder = _placeholder;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -78,7 +75,7 @@
 		_searchField.borderStyle = UITextBorderStyleRoundedRect;
 		_searchField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
 		_searchField.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
-		_searchField.leftView = [[[UIImageView alloc] initWithImage:[UIImage _searchBarIcon]] autorelease];
+		_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage _searchBarIcon]];
 		_searchField.leftViewMode = UITextFieldViewModeAlways;
         [self addSubview:_searchField];
     }
@@ -88,9 +85,6 @@
 - (void)dealloc
 {
     _delegate = nil;
-    [_placeholder release];
-    [_searchField release];
-    [super dealloc];
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -101,8 +95,11 @@
 	const CGFloat locations[] = { 0.0f, 1.0f };
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	
-	NSArray *colors = [NSArray arrayWithObjects:(id) [UIColor colorWithRed:233.0f/255.0f green:236.0f/255.0f blue:239.0f/255.0f alpha:1.0f].CGColor, (id) [UIColor colorWithRed:215.0f/255.0f green:223.0f/255.0f blue:225.0f/255.0f alpha:1.0f].CGColor, nil];
-	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef) colors, locations);
+	NSArray *colors = @[
+        (id)[UIColor colorWithRed:233.0f/255.0f green:236.0f/255.0f blue:239.0f/255.0f alpha:1.0f].CGColor,
+        (id)[UIColor colorWithRed:215.0f/255.0f green:223.0f/255.0f blue:225.0f/255.0f alpha:1.0f].CGColor
+    ];
+	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
 	
 	CGContextDrawLinearGradient(context, gradient, CGPointMake(0.0f, 0.0f), CGPointMake(0.0f, self.bounds.size.height), kCGGradientDrawsBeforeStartLocation);
 	

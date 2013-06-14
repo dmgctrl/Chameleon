@@ -40,10 +40,7 @@
 - (BOOL)clipViewShouldScroll;
 @end
 
-@interface UICustomNSClipView : NSClipView {
-    CALayer *parentLayer;
-    id<UICustomNSClipViewBehaviorDelegate> behaviorDelegate;
-}
+@interface UICustomNSClipView : NSClipView 
 
 - (id)initWithFrame:(NSRect)frame;
 

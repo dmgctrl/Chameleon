@@ -51,7 +51,7 @@ extern NSString *const UIImagePickerControllerMediaURL;
 + (BOOL)isSourceTypeAvailable:(UIImagePickerControllerSourceType)sourceType;
 
 @property (nonatomic) UIImagePickerControllerSourceType sourceType;
-@property (nonatomic,assign) id <UINavigationControllerDelegate, UIImagePickerControllerDelegate> delegate;
-@property (nonatomic,copy) NSArray *mediaTypes;
+@property (nonatomic, assign) id <UINavigationControllerDelegate, UIImagePickerControllerDelegate> delegate;
+@property (nonatomic, copy) NSArray *mediaTypes;
 
 @end

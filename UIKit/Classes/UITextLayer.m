@@ -46,8 +46,20 @@
 - (void)removeNSView;
 @end
 
-@implementation UITextLayer
-@synthesize textColor, font, editable, secureTextEntry;
+@implementation UITextLayer {
+    id containerView;
+    BOOL containerCanScroll;
+    UICustomNSTextView *textView;
+    UICustomNSClipView *clipView;
+    BOOL changingResponderStatus;
+    
+    struct {
+        unsigned int didChange : 1;
+        unsigned int didChangeSelection : 1;
+        unsigned int didReturnKey : 1;
+		unsigned int doCommandBySelector : 1;
+    } textDelegateHas;
+}
 
 - (id)initWithContainer:(UIView <UITextLayerContainerViewProtocol, UITextLayerTextDelegate> *)aView isField:(BOOL)isField
 {
@@ -68,7 +80,7 @@
             && [containerView respondsToSelector:@selector(isScrollEnabled)];
         
         clipView = [(UICustomNSClipView *)[UICustomNSClipView alloc] initWithFrame:NSMakeRect(0,0,100,100)];
-        textView = [(UICustomNSTextView *)[UICustomNSTextView alloc] initWithFrame:[clipView frame] secureTextEntry:secureTextEntry isField:isField];
+        textView = [(UICustomNSTextView *)[UICustomNSTextView alloc] initWithFrame:[clipView frame] secureTextEntry:_secureTextEntry isField:isField];
 
         [textView setDelegate:self];
         [clipView setDocumentView:textView];
@@ -83,11 +95,6 @@
 {
     [textView setDelegate:nil];
     [self removeNSView];
-    [clipView release];
-    [textView release];
-    [textColor release];
-    [font release];
-    [super dealloc];
 }
 
 // Need to prevent Core Animation effects from happening... very ugly otherwise.
@@ -210,19 +217,17 @@
 - (void)setFont:(UIFont *)newFont
 {
     assert(newFont != nil);
-    if (newFont != font) {
-        [font release];
-        font = [newFont retain];
-        [textView setFont:[font NSFont]];
+    if (newFont != _font) {
+        _font = newFont;
+        [textView setFont:[_font NSFont]];
     }
 }
 
 - (void)setTextColor:(UIColor *)newColor
 {
-    if (newColor != textColor) {
-        [textColor release];
-        textColor = [newColor retain];
-        [textView setTextColor:[textColor NSColor]];
+    if (newColor != _textColor) {
+        _textColor = newColor;
+        [textView setTextColor:[_textColor NSColor]];
     }
 }
 
@@ -239,17 +244,17 @@
 
 - (void)setSecureTextEntry:(BOOL)s
 {
-    if (s != secureTextEntry) {
-        secureTextEntry = s;
-        [textView setSecureTextEntry:secureTextEntry];
+    if (s != _secureTextEntry) {
+        _secureTextEntry = s;
+        [textView setSecureTextEntry:_secureTextEntry];
     }
 }
 
 - (void)setEditable:(BOOL)edit
 {
-    if (editable != edit) {
-        editable = edit;
-        [textView setEditable:editable];
+    if (_editable != edit) {
+        _editable = edit;
+        [textView setEditable:_editable];
     }
 }
 

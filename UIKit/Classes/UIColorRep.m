@@ -35,7 +35,7 @@
 
 static void drawPatternImage(void *info, CGContextRef ctx)
 {
-    UIImageRep *rep = [(UIColorRep *)info patternImageRep];
+    UIImageRep *rep = [(__bridge UIColorRep *)info patternImageRep];
 
     UIGraphicsPushContext(ctx);
     CGContextSaveGState(ctx);
@@ -64,15 +64,13 @@ static void drawPatternImage(void *info, CGContextRef ctx)
 }
 
 @implementation UIColorRep
-@synthesize patternImageRep = _patternImageRep;
 
 - (id)initWithPatternImageRepresentation:(UIImageRep *)patternImageRep
 {
     if (!patternImageRep) {
-        [self release];
         self = nil;
     } else if ((self=[super init])) {
-        _patternImageRep = [patternImageRep retain];
+        _patternImageRep = patternImageRep;
     }
     return self;
 }
@@ -80,7 +78,6 @@ static void drawPatternImage(void *info, CGContextRef ctx)
 - (id)initWithCGColor:(CGColorRef)color
 {
     if (!color) {
-        [self release];
         self = nil;
     } else if ((self=[super init])) {
         _CGColor = CGColorRetain(color);
@@ -90,9 +87,7 @@ static void drawPatternImage(void *info, CGContextRef ctx)
 
 - (void)dealloc
 {
-    [_patternImageRep release];
     CGColorRelease(_CGColor);
-    [super dealloc];
 }
 
 - (CGColorRef)CGColor
@@ -104,7 +99,7 @@ static void drawPatternImage(void *info, CGContextRef ctx)
         const CGAffineTransform t = CGAffineTransformMakeScale(scaler, scaler);
         static const CGPatternCallbacks callbacks = {0, &drawPatternImage, NULL};
         
-        CGPatternRef pattern = CGPatternCreate ((void *)self,
+        CGPatternRef pattern = CGPatternCreate ((__bridge void *)self,
                                                 CGRectMake (0, 0, imageSize.width, imageSize.height),
                                                 t,
                                                 imageSize.width,

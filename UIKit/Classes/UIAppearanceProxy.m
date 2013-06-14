@@ -140,7 +140,7 @@ static void DidSetPropertyWithAxisValues(id self, SEL cmd, NSInteger numberOfAxi
         [values addObject:[NSValue valueWithBytes:&axisValues[i] objCType:@encode(NSInteger)]];
     }
     
-    [self _appearancePropertyDidChange:[[[UIAppearanceProperty alloc] initWithSelector:cmd axisValues:values] autorelease]];
+    [self _appearancePropertyDidChange:[[UIAppearanceProperty alloc] initWithSelector:cmd axisValues:values]];
 }
 
 // this evil macro is used to generate type-specific setter overrides
@@ -223,11 +223,6 @@ static IMP ImplementationForPropertyType(const char *t)
     return self;
 }
 
-- (void)dealloc
-{
-    [_settings release];
-    [super dealloc];
-}
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation
 {
@@ -324,7 +319,6 @@ static IMP ImplementationForPropertyType(const char *t)
             }
         }
         
-        [key release];
     } else if (isGetter) {
         // convert the getter's selector into a setter's selector since that's what we keyed on above
         NSMutableString *selectorString = [NSStringFromSelector([anInvocation selector]) mutableCopy];
@@ -361,8 +355,6 @@ static IMP ImplementationForPropertyType(const char *t)
         [propertyValue getValue:returnData];
         [anInvocation setReturnValue:returnData];
 
-        [key release];
-        [selectorString release];
     } else {
         // derp
         [self doesNotRecognizeSelector:[anInvocation selector]];
@@ -376,7 +368,7 @@ static IMP ImplementationForPropertyType(const char *t)
 
 - (NSDictionary *)_appearancePropertiesAndValues
 {
-    return [[_settings copy] autorelease];
+    return [_settings copy];
 }
 
 @end

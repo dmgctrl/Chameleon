@@ -45,10 +45,6 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     UIImageView* _maximumTrackView;
     UIButton* _thumbView;
 }
-@synthesize value = _value;
-@synthesize minimumValue = _minimumValue;
-@synthesize maximumValue = _maximumValue;
-@synthesize continuous = _continuous;
 
 - (void) _commonInitForUISlider
 {
@@ -62,12 +58,10 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     _minimumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMinimumTrackImage]];
     _minimumTrackView.frame = CGRectMake(3, 7, 18, 9);
     [self addSubview:_minimumTrackView];
-    [_minimumTrackView release];
     
     _maximumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMaximumTrackImage]];
     _maximumTrackView.frame = CGRectMake(0, 7, 18, 9);
     [self addSubview:_maximumTrackView];
-    [_maximumTrackView release];
     
     _thumbView = [UIButton buttonWithType:UIButtonTypeCustom];
     _thumbView.userInteractionEnabled = NO;

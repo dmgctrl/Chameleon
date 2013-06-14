@@ -2,7 +2,7 @@
 
 @interface UIProxyObject : NSObject <NSCoding>
 
-@property (retain) NSString* proxiedObjectIdentifier;
+@property (strong) NSString* proxiedObjectIdentifier;
 
 - (id) initWithCoder:(NSCoder*)coder;
 - (void)encodeWithCoder:(NSCoder*)coder;

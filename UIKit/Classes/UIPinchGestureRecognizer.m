@@ -31,7 +31,6 @@
 #import "UIGestureRecognizerSubclass.h"
 
 @implementation UIPinchGestureRecognizer 
-@synthesize scale=_scale;
 
 - (id)initWithTarget:(id)target action:(SEL)action
 {

@@ -89,36 +89,11 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 		BOOL doCommandBySelector : 1;
     } _delegateHas;	
 }
-@synthesize delegate = _delegate;
-@synthesize background = _background;
-@synthesize disabledBackground = _disabledBackground;
-@synthesize editing = _editing;
-@synthesize clearsOnBeginEditing = _clearsOnBeginEditing;
-@synthesize adjustsFontSizeToFitWidth = _adjustsFontSizeToFitWidth;
-@synthesize clearButtonMode = _clearButtonMode;
-@synthesize leftView = _leftView;
-@synthesize rightView = _rightView;
-@synthesize leftViewMode = _leftViewMode;
-@synthesize rightViewMode = _rightViewMode;
-@synthesize borderStyle = _borderStyle;
-@synthesize inputAccessoryView = _inputAccessoryView;
-@synthesize inputView = _inputView;
-@synthesize minimumFontSize = _minimumFontSize;
 
 - (void)dealloc
 {
 	[_placeholderTextLayer removeFromSuperlayer];
-	[_placeholderTextLayer release];
     [_textLayer removeFromSuperlayer];
-    [_textLayer release];
-    [_leftView release];
-    [_rightView release];
-    [_background release];
-    [_disabledBackground release];
-    [_placeholder release];
-    [_inputAccessoryView release];
-    [_inputView release];
-    [super dealloc];
 }
 
 - (void) _commonInitForUITextField
@@ -286,8 +261,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 - (void)setBackground:(UIImage *)aBackground
 {
     if (aBackground != _background) {
-        [_background release];
-        _background = [aBackground retain];
+        _background = aBackground;
         [self setNeedsDisplay];
     }
 }
@@ -295,8 +269,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 - (void)setDisabledBackground:(UIImage *)aBackground
 {
     if (aBackground != _disabledBackground) {
-        [_disabledBackground release];
-        _disabledBackground = [aBackground retain];
+        _disabledBackground = aBackground;
         [self setNeedsDisplay];
     }
 }
@@ -305,8 +278,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 {
     if (leftView != _leftView) {
         [_leftView removeFromSuperview];
-        [_leftView release];
-        _leftView = [leftView retain];
+        _leftView = leftView;
         [self addSubview:_leftView];
     }
 }
@@ -315,8 +287,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 {
     if (rightView != _rightView) {
         [_rightView removeFromSuperview];
-        [_rightView release];
-        _rightView = [rightView retain];
+        _rightView = rightView;
         [self addSubview:_rightView];
     }
 }
@@ -474,7 +445,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 			
 			CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 			CGFloat locations[] = { 1.0f, 0.0f };
-			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef) [NSArray arrayWithObjects:(id) [UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id) [UIColor colorWithWhite:0.65 alpha:1.0].CGColor, nil], locations);
+			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) @[(id) [UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id) [UIColor colorWithWhite:0.65 alpha:1.0].CGColor], locations);
 			
 			CGContextSaveGState(context);
 			CGContextAddPath(context, [UIBezierPath bezierPathWithRoundedRect:blackOutlineFrame cornerRadius:3.6f].CGPath);

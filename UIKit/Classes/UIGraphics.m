@@ -42,9 +42,8 @@ void UIGraphicsPushContext(CGContextRef ctx)
     if (!stack) {
         stack = [[NSMutableArray alloc] initWithCapacity:10];
         [threadDictionary setObject:stack forKey:kUIGraphicsContextStackKey];
-        [stack release];
     }
-    [stack addObject:(id)ctx];
+    [stack addObject:(__bridge id)ctx];
 }
 
 void UIGraphicsPopContext()
@@ -60,7 +59,7 @@ CGContextRef UIGraphicsGetCurrentContext()
     NSMutableDictionary* threadDictionary = [[NSThread currentThread] threadDictionary];
     NSMutableArray* stack = [threadDictionary objectForKey:kUIGraphicsContextStackKey];
     assert(stack.count); // Someone didn't call *push* first.
-    return (CGContextRef)[stack lastObject];
+    return (__bridge CGContextRef)[stack lastObject];
 }
 
 CGFloat _UIGraphicsGetContextScaleFactor(CGContextRef ctx)
@@ -86,9 +85,8 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat sc
         if (!stack) {
             stack = [[NSMutableArray alloc] initWithCapacity:10];
             [threadDictionary setObject:stack forKey:kUIGraphicsContextImageStackKey];
-            [stack release];
         }
-        [stack addObject:[NSNumber numberWithFloat:scale]];
+        [stack addObject:@(scale)];
 
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4*width, colorSpace, (opaque? kCGImageAlphaNoneSkipFirst : kCGImageAlphaPremultipliedFirst));
@@ -102,7 +100,7 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat sc
 
 void UIGraphicsBeginImageContext(CGSize size)
 {
-    UIGraphicsBeginImageContextWithOptions(size, NO, 1.f);
+    UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
 }
 
 UIImage *UIGraphicsGetImageFromCurrentImageContext()
