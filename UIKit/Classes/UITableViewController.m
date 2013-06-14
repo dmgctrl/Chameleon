@@ -33,7 +33,6 @@
     UITableViewStyle _style;
     BOOL _hasReloaded;
 }
-@synthesize clearsSelectionOnViewWillAppear = _clearsSelectionOnViewWillAppear;
 
 - (id)init
 {
