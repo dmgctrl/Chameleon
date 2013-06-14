@@ -119,7 +119,7 @@ static inline double decodeFloat64(void const** pp);
     UINibDecoderValueEntry* values;
     
     uint32_t numberOfClasses;
-    Class* classes;
+    NSMutableArray* classes;
 }
 
 - (void) dealloc
@@ -129,9 +129,6 @@ static inline double decodeFloat64(void const** pp);
     }
     if (values) {
         free(values);
-    }
-    if (classes) {
-        free(classes);
     }
     [data_ release];
     [super dealloc];
@@ -315,7 +312,7 @@ static inline double decodeFloat64(void const** pp);
         
         /*  Read in the classes table.
          */
-        classes = malloc(sizeof(Class) * numberOfClasses);
+        classes = [[NSMutableArray alloc] initWithCapacity:numberOfClasses];
         if (!classes) {
             [self release];
             return nil;
@@ -336,7 +333,7 @@ static inline double decodeFloat64(void const** pp);
                 [self release];
                 return nil;
             }
-            classes[i] = class;
+            [classes addObject:class];
             [className release];
             cp += length;
         }
@@ -827,7 +824,7 @@ static Class kClassForUIImageNibPlaceholder;
                     object = [[UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]] retain];
                 }
 
-                [objects_ replacePointerAtIndex:indexOfObject withPointer:object];
+                [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(object)];
             }
             return object;
         }
