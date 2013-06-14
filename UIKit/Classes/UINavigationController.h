@@ -58,6 +58,6 @@
 @property (nonatomic, assign) id<UINavigationControllerDelegate> delegate;
 @property (nonatomic, readonly, strong) UIViewController *topViewController;
 @property (nonatomic,getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property (nonatomic,getter=isToolbarHidden) BOOL toolbarHidden;
+@property (nonatomic, getter=isToolbarHidden) BOOL toolbarHidden;
 
 @end

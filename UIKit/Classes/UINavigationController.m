@@ -50,12 +50,7 @@ static const CGFloat ToolbarHeight = 28;
         BOOL willShowViewController : 1;
     } _delegateHas;
 }
-@synthesize viewControllers = _viewControllers;
-@synthesize delegate = _delegate;
-@synthesize navigationBar = _navigationBar;
-@synthesize toolbar = _toolbar;
 @synthesize toolbarHidden = _toolbarHidden;
-@synthesize navigationBarHidden = _navigationBarHidden;
 
 - (UIViewController *)visibleViewController
 {
