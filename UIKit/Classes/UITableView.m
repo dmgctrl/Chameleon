@@ -802,6 +802,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
         if ([cell.reuseIdentifier isEqualToString:identifier]) {
             [_reusableCells removeObject:cell];
             [cell prepareForReuse];
+            [cell setNeedsLayout];
             return cell;
         }
     }
