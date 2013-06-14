@@ -103,30 +103,6 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     BOOL _alwaysBounceHorizontal;
     BOOL _alwaysBounceVertical;
 }
-@synthesize contentOffset = _contentOffset;
-@synthesize contentInset = _contentInset;
-@synthesize scrollIndicatorInsets = _scrollIndicatorInsets;
-@synthesize scrollEnabled = _scrollEnabled;
-@synthesize showsHorizontalScrollIndicator = _showsHorizontalScrollIndicator;
-@synthesize showsVerticalScrollIndicator = _showsVerticalScrollIndicator;
-@synthesize contentSize = _contentSize;
-@synthesize maximumZoomScale = _maximumZoomScale;
-@synthesize minimumZoomScale = _minimumZoomScale;
-@synthesize scrollsToTop = _scrollsToTop;
-@synthesize indicatorStyle = _indicatorStyle;
-@synthesize delaysContentTouches = _delaysContentTouches;
-@synthesize delegate = _delegate;
-@synthesize pagingEnabled = _pagingEnabled;
-@synthesize canCancelContentTouches = _canCancelContentTouches;
-@synthesize bouncesZoom = _bouncesZoom;
-@synthesize zooming = _zooming;
-@synthesize alwaysBounceVertical = _alwaysBounceVertical;
-@synthesize alwaysBounceHorizontal = _alwaysBounceHorizontal;
-@synthesize bounces = _bounces;
-@synthesize decelerationRate = _decelerationRate;
-@synthesize scrollWheelGestureRecognizer = _scrollWheelGestureRecognizer;
-@synthesize panGestureRecognizer = _panGestureRecognizer;
-
 
 - (void) _commonInitForUIScrollView
 {
