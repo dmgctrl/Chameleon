@@ -832,6 +832,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
             [cell retain];
             [_reusableCells removeObject:cell];
             [cell prepareForReuse];
+            [cell setNeedsLayout];
             return [cell autorelease];
         }
     }
