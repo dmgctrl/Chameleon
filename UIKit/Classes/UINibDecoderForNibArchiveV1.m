@@ -127,9 +127,6 @@ static inline double decodeFloat64(void const** pp);
     if (objects) {
         free(objects);
     }
-    if (keys) {
-        free(keys);
-    }
     if (values) {
         free(values);
     }
