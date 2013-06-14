@@ -364,7 +364,7 @@ static NSString* const kUIMomentaryKey = @"UIMomentary";
 
 - (void)setEnabled:(BOOL)enabled forSegmentAtIndex:(NSUInteger)segment
 {
-    [self _setMetaValue:[NSNumber numberWithBool:enabled] forKey:kSSSegmentedControlEnabledKey segmentIndex:segment];
+    [self _setMetaValue:@(enabled) forKey:kSSSegmentedControlEnabledKey segmentIndex:segment];
     
 }
 
