@@ -31,8 +31,6 @@
 #import "UIApplication.h"
 
 @implementation UIViewBlockAnimationDelegate
-@synthesize completion=_completion, ignoreInteractionEvents=_ignoreInteractionEvents;
-
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished
 {
