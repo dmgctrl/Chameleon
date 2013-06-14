@@ -45,10 +45,6 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     UIImageView* _maximumTrackView;
     UIButton* _thumbView;
 }
-@synthesize value = _value;
-@synthesize minimumValue = _minimumValue;
-@synthesize maximumValue = _maximumValue;
-@synthesize continuous = _continuous;
 
 - (void) _commonInitForUISlider
 {
