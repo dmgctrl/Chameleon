@@ -31,10 +31,6 @@
 #import "UITabBar.h"
 
 @implementation UITabBarController 
-@synthesize selectedViewController = _selectedViewController;
-@synthesize viewControllers = _viewControllers;
-@synthesize selectedIndex = _selectedIndex;
-@synthesize tabBar = _tabBar;
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
