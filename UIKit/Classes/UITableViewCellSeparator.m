@@ -32,9 +32,6 @@
 #import "UIGraphics.h"
 
 @implementation UITableViewCellSeparator 
-@synthesize style = _style;
-@synthesize color = _color;
-
 
 - (id) initWithFrame:(CGRect)frame
 {
