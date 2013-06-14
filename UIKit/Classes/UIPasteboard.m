@@ -114,8 +114,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (id)_objectsWithClasses:(NSArray *)types
 {
-    NSDictionary *options = [NSDictionary dictionary];
-    return [pasteboard readObjectsForClasses:types options:options];
+    return [pasteboard readObjectsForClasses:types options:@{}];
 }
 
 - (void)setStrings:(NSArray *)strings
@@ -125,12 +124,12 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (NSArray *)strings
 {
-    return [self _objectsWithClasses:[NSArray arrayWithObject:[NSString class]]];
+    return [self _objectsWithClasses:@[[NSString class]]];
 }
 
 - (void)setString:(NSString *)aString
 {
-    [self setStrings:[NSArray arrayWithObject:aString]];
+    [self setStrings:@[aString]];
 }
 
 - (NSString *)string
@@ -145,12 +144,12 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (NSArray *)URLs
 {
-    return [self _objectsWithClasses:[NSArray arrayWithObject:[NSURL class]]];
+    return [self _objectsWithClasses:@[[NSURL class]]];
 }
 
 - (void)setURL:(NSURL *)aURL
 {
-    [self setURLs:[NSArray arrayWithObject:aURL]];
+    [self setURLs:@[aURL]];
 }
 
 - (NSURL *)URL
@@ -171,7 +170,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (NSArray *)images
 {
-    NSArray *rawImages = [self _objectsWithClasses:[NSArray arrayWithObject:[NSImage class]]];
+    NSArray *rawImages = [self _objectsWithClasses:@[[NSImage class]]];
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:[rawImages count]];
     
     for (NSImage *image in rawImages) {
@@ -183,7 +182,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (void)setImage:(UIImage *)anImage
 {
-    [self setImages:[NSArray arrayWithObject:anImage]];
+    [self setImages:@[anImage]];
 }
 
 - (UIImage *)image
@@ -204,7 +203,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (NSArray *)colors
 {
-    NSArray *rawColors = [self _objectsWithClasses:[NSArray arrayWithObject:[NSColor class]]];
+    NSArray *rawColors = [self _objectsWithClasses:@[[NSColor class]]];
     NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[rawColors count]];
     
     for (NSColor *color in rawColors) {
@@ -216,7 +215,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 
 - (void)setColor:(UIColor *)aColor
 {
-    [self setColors:[NSArray arrayWithObject:aColor]];
+    [self setColors:@[aColor]];
 }
 
 - (UIColor *)color
@@ -275,7 +274,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 {
     if (data && pasteboardType) {
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:PasteBoardItemWithDictionary([NSDictionary dictionaryWithObject:data forKey:pasteboardType])]];
+        [pasteboard writeObjects:@[PasteBoardItemWithDictionary(@{ pasteboardType: data })]];
     }
 }
 
@@ -283,7 +282,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 {
     if (pasteboardType && IsUIPasteboardPropertyListType(value)) {
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:PasteBoardItemWithDictionary([NSDictionary dictionaryWithObject:value forKey:pasteboardType])]];
+        [pasteboard writeObjects:@[PasteBoardItemWithDictionary(@{ pasteboardType: value })]];
     }
 }
 
