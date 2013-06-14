@@ -52,8 +52,6 @@ NSMutableArray *_allScreens = nil;
     CALayer *_layer;
     UIPopoverController *_popoverController;
 }
-@synthesize currentMode = _currentMode;
-@synthesize UIKitView = _UIKitView;
 
 + (void)initialize
 {
