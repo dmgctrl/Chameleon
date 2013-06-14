@@ -90,20 +90,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
 		BOOL canEditRowAtIndexPath : 1;
     } _dataSourceHas;
 }
-@synthesize style = _style;
-@synthesize dataSource = _dataSource;
-@synthesize rowHeight = _rowHeight;
-@synthesize separatorStyle = _separatorStyle;
-@synthesize separatorColor = _separatorColor;
-@synthesize tableHeaderView = _tableHeaderView;
-@synthesize tableFooterView = _tableFooterView;
-@synthesize allowsSelection = _allowsSelection;
-@synthesize editing = _editing;
-@synthesize sectionFooterHeight = _sectionFooterHeight;
-@synthesize sectionHeaderHeight = _sectionHeaderHeight;
-@synthesize allowsSelectionDuringEditing = _allowsSelectionDuringEditing;
-@synthesize allowsMultipleSelection = _allowsMultipleSelection;
-@synthesize selectedRows = _selectedRows;
 
 @dynamic delegate;
 
