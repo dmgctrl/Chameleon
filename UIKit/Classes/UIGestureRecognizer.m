@@ -68,12 +68,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_registeredActions release];
-    [_trackingTouches release];
-    [super dealloc];
-}
 
 - (void)_setView:(UIView *)v
 {
@@ -100,7 +94,6 @@
     actionRecord.target = target;
     actionRecord.action = action;
     [_registeredActions addObject:actionRecord];
-    [actionRecord release];
 }
 
 - (void)removeTarget:(id)target action:(SEL)action
@@ -109,7 +102,6 @@
     actionRecord.target = target;
     actionRecord.action = action;
     [_registeredActions removeObject:actionRecord];
-    [actionRecord release];
 }
 
 - (void)requireGestureRecognizerToFail:(UIGestureRecognizer *)otherGestureRecognizer

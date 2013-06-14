@@ -42,7 +42,7 @@ static NSArray *GestureRecognizersForView(UIView *view)
         view = [view superview];
     }
     
-    return [recognizers autorelease];
+    return recognizers;
 }
 
 @implementation UITouch {
@@ -69,13 +69,6 @@ static NSArray *GestureRecognizersForView(UIView *view)
     return self;
 }
 
-- (void)dealloc
-{
-    [_window release];
-    [_view release];
-    [_gestureRecognizers release];
-    [super dealloc];
-}
 
 - (void)_setPhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount timestamp:(NSTimeInterval)timestamp;
 {
@@ -135,16 +128,13 @@ static NSArray *GestureRecognizersForView(UIView *view)
 - (void)_setTouchedView:(UIView *)view
 {
     if (_view != view) {
-        [_view release];
-        _view = [view retain];
+        _view = view;
     }
 
     if (_window != view.window) {
-        [_window release];
-        _window = [view.window retain];
+        _window = view.window;
     }
 
-    [_gestureRecognizers release];
     _gestureRecognizers = [GestureRecognizersForView(_view) copy];
 }
 
@@ -168,11 +158,8 @@ static NSArray *GestureRecognizersForView(UIView *view)
         }
     }
     
-    [_gestureRecognizers release];
     _gestureRecognizers = [remainingRecognizers copy];
-    [remainingRecognizers release];
     
-    [_view release];
     _view = nil;
 }
 

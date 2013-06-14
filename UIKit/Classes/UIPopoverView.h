@@ -46,7 +46,7 @@
 - (void)setContentView:(UIView *)aView animated:(BOOL)animated;
 - (void)setContentSize:(CGSize)aSize animated:(BOOL)animated;
 
-@property (nonatomic, retain) UIView *contentView;
+@property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, assign) CGSize contentSize;
 @property (nonatomic, assign) UIPopoverTheme theme;
 

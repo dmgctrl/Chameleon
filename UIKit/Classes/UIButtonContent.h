@@ -4,10 +4,10 @@
 
 @interface UIButtonContent : NSObject <NSCoding, NSCopying>
 
-@property (retain, nonatomic) UIColor* shadowColor;
-@property (retain, nonatomic) UIColor* titleColor;
-@property (retain, nonatomic) UIImage* backgroundImage;
-@property (retain, nonatomic) UIImage* image;
-@property (retain, nonatomic) NSString* title;
+@property (strong, nonatomic) UIColor* shadowColor;
+@property (strong, nonatomic) UIColor* titleColor;
+@property (strong, nonatomic) UIImage* backgroundImage;
+@property (strong, nonatomic) UIImage* image;
+@property (strong, nonatomic) NSString* title;
 
 @end

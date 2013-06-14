@@ -42,7 +42,6 @@ void UIGraphicsPushContext(CGContextRef ctx)
     if (!stack) {
         stack = [[NSMutableArray alloc] initWithCapacity:10];
         [threadDictionary setObject:stack forKey:kUIGraphicsContextStackKey];
-        [stack release];
     }
     [stack addObject:(__bridge id)ctx];
 }
@@ -60,7 +59,7 @@ CGContextRef UIGraphicsGetCurrentContext()
     NSMutableDictionary* threadDictionary = [[NSThread currentThread] threadDictionary];
     NSMutableArray* stack = [threadDictionary objectForKey:kUIGraphicsContextStackKey];
     assert(stack.count); // Someone didn't call *push* first.
-    return (CGContextRef)[stack lastObject];
+    return (__bridge CGContextRef)[stack lastObject];
 }
 
 CGFloat _UIGraphicsGetContextScaleFactor(CGContextRef ctx)
@@ -86,7 +85,6 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat sc
         if (!stack) {
             stack = [[NSMutableArray alloc] initWithCapacity:10];
             [threadDictionary setObject:stack forKey:kUIGraphicsContextImageStackKey];
-            [stack release];
         }
         [stack addObject:[NSNumber numberWithFloat:scale]];
 

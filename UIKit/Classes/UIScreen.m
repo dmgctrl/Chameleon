@@ -81,7 +81,7 @@ NSMutableArray *_allScreens = nil;
 - (id)init
 {
     if ((self = [super init])) {
-        _layer = [[CALayer layer] retain];
+        _layer = [CALayer layer];
         _layer.delegate = self;		// required to get the magic of the UIViewLayoutManager...
         _layer.layoutManager = [UIViewLayoutManager layoutManager];
         
@@ -103,11 +103,7 @@ NSMutableArray *_allScreens = nil;
     [_grabber.layer removeFromSuperlayer];
     [_layer removeFromSuperlayer];
 
-    [_grabber release];
-    [_layer release];
-    [_currentMode release];
     
-    [super dealloc];
 }
 
 - (CGFloat)scale
@@ -196,7 +192,7 @@ NSMutableArray *_allScreens = nil;
 {
     for (UIWindow *window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
         if (window.screen == self) {
-            [window _didMoveToScreen];
+            [window _didMoveToScreenWithScale:[self scale]];
         }
     }
 }

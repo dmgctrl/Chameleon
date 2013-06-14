@@ -33,7 +33,7 @@
 static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 {
     NSString *macPath = [[[imagePath stringByDeletingPathExtension] stringByAppendingString:@"~mac"] stringByAppendingPathExtension:[imagePath pathExtension]];
-    return CGImageSourceCreateWithURL((CFURLRef)[NSURL fileURLWithPath:macPath], NULL) ?: CGImageSourceCreateWithURL((CFURLRef)[NSURL fileURLWithPath:imagePath], NULL);
+    return CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:macPath], NULL) ?: CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:imagePath], NULL);
 }
 
 @implementation UIImageRep
@@ -54,14 +54,13 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
         CGFloat dotsPerInchXAt1x = INFINITY;
         CGFloat dotsPerInchYAt1x = INFINITY;
         for (NSInteger i = 0, iMax = CGImageSourceGetCount(source); i < iMax; i++) {
-            NSDictionary* properties = (NSDictionary*)CGImageSourceCopyPropertiesAtIndex(source, i, NULL);
+            NSDictionary* properties = (NSDictionary*)CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, i, NULL));
             if (!properties) {
                 continue;
             }
 
             CGFloat dotsPerInchX = [[properties objectForKey:(id)kCGImagePropertyDPIWidth] floatValue];
             CGFloat dotsPerInchY = [[properties objectForKey:(id)kCGImagePropertyDPIHeight] floatValue];
-            [properties release];
 
             if (dotsPerInchX == 0 || dotsPerInchY == 0) {
                 continue;
@@ -74,20 +73,18 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
         
         if (dpiInfoPresent) {
             for (NSInteger i = 0, iMax = CGImageSourceGetCount(source); i < iMax; i++) {
-                NSDictionary* properties = (NSDictionary*)CGImageSourceCopyPropertiesAtIndex(source, i, NULL);
+                NSDictionary* properties = (NSDictionary*)CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, i, NULL));
                 if (!properties) {
                     continue;
                 }
 
                 CGFloat scaleX = [[properties objectForKey:(id)kCGImagePropertyDPIWidth] floatValue] / dotsPerInchXAt1x;
                 CGFloat scaleY = [[properties objectForKey:(id)kCGImagePropertyDPIHeight] floatValue] / dotsPerInchYAt1x;
-                [properties release];
 
                 if (fabs(scaleX - scaleY) < 0.01) {
                     UIImageRep* rep = [[UIImageRep alloc] initWithCGImageSource:source imageIndex:i scale:scaleX];
                     if (rep) {
                         [reps addObject:rep];
-                        [rep release];
                     }
                 }
             }
@@ -95,7 +92,6 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
             UIImageRep* rep = [[UIImageRep alloc] initWithCGImageSource:source imageIndex:0 scale:1.0];
             if (rep) {
                 [reps addObject:rep];
-                [rep release];
             }
         }
         
@@ -113,14 +109,12 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
         UIImageRep* repAt1x = [[self alloc] initWithContentsOfFile:file scale:1.0];
         if (repAt1x) {
             [reps addObject:repAt1x];
-            [repAt1x release];
         }
     }
     if (fileAt2x) {
         UIImageRep* repAt2x = [[self alloc] initWithContentsOfFile:fileAt2x scale:2.0];
         if (repAt2x) {
             [reps addObject:repAt2x];
-            [repAt2x release];
         }
     }
 
@@ -142,7 +136,6 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 - (id)initWithCGImageSource:(CGImageSourceRef)source imageIndex:(NSUInteger)index scale:(CGFloat)scale
 {
     if (!source || CGImageSourceGetCount(source) <= index) {
-        [self release];
         self = nil;
     } else if ((self=[super init])) {
         CFRetain(source);
@@ -156,7 +149,6 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 - (id)initWithCGImage:(CGImageRef)image scale:(CGFloat)scale
 {
     if (!image) {
-        [self release];
         self = nil;
     } else if ((self=[super init])) {
         _scale = scale;
@@ -172,7 +164,6 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
         self = [self initWithCGImageSource:src imageIndex:0 scale:1];
         CFRelease(src);
     } else {
-        [self release];
         self = nil;
     }
     
@@ -183,7 +174,6 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
 {
     if (_image) CGImageRelease(_image);
     if (_imageSource) CFRelease(_imageSource);
-    [super dealloc];
 }
 
 - (BOOL)isLoaded

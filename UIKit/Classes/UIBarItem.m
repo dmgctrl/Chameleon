@@ -46,12 +46,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_image release];
-    [_title release];
-    [super dealloc];
-}
 
 - (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
 {

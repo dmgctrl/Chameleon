@@ -89,8 +89,8 @@ inline static NSNumber* _keyForState(NSInteger state)
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSBundle* bundle = [NSBundle bundleForClass:[self class]];
-        detailDisclosureButtonImage = [[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UIButton> detailDisclosureButton"]] retain];
-        detailDisclosureButtonImagePressed = [[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UIButton> detailDisclosureButtonPressed"]] retain];
+        detailDisclosureButtonImage = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UIButton> detailDisclosureButton"]];
+        detailDisclosureButtonImagePressed = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UIButton> detailDisclosureButtonPressed"]];
 
         kUIControlStateNormalKey = [[NSNumber alloc] initWithInteger:UIControlStateNormal];
         kUIControlStateHighlightedKey = [[NSNumber alloc] initWithInteger:UIControlStateHighlighted];
@@ -114,18 +114,18 @@ inline static NSNumber* _keyForState(NSInteger state)
             UIButton* button = [[UIButton alloc] initWithFrame:frame];
             [button setImage:detailDisclosureButtonImage forState:UIControlStateNormal];
             [button setImage:detailDisclosureButtonImagePressed forState:UIControlStateHighlighted];
-            return [button autorelease];
+            return button;
         }
 
         case UIButtonTypeRoundedRect:
         case UIButtonTypeInfoLight:
         case UIButtonTypeInfoDark:
         case UIButtonTypeContactAdd:
-            return [[[UIRoundedRectButton alloc] init] autorelease];
+            return [[UIRoundedRectButton alloc] init];
             
         case UIButtonTypeCustom:
         default: {
-            return [[[UIButton alloc] init] autorelease];
+            return [[UIButton alloc] init];
         }
     }
 }
@@ -170,7 +170,7 @@ inline static NSNumber* _keyForState(NSInteger state)
             self.adjustsImageWhenHighlighted = [coder decodeBoolForKey:kUIAdjustsImageWhenHighlightedKey];
         }
         if ([coder containsValueForKey:kUIButtonStatefulContentKey]) {
-            [_content release], _content = [[coder decodeObjectForKey:kUIButtonStatefulContentKey] retain];
+            _content = [coder decodeObjectForKey:kUIButtonStatefulContentKey];
             [self _updateContent];
         }
         if ([coder containsValueForKey:kUIButtonTypeKey]) {
@@ -183,16 +183,6 @@ inline static NSNumber* _keyForState(NSInteger state)
     return self;
 }
 
-- (void)dealloc
-{
-    [_content release];
-    [_titleLabel release];
-    [_imageView release];
-    [_backgroundImageView release];
-    [_adjustedHighlightImage release];
-    [_adjustedDisabledImage release];
-    [super dealloc];
-}
 
 - (UIButtonType) buttonType
 {
@@ -296,7 +286,6 @@ inline static NSNumber* _keyForState(NSInteger state)
     if (!content) {
         content = [[UIButtonContent alloc] init];
         [_content setValue:content forKey:key];
-        [content release];
     }
     content.title = title;
     [self _updateContent];
@@ -309,7 +298,6 @@ inline static NSNumber* _keyForState(NSInteger state)
     if (!content) {
         content = [[UIButtonContent alloc] init];
         [_content setValue:content forKey:key];
-        [content release];
     }
     content.titleColor = titleColor;
     [self _updateContent];
@@ -322,7 +310,6 @@ inline static NSNumber* _keyForState(NSInteger state)
     if (!content) {
         content = [[UIButtonContent alloc] init];
         [_content setValue:content forKey:key];
-        [content release];
     }
     content.shadowColor = shadowColor;
     [self _updateContent];
@@ -335,7 +322,6 @@ inline static NSNumber* _keyForState(NSInteger state)
     if (!content) {
         content = [[UIButtonContent alloc] init];
         [_content setValue:content forKey:key];
-        [content release];
     }
     content.backgroundImage = backgroundImage;
     [self _updateContent];
@@ -343,15 +329,12 @@ inline static NSNumber* _keyForState(NSInteger state)
 
 - (void)setImage:(UIImage *)image forState:(UIControlState)state
 {
-    [_adjustedHighlightImage release];
-    [_adjustedDisabledImage release];
     _adjustedDisabledImage = _adjustedHighlightImage = nil;
     id key = _keyForState(state);
     UIButtonContent* content = [_content objectForKey:key];
     if (!content) {
         content = [[UIButtonContent alloc] init];
         [_content setValue:content forKey:key];
-        [content release];
     }
     content.image = image;
     if (state == UIControlStateNormal) {

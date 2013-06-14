@@ -80,8 +80,8 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 - (void)_stopTrackingPotentiallyNewToolTip;
 - (void)_toolTipViewDidChangeSuperview:(NSNotification *)notification;
 
-@property (nonatomic, retain) UIView *currentToolTipView;
-@property (nonatomic, retain) UIView *toolTipViewToShow;
+@property (nonatomic, strong) UIView *currentToolTipView;
+@property (nonatomic, strong) UIView *toolTipViewToShow;
 @end
 
 
@@ -111,9 +111,6 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 	[self _stopTrackingPotentiallyNewToolTip];
 	[self _hideCurrentToolTip];
     [self _makeHidden];	// I don't really like this here, but the real UIKit seems to do something like this on window destruction as it sends a notification and we also need to remove it from the app's list of windows
-    [_screen release];
-    [_undoManager release];
-    [_rootViewController release];
     
     // since UIView's dealloc is called after this one, it's hard ot say what might happen in there due to all of the subview removal stuff
     // so it's safer to make sure these things are nil now rather than potential garbage. I don't like how much work UIView's -dealloc is doing
@@ -122,15 +119,13 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     _undoManager = nil;
     _rootViewController = nil;
     
-    [super dealloc];
 }
 
 - (void)setRootViewController:(UIViewController *)rootViewController
 {
 	if (rootViewController != _rootViewController) {
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        [_rootViewController release];
-        _rootViewController = [rootViewController retain];
+        _rootViewController = rootViewController;
         _rootViewController.view.frame = self.bounds;    // unsure about this
         [self addSubview:_rootViewController.view];
 	}
@@ -180,8 +175,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
         [self _makeHidden];
 
         [self.layer removeFromSuperlayer];
-        [_screen release];
-        _screen = [theScreen retain];
+        _screen = theScreen;
         [[_screen _layer] addSublayer:self.layer];
 
         if (!wasHidden) {
@@ -369,7 +363,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
             // against mid-method view destrustion should be provided under ARC. If someone can figure out some other,
             // better way to fix this without it having to have this hacky-feeling retain here, that'd be cool, but be
             // aware that this is here for a reason and that the problem it prevents is very rare and somewhat contrived.
-            UIView *view = [touch.view retain];
+            UIView *view = touch.view;
 
             const UITouchPhase phase = touch.phase;
             const _UITouchGesture gesture = [touch _gesture];
@@ -399,7 +393,6 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
                 [newCursor set];
             }
             
-            [view release];
         }
 		
 		if(touches.count < 1) {
@@ -424,11 +417,11 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 - (void)_showToolTipForView:(UIView *)view {
 	if(view == nil) return;
 	
-	NSMutableAttributedString *attributedToolTip = [[[NSMutableAttributedString alloc] initWithString:view.toolTip] autorelease];
+	NSMutableAttributedString *attributedToolTip = [[NSMutableAttributedString alloc] initWithString:view.toolTip];
 	NSRange wholeStringRange = NSMakeRange(0, view.toolTip.length);
 	[attributedToolTip addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:11.0f] range:wholeStringRange];
 	
-	NSMutableParagraphStyle *paragraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
+	NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
 	[paragraphStyle setAlignment:NSLeftTextAlignment];
 	
 	[attributedToolTip addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:wholeStringRange];

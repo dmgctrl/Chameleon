@@ -87,7 +87,7 @@
 {
     if (nil != (self = [super init])) {
         _nibName = [nibName copy];
-        _nibBundle = [nibBundle retain];
+        _nibBundle = nibBundle;
         _contentSizeForViewInPopover = CGSizeMake(320,1100);
     }
     return self;
@@ -96,13 +96,6 @@
 - (void)dealloc
 {
     [_view _setViewController:nil];
-    [_modalViewController release];
-    [_navigationItem release];
-    [_title release];
-    [_view release];
-    [_nibName release];
-    [_nibBundle release];
-    [super dealloc];
 }
 
 - (UIResponder *)nextResponder
@@ -159,8 +152,7 @@
 {
     if (aView != _view) {
         [_view _setViewController:nil];
-        [_view release];
-        _view = [aView retain];
+        _view = aView;
         [_view _setViewController:self];
     }
 }
@@ -170,7 +162,7 @@
     if (self.nibName) {
         [[UINib nibWithNibName:self.nibName bundle:self.nibBundle] instantiateWithOwner:self options:nil];
     } else {
-        self.view = [[[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)] autorelease];
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)];
     }
 }
 
@@ -231,8 +223,7 @@
 - (void)setToolbarItems:(NSArray *)theToolbarItems animated:(BOOL)animated
 {
     if (_toolbarItems != theToolbarItems) {
-        [_toolbarItems release];
-        _toolbarItems = [theToolbarItems retain];
+        _toolbarItems = theToolbarItems;
         [self.navigationController.toolbar setItems:_toolbarItems animated:animated];
     }
 }
@@ -266,7 +257,7 @@
 - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated
 {
     if (!_modalViewController && _modalViewController != self) {
-        _modalViewController = [modalViewController retain];
+        _modalViewController = modalViewController;
         [_modalViewController _setParentViewController:self];
 
         UIWindow *window = self.view.window;

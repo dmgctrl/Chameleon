@@ -63,15 +63,6 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 @synthesize highlighted = _highlighted;
 @synthesize attributedText = _attributedText;
 
-- (void)dealloc
-{
-    [_text release];
-    [_font release];
-    [_textColor release];
-    [_shadowColor release];
-    [_highlightedTextColor release];
-    [super dealloc];
-}
 
 - (void) _commonInitForUILabel
 {
@@ -137,7 +128,6 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void)setText:(NSString *)newText
 {
     if (_text != newText) {
-        [_text release];
         _text = [newText copy];
         [self setNeedsDisplay];
     }
@@ -148,8 +138,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     assert(newFont != nil);
 
     if (newFont != _font) {
-        [_font release];
-        _font = [newFont retain];
+        _font = newFont;
         [self setNeedsDisplay];
     }
 }
@@ -157,8 +146,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void)setTextColor:(UIColor *)newColor
 {
     if (newColor != _textColor) {
-        [_textColor release];
-        _textColor = [newColor retain];
+        _textColor = newColor;
         [self setNeedsDisplay];
     }
 }
@@ -166,8 +154,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void)setShadowColor:(UIColor *)newColor
 {
     if (newColor != _shadowColor) {
-        [_shadowColor release];
-        _shadowColor = [newColor retain];
+        _shadowColor = newColor;
         [self setNeedsDisplay];
     }
 }

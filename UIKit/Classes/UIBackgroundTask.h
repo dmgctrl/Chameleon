@@ -29,11 +29,8 @@
 
 #import "UIApplication.h"
 
-@interface UIBackgroundTask : NSObject {
-    void (^_expirationHandler)(void);
-    UIBackgroundTaskIdentifier _taskIdentifier;
-}
-
+@interface UIBackgroundTask : NSObject
+    
 - (id)initWithExpirationHandler:(void(^)(void))handler;
 
 @property (nonatomic, readonly) void (^expirationHandler)(void);

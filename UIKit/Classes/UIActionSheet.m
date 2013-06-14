@@ -102,14 +102,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_title release];
-    [_menu release];
-    [_menuTitles release];
-    [_separatorIndexes release];
-    [super dealloc];
-}
 
 - (void)setDelegate:(id<UIActionSheetDelegate>)newDelegate
 {
@@ -197,7 +189,6 @@
                 [theItem setTag:index];
                 [theItem setTarget:self];
                 [_menu addItem:theItem];
-                [theItem release];
             }
         }
 
@@ -319,7 +310,6 @@
     }
     
     // kill off the menu
-    [_menu release];
     _menu = nil;
 
     // remove ourself from the superview that we piggy-backed on

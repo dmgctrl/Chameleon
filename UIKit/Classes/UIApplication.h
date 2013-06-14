@@ -152,8 +152,8 @@ extern const NSTimeInterval UIMinimumKeepAliveTimeout;
 
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
 
-@property (nonatomic, readonly) UIWindow *keyWindow;
-@property (nonatomic, readonly) NSArray *windows;
+@property (assign, nonatomic, readonly) UIWindow *keyWindow;
+@property (assign, nonatomic, readonly) NSArray *windows;
 @property (nonatomic, getter=isStatusBarHidden, readonly) BOOL statusBarHidden;
 @property (nonatomic, readonly) CGRect statusBarFrame;
 @property (nonatomic, getter=isNetworkActivityIndicatorVisible) BOOL networkActivityIndicatorVisible;	// does nothing, always returns NO

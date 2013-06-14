@@ -65,11 +65,6 @@
     if (_rowOffsets) {
         free(_rowOffsets);
     }
-    [headerView release];
-    [footerView release];
-    [headerTitle release];
-    [footerTitle release];
-    [super dealloc];
 }
 
 - (void) setRowOffsets:(CGFloat*)rowOffsets

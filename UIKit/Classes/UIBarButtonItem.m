@@ -32,11 +32,6 @@
 #import "UIImage+UIPrivate.h"
 
 @implementation UIBarButtonItem 
-@synthesize width = _width;
-@synthesize customView = _customView;
-@synthesize action = _action;
-@synthesize target = _target;
-@synthesize style = _style;
 
 - (id)init
 {
@@ -149,11 +144,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_customView release];
-    [super dealloc];
-}
 
 - (UIView *)customView
 {

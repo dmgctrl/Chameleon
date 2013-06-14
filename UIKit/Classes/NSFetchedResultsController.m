@@ -49,23 +49,18 @@
 
 - (id)initWithFetchRequest:(NSFetchRequest *)fetchRequest managedObjectContext: (NSManagedObjectContext *)context sectionNameKeyPath:(NSString *)sectionNameKeyPath cacheName:(NSString *)name {
   if ((self = [super init])) {
-    _fetchRequest = [fetchRequest retain];
-    _managedObjectContext = [context retain];
+    _fetchRequest = fetchRequest;
+    _managedObjectContext = context;
   }
   return self;
 }
 
 - (void)dealloc {
   _delegate = nil;
-  [_fetchRequest release];
-  [_managedObjectContext release];
-  [_fetchedObjects release];
-  [super dealloc];
 }
 
 - (BOOL)performFetch:(NSError **)error {
-  [_fetchedObjects release];
-  _fetchedObjects = [[_managedObjectContext executeFetchRequest:_fetchRequest error:error] retain];
+  _fetchedObjects = [_managedObjectContext executeFetchRequest:_fetchRequest error:error];
 
   return YES;
 }

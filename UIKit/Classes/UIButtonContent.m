@@ -15,15 +15,6 @@ static NSString* const kUITitleColorKey = @"UITitleColor";
 @synthesize image = _image;
 @synthesize title = _title;
 
-- (void) dealloc
-{
-    [_shadowColor release];
-    [_titleColor release];
-    [_backgroundImage release];
-    [_image release];
-    [_title release];
-    [super dealloc];
-}
 
 - (id) initWithCoder:(NSCoder*)coder
 {

@@ -50,9 +50,9 @@
 @property (nonatomic, readonly) UISearchBar *searchBar;
 @property (nonatomic, readonly) UIViewController *searchContentsController;
 
-@property (nonatomic,readonly) UITableView *searchResultsTableView;
-@property (nonatomic,assign) id<UITableViewDataSource> searchResultsDataSource;
-@property (nonatomic,assign) id<UITableViewDelegate> searchResultsDelegate;
+@property (assign, nonatomic,readonly) UITableView *searchResultsTableView;
+@property (nonatomic, assign) id<UITableViewDataSource> searchResultsDataSource;
+@property (nonatomic, assign) id<UITableViewDelegate> searchResultsDelegate;
 
 @end
 

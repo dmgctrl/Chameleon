@@ -50,10 +50,5 @@ NSString *const UIImagePickerControllerMediaURL = @"UIImagePickerControllerMedia
     return NO;
 }
 
-- (void)dealloc
-{
-    [_mediaTypes release];
-    [super dealloc];
-}
 
 @end

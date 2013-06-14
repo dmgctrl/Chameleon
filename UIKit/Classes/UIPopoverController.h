@@ -65,7 +65,7 @@ typedef NSUInteger UIPopoverArrowDirection;
 + (CGSize)frameSizeForContentSize:(CGSize)contentSize withNavigationBar:(BOOL)hasNavBar;
 
 @property (nonatomic, assign) id <UIPopoverControllerDelegate> delegate;
-@property (nonatomic, retain) UIViewController *contentViewController;
+@property (nonatomic, strong) UIViewController *contentViewController;
 @property (nonatomic, readonly, getter=isPopoverVisible) BOOL popoverVisible;
 @property (nonatomic, copy) NSArray *passthroughViews;
 @property (nonatomic, readonly) UIPopoverArrowDirection popoverArrowDirection;

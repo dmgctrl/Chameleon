@@ -73,13 +73,16 @@ static NSString* const kUISubviewsKey = @"UISubviews";
 static NSMutableArray *_animationGroups;
 static BOOL _animationsEnabled = YES;
 
+typedef void DrawRectMethod(id, SEL, CGRect);
+typedef void DisplayLayerMethod(id, SEL, CALayer*);
+
 @implementation UIView {
     BOOL _needsDidAppearOrDisappear;
 
     NSMutableSet *_subviews;
     UIViewController *_viewController;
     NSMutableSet *_gestureRecognizers;
-    IMP ourDrawRect_;
+    DrawRectMethod* ourDrawRect_;
     
     struct {
         BOOL overridesDisplayLayer : 1;
@@ -102,8 +105,8 @@ static BOOL _animationsEnabled = YES;
 
 static SEL drawRectSelector;
 static SEL displayLayerSelector;
-static IMP defaultImplementationOfDrawRect;
-static IMP defaultImplementationOfDisplayLayer;
+static DrawRectMethod* defaultImplementationOfDrawRect;
+static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 + (void)initialize
 {
@@ -111,8 +114,8 @@ static IMP defaultImplementationOfDisplayLayer;
         _animationGroups = [[NSMutableArray alloc] init];
         drawRectSelector = @selector(drawRect:);
         displayLayerSelector = @selector(displayLayer:);
-        defaultImplementationOfDrawRect = [UIView instanceMethodForSelector:drawRectSelector];
-        defaultImplementationOfDisplayLayer = [UIView instanceMethodForSelector:displayLayerSelector];
+        defaultImplementationOfDrawRect = (DrawRectMethod*)[UIView instanceMethodForSelector:drawRectSelector];
+        defaultImplementationOfDisplayLayer = (DisplayLayerMethod*)[UIView instanceMethodForSelector:displayLayerSelector];
     }
 }
 
@@ -123,9 +126,9 @@ static IMP defaultImplementationOfDisplayLayer;
 
 - (void) _commonInitForUIView
 {
-    _flags.overridesDisplayLayer = defaultImplementationOfDisplayLayer != [[self class] instanceMethodForSelector:displayLayerSelector];
+    _flags.overridesDisplayLayer = (defaultImplementationOfDisplayLayer != (DisplayLayerMethod*)[[self class] instanceMethodForSelector:displayLayerSelector]);
 
-    IMP ourDrawRect = [[self class] instanceMethodForSelector:drawRectSelector];
+    DrawRectMethod* ourDrawRect = (DrawRectMethod*)[[self class] instanceMethodForSelector:drawRectSelector];
     if (ourDrawRect != defaultImplementationOfDrawRect) {
         ourDrawRect_ = ourDrawRect;
     }
@@ -146,6 +149,16 @@ static IMP defaultImplementationOfDisplayLayer;
     self.opaque = YES;
     [self setNeedsDisplay];
 }
+
+- (void) dealloc
+{
+    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    _layer.layoutManager = nil;
+    _layer.delegate = nil;
+    [_layer removeFromSuperlayer];
+    _layer = nil;
+}
+
 
 - (id)init
 {
@@ -225,22 +238,6 @@ static IMP defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)dealloc
-{
-    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    _layer.layoutManager = nil;
-    _layer.delegate = nil;
-    [_layer removeFromSuperlayer];
-
-    [_subviews release];
-    [_layer release];
-    [_backgroundColor release];
-    [_gestureRecognizers release];
-    
-    [super dealloc];
-}
-
 - (void)_setViewController:(UIViewController *)theViewController
 {
     _viewController = theViewController;
@@ -305,16 +302,15 @@ static IMP defaultImplementationOfDisplayLayer;
     }
 }
 
-- (void)_didMoveToScreen
+- (void) _didMoveToScreenWithScale:(CGFloat)scale
 {
-    if (ourDrawRect_ && self.contentScaleFactor != self.window.screen.scale) {
-        self.contentScaleFactor = self.window.screen.scale;
+    if (ourDrawRect_ && self.contentScaleFactor != scale) {
+        self.contentScaleFactor = scale;
     } else {
         [self setNeedsDisplay];
     }
-    
     for (UIView *subview in self.subviews) {
-        [subview _didMoveToScreen];
+        [subview _didMoveToScreenWithScale:scale];
     }
 }
 
@@ -344,7 +340,6 @@ static IMP defaultImplementationOfDisplayLayer;
         [subview willMoveToSuperview:self];
 
         {
-            [subview retain];
             
             if (subview.superview) {
                 [subview.layer removeFromSuperlayer];
@@ -357,11 +352,10 @@ static IMP defaultImplementationOfDisplayLayer;
             [_layer addSublayer:subview.layer];
             [subview didChangeValueForKey:@"superview"];
             
-            [subview release];
         }
         
         if (oldWindow.screen != newWindow.screen) {
-            [subview _didMoveToScreen];
+            [subview _didMoveToScreenWithScale:[[newWindow screen] scale]];
         }
         
         if (newWindow) {
@@ -411,7 +405,6 @@ static IMP defaultImplementationOfDisplayLayer;
 - (void)removeFromSuperview
 {
     if (_superview) {
-        [self retain];
         
         [[UIApplication sharedApplication] _removeViewFromTouches:self];
         
@@ -435,7 +428,6 @@ static IMP defaultImplementationOfDisplayLayer;
         [self didMoveToSuperview];
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewDidMoveToSuperviewNotification object:self];
         
-        [self release];
     }
 }
 
@@ -873,8 +865,7 @@ static IMP defaultImplementationOfDisplayLayer;
 - (void)setBackgroundColor:(UIColor *)newColor
 {
     if (_backgroundColor != newColor) {
-        [_backgroundColor release];
-        _backgroundColor = [newColor retain];
+        _backgroundColor = newColor;
 
         self.opaque = [_backgroundColor _isOpaque];
         
@@ -1128,7 +1119,7 @@ static IMP defaultImplementationOfDisplayLayer;
         animations();
     } @finally {
         [UIView commitAnimations];
-        [delegate release];
+        delegate = nil;
     }
 }
 

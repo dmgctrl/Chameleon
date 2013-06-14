@@ -78,7 +78,7 @@
 		_searchField.borderStyle = UITextBorderStyleRoundedRect;
 		_searchField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
 		_searchField.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
-		_searchField.leftView = [[[UIImageView alloc] initWithImage:[UIImage _searchBarIcon]] autorelease];
+		_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage _searchBarIcon]];
 		_searchField.leftViewMode = UITextFieldViewModeAlways;
         [self addSubview:_searchField];
     }
@@ -88,9 +88,6 @@
 - (void)dealloc
 {
     _delegate = nil;
-    [_placeholder release];
-    [_searchField release];
-    [super dealloc];
 }
 
 - (void)drawRect:(CGRect)rect {

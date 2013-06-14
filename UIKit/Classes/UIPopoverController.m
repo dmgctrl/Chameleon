@@ -57,11 +57,6 @@
         BOOL popoverControllerShouldDismissPopover : 1;
     } _delegateHas;	
 }
-@synthesize delegate = _delegate;
-@synthesize contentViewController = _contentViewController;
-@synthesize passthroughViews = _passthroughViews;
-@synthesize popoverArrowDirection = _popoverArrowDirection;
-@synthesize popoverContentSize = _popoverContentSize;
 
 - (id)init
 {
@@ -70,7 +65,6 @@
     }
     return self;
 }
-
 
 - (id)initWithContentViewController:(UIViewController *)viewController
 {
@@ -84,8 +78,6 @@
 {
     [self dismissPopoverAnimated:NO];
     [self setContentViewController:nil];
-    [_passthroughViews release];
-    [super dealloc];
 }
 
 - (void)setDelegate:(id<UIPopoverControllerDelegate>)newDelegate
@@ -104,8 +96,7 @@
         if (_contentViewController) {
             [_contentViewController removeObserver:self forKeyPath:@"contentSizeForViewInPopover"];
         }
-        [_contentViewController release];
-        _contentViewController = [controller retain];
+        _contentViewController = controller;
         if (_contentViewController) {
             [_contentViewController addObserver:self forKeyPath:@"contentSizeForViewInPopover" options:NSKeyValueObservingOptionNew context:NULL];
         }
@@ -146,7 +137,7 @@
         [_overlayWindow setOpaque:NO];
         [_overlayWindow setBackgroundColor:[NSColor clearColor]];
         [_overlayWindow setFrameOrigin:windowFrame.origin];
-        [_overlayWindow setContentView:[[[UIPopoverOverlayNSView alloc] initWithFrame:overlayContentRect popoverController:self] autorelease]];
+        [_overlayWindow setContentView:[[UIPopoverOverlayNSView alloc] initWithFrame:overlayContentRect popoverController:self]];
         [viewNSWindow addChildWindow:_overlayWindow ordered:NSWindowAbove];
 
 		[_contentViewController viewWillAppear:animated];
@@ -179,7 +170,6 @@
         [viewNSWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
         [_popoverWindow makeFirstResponder:hostingView];
 
-        [hostingView release];
     }
     
     // cancel current touches (if any) to prevent the main window from losing track of events (such as if the user was holding down the mouse
@@ -246,17 +236,11 @@
             popoverView.alpha = 0;
         };
         void(^completionBlock)(BOOL) = ^(BOOL finished) {
-            NSWindow *parentWindow = [overlayWindow parentWindow];
-            
-            [overlayWindow orderOut:nil];
             [popoverWindow orderOut:nil];
-            
-            [parentWindow removeChildWindow:popoverWindow];
-            [parentWindow removeChildWindow:overlayWindow];
-            
-            [popoverView release];
-            [popoverWindow release];
-            [overlayWindow release];
+            [overlayWindow orderOut:nil];
+
+            [[popoverWindow parentWindow] removeChildWindow:popoverWindow];
+            [[overlayWindow parentWindow] removeChildWindow:overlayWindow];
         };
         
         if (animated) {

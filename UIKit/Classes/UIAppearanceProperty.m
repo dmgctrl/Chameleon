@@ -41,11 +41,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [axisValues release];
-    [super dealloc];
-}
 
 - (BOOL)isEqual:(id)object
 {

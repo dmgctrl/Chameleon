@@ -105,14 +105,6 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     return self;
 }
 
-- (void)dealloc
-{
-    [_animationImages release];
-    [_image release];
-    [_highlightedImage release];
-    [_highlightedAnimationImages release];
-    [super dealloc];
-}
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
@@ -134,8 +126,7 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 - (void)setImage:(UIImage *)newImage
 {
     if (_image != newImage) {
-        [_image release];
-        _image = [newImage retain];
+        _image = newImage;
         if (!_highlighted || !_highlightedImage) {
             [self setNeedsDisplay];
         }
@@ -145,8 +136,7 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 - (void)setHighlightedImage:(UIImage *)newImage
 {
     if (_highlightedImage != newImage) {
-        [_highlightedImage release];
-        _highlightedImage = [newImage retain];
+        _highlightedImage = newImage;
         if (_highlighted) {
             [self setNeedsDisplay];
         }

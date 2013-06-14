@@ -92,7 +92,7 @@
 
 - (id)initWithData:(NSData *)data
 {
-    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[[UIImageRep alloc] initWithData:data] autorelease], nil]];
+    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[UIImageRep alloc] initWithData:data], nil]];
 }
 
 - (id)initWithCGImage:(CGImageRef)imageRef
@@ -102,33 +102,28 @@
 
 - (id)initWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation
 {
-    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[[UIImageRep alloc] initWithCGImage:imageRef scale:scale] autorelease], nil]];
+    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[UIImageRep alloc] initWithCGImage:imageRef scale:scale], nil]];
 }
 
-- (void)dealloc
-{
-    [_representations release];
-    [super dealloc];
-}
 
 + (UIImage *)imageWithData:(NSData *)data
 {
-    return data? [[[self alloc] initWithData:data] autorelease] : nil;
+    return data? [[self alloc] initWithData:data] : nil;
 }
 
 + (UIImage *)imageWithContentsOfFile:(NSString *)path
 {
-    return path? [[[self alloc] initWithContentsOfFile:path] autorelease] : nil;
+    return path? [[self alloc] initWithContentsOfFile:path] : nil;
 }
 
 + (UIImage *)imageWithCGImage:(CGImageRef)imageRef
 {
-    return [[[self alloc] initWithCGImage:imageRef] autorelease];
+    return [[self alloc] initWithCGImage:imageRef];
 }
 
 + (UIImage *)imageWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation
 {
-    return [[[self alloc] initWithCGImage:imageRef scale:scale orientation:orientation] autorelease];
+    return [[self alloc] initWithCGImage:imageRef scale:scale orientation:orientation];
 }
 
 - (UIImage *)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight
@@ -138,11 +133,11 @@
     if ((leftCapWidth == 0 && topCapHeight == 0) || (leftCapWidth >= size.width && topCapHeight >= size.height)) {
         return self;
     } else if (leftCapWidth <= 0 || leftCapWidth >= size.width) {
-        return [[[UIThreePartImage alloc] initWithRepresentations:[self _representations] capSize:MIN(topCapHeight,size.height) vertical:YES] autorelease];
+        return [[UIThreePartImage alloc] initWithRepresentations:[self _representations] capSize:MIN(topCapHeight,size.height) vertical:YES];
     } else if (topCapHeight <= 0 || topCapHeight >= size.height) {
-        return [[[UIThreePartImage alloc] initWithRepresentations:[self _representations] capSize:MIN(leftCapWidth,size.width) vertical:NO] autorelease];
+        return [[UIThreePartImage alloc] initWithRepresentations:[self _representations] capSize:MIN(leftCapWidth,size.width) vertical:NO];
     } else {
-        return [[[UINinePartImage alloc] initWithRepresentations:[self _representations] leftCapWidth:leftCapWidth topCapHeight:topCapHeight] autorelease];
+        return [[UINinePartImage alloc] initWithRepresentations:[self _representations] leftCapWidth:leftCapWidth topCapHeight:topCapHeight];
     }
 }
 
@@ -240,7 +235,7 @@ NSData *UIImageJPEGRepresentation(UIImage *image, CGFloat compressionQuality)
     CFRelease(properties);
     CFRelease(quality);
     CFRelease(dest);
-    return [(__bridge NSData *)data autorelease];
+    return (__bridge NSData *)data;
 }
 
 NSData *UIImagePNGRepresentation(UIImage *image)
@@ -250,5 +245,5 @@ NSData *UIImagePNGRepresentation(UIImage *image)
     CGImageDestinationAddImage(dest, image.CGImage, NULL);
     CGImageDestinationFinalize(dest);
     CFRelease(dest);
-    return [(__bridge NSData *)data autorelease];
+    return (__bridge NSData *)data;
 }

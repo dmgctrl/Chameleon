@@ -127,15 +127,6 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 @synthesize scrollWheelGestureRecognizer = _scrollWheelGestureRecognizer;
 @synthesize panGestureRecognizer = _panGestureRecognizer;
 
-- (void)dealloc
-{
-    [_scrollAnimation release];
-    [_verticalScroller release];
-    [_horizontalScroller release];
-    [_panGestureRecognizer release];
-    [_scrollWheelGestureRecognizer release];
-    [super dealloc];
-}
 
 - (void) _commonInitForUIScrollView
 {
@@ -317,7 +308,6 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     [_scrollTimer invalidate];
     _scrollTimer = nil;
     
-    [_scrollAnimation release];
     _scrollAnimation = nil;
     
     if (_delegateCan.scrollViewDidEndScrollingAnimation) {
@@ -345,7 +335,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 - (void)_setScrollAnimation:(UIScrollViewAnimation *)animation
 {
     [self _cancelScrollAnimation];
-    _scrollAnimation = [animation retain];
+    _scrollAnimation = animation;
 
     if (!_scrollTimer) {
         _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:1/(NSTimeInterval)UIScrollViewScrollAnimationFramesPerSecond target:self selector:@selector(_updateScrollAnimation) userInfo:nil repeats:YES];
@@ -449,7 +439,6 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
                                                                                                 duration:UIScrollViewAnimationDuration
                                                                                                    curve:UIScrollViewAnimationScrollCurveLinear];
         [self _setScrollAnimation:animation];
-        [animation release];
     } else {
         _contentOffset.x = roundf(theOffset.x);
         _contentOffset.y = roundf(theOffset.y);
@@ -545,11 +534,11 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     
     // quickly animate the snap (if necessary)
     if (!CGPointEqualToPoint(finalContentOffset, _contentOffset)) {
-        return [[[UIScrollViewAnimationScroll alloc] initWithScrollView:self
+        return [[UIScrollViewAnimationScroll alloc] initWithScrollView:self
                                                       fromContentOffset:_contentOffset
                                                         toContentOffset:finalContentOffset
                                                                duration:UIScrollViewQuickAnimationDuration
-                                                                  curve:UIScrollViewAnimationScrollCurveQuadraticEaseOut] autorelease];
+                                                                  curve:UIScrollViewAnimationScrollCurveQuadraticEaseOut];
     } else {
         return nil;
     }
@@ -569,8 +558,8 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     }
     
     if (!CGPointEqualToPoint(velocity, CGPointZero) || !CGPointEqualToPoint(confinedOffset, _contentOffset)) {
-        return [[[UIScrollViewAnimationDeceleration alloc] initWithScrollView:self
-                                                                     velocity:velocity] autorelease];
+        return [[UIScrollViewAnimationDeceleration alloc] initWithScrollView:self
+                                                                     velocity:velocity];
     } else {
         return nil;
     }

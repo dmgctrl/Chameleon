@@ -44,11 +44,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_tabBar release];
-    [super dealloc];
-}
 
 - (void)setViewControllers:(NSArray *)viewController animated:(BOOL)animated
 {

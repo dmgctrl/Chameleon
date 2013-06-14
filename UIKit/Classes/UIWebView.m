@@ -72,9 +72,6 @@
     [_webView setPolicyDelegate:nil];
     [_webView setFrameLoadDelegate:nil];
     [_webView setUIDelegate:nil];
-    [_webViewAdapter release];
-    [_webView release];
-    [super dealloc];
 }
 
 - (void)layoutSubviews
@@ -99,8 +96,7 @@
 - (void)loadRequest:(NSURLRequest *)request
 {
     if (request != _request) {
-        [_request release];
-        _request = [request retain];
+        _request = request;
     }
 
     [[_webView mainFrame] loadRequest:_request];

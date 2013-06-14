@@ -29,7 +29,7 @@ enum {
 @interface UISegmentedControl : UIControl 
 
 @property (nonatomic) UISegmentedControlStyle segmentedControlStyle; // stub
-@property (nonatomic,retain) UIColor *tintColor; // stub
+@property (nonatomic,strong) UIColor *tintColor; // stub
 @property (nonatomic, assign, readonly) NSUInteger numberOfSegments;
 @property (nonatomic, assign) NSInteger selectedSegmentIndex;
 @property (nonatomic, getter=isMomentary) BOOL momentary;
