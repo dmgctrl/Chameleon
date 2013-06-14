@@ -44,7 +44,7 @@ void UIGraphicsPushContext(CGContextRef ctx)
         [threadDictionary setObject:stack forKey:kUIGraphicsContextStackKey];
         [stack release];
     }
-    [stack addObject:(id)ctx];
+    [stack addObject:(__bridge id)ctx];
 }
 
 void UIGraphicsPopContext()
@@ -102,7 +102,7 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat sc
 
 void UIGraphicsBeginImageContext(CGSize size)
 {
-    UIGraphicsBeginImageContextWithOptions(size, NO, 1.f);
+    UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
 }
 
 UIImage *UIGraphicsGetImageFromCurrentImageContext()
