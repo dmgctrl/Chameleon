@@ -53,12 +53,8 @@ static NSArray *GestureRecognizersForView(UIView *view)
     CGPoint _location;
     CGPoint _previousLocation;
 }
-@synthesize timestamp = _timestamp;
-@synthesize tapCount = _tapCount;
-@synthesize phase = _phase;
 @synthesize view = _view;
 @synthesize window = _window;
-@synthesize gestureRecognizers = _gestureRecognizers;
 
 - (id)init
 {
@@ -68,7 +64,6 @@ static NSArray *GestureRecognizersForView(UIView *view)
     }
     return self;
 }
-
 
 - (void)_setPhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount timestamp:(NSTimeInterval)timestamp;
 {
