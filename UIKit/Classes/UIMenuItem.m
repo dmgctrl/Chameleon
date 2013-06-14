@@ -30,8 +30,6 @@
 #import "UIMenuItem.h"
 
 @implementation UIMenuItem 
-@synthesize action = _action;
-@synthesize title = _title;
 
 - (id)initWithTitle:(NSString *)title action:(SEL)action
 {
