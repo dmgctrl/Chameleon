@@ -66,9 +66,6 @@
 		BOOL doCommandBySelector : 1;
     } _delegateHas;
 }
-@synthesize delegate = _delegate;
-@synthesize showsCancelButton = _showsCancelButton;
-@synthesize placeholder = _placeholder;
 
 - (id)initWithFrame:(CGRect)frame
 {
