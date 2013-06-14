@@ -315,6 +315,8 @@
 		F92CB51113E067F900A50B9F /* UINibDecoderForNibArchiveV1.m in Sources */ = {isa = PBXBuildFile; fileRef = F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */; };
 		F92CB51413E06D9500A50B9F /* UINibDecoderForKeyedArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = F92CB51213E06D9500A50B9F /* UINibDecoderForKeyedArchive.h */; };
 		F92CB51513E06D9500A50B9F /* UINibDecoderForKeyedArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = F92CB51313E06D9500A50B9F /* UINibDecoderForKeyedArchive.m */; };
+		F92EA5A4176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */; };
+		F92EA5A5176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */; };
 		F935331D13DF0733003C7D3A /* UINibDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = F935331B13DF0733003C7D3A /* UINibDecoder.h */; };
 		F935331E13DF0733003C7D3A /* UINibDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F935331C13DF0733003C7D3A /* UINibDecoder.m */; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
@@ -755,6 +757,7 @@
 		F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibDecoderForNibArchiveV1.m; sourceTree = "<group>"; };
 		F92CB51213E06D9500A50B9F /* UINibDecoderForKeyedArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDecoderForKeyedArchive.h; sourceTree = "<group>"; };
 		F92CB51313E06D9500A50B9F /* UINibDecoderForKeyedArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibDecoderForKeyedArchive.m; sourceTree = "<group>"; };
+		F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "iphone-example-02.storyboard"; sourceTree = "<group>"; };
 		F935331B13DF0733003C7D3A /* UINibDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDecoder.h; sourceTree = "<group>"; };
 		F935331C13DF0733003C7D3A /* UINibDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibDecoder.m; sourceTree = "<group>"; };
 		F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableViewCell> accessoryDisclosureIndicatorHighlighted.png"; path = "Resources/<UITableViewCell> accessoryDisclosureIndicatorHighlighted.png"; sourceTree = "<group>"; };
@@ -906,8 +909,6 @@
 		0867D691FE84028FC02AAC07 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				F976749C176945330073489E /* Foundation.framework */,
-				F976749A176945290073489E /* UIKit.framework */,
 				147A838C120C902C00422EDC /* Private Classes */,
 				14FA8C44121DA47500C4264B /* Private Categories */,
 				F94CB9C513C89EAB001DF656 /* AppKit Integration */,
@@ -1384,6 +1385,8 @@
 		F95F640515C34C6100F3523B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F976749C176945330073489E /* Foundation.framework */,
+				F976749A176945290073489E /* UIKit.framework */,
 				F95F645015C3504000F3523B /* Foundation.framework */,
 				F95F645115C3504000F3523B /* UIKit.framework */,
 				F95F643415C34E9700F3523B /* libKiwi-OSX.a */,
@@ -1425,6 +1428,7 @@
 			children = (
 				F97674941769433E0073489E /* UIStoryboardSpec.m */,
 				F9767497176943950073489E /* iphone-example-01.storyboard */,
+				F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */,
 			);
 			name = UIStoryboard;
 			sourceTree = "<group>";
@@ -1823,6 +1827,7 @@
 				F95F646815C37EF500F3523B /* image-with-hyphens.png in Resources */,
 				F95F64B115C4377E00F3523B /* white-noalpha-100x100@2x.png in Resources */,
 				F9767498176943950073489E /* iphone-example-01.storyboard in Resources */,
+				F92EA5A4176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1842,6 +1847,7 @@
 				F9FFDE4B15C6E9D2000EDAA0 /* white-noalpha-100x100.png in Resources */,
 				F9FFDE4C15C6E9D2000EDAA0 /* white-noalpha-100x100@2x.png in Resources */,
 				F9767499176943950073489E /* iphone-example-01.storyboard in Resources */,
+				F92EA5A5176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
