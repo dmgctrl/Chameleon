@@ -53,8 +53,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     BOOL _rightAlignMenu;
     UIWindow *_window;
 }
-@synthesize menuItems = _menuItems;
-@synthesize menuFrame = _menuFrame;
 
 + (UIMenuController *)sharedMenuController
 {
