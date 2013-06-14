@@ -445,7 +445,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 			
 			CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 			CGFloat locations[] = { 1.0f, 0.0f };
-			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) [NSArray arrayWithObjects:(id) [UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id) [UIColor colorWithWhite:0.65 alpha:1.0].CGColor, nil], locations);
+			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) @[(id) [UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id) [UIColor colorWithWhite:0.65 alpha:1.0].CGColor], locations);
 			
 			CGContextSaveGState(context);
 			CGContextAddPath(context, [UIBezierPath bezierPathWithRoundedRect:blackOutlineFrame cornerRadius:3.6f].CGPath);
