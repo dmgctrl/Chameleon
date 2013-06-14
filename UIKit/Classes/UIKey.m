@@ -31,7 +31,6 @@
 #import <AppKit/NSEvent.h>
 
 @implementation UIKey
-@synthesize keyCode=_keyCode, characters=_characters, charactersWithModifiers=_charactersWithModifiers, repeat=_repeat;
 
 - (id)initWithNSEvent:(NSEvent *)event
 {
@@ -44,7 +43,6 @@
     }
     return self;
 }
-
 
 - (UIKeyType)type
 {
