@@ -172,7 +172,7 @@ static UIColor *ClearColor = nil;
 
 - (id)initWithCGColor:(CGColorRef)ref
 {
-    return [self _initWithRepresentations:[NSArray arrayWithObjects:[[UIColorRep alloc] initWithCGColor:ref], nil]];
+    return [self _initWithRepresentations:@[[[UIColorRep alloc] initWithCGColor:ref]]];
 }
 
 - (id)initWithPatternImage:(UIImage *)patternImage
