@@ -6,10 +6,5 @@
 @synthesize highlighted = _highlighted;
 @synthesize opaque = _opaque;
 
-- (void) dealloc
-{
-    [_backgroundColor release];
-    [super dealloc];
-}
 
 @end

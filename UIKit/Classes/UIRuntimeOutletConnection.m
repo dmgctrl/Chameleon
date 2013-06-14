@@ -11,13 +11,6 @@ static NSString* const kUISourceKey = @"UISource";
 @synthesize value = _value;
 @synthesize key = _key;
 
-- (void) dealloc
-{
-    [_target release];
-    [_value release];
-    [_key release];
-    [super dealloc];
-}
     
 - (id) initWithCoder:(NSCoder*)coder
 {

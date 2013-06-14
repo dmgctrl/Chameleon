@@ -73,10 +73,6 @@ static NSString* const kUIEditableKey = @"UIEditable";
 - (void) dealloc
 {
     [_textLayer removeFromSuperlayer];
-    [_textLayer release];
-    [_inputAccessoryView release];
-    [_inputView release];
-    [super dealloc];
 }
 
 - (void) _commonInitForUITextView

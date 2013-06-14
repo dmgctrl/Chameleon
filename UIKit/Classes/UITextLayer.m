@@ -83,11 +83,6 @@
 {
     [textView setDelegate:nil];
     [self removeNSView];
-    [clipView release];
-    [textView release];
-    [textColor release];
-    [font release];
-    [super dealloc];
 }
 
 // Need to prevent Core Animation effects from happening... very ugly otherwise.
@@ -211,8 +206,7 @@
 {
     assert(newFont != nil);
     if (newFont != font) {
-        [font release];
-        font = [newFont retain];
+        font = newFont;
         [textView setFont:[font NSFont]];
     }
 }
@@ -220,8 +214,7 @@
 - (void)setTextColor:(UIColor *)newColor
 {
     if (newColor != textColor) {
-        [textColor release];
-        textColor = [newColor retain];
+        textColor = newColor;
         [textView setTextColor:[textColor NSColor]];
     }
 }

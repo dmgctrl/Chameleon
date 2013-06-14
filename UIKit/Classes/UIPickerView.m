@@ -51,7 +51,6 @@
 {
     _dataSource = nil;
     _delegate = nil;
-    [super dealloc];
 }
 
 - (NSInteger) numberOfComponents

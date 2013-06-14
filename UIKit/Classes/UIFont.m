@@ -46,19 +46,16 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
 
 + (void)setSystemFontName:(NSString *)aName
 {
-    [UIFontSystemFontName release];
     UIFontSystemFontName = [aName copy];
 }
 
 + (void)setBoldSystemFontName:(NSString *)aName
 {
-    [UIFontBoldSystemFontName release];
     UIFontBoldSystemFontName = [aName copy];
 }
 
 + (void)setItalicSystemFontName:(NSString *)aName
 {
-    [UIFontItalicSystemFontName release];
     UIFontItalicSystemFontName = [aName copy];
 }
 
@@ -66,7 +63,7 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
 {
     UIFont *theFont = [[UIFont alloc] init];
     theFont->_font = CFRetain(aFont);
-    return [theFont autorelease];
+    return theFont;
 }
 
 + (UIFont *)fontWithNSFont:(NSFont *)aFont
@@ -179,12 +176,11 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
 - (void)dealloc
 {
     if (_font) CFRelease(_font);
-    [super dealloc];
 }
 
 - (NSString *)fontName
 {
-    return [(NSString *)CTFontCopyFullName(_font) autorelease];
+    return (NSString *)CFBridgingRelease(CTFontCopyFullName(_font));
 }
 
 - (CGFloat)ascender
@@ -223,7 +219,7 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
 
 - (NSString *)familyName
 {
-    return [(NSString *)CTFontCopyFamilyName(_font) autorelease];
+    return (NSString *)CFBridgingRelease(CTFontCopyFamilyName(_font));
 }
 
 - (UIFont *)fontWithSize:(CGFloat)fontSize

@@ -83,13 +83,6 @@ static const CGFloat ToolbarHeight = 28;
 	return self;
 }
 
-- (void)dealloc
-{
-	[_viewControllers release];
-	[_navigationBar release];
-	[_toolbar release];
-	[super dealloc];
-}
 
 - (void)setDelegate:(id<UINavigationControllerDelegate>)newDelegate
 {
@@ -133,7 +126,7 @@ static const CGFloat ToolbarHeight = 28;
 
 - (void)loadView
 {
-	self.view = [[[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)] autorelease];
+	self.view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)];
 	self.view.clipsToBounds = YES;
 
 	_navigationBar.frame = [self _navigationBarFrame];
@@ -171,7 +164,6 @@ static const CGFloat ToolbarHeight = 28;
             [controller didMoveToParentViewController:nil];
 		}
 		
-		[_viewControllers release];
 		_viewControllers = [newViewControllers mutableCopy];
 		
 		NSMutableArray *items = [NSMutableArray arrayWithCapacity:[_viewControllers count]];
@@ -244,7 +236,6 @@ static const CGFloat ToolbarHeight = 28;
             if (fromViewController.view.superview == oldContainerView) {
                 [fromViewController.view removeFromSuperview];
             }
-            [oldContainerView release];
         }
      ];
 }
@@ -311,7 +302,7 @@ static const CGFloat ToolbarHeight = 28;
         return nil;
     }
 
-    UIViewController* oldViewController = [self.topViewController retain];
+    UIViewController* oldViewController = self.topViewController;
     [_viewControllers removeLastObject];
     [oldViewController removeFromParentViewController];
     UIViewController* viewController = self.topViewController;
@@ -329,7 +320,7 @@ static const CGFloat ToolbarHeight = 28;
         }
     ];
 
-    return [oldViewController autorelease];
+    return oldViewController;
 }
 
 - (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -345,7 +336,7 @@ static const CGFloat ToolbarHeight = 28;
 		}
 	}
 	
-	return [popped autorelease];
+	return popped;
 }
 
 - (NSArray *)popToRootViewControllerAnimated:(BOOL)animated

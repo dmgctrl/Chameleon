@@ -49,8 +49,8 @@
 - (id)initWithSearchBar:(UISearchBar *)searchBar contentsController:(UIViewController *)viewController
 {
     if ((self = [super init])) {
-        _searchBar = [searchBar retain];
-        _viewController = [viewController retain];
+        _searchBar = searchBar;
+        _viewController = viewController;
     }
     return self;
 }
@@ -60,9 +60,6 @@
     _delegate = nil;
     _tableViewDataSource = nil;
     _tableViewDelegate = nil;
-    [_searchBar release];
-    [_viewController release];
-    [super dealloc];
 }
 
 - (BOOL)isActive

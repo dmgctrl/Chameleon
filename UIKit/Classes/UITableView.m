@@ -107,17 +107,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 @dynamic delegate;
 
-- (void) dealloc
-{
-    [_selectedRows release];
-    [_tableFooterView release];
-    [_tableHeaderView release];
-    [_cachedCells release];
-    [_sections release];
-    [_reusableCells release];
-    [_separatorColor release];
-    [super dealloc];
-}
 
 - (void) _commonInitForUITableView
 {
@@ -291,7 +280,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
             sectionRecord.rowOffsets = rowOffsets;
             
             [_sections addObject:sectionRecord];
-            [sectionRecord release];
         }
     }
 }
@@ -443,7 +431,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
     }
     
     // non-reusable cells should end up dealloced after at this point, but reusable ones live on in _reusableCells.
-    [usedCells release];
     
     // now make sure that all available (but unused) reusable cells aren't on screen in the visible area.
     // this is done becaue when resizing a table view by shrinking it's height in an animation, it looks better. The reason is that
@@ -593,7 +580,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
         offset += sectionRecord.footerHeight;
     }
     
-    return [results autorelease];
+    return results;
 }
 
 - (NSIndexPath *)indexPathForRowAtPoint:(CGPoint)point
@@ -624,7 +611,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (NSArray *)visibleCells
 {
-    NSMutableArray *cells = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *cells = [[NSMutableArray alloc] init];
     for (NSIndexPath *index in [self indexPathsForVisibleRows]) {
         UITableViewCell *cell = [self cellForRowAtIndexPath:index];
         if (cell) {
@@ -638,8 +625,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 {
     if (newHeader != _tableHeaderView) {
         [_tableHeaderView removeFromSuperview];
-        [_tableHeaderView release];
-        _tableHeaderView = [newHeader retain];
+        _tableHeaderView = newHeader;
         [self _setContentSize];
         [self addSubview:_tableHeaderView];
     }
@@ -649,8 +635,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 {
     if (newFooter != _tableFooterView) {
         [_tableFooterView removeFromSuperview];
-        [_tableFooterView release];
-        _tableFooterView = [newFooter retain];
+        _tableFooterView = newFooter;
         [self _setContentSize];
         [self addSubview:_tableFooterView];
     }
@@ -725,14 +710,14 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (NSIndexPath *)indexPathForSelectedRow
 {
     if (![_selectedRows count]) { return nil; }
-    return [[[_selectedRows objectAtIndex:0] retain] autorelease];
+    return [_selectedRows objectAtIndex:0];
 }
 
 - (NSIndexPath *)indexPathForCell:(UITableViewCell *)cell
 {
     for (NSIndexPath *index in [_cachedCells allKeys]) {
         if ([_cachedCells objectForKey:index] == cell) {
-            return [[index retain] autorelease];
+            return index;
         }
     }
     
@@ -829,10 +814,9 @@ static NSString* const kUIStyleKey = @"UIStyle";
 {
     for (UITableViewCell *cell in _reusableCells) {
         if ([cell.reuseIdentifier isEqualToString:identifier]) {
-            [cell retain];
             [_reusableCells removeObject:cell];
             [cell prepareForReuse];
-            return [cell autorelease];
+            return cell;
         }
     }
     
@@ -919,7 +903,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
         exclusively = YES;
     }
     if (exclusively) {
-        for (NSIndexPath *rowToDeselect in [NSArray arrayWithArray:_selectedRows]) {
+        for (__strong NSIndexPath *rowToDeselect in [NSArray arrayWithArray:_selectedRows]) {
             if (sendDelegateMessages && _delegateHas.willDeselectRowAtIndexPath) {
                 rowToDeselect = [self.delegate tableView:self willDeselectRowAtIndexPath:rowToDeselect];
             }
@@ -1017,8 +1001,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
         // modally present a menu with the single delete option on it, if it was selected, then do the delete, otherwise do nothing
         const BOOL didSelectItem = [menu popUpMenuPositioningItem:nil atLocation:NSPointFromCGPoint(screenPoint) inView:[self.window.screen UIKitView]];
         
-        [menu release];
-        [theItem release];
         
         [[UIApplication sharedApplication] _cancelTouches];
 

@@ -41,7 +41,7 @@
         UIScreenMode *mode = [[self alloc] init];
         mode->_size = NSSizeToCGSize([theNSView bounds].size);
         mode->_pixelAspectRatio = 1;
-        return [mode autorelease];
+        return mode;
     } else {
         return nil;
     }

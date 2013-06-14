@@ -40,8 +40,8 @@
 @property (nonatomic, assign) CGFloat footerHeight;
 @property (nonatomic, assign) NSInteger numberOfRows;
 @property (nonatomic, assign) CGFloat* rowOffsets;
-@property (nonatomic, retain) UIView* headerView;
-@property (nonatomic, retain) UIView* footerView;
+@property (nonatomic, strong) UIView* headerView;
+@property (nonatomic, strong) UIView* footerView;
 @property (nonatomic, copy) NSString* headerTitle;
 @property (nonatomic, copy) NSString* footerTitle;
 

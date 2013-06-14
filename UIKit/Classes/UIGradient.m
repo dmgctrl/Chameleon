@@ -18,13 +18,11 @@
 - (void)dealloc {
 	CGGradientRelease(_gradient);
 	
-	[super dealloc];
 }
 
 - (id)initWithStartingColor:(UIColor *)starting endingColor:(UIColor *)ending {
 	self = [super init];
 	if(self == nil) {
-		[self release];
 		return nil;
 	}
 	
@@ -32,7 +30,7 @@
 	CGFloat locations[2];
 	locations[0] = 1.0f;
 	locations[1] = 0.0f;
-	_gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef) [NSArray arrayWithObjects:(id) starting.CGColor, (id) ending.CGColor, nil], locations);
+	_gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) [NSArray arrayWithObjects:(id) starting.CGColor, (id) ending.CGColor, nil], locations);
 	CGColorSpaceRelease(colorSpace);
 	
 	return self;
@@ -41,7 +39,6 @@
 - (id)initWithColors:(NSArray *)colors locations:(NSArray *)colorLocations {
 	self = [super init];
 	if(self == nil) {
-		[self release];
 		return nil;
 	}
 	

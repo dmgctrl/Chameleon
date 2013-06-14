@@ -24,9 +24,4 @@ static NSString* const kUISegmentPositionKey = @"UISegmentPosition";
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)dealloc
-{
-    [_title release];
-    [super dealloc];
-}
 @end

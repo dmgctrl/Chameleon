@@ -80,12 +80,12 @@ static NSCache* imageCache = nil;
 {
     // if the NSImage isn't named, we can't optimize
     if ([[ns name] length] == 0)
-        return [[[self alloc] initWithNSImage:ns] autorelease];
+        return [[self alloc] initWithNSImage:ns];
     
     // if it's named, we can cache a UIImage instance for it
     UIImage *cached = [self _cachedImageForName:[ns name]];
     if (cached == nil) {
-        cached = [[[self alloc] initWithNSImage:ns] autorelease];
+        cached = [[self alloc] initWithNSImage:ns];
         [self _cacheImage:cached forName:[ns name]];
     }
     
@@ -349,7 +349,6 @@ static NSCache* imageCache = nil;
 - (id)_initWithRepresentations:(NSArray *)reps
 {
     if ([reps count] == 0) {
-        [self release];
         self = nil;
     } else if ((self=[super init])) {
         _representations = [reps copy];

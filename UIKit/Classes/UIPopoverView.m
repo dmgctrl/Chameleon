@@ -104,9 +104,9 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 - (id)initWithContentView:(UIView *)aView size:(CGSize)aSize popoverController:(UIPopoverController *)controller
 {	
     if ((self=[super initWithFrame:CGRectMake(0,0,320,480)])) {
-        _contentView = [aView retain];
+        _contentView = aView;
 		
-		_popoverController = [controller retain];
+		_popoverController = controller;
         
         _theme = UIPopoverThemeDefault;
         _backgroundView = [[UIImageView alloc] initWithImage:[[_popoverController class] backgroundImageForTheme:_theme]];
@@ -127,15 +127,6 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     return self;
 }
 
-- (void)dealloc
-{
-    [_backgroundView release];
-    [_arrowView release];
-    [_contentContainerView release];
-    [_contentView release];
-    [_popoverController release];
-    [super dealloc];
-}
 
 - (void)layoutSubviews
 {
@@ -276,8 +267,7 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 {
     if (aView != _contentView) {
         [_contentView removeFromSuperview];
-        [_contentView release];
-        _contentView = [aView retain];
+        _contentView = aView;
         [_contentContainerView addSubview:_contentView];
         [self setNeedsLayout];
     }

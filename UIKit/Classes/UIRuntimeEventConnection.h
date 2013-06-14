@@ -3,8 +3,8 @@
 
 @interface UIRuntimeEventConnection : NSObject <NSCoding>
 
-@property (retain, nonatomic) UIControl* control;
-@property (retain, nonatomic) id target;
+@property (strong, nonatomic) UIControl* control;
+@property (strong, nonatomic) id target;
 @property (assign, nonatomic) SEL action;
 @property (assign, nonatomic) UIControlEvents eventMask;
 

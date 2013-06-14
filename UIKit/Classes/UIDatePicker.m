@@ -41,15 +41,5 @@
 @synthesize minuteInterval = _minuteInterval;
 @synthesize countDownDuration = _countDownDuration;
 
-- (void) dealloc
-{
-    [_calendar release];
-    [_date release];
-    [_locale release];
-    [_timeZone release];
-    [_minimumDate release];
-    [_maximumDate release];
-    [super dealloc];
-}
 
 @end

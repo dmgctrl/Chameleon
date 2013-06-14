@@ -58,7 +58,6 @@
 - (void)dealloc
 {
     if (_path) CGPathRelease(_path);
-    [super dealloc];
 }
 
 + (UIBezierPath *)bezierPathWithCGPath:(CGPathRef)CGPath
@@ -66,14 +65,14 @@
     NSAssert(CGPath != NULL, @"CGPath must not be NULL");
     UIBezierPath *bezierPath = [[self alloc] init];
     bezierPath.CGPath = CGPath;
-    return [bezierPath autorelease];
+    return bezierPath;
 }
 
 + (UIBezierPath *)bezierPath
 {
     UIBezierPath *bezierPath = [[self alloc] init];
     bezierPath->_path = CGPathCreateMutable();
-    return [bezierPath autorelease];
+    return bezierPath;
 }
 
 + (UIBezierPath *)bezierPathWithRect:(CGRect)rect
@@ -83,7 +82,7 @@
 
     UIBezierPath *bezierPath = [[self alloc] init];
     bezierPath->_path = path;
-    return [bezierPath autorelease];
+    return bezierPath;
 }
 
 + (UIBezierPath *)bezierPathWithOvalInRect:(CGRect)rect
@@ -93,7 +92,7 @@
 
     UIBezierPath *bezierPath = [[self alloc] init];
     bezierPath->_path = path;
-    return [bezierPath autorelease];
+    return bezierPath;
 }
 
 + (UIBezierPath *)bezierPathWithRoundedRect:(CGRect)rect cornerRadius:(CGFloat)cornerRadius
@@ -148,7 +147,7 @@
     
     UIBezierPath *bezierPath = [[self alloc] init];
     bezierPath->_path = path;
-    return [bezierPath autorelease];
+    return bezierPath;
 }
 
 + (UIBezierPath *)bezierPathWithArcCenter:(CGPoint)center radius:(CGFloat)radius startAngle:(CGFloat)startAngle endAngle:(CGFloat)endAngle clockwise:(BOOL)clockwise
@@ -158,7 +157,7 @@
     
     UIBezierPath *bezierPath = [[self alloc] init];
     bezierPath->_path = path;
-    return [bezierPath autorelease];
+    return bezierPath;
 }
 
 - (void)moveToPoint:(CGPoint)point

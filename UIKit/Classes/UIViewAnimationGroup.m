@@ -61,17 +61,10 @@ static CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIVi
     return self;
 }
 
-- (void)dealloc
-{
-    [_name release];
-    [_animationDelegate release];
-    [_animatingViews release];
-    [super dealloc];
-}
 
 + (id)animationGroupWithName:(NSString *)theName context:(void *)theContext
 {
-    return [[[self alloc] initWithGroupName:theName context:theContext] autorelease];
+    return [[self alloc] initWithGroupName:theName context:theContext];
 }
 
 - (void)notifyAnimationsDidStopIfNeededUsingStatus:(BOOL)animationsDidFinish
@@ -149,8 +142,7 @@ static CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIVi
 - (void)setAnimationDelegate:(id)delegate
 {
     if (delegate != _animationDelegate) {
-        [_animationDelegate release];
-        _animationDelegate = [delegate retain];
+        _animationDelegate = delegate;
     }
 }
 

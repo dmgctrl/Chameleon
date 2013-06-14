@@ -18,17 +18,12 @@ static NSString* const kIBFirstResponderKey = @"IBFirstResponder";
     NSData* _data;
 }
 
-- (void) dealloc
-{
-    [_data release];
-    [super dealloc];
-}
 
 - (id) initWithData:(NSData*)data
 {
     assert(data);
     if (nil != (self = [super init])) {
-        _data = [data retain];
+        _data = data;
     }
     return self;
 }
@@ -36,8 +31,8 @@ static NSString* const kIBFirstResponderKey = @"IBFirstResponder";
 - (NSCoder*) instantiateCoderWithBundle:(NSBundle*)bundle owner:(id)owner externalObjects:(NSDictionary*)externalObjects
 {
     NSKeyedUnarchiver* coder = [[NSKeyedUnarchiver alloc] initForReadingWithData:_data];
-    coder.delegate = [[[UIKeyedArchiveNibInflationHelper alloc] initWithBundle:bundle owner:owner externalObjects:externalObjects] autorelease]; 
-    return [coder autorelease];
+    coder.delegate = [[UIKeyedArchiveNibInflationHelper alloc] initWithBundle:bundle owner:owner externalObjects:externalObjects]; 
+    return coder;
 }
 
 @end
@@ -65,20 +60,13 @@ static Class kClassForUIImageNibPlaceholder;
     assert(kClassForUIImageNibPlaceholder);
 }
 
-- (void) dealloc
-{
-    [_bundle release];
-    [_owner release];
-    [_externalObjects release];
-    [super dealloc];
-}
 
 - (id) initWithBundle:(NSBundle*)bundle owner:(id)owner externalObjects:(NSDictionary*)externalObjects
 {
     if (nil != (self = [super init])) {
-        _bundle = [bundle retain];
-        _owner = [owner retain];
-        _externalObjects = [externalObjects retain];
+        _bundle = bundle;
+        _owner = owner;
+        _externalObjects = externalObjects;
     }
     return self;
 }
@@ -92,15 +80,15 @@ static Class kClassForUIImageNibPlaceholder;
     if (class == kClassForUIProxyObject) {
         NSString* proxiedObjectIdentifier = [object proxiedObjectIdentifier];
         if ([proxiedObjectIdentifier isEqualToString:kIBFilesOwnerKey]) {
-            return [_owner retain]; 
+            return _owner; 
         } else if ([proxiedObjectIdentifier isEqualToString:kIBFirstResponderKey]) {
-            return [[NSNull null] retain];
+            return [NSNull null];
         } else {
-            return [[_externalObjects objectForKey:proxiedObjectIdentifier] retain];
+            return [_externalObjects objectForKey:proxiedObjectIdentifier];
         }
     } else if (class == kClassForUIImageNibPlaceholder) {
         NSString* resourceName = [object resourceName];
-        return [[UIImage imageWithContentsOfFile:[_bundle pathForResource:resourceName ofType:nil]] retain];
+        return [UIImage imageWithContentsOfFile:[_bundle pathForResource:resourceName ofType:nil]];
     }
     return nil;
 }

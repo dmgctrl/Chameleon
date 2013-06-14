@@ -45,12 +45,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_characters release];
-    [_charactersWithModifiers release];
-    [super dealloc];
-}
 
 - (UIKeyType)type
 {

@@ -93,7 +93,7 @@ static NSArray *UIAppearanceHierarchyForClass(Class klass)
         klass = [klass superclass];
     }
     
-    return [classes autorelease];
+    return classes;
 }
 
 @implementation NSObject (UIAppearanceInstance)
@@ -124,7 +124,7 @@ static NSArray *UIAppearanceHierarchyForClass(Class klass)
     UIAppearanceProxy *record = [appearanceRules objectForKey:containmentPath];
     
     if (!record) {
-        record = [[[UIAppearanceProxy alloc] initWithClass:self] autorelease];
+        record = [[UIAppearanceProxy alloc] initWithClass:self];
         [appearanceRules setObject:record forKey:containmentPath];
     }
     
@@ -215,7 +215,6 @@ static NSArray *UIAppearanceHierarchyForClass(Class klass)
         
         // now reset our set of changes properties to the original set so we don't count the UIAppearance defaults
         UIAppearanceInstanceSetProperties(self, originalProperties);
-        [originalProperties release];
         
         // done!
         UIAppearanceInstanceSetNeedsUpdate(self, NO);

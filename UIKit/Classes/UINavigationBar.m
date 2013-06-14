@@ -141,9 +141,6 @@ typedef enum {
 - (void)dealloc
 {
 	[self.topItem _setNavigationBar: nil];
-	[_navStack release];
-	[_tintColor release];
-	[super dealloc];
 }
 
 - (void)setDelegate:(id)newDelegate
@@ -204,7 +201,6 @@ typedef enum {
             }
             completion:^(BOOL finished){
                 [previousViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                [previousViews release];
             }
         ];
     }
@@ -212,7 +208,7 @@ typedef enum {
     UINavigationItem *topItem = self.topItem;
     
     if (topItem) {
-        UINavigationItem *backItem = [self.backItem retain];
+        UINavigationItem *backItem = self.backItem;
         
         // update weak references
         [backItem _setNavigationBar: nil];
@@ -227,7 +223,6 @@ typedef enum {
             _leftView = [isa _viewWithBarButtonItem:topItem.leftBarButtonItem];
         }
 
-        [backItem release];
         
         if (_leftView) {
             leftFrame = _leftView.frame;
@@ -250,7 +245,7 @@ typedef enum {
         _centerView = topItem.titleView;
 
         if (!_centerView) {
-            UILabel *titleLabel = [[[UILabel alloc] init] autorelease];
+            UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.text = topItem.title;
             titleLabel.textAlignment = UITextAlignmentCenter;
             titleLabel.backgroundColor = [UIColor clearColor];
@@ -304,8 +299,7 @@ typedef enum {
 - (void)setTintColor:(UIColor *)newColor
 {
 	if (newColor != _tintColor) {
-		[_tintColor release];
-		_tintColor = [newColor retain];
+		_tintColor = newColor;
 		[self setNeedsDisplay];
 	}
 }
@@ -363,7 +357,6 @@ typedef enum {
 		}
 		
 		if (shouldPop) {
-			[previousItem retain];
 			[_navStack removeObject:previousItem];
 			[self _setViewsWithTransition:_UINavigationBarTransitionPop animated:animated];
 			
@@ -371,7 +364,7 @@ typedef enum {
 				[_delegate navigationBar:self didPopItem:previousItem];
 			}
 			
-			return [previousItem autorelease];
+			return previousItem;
 		}
 	}
 	

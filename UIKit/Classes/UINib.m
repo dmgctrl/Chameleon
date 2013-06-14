@@ -22,7 +22,7 @@
         return nil;
     }
     NSBundle* bundle = bundleOrNil ?: [NSBundle mainBundle];
-    return [[[self alloc] initWithData:data bundle:bundle] autorelease];
+    return [[self alloc] initWithData:data bundle:bundle];
 }
 
 + (UINib*) nibWithNibName:(NSString*)name bundle:(NSBundle*)bundleOrNil
@@ -39,29 +39,22 @@
     return [UINib nibWithData:data bundle:bundle];
 }
 
-- (void) dealloc
-{
-    [_data release];
-    [_bundle release];
-    [_decoder release];
-    [super dealloc];
-}
 
 - (id) initWithData:(NSData*)data bundle:(NSBundle*)bundle
 {
     assert(data);
     assert(bundle);
     if (nil != (self = [super init])) {
-        _data = [data retain];
-        _bundle = [bundle retain];
-        _decoder = [[UINibDecoder nibDecoderForData:_data] retain];
+        _data = data;
+        _bundle = bundle;
+        _decoder = [UINibDecoder nibDecoderForData:_data];
     }
     return self;
 }
 
 - (NSArray*) instantiateWithOwner:(id)ownerOrNil options:(NSDictionary*)optionsOrNil
 {    
-    id owner = ownerOrNil ?: [[[NSObject alloc] init] autorelease];
+    id owner = ownerOrNil ?: [[NSObject alloc] init];
     NSDictionary* externalObjects = [optionsOrNil objectForKey:UINibExternalObjects];
     return [_decoder instantiateWithBundle:_bundle owner:owner externalObjects:externalObjects];
 }

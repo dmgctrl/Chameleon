@@ -55,10 +55,5 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_badgeValue release];
-    [super dealloc];
-}
 
 @end

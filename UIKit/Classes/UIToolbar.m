@@ -59,10 +59,10 @@
     if ((self=[super init])) {
         NSAssert((anItem != nil), @"the bar button item must not be nil");
         
-        item = [anItem retain];
+        item = anItem;
         
         if (!item->_isSystemItem && item.customView) {
-            view = [item.customView retain];
+            view = item.customView;
         } else if (!item->_isSystemItem || (item->_systemItem != UIBarButtonSystemItemFixedSpace && item->_systemItem != UIBarButtonSystemItemFlexibleSpace)) {
             view = [[UIToolbarButton alloc] initWithBarButtonItem:item];
         }
@@ -70,12 +70,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [item release];
-    [view release];
-    [super dealloc];
-}
 
 - (CGFloat)width
 {
@@ -120,12 +114,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_tintColor release];
-    [_toolbarItems release];
-    [super dealloc];
-}
 
 - (void)setBarStyle:(UIBarStyle)newStyle
 {
@@ -258,7 +246,6 @@
                     }
                 ];
             }
-            [toolbarItem release];
         }
     }
 }

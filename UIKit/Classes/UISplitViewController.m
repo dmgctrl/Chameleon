@@ -65,12 +65,6 @@ static const CGFloat SplitterPadding = 3;
     return self;
 }
 
-- (void)dealloc
-{
-    [leftPanel release];
-    [rightPanel release];
-    [super dealloc];
-}
 
 - (void)addViewControllers:(NSArray *)viewControllers
 {
@@ -193,11 +187,6 @@ static const CGFloat SplitterPadding = 3;
     return self;
 }
 
-- (void)dealloc
-{
-    [_viewControllers release];
-    [super dealloc];
-}
 
 - (void)setDelegate:(id <UISplitViewControllerDelegate>)newDelegate
 {
@@ -209,7 +198,7 @@ static const CGFloat SplitterPadding = 3;
 
 - (void)loadView
 {
-    self.view = [[(_UISplitViewControllerView *)[_UISplitViewControllerView alloc] initWithFrame:CGRectMake(0,0,1024,768)] autorelease];
+    self.view = [(_UISplitViewControllerView *)[_UISplitViewControllerView alloc] initWithFrame:CGRectMake(0,0,1024,768)];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
@@ -245,7 +234,6 @@ static const CGFloat SplitterPadding = 3;
             }
         }
 
-        [_viewControllers release];
         _viewControllers = [newControllers copy];
     }
 }

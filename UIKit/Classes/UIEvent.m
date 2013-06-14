@@ -46,17 +46,11 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_touch release];
-    [super dealloc];
-}
 
 - (void)_setTouch:(UITouch *)t
 {
     if (_touch != t) {
-        [_touch release];
-        _touch = [t retain];
+        _touch = t;
     }
 }
 

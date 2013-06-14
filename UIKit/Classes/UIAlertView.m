@@ -35,7 +35,7 @@
 #import <AppKit/NSButton.h>
 
 @interface UIAlertView ()
-@property (nonatomic, retain) NSMutableArray *buttonTitles;
+@property (nonatomic, strong) NSMutableArray *buttonTitles;
 @end
 
 @implementation UIAlertView {
@@ -84,13 +84,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_title release];
-    [_message release];
-    [_buttonTitles release];
-    [super dealloc];
-}
 
 - (void)setDelegate:(id<UIAlertViewDelegate>)newDelegate
 {
@@ -129,8 +122,8 @@
     // NSAlert does have a mode that doesn't block the runloop, but it has other drawbacks that I didn't like
     // so opting to do it this way here. :/
 
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-    NSMutableArray *buttonOrder = [[[NSMutableArray alloc] initWithCapacity:self.numberOfButtons] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
+    NSMutableArray *buttonOrder = [[NSMutableArray alloc] initWithCapacity:self.numberOfButtons];
     
     if (self.title) {
         [alert setMessageText:self.title];

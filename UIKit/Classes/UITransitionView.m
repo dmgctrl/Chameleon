@@ -40,11 +40,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_view release];
-    [super dealloc];
-}
 
 - (void)setFrame:(CGRect)frame
 {
@@ -111,7 +106,7 @@
             }
         ];
         
-        [_view release], _view = [view retain];
+        _view = view;
     }
 }
 

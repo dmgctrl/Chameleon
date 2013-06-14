@@ -43,12 +43,5 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_accessibilityLabel release];
-    [_accessibilityHint release];
-    [_accessibilityValue release];
-    [super dealloc];
-}
 
 @end

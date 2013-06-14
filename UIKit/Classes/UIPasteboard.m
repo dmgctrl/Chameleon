@@ -70,8 +70,6 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
                 NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
                 NSAttributedString *str = [NSAttributedString attributedStringWithAttachment:attachment];
                 [pasteboardItem setData:[str RTFDFromRange:NSMakeRange(0, [str length]) documentAttributes:nil] forType:(NSString *)kUTTypeFlatRTFD];
-                [attachment release];
-                [fileWrapper release];
             }
             [pasteboardItem setData:object forType:type];
         } else if ([object isKindOfClass:[NSURL class]]) {
@@ -81,7 +79,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
         }
     }
     
-    return [pasteboardItem autorelease];
+    return pasteboardItem;
 }
 
 @implementation UIPasteboard {
@@ -91,16 +89,11 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
 - (id)initWithPasteboard:(NSPasteboard *)aPasteboard
 {
     if ((self=[super init])) {
-        pasteboard = [aPasteboard retain];
+        pasteboard = aPasteboard;
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [pasteboard release];
-    [super dealloc];
-}
 
 + (UIPasteboard *)generalPasteboard
 {
@@ -182,7 +175,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:[rawImages count]];
     
     for (NSImage *image in rawImages) {
-        [images addObject:[[[UIImage alloc] initWithNSImage:image] autorelease]];
+        [images addObject:[[UIImage alloc] initWithNSImage:image]];
     }
     
     return images;
@@ -215,7 +208,7 @@ static NSPasteboardItem *PasteBoardItemWithDictionary(NSDictionary *item)
     NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[rawColors count]];
     
     for (NSColor *color in rawColors) {
-        [colors addObject:[[[UIColor alloc] initWithNSColor:color] autorelease]];
+        [colors addObject:[[UIColor alloc] initWithNSColor:color]];
     }
     
     return colors;
