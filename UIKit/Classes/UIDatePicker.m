@@ -31,15 +31,4 @@
 
 
 @implementation UIDatePicker 
-@synthesize calendar = _calendar;
-@synthesize date = _date;
-@synthesize locale = _locale;
-@synthesize timeZone = _timeZone;
-@synthesize datePickerMode = _datePickerMode;
-@synthesize minimumDate = _minimumDate;
-@synthesize maximumDate = _maximumDate;
-@synthesize minuteInterval = _minuteInterval;
-@synthesize countDownDuration = _countDownDuration;
-
-
 @end
