@@ -43,13 +43,6 @@
         BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
     } _delegateHas;
 }
-@synthesize delegate = _delegate;
-@synthesize delaysTouchesBegan = _delaysTouchesBegan;
-@synthesize delaysTouchesEnded = _delaysTouchesEnded;
-@synthesize cancelsTouchesInView = _cancelsTouchesInView;
-@synthesize state = _state;
-@synthesize enabled = _enabled;
-@synthesize view = _view;
 
 - (id)initWithTarget:(id)target action:(SEL)action
 {
