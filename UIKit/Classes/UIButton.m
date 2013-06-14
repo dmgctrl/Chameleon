@@ -54,15 +54,6 @@ static NSString* const kUIFontKey = @"UIFont";
         UIButtonType buttonType : 8;
     } _buttonFlags;
 }
-@synthesize titleLabel = _titleLabel;
-@synthesize reversesTitleShadowWhenHighlighted = _reversesTitleShadowWhenHighlighted;
-@synthesize adjustsImageWhenHighlighted = _adjustsImageWhenHighlighted;
-@synthesize adjustsImageWhenDisabled = _adjustsImageWhenDisabled;
-@synthesize showsTouchWhenHighlighted = _showsTouchWhenHighlighted;
-@synthesize imageView = _imageView;
-@synthesize contentEdgeInsets = _contentEdgeInsets;
-@synthesize titleEdgeInsets = _titleEdgeInsets;
-@synthesize imageEdgeInsets = _imageEdgeInsets;
 
 static UIImage* detailDisclosureButtonImage;
 static UIImage* detailDisclosureButtonImagePressed;
