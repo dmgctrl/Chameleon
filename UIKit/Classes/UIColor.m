@@ -142,7 +142,12 @@ static UIColor *ClearColor = nil;
 - (id)initWithWhite:(CGFloat)white alpha:(CGFloat)alpha
 {
     CGColorRef color = CGColorCreateGenericGray(white, alpha);
-    return [self initWithCGColor:(CGColorRef)[(id)color autorelease]];
+    if (nil == color) {
+        return nil;
+    }
+    self = [self initWithCGColor:color];
+    CGColorRelease(color);
+    return self;
 }
 
 - (id)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha
@@ -153,7 +158,12 @@ static UIColor *ClearColor = nil;
 - (id)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
 {
     CGColorRef color = CGColorCreateGenericRGB(red, green, blue, alpha);
-    return [self initWithCGColor:(CGColorRef)[(id)color autorelease]];
+    if (nil == color) {
+        return nil;
+    }
+    self = [self initWithCGColor:color];
+    CGColorRelease(color);
+    return self;
 }
 
 - (id)_initWithRepresentations:(NSArray *)reps
