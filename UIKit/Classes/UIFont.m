@@ -93,7 +93,7 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
         NSString* fontName = [coder decodeObjectForKey:kUIFontNameKey];
         CGFloat fontPointSize = [coder decodeFloatForKey:kUIFontPointSizeKey];
         
-        _font = CTFontCreateWithName((CFStringRef)fontName, fontPointSize, NULL);
+        _font = CTFontCreateWithName((__bridge CFStringRef)fontName, fontPointSize, NULL);
         if (!_font) {
             return nil;
         }
