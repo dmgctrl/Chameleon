@@ -791,30 +791,30 @@ static Class kClassForUIImageNibPlaceholder;
             
         case kValueTypeByte: {
             uint8_t v = decodeByte(&vp);
-            return [[NSNumber alloc] initWithInt:v];
+            return @(v);
         }
             
         case kValueTypeShort: {
             uint16_t v = decodeShort(&vp);
-            return [[NSNumber alloc] initWithShort:v];
+            return @(v);
         }
             
         case kValueTypeConstantEqualsZero: {
-            return [[NSNumber alloc] initWithInt:0];
+            return @(0);
         }
             
         case kValueTypeConstantEqualsOne: {
-            return [[NSNumber alloc] initWithInt:1];
+            return @(1);
         }
 
         case kValueTypeFloat32: {
             float v = decodeFloat32(&vp);
-            return [[NSNumber alloc] initWithFloat:v];
+            return @(v);
         }
 
         case kValueTypeFloat64: {
             float v = decodeFloat64(&vp);
-            return [[NSNumber alloc] initWithDouble:v];
+            return @(v);
         }
 
         case kValueTypeData: {
