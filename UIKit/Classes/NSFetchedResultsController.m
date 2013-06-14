@@ -40,12 +40,6 @@
 #import "NSIndexPath+UITableView.h"
 
 @implementation NSFetchedResultsController 
-@synthesize delegate = _delegate;
-@synthesize fetchRequest = _fetchRequest;
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize fetchedObjects = _fetchedObjects;
-@synthesize cacheName = _cacheName;
-@synthesize sectionNameKeyPath = _sectionNameKeyPath;
 
 - (id)initWithFetchRequest:(NSFetchRequest *)fetchRequest managedObjectContext: (NSManagedObjectContext *)context sectionNameKeyPath:(NSString *)sectionNameKeyPath cacheName:(NSString *)name {
   if ((self = [super init])) {
