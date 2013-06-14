@@ -55,22 +55,6 @@
 }
 @synthesize navigationItem = _navigationItem;
 @synthesize view = _view;
-@synthesize wantsFullScreenLayout = _wantsFullScreenLayout;
-@synthesize title = _title;
-@synthesize contentSizeForViewInPopover = _contentSizeForViewInPopover;
-@synthesize modalInPopover = _modalInPopover;
-@synthesize toolbarItems = _toolbarItems;
-@synthesize modalPresentationStyle = _modalPresentationStyle;
-@synthesize editing = _editing;
-@synthesize modalViewController = _modalViewController;
-@synthesize parentViewController = _parentViewController;
-@synthesize modalTransitionStyle = _modalTransitionStyle;
-@synthesize hidesBottomBarWhenPushed = _hidesBottomBarWhenPushed;
-@synthesize searchDisplayController = _searchDisplayController;
-@synthesize tabBarItem = _tabBarItem;
-@synthesize tabBarController = _tabBarController;
-@synthesize nibBundle = _nibBundle;
-@synthesize nibName = _nibName;
 
 - (id)init
 {
