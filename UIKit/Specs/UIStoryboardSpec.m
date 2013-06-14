@@ -32,6 +32,30 @@ describe(@"UIStoryboard", ^{
             it(@"should be an instance of UIStoryboard", ^{
                 [[storyboard should] beKindOfClass:[UIStoryboard class]];
             });
+
+            it(@"should not have an initialViewController", ^{
+                [[[storyboard instantiateInitialViewController] should] beNil];
+            });
+        });
+
+        context(@"When given iphone example 02", ^{
+            __block UIStoryboard* storyboard;
+            beforeAll(^{
+                storyboard = [UIStoryboard storyboardWithName:@"iphone-example-02" bundle:nil];
+            });
+            
+            it(@"should not return nil", ^{
+                [[storyboard should] beNonNil];
+            });
+            
+            it(@"should be an instance of UIStoryboard", ^{
+                [[storyboard should] beKindOfClass:[UIStoryboard class]];
+            });
+            
+            it(@"should not have an initialViewController", ^{
+                UIViewController* viewController = [storyboard instantiateInitialViewController];
+                [[viewController should] beNonNil];
+            });
         });
     });
 });
