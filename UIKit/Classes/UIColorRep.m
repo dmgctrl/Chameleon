@@ -64,7 +64,6 @@ static void drawPatternImage(void *info, CGContextRef ctx)
 }
 
 @implementation UIColorRep
-@synthesize patternImageRep = _patternImageRep;
 
 - (id)initWithPatternImageRepresentation:(UIImageRep *)patternImageRep
 {
