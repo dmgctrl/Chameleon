@@ -122,7 +122,7 @@
 
 - (void)addSeparator
 {
-    [_separatorIndexes addObject:[NSNumber numberWithInt:[_menuTitles count]]];
+    [_separatorIndexes addObject:@([_menuTitles count])];
 }
 
 - (void)setDestructiveButtonIndex:(NSInteger)index
@@ -171,7 +171,7 @@
         [_menu setAllowsContextMenuPlugIns:NO];
         
         for (NSInteger index=0; index<[_menuTitles count]; index++) {
-            if ([_separatorIndexes containsObject:[NSNumber numberWithInt:index]]) {
+            if ([_separatorIndexes containsObject:@(index)]) {
                 [_menu addItem:[NSMenuItem separatorItem]];
             }
             
