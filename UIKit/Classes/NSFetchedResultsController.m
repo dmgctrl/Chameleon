@@ -81,12 +81,12 @@
 
 - (NSArray *)sectionIndexTitles {
   // stub
-  return [NSArray array];
+  return @[];
 }
 
 - (NSArray *)sections {
   // stub
-  return [NSArray array];
+  return @[];
 }
 
 - (NSInteger)sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)sectionIndex {
