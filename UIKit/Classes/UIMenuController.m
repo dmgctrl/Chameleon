@@ -65,14 +65,14 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     static NSArray *items = nil;
 
     if (!items) {
-        items = [[NSArray alloc] initWithObjects:
-                 [[UIMenuItem alloc] initWithTitle:@"Cut" action:@selector(cut:)],
-                 [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copy:)],
-                 [[UIMenuItem alloc] initWithTitle:@"Paste" action:@selector(paste:)],
-                 [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(delete:)],
-                 [[UIMenuItem alloc] initWithTitle:@"Select" action:@selector(select:)],
-                 [[UIMenuItem alloc] initWithTitle:@"Select All" action:@selector(selectAll:)],
-                 nil];
+        items = @[
+            [[UIMenuItem alloc] initWithTitle:@"Cut" action:@selector(cut:)],
+            [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copy:)],
+            [[UIMenuItem alloc] initWithTitle:@"Paste" action:@selector(paste:)],
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(delete:)],
+            [[UIMenuItem alloc] initWithTitle:@"Select" action:@selector(select:)],
+            [[UIMenuItem alloc] initWithTitle:@"Select All" action:@selector(selectAll:)],
+        ];
     }
 
     return items;
