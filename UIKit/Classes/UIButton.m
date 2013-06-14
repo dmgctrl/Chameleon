@@ -70,7 +70,7 @@ inline static NSNumber* _keyForState(NSInteger state)
         case UIControlStateHighlighted: return kUIControlStateHighlightedKey;
         case UIControlStateDisabled:    return kUIControlStateDisabledKey;
         case UIControlStateSelected:    return kUIControlStateSelectedKey;
-        default:                        return [NSNumber numberWithInt:state];
+        default:                        return @(state);
     }
     return nil;
 }
@@ -83,10 +83,10 @@ inline static NSNumber* _keyForState(NSInteger state)
         detailDisclosureButtonImage = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UIButton> detailDisclosureButton"]];
         detailDisclosureButtonImagePressed = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UIButton> detailDisclosureButtonPressed"]];
 
-        kUIControlStateNormalKey = [[NSNumber alloc] initWithInteger:UIControlStateNormal];
-        kUIControlStateHighlightedKey = [[NSNumber alloc] initWithInteger:UIControlStateHighlighted];
-        kUIControlStateDisabledKey = [[NSNumber alloc] initWithInteger:UIControlStateDisabled];
-        kUIControlStateSelectedKey = [[NSNumber alloc] initWithInteger:UIControlStateSelected];
+        kUIControlStateNormalKey = @(UIControlStateNormal);
+        kUIControlStateHighlightedKey = @(UIControlStateHighlighted);
+        kUIControlStateDisabledKey = @(UIControlStateDisabled);
+        kUIControlStateSelectedKey = @(UIControlStateSelected);
     });
 }
 
