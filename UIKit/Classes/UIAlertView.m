@@ -131,7 +131,7 @@
     for (NSInteger buttonIndex=0; buttonIndex<self.numberOfButtons; buttonIndex++) {
         if (buttonIndex != self.cancelButtonIndex) {
             [alert addButtonWithTitle:[self.buttonTitles objectAtIndex:buttonIndex]];
-            [buttonOrder addObject:[NSNumber numberWithInt:buttonIndex]];
+            [buttonOrder addObject:@(buttonIndex)];
         }
     }
     
@@ -143,7 +143,7 @@
             [btn setKeyEquivalent:@"\033"];		// this should make the escape key trigger the cancel option
         }
 
-        [buttonOrder addObject:[NSNumber numberWithInt:self.cancelButtonIndex]];
+        [buttonOrder addObject:@(self.cancelButtonIndex)];
     }
     
     if (_delegateHas.willPresentAlertView) {
@@ -151,11 +151,12 @@
     }
     
     [self performSelector:@selector(_showAlertWithOptions:)
-               withObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                           alert,		@"alert",
-                           buttonOrder, @"buttonOrder",
-                           nil]
-               afterDelay:0];
+        withObject:@{
+            @"alert":       alert,
+            @"buttonOrder": buttonOrder
+        }
+        afterDelay:0
+    ];
 }
 
 - (void)_showAlertWithOptions:(NSDictionary *)options
