@@ -66,24 +66,7 @@
 - (BOOL)_textShouldDoCommandBySelector:(SEL)selector;
 @end
 
-@interface UITextLayer : CALayer {
-    id containerView;
-    BOOL containerCanScroll;
-    UICustomNSTextView *textView;
-    UICustomNSClipView *clipView;
-    BOOL secureTextEntry;
-    BOOL editable;
-    UIColor *textColor;
-    UIFont *font;
-    BOOL changingResponderStatus;
-
-    struct {
-        unsigned int didChange : 1;
-        unsigned int didChangeSelection : 1;
-        unsigned int didReturnKey : 1;
-		unsigned int doCommandBySelector : 1;
-    } textDelegateHas;
-}
+@interface UITextLayer : CALayer
 
 - (id)initWithContainer:(UIView <UITextLayerContainerViewProtocol,UITextLayerTextDelegate> *)aView isField:(BOOL)isField;
 - (void)setContentOffset:(CGPoint)contentOffset;
