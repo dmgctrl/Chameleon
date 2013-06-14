@@ -46,23 +46,7 @@ static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
 static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 
-@implementation UILabel 
-@synthesize text = _text;
-@synthesize font = _font;
-@synthesize textColor = _textColor;
-@synthesize textAlignment = _textAlignment;
-@synthesize lineBreakMode = _lineBreakMode;
-@synthesize enabled = _enabled;
-@synthesize numberOfLines = _numberOfLines;
-@synthesize shadowColor = _shadowColor;
-@synthesize shadowOffset = _shadowOffset;
-@synthesize baselineAdjustment = _baselineAdjustment;
-@synthesize adjustsFontSizeToFitWidth = _adjustsFontSizeToFitWidth;
-@synthesize highlightedTextColor = _highlightedTextColor;
-@synthesize minimumFontSize = _minimumFontSize;
-@synthesize highlighted = _highlighted;
-@synthesize attributedText = _attributedText;
-
+@implementation UILabel
 
 - (void) _commonInitForUILabel
 {
