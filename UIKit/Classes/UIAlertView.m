@@ -48,11 +48,6 @@
         BOOL didDismissWithButtonIndex : 1;
     } _delegateHas;
 }
-@synthesize title = _title;
-@synthesize message = _message;
-@synthesize delegate = _delegate;
-@synthesize cancelButtonIndex = _cancelButtonIndex;
-@synthesize buttonTitles = _buttonTitles;
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...
 {
