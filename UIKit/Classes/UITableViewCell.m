@@ -465,7 +465,7 @@ static Class kUIButtonClass;
         state.highlighted = [view respondsToSelector:@selector(isHighlighted)] ? [(id)view isHighlighted] : NO;
         state.opaque = [view isOpaque];
         state.backgroundColor = view.backgroundColor;
-        CFDictionarySetValue(_unhighlightedStates, view, state);
+        CFDictionarySetValue(_unhighlightedStates, (__bridge const void *)(view), (__bridge const void *)(state));
         [state release];
     }
     for (UIView* subview in view.subviews) {
@@ -475,8 +475,9 @@ static Class kUIButtonClass;
 
 - (void) _clearOpaqueViewState:(UIView*)view
 {
-    UITableViewCellUnhighlightedState* state;
-    if (CFDictionaryGetValueIfPresent(_unhighlightedStates, view, (const void**)&state)) {
+    void const* pointer = nil;
+    if (CFDictionaryGetValueIfPresent(_unhighlightedStates, (__bridge const void *)(view), &pointer)) {
+        UITableViewCellUnhighlightedState* state = (__bridge id)pointer;
         if ([view respondsToSelector:@selector(setHighlighted:)]) {
             [(id)view setHighlighted:state.highlighted];
         }
