@@ -50,7 +50,7 @@
     NSError *error = nil;
 
     NSSavePanel *panel = [NSSavePanel savePanel];
-    [panel setAllowedFileTypes:[NSArray arrayWithObject:@"png"]];
+    [panel setAllowedFileTypes:@[@"png"]];
 
     if (NSFileHandlingPanelOKButton == [panel runModal] && [panel URL]) {
         NSData *imageData = UIImagePNGRepresentation(image);
