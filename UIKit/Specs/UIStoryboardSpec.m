@@ -18,6 +18,21 @@ describe(@"UIStoryboard", ^{
                 [[[x description] should] equal:@"Invalid parameter not satisfying: [name length] > 0"];
             }
         });
+
+        context(@"When given iphone example 01", ^{
+            __block UIStoryboard* storyboard;
+            beforeAll(^{
+                storyboard = [UIStoryboard storyboardWithName:@"iphone-example-01" bundle:nil];
+            });
+            
+            it(@"should not return nil", ^{
+                [[storyboard should] beNonNil];
+            });
+            
+            it(@"should be an instance of UIStoryboard", ^{
+                [[storyboard should] beKindOfClass:[UIStoryboard class]];
+            });
+        });
     });
 });
 
