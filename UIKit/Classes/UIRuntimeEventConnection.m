@@ -8,11 +8,6 @@ static NSString* const kUIEventMaskKey = @"UIEventMask";
 
 
 @implementation UIRuntimeEventConnection
-@synthesize control = _control;
-@synthesize target = _target;
-@synthesize action = _action;
-@synthesize eventMask = _eventMask;
-
 
 - (id) initWithCoder:(NSCoder*)coder
 {
