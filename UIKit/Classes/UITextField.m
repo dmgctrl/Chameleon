@@ -89,21 +89,6 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 		BOOL doCommandBySelector : 1;
     } _delegateHas;	
 }
-@synthesize delegate = _delegate;
-@synthesize background = _background;
-@synthesize disabledBackground = _disabledBackground;
-@synthesize editing = _editing;
-@synthesize clearsOnBeginEditing = _clearsOnBeginEditing;
-@synthesize adjustsFontSizeToFitWidth = _adjustsFontSizeToFitWidth;
-@synthesize clearButtonMode = _clearButtonMode;
-@synthesize leftView = _leftView;
-@synthesize rightView = _rightView;
-@synthesize leftViewMode = _leftViewMode;
-@synthesize rightViewMode = _rightViewMode;
-@synthesize borderStyle = _borderStyle;
-@synthesize inputAccessoryView = _inputAccessoryView;
-@synthesize inputView = _inputView;
-@synthesize minimumFontSize = _minimumFontSize;
 
 - (void)dealloc
 {
