@@ -30,6 +30,7 @@
 #import "UINSClipView.h"
 #import "UIScrollView+UIPrivate.h"
 #import "UIWindow.h"
+#import "UIKitView.h"
 #import "UIScreen+UIPrivate.h"
 #import "UIScreen+AppKit.h"
 #import <AppKit/NSEvent.h>
