@@ -94,14 +94,6 @@ typedef void DisplayLayerMethod(id, SEL, CALayer*);
         BOOL layerHasContentScale : 1;
     } _flags;
 }
-@synthesize layer = _layer;
-@synthesize superview = _superview;
-@synthesize tag = _tag;
-@synthesize contentMode = _contentMode;
-@synthesize backgroundColor = _backgroundColor;
-@synthesize exclusiveTouch = _exclusiveTouch;
-@synthesize autoresizingMask = _autoresizingMask;
-@synthesize toolTip = _toolTip;
 
 static SEL drawRectSelector;
 static SEL displayLayerSelector;
