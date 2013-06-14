@@ -73,7 +73,7 @@ static const CGFloat ToolbarHeight = 28;
 - (id)initWithRootViewController:(UIViewController *)rootViewController
 {
 	if ((self=[self initWithNibName:nil bundle:nil])) {
-		self.viewControllers = [NSArray arrayWithObject:rootViewController];
+		self.viewControllers = @[rootViewController];
 	}
 	return self;
 }
