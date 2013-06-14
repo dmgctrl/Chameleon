@@ -117,12 +117,6 @@ static BOOL TouchIsActiveNonGesture(UITouch *touch)
     NSDate *_backgroundTasksExpirationDate;
     NSMutableArray *_backgroundTasks;
 }
-@synthesize keyWindow = _keyWindow;
-@synthesize delegate = _delegate;
-@synthesize idleTimerDisabled = _idleTimerDisabled;
-@synthesize applicationSupportsShakeToEdit = _applicationSupportsShakeToEdit;
-@synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
-@synthesize applicationState = _applicationState;
 
 static BOOL TouchIsActive(UITouch *touch)
 {
