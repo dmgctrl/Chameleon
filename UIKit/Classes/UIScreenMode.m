@@ -32,8 +32,6 @@
 #import <AppKit/AppKit.h>
 
 @implementation UIScreenMode
-@synthesize pixelAspectRatio = _pixelAspectRatio;
-@synthesize size = _size;
 
 + (id)screenModeWithNSView:(NSView *)theNSView
 {
