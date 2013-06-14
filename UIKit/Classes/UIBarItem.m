@@ -31,11 +31,6 @@
 #import "UIImage.h"
 
 @implementation UIBarItem
-@synthesize enabled = _enabled;
-@synthesize image = _image;
-@synthesize imageInsets = _imageInsets;
-@synthesize title = _title;
-@synthesize tag = _tag;
 
 - (id)init
 {
@@ -45,7 +40,6 @@
     }
     return self;
 }
-
 
 - (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
 {
