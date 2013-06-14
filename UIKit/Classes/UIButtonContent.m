@@ -1,4 +1,6 @@
 #import "UIButtonContent.h"
+#import "UIColor.h"
+#import "UIimage.h"
 
 static NSString* const kUIBackgroundImageKey = @"UIBackgroundImage";
 static NSString* const kUIImageKey = @"UIImage";
