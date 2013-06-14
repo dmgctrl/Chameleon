@@ -98,8 +98,6 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 }
 
 @implementation UIPopoverView
-@synthesize contentView=_contentView;
-@synthesize theme = _theme;
 
 - (id)initWithContentView:(UIView *)aView size:(CGSize)aSize popoverController:(UIPopoverController *)controller
 {	
