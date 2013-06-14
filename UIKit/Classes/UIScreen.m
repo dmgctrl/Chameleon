@@ -181,7 +181,7 @@ NSMutableArray *_allScreens = nil;
 
 - (void)_UIKitViewFrameDidChange
 {
-    NSDictionary *userInfo = (self.currentMode)? [NSDictionary dictionaryWithObject:self.currentMode forKey:@"_previousMode"] : nil;
+    NSDictionary *userInfo = (self.currentMode)? @{ @"_previousMode": self.currentMode } : nil;
     self.currentMode = [UIScreenMode screenModeWithNSView:_UIKitView];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIScreenModeDidChangeNotification object:self userInfo:userInfo];
 }
@@ -218,7 +218,7 @@ NSMutableArray *_allScreens = nil;
 
 - (NSArray *)availableModes
 {
-    return (self.currentMode)? [NSArray arrayWithObject:self.currentMode] : nil;
+    return (self.currentMode)? @[self.currentMode] : nil;
 }
 
 - (UIView *)_hitTest:(CGPoint)clickPoint event:(UIEvent *)theEvent
