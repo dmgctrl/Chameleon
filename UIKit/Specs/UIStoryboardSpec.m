@@ -1,15 +1,9 @@
 SPEC_BEGIN(UIStoryboardSpec)
 
 describe(@"UIStoryboard", ^{
+    [NSBundle pushMainBundle:[NSBundle bundleForClass:[UIStoryboardSpec class]]];
+    
     context(@"+storyboardWithName:bundle:", ^{
-        beforeAll(^{
-            [NSBundle pushMainBundle:[NSBundle bundleForClass:[UIStoryboardSpec class]]];
-        });
-        
-        afterAll(^{
-            [NSBundle popMainBundle];
-        });
-        
         it(@"should throw an assertion failure when passed a nil name", ^{
             @try {
                 UIStoryboard* storyboard = [UIStoryboard storyboardWithName:nil bundle:nil];
@@ -20,10 +14,7 @@ describe(@"UIStoryboard", ^{
         });
 
         context(@"When given iphone example 01", ^{
-            __block UIStoryboard* storyboard;
-            beforeAll(^{
-                storyboard = [UIStoryboard storyboardWithName:@"iphone-example-01" bundle:nil];
-            });
+            UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"iphone-example-01" bundle:nil];
             
             it(@"should not return nil", ^{
                 [[storyboard should] beNonNil];
@@ -39,10 +30,7 @@ describe(@"UIStoryboard", ^{
         });
 
         context(@"When given iphone example 02", ^{
-            __block UIStoryboard* storyboard;
-            beforeAll(^{
-                storyboard = [UIStoryboard storyboardWithName:@"iphone-example-02" bundle:nil];
-            });
+            UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"iphone-example-02" bundle:nil];
             
             it(@"should not return nil", ^{
                 [[storyboard should] beNonNil];
@@ -52,12 +40,28 @@ describe(@"UIStoryboard", ^{
                 [[storyboard should] beKindOfClass:[UIStoryboard class]];
             });
             
-            it(@"should not have an initialViewController", ^{
+            it(@"should have an initialViewController", ^{
                 UIViewController* viewController = [storyboard instantiateInitialViewController];
                 [[viewController should] beNonNil];
             });
         });
     });
+    
+    context(@"When given a valid storyboard", ^{
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"iphone-example-02" bundle:nil];
+        [[storyboard should] beNonNil];
+
+        context(@"and it's initialViewController", ^{
+            UIViewController* controller = [storyboard instantiateInitialViewController];
+            [[controller should] beNonNil];
+            
+            it(@"should load it's view", ^{
+                [[[controller view] should] beNonNil];
+            });
+        });
+    });
+    
+    [NSBundle popMainBundle];
 });
 
 SPEC_END
