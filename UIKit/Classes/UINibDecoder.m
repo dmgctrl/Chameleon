@@ -78,7 +78,7 @@ static NSString* const kUINibVisibleWindowsKey = @"UINibVisibleWindowsKey";
         if (!referencedOwner) {
             [mutableTopLevel removeObjectAtIndex:0];
         }
-        topLevelObjects = @[mutableTopLevel];
+        topLevelObjects = [mutableTopLevel copy];
     }
     return topLevelObjects;
 }
