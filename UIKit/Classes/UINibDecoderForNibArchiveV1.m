@@ -779,6 +779,9 @@ static Class kClassForUIImageNibPlaceholder;
                     } else {
                         object = [externalObjects_ objectForKey:proxiedObjectIdentifier];
                     }
+                    if (!object) {
+                        [self _cannotDereferenceExternalObject:proxiedObjectIdentifier];
+                    }
                 } else if (class == kClassForUIImageNibPlaceholder) {
                     NSString* resourceName = [object resourceName];
                     object = [UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]];
@@ -953,6 +956,11 @@ static Class kClassForUIImageNibPlaceholder;
     
     [self _cannotDecodeType:value->type asObjCType:"UIEdgeInsets"];
     return UIEdgeInsetsZero;
+}
+
+- (void) _cannotDereferenceExternalObject:(NSString*)identifier
+{
+    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot dereference external object: %@", identifier];
 }
 
 - (void) _cannotDecodeObjCType:(const char *)objcType 
