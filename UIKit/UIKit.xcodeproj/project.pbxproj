@@ -304,6 +304,7 @@
 		F900793113E7405600DFAF19 /* UISegment.m in Sources */ = {isa = PBXBuildFile; fileRef = F900792F13E7405600DFAF19 /* UISegment.m */; };
 		F9177F9613BA317200619E3D /* UITableViewCellLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */; };
 		F9177F9713BA317200619E3D /* UITableViewCellLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */; };
+		F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */; };
 		F922DB5B13D32D6C00469869 /* UIClassSwapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5913D32D6B00469869 /* UIClassSwapper.h */; };
 		F922DB5C13D32D6C00469869 /* UIClassSwapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F922DB5A13D32D6B00469869 /* UIClassSwapper.m */; };
 		F922DB6113D3310000469869 /* UITextSelectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5F13D3310000469869 /* UITextSelectionView.h */; };
@@ -744,6 +745,7 @@
 		F900792F13E7405600DFAF19 /* UISegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISegment.m; sourceTree = "<group>"; };
 		F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITableViewCellLayoutManager.h; sourceTree = "<group>"; };
 		F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellLayoutManager.m; sourceTree = "<group>"; };
+		F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+UIPrivate.h"; sourceTree = "<group>"; };
 		F91D412C13DA4228006ED0DA /* UIScrollViewAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScrollViewAnimation.h; sourceTree = "<group>"; };
 		F91D412D13DA4228006ED0DA /* UIScrollViewAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScrollViewAnimation.m; sourceTree = "<group>"; };
 		F922DB5913D32D6B00469869 /* UIClassSwapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIClassSwapper.h; sourceTree = "<group>"; };
@@ -1305,6 +1307,7 @@
 				14A726B71213303400648C9B /* UIScreen+UIPrivate.h */,
 				1443DF23121F0D5A00E07C4A /* UIScreenMode+UIPrivate.h */,
 				14805F5812A6E2AE0080C4BA /* UIScrollView+UIPrivate.h */,
+				F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */,
 				14A726B91213303400648C9B /* UITableViewCell+UIPrivate.h */,
 				14A726BA1213303400648C9B /* UITouch+UIPrivate.h */,
 				14A726BB1213303400648C9B /* UIView+UIPrivate.h */,
@@ -1643,6 +1646,7 @@
 				F9EB69561768EE6B00EBBD4C /* AppKitIntegration.h in Headers */,
 				F92AB7E81768F29A0090CE21 /* UIImage+AppKit.h in Headers */,
 				F9767490176940CB0073489E /* UIStoryboard.h in Headers */,
+				F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

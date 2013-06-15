@@ -40,8 +40,24 @@
 #import "UIScreen.h"
 #import "UITabBarController.h"
 #import "UINib.h"
+#import "UINibLoading.h"
+#import "UIStoryboard.h"
+#import "UIStoryboard+UIPrivate.h"
+
+
+static NSString* kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
+static NSString* kUINibNameKey = @"UINibName";
+
+
+@interface UIViewController ()
+@property (nonatomic, strong, readwrite) UIStoryboard* storyboard;
+@end
+
 
 @implementation UIViewController {
+    NSString* _storyboardIdentifier;
+    NSString* _topLevelObjectsToKeepAliveFromStoryboard;
+
     UIViewControllerAppearState _appearState;
     
     struct {
@@ -75,6 +91,24 @@
         _contentSizeForViewInPopover = CGSizeMake(320,1100);
     }
     return self;
+}
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super init])) {
+        if ([coder containsValueForKey:kUINibNameKey]) {
+            _storyboardIdentifier = [[coder decodeObjectForKey:kUINibNameKey] copy];
+        }
+        if ([coder containsValueForKey:kUIExternalObjectsTableForViewLoadingKey]) {
+            _topLevelObjectsToKeepAliveFromStoryboard = [coder decodeObjectForKey:kUIExternalObjectsTableForViewLoadingKey];
+        }
+    }
+    return self;
+}
+
+- (void) encodeWithCoder:(NSCoder *)aCoder
+{
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void)dealloc
@@ -143,7 +177,11 @@
 
 - (void)loadView
 {
-    if (self.nibName) {
+    if (self.storyboard) {
+        [[self.storyboard nibForStoryboardNibNamed:_storyboardIdentifier] instantiateWithOwner:self options:@{
+            UINibExternalObjects: _topLevelObjectsToKeepAliveFromStoryboard,
+        }];
+    } else if (self.nibName) {
         [[UINib nibWithNibName:self.nibName bundle:self.nibBundle] instantiateWithOwner:self options:nil];
     } else {
         self.view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)];
