@@ -98,12 +98,12 @@ static NSString* const kUIStoryboardDesignatedEntryPointIdentifierKey = @"UIStor
             @"UIStoryboardPlaceholder": self,
         },
     }];
-    if ([topLevelObjects count] != 1) {
+    if ([topLevelObjects count] == 0) {
         return nil;
     }
     
     UIViewController* viewController = [topLevelObjects objectAtIndex:0];
-    if ([viewController isKindOfClass:[UIViewController class]]) {
+    if (![viewController isKindOfClass:[UIViewController class]]) {
         return nil;
     }
     
