@@ -1,10 +1,20 @@
 #import "UIStoryboard.h"
+#import "UINib.h"
+#import "UINibLoading.h"
+#import "UIViewController.h"
+
 
 static NSInteger const kOldestSupportedVersion = 1;
 static NSInteger const kNewestSupportedVersion = 1;
 
 static NSString* const kUIStoryboardVersionKey = @"UIStoryboardVersion";
 static NSString* const kUIViewControllerIdentifiersToNibNamesKey = @"UIViewControllerIdentifiersToNibNames";
+static NSString* const kUIStoryboardDesignatedEntryPointIdentifierKey = @"UIStoryboardDesignatedEntryPointIdentifier";
+
+
+@interface UIStoryboard ()
+@property (nonatomic, strong) UIViewController* sceneViewController;
+@end
 
 @implementation UIStoryboard {
     NSBundle* _bundle;
@@ -41,7 +51,7 @@ static NSString* const kUIViewControllerIdentifiersToNibNamesKey = @"UIViewContr
         return nil;
     }
 
-    NSString* designatedEntryPointIdentifier = [info objectForKey:@""];
+    NSString* designatedEntryPointIdentifier = [info objectForKey:kUIStoryboardDesignatedEntryPointIdentifierKey];
     if (designatedEntryPointIdentifier && ![designatedEntryPointIdentifier isKindOfClass:[NSString class]]) {
         return nil;
     }
@@ -65,12 +75,49 @@ static NSString* const kUIViewControllerIdentifiersToNibNamesKey = @"UIViewContr
 
 - (id) instantiateInitialViewController
 {
-    return nil;
+    if (nil == _designatedEntryPointIdentifier) {
+        return nil;
+    }
+    return [self instantiateViewControllerWithIdentifier:_designatedEntryPointIdentifier];
 }
 
 - (id) instantiateViewControllerWithIdentifier:(NSString*)identifier
 {
-    return nil;
+    NSString* nibName = [_identifierToNibNameMap objectForKey:identifier];
+    if (!nibName || ![nibName isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    
+    UINib* nib = [self nibForStoryboardNibNamed:nibName];
+    if (!nib) {
+        return nil;
+    }
+
+    NSArray* topLevelObjects = [nib instantiateWithOwner:self options:@{
+        UINibExternalObjects: @{
+            @"UIStoryboardPlaceholder": self,
+        },
+    }];
+    if ([topLevelObjects count] != 1) {
+        return nil;
+    }
+    
+    UIViewController* viewController = [topLevelObjects objectAtIndex:0];
+    if ([viewController isKindOfClass:[UIViewController class]]) {
+        return nil;
+    }
+    
+    return viewController;
+}
+
+- (UINib*) nibForStoryboardNibNamed:(NSString*)name
+{
+    NSError* error;
+    NSData* nibData = [NSData dataWithContentsOfFile:[_bundle pathForResource:name ofType:@"nib" inDirectory:_relativePath] options:0 error:&error];
+    if (!nibData) {
+        return nil;
+    }
+    return [UINib nibWithData:nibData bundle:_bundle];
 }
 
 @end

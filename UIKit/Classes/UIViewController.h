@@ -50,7 +50,7 @@ typedef enum {
 
 @class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController;
 
-@interface UIViewController : UIResponder 
+@interface UIViewController : UIResponder <NSCoding> 
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle;	// won't load a nib no matter what you do!
 
