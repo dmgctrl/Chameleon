@@ -1,13 +1,14 @@
-//
-//  UIStoryboardSegueTemplate.h
-//  UIKit
-//
-//  Created by Jason Allum on 6/16/13.
-//
-//
+@class UIViewController;
 
-#import <Foundation/Foundation.h>
+@interface UIStoryboardSegueTemplate : NSObject <NSCoding> 
 
-@interface UIStoryboardSegueTemplate : NSObject
+@property (readonly, assign, nonatomic) NSString* identifier;
+@property (assign, nonatomic) BOOL performOnViewLoad;
+@property (assign, nonatomic) UIViewController* viewController;
+
+- (id) defaultSegueClassName;
+- (Class) effectiveSegueClass;
+- (void) perform:(id)perform;
+- (id) segueWithDestinationViewController:(UIViewController*)destinationViewController;
 
 @end
