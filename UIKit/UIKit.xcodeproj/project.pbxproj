@@ -309,6 +309,8 @@
 		F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */; };
 		F91AA50A176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */; };
 		F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */; };
+		F91AA510176E6A82001B6D5F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
+		F91AA511176E6A89001B6D5F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
 		F922DB5B13D32D6C00469869 /* UIClassSwapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5913D32D6B00469869 /* UIClassSwapper.h */; };
 		F922DB5C13D32D6C00469869 /* UIClassSwapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F922DB5A13D32D6B00469869 /* UIClassSwapper.m */; };
 		F922DB6113D3310000469869 /* UITextSelectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5F13D3310000469869 /* UITextSelectionView.h */; };
@@ -337,7 +339,6 @@
 		F95416F013C9FC9D000A9282 /* UITableView+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F95416EF13C9FC9D000A9282 /* UITableView+UIPrivate.h */; };
 		F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F642C15C34E3700F3523B /* UIImageSpec.m */; };
 		F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
-		F95F643115C34E8C00F3523B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
 		F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643215C34E9100F3523B /* Foundation.framework */; };
 		F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643415C34E9700F3523B /* libKiwi-OSX.a */; };
 		F95F645F15C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */; };
@@ -358,7 +359,6 @@
 		F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
 		F9767498176943950073489E /* iphone-example-01.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9767497176943950073489E /* iphone-example-01.storyboard */; };
 		F9767499176943950073489E /* iphone-example-01.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9767497176943950073489E /* iphone-example-01.storyboard */; };
-		F976749B176945290073489E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749A176945290073489E /* UIKit.framework */; };
 		F976749D176945330073489E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749C176945330073489E /* Foundation.framework */; };
 		F976749E1769458C0073489E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749A176945290073489E /* UIKit.framework */; };
 		F976749F176945910073489E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749C176945330073489E /* Foundation.framework */; };
@@ -874,9 +874,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F91AA510176E6A82001B6D5F /* UIKit.framework in Frameworks */,
 				F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */,
 				F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */,
-				F95F643115C34E8C00F3523B /* UIKit.framework in Frameworks */,
 				F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -895,8 +895,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F91AA511176E6A89001B6D5F /* UIKit.framework in Frameworks */,
 				F976749D176945330073489E /* Foundation.framework in Frameworks */,
-				F976749B176945290073489E /* UIKit.framework in Frameworks */,
 				F9FFDE5015C6EA05000EDAA0 /* libKiwi.a in Frameworks */,
 				F9FFDE3415C6E88A000EDAA0 /* SenTestingKit.framework in Frameworks */,
 			);
