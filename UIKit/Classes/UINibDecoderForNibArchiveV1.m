@@ -307,13 +307,18 @@ static inline double decodeFloat64(void const** pp);
             }
             Class class = NSClassFromString(className);
             if (!class) {
-                return nil;
+                [self _throwCannotInstantiateClassWithName:className];
             }
             [classes addObject:class];
             cp += length;
         }
     }
     return self;
+}
+
+- (void) _throwCannotInstantiateClassWithName:(NSString*)name
+{
+    [NSException raise:NSInvalidUnarchiveOperationException format:@"Could not instantiate class named %@", name];
 }
 
 @end
@@ -960,17 +965,17 @@ static Class kClassForUIImageNibPlaceholder;
 
 - (void) _cannotDereferenceExternalObject:(NSString*)identifier
 {
-    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot dereference external object: %@", identifier];
+    [NSException raise:[self className] format:@"Unable to load Nib: Unable to deference external object \"%@\"", identifier];
 }
 
 - (void) _cannotDecodeObjCType:(const char *)objcType 
 {
-    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot decode type %s", objcType];
+    [NSException raise:[self className] format:@"Unable to load Nib: Unknown Objc-Type \"%s\"", objcType];
 }
 
 - (void) _cannotDecodeType:(NSInteger)type asObjCType:(char const*)objcType 
 {
-    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot decode type-code %ld as %s", type, objcType];
+    [NSException raise:[self className] format:@"Unable to load Nib: Cannot decode type-code %ld as %s", type, objcType];
 }
 
 @end
