@@ -112,12 +112,7 @@ static NSString* const kUIStoryboardDesignatedEntryPointIdentifierKey = @"UIStor
 
 - (UINib*) nibForStoryboardNibNamed:(NSString*)name
 {
-    NSError* error;
-    NSData* nibData = [NSData dataWithContentsOfFile:[_bundle pathForResource:name ofType:@"nib" inDirectory:_relativePath] options:0 error:&error];
-    if (!nibData) {
-        return nil;
-    }
-    return [UINib nibWithData:nibData bundle:_bundle];
+    return [UINib nibWithNibName:[_relativePath stringByAppendingPathComponent:name] bundle:_bundle];
 }
 
 @end
