@@ -51,11 +51,11 @@ describe(@"UIStoryboard", ^{
         UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"iphone-example-02" bundle:nil];
         [[storyboard should] beNonNil];
 
-        context(@"and it's initialViewController", ^{
+        context(@"it's initialViewController", ^{
             UIViewController* controller = [storyboard instantiateInitialViewController];
             [[controller should] beNonNil];
             
-            it(@"should load it's view", ^{
+            it(@"should load a view", ^{
                 [[[controller view] should] beNonNil];
             });
         });
