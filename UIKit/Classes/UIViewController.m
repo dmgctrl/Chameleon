@@ -43,14 +43,17 @@
 #import "UINibLoading.h"
 #import "UIStoryboard.h"
 #import "UIStoryboard+UIPrivate.h"
+#import "UIStoryboardSegueTemplate.h"
 
 
-static NSString* kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
-static NSString* kUINibNameKey = @"UINibName";
+static NSString* const kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
+static NSString* const kUINibNameKey                            = @"UINibName";
+static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboardSegueTemplates";
 
 
 @interface UIViewController ()
 @property (nonatomic, strong, readwrite) UIStoryboard* storyboard;
+@property (nonatomic, readonly) NSArray* storyboardSegueTemplates;
 @end
 
 
@@ -101,6 +104,9 @@ static NSString* kUINibNameKey = @"UINibName";
         }
         if ([coder containsValueForKey:kUIExternalObjectsTableForViewLoadingKey]) {
             _topLevelObjectsToKeepAliveFromStoryboard = [coder decodeObjectForKey:kUIExternalObjectsTableForViewLoadingKey];
+        }
+        if ([coder containsValueForKey:kUIStoryboardSegueTemplatesKey]) {
+            _storyboardSegueTemplates = [coder decodeObjectForKey:kUIStoryboardSegueTemplatesKey];
         }
     }
     return self;
@@ -503,5 +509,25 @@ static NSString* kUINibNameKey = @"UINibName";
     return nil;
 }
 
+
+#pragma mark Storyboard
+
+- (void) performSegueWithIdentifier:(NSString*)identifier sender:(id)sender
+{
+    UIStoryboardSegueTemplate* segueTemplate = [self _segueTemplateForIdentifier:identifier];
+    if (!segueTemplate) {
+        [NSException raise:NSInvalidArgumentException format:@"Receiver (%@) has no segue with identifier '%@'", self, identifier];
+    }
+}
+
+- (UIStoryboardSegueTemplate*) _segueTemplateForIdentifier:(NSString*)identifier
+{
+    for (UIStoryboardSegueTemplate* segueTemplate in _storyboardSegueTemplates) {
+        if ([[segueTemplate identifier] isEqualToString:identifier]) {
+            return segueTemplate;
+        }
+    }
+    return nil;
+}
 
 @end

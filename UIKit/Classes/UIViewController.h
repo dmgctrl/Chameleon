@@ -117,4 +117,7 @@ typedef enum {
 @property (nonatomic, strong) UITabBarItem *tabBarItem;
 @property (nonatomic, readonly, strong) UITabBarController *tabBarController;
 
+#pragma mark Storyboard
+- (void) performSegueWithIdentifier:(NSString*)identifier sender:(id)sender;
+
 @end
