@@ -1,13 +1,12 @@
-//
-//  UIStoryboardModalSegueTemplate.h
-//  UIKit
-//
-//  Created by Jason Allum on 6/16/13.
-//
-//
+#import "UIStoryboardSegueTemplate.h"
+#import "UIViewController.h"
 
-#import <Foundation/Foundation.h>
+@interface UIStoryboardModalSegueTemplate : UIStoryboardSegueTemplate
 
-@interface UIStoryboardModalSegueTemplate : NSObject
+@property (nonatomic, assign) BOOL animates;
+@property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
+@property (nonatomic, assign) UIModalTransitionStyle modalTransitionStyle;
+@property (nonatomic, assign) BOOL useDefaultModalPresentationStyle;
+@property (nonatomic, assign) BOOL useDefaultModalTransitionStyle;
 
 @end

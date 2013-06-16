@@ -305,6 +305,10 @@
 		F9177F9613BA317200619E3D /* UITableViewCellLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */; };
 		F9177F9713BA317200619E3D /* UITableViewCellLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */; };
 		F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */; };
+		F91AA505176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */; };
+		F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */; };
+		F91AA50A176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */; };
+		F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */; };
 		F922DB5B13D32D6C00469869 /* UIClassSwapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5913D32D6B00469869 /* UIClassSwapper.h */; };
 		F922DB5C13D32D6C00469869 /* UIClassSwapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F922DB5A13D32D6B00469869 /* UIClassSwapper.m */; };
 		F922DB6113D3310000469869 /* UITextSelectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5F13D3310000469869 /* UITextSelectionView.h */; };
@@ -746,6 +750,10 @@
 		F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITableViewCellLayoutManager.h; sourceTree = "<group>"; };
 		F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellLayoutManager.m; sourceTree = "<group>"; };
 		F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+UIPrivate.h"; sourceTree = "<group>"; };
+		F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardModalSegueTemplate.h; sourceTree = "<group>"; };
+		F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardModalSegueTemplate.m; sourceTree = "<group>"; };
+		F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardSegueTemplate.h; sourceTree = "<group>"; };
+		F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardSegueTemplate.m; sourceTree = "<group>"; };
 		F91D412C13DA4228006ED0DA /* UIScrollViewAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScrollViewAnimation.h; sourceTree = "<group>"; };
 		F91D412D13DA4228006ED0DA /* UIScrollViewAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScrollViewAnimation.m; sourceTree = "<group>"; };
 		F922DB5913D32D6B00469869 /* UIClassSwapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIClassSwapper.h; sourceTree = "<group>"; };
@@ -1194,6 +1202,7 @@
 			isa = PBXGroup;
 			children = (
 				F922DB5E13D3308800469869 /* Nib Support */,
+				F91AA507176E5A8B001B6D5F /* Storyboard Support */,
 				14C0715C13CF5A2300B76E35 /* UIAction.h */,
 				14C0715D13CF5A2300B76E35 /* UIAction.m */,
 				145576221541DC560029EF4D /* UIAppearanceInstance.h */,
@@ -1327,6 +1336,17 @@
 				32DBCF5E0370ADEE00C91783 /* UIKit_Prefix.pch */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
+			isa = PBXGroup;
+			children = (
+				F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */,
+				F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */,
+				F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */,
+				F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */,
+			);
+			name = "Storyboard Support";
 			sourceTree = "<group>";
 		};
 		F922DB5E13D3308800469869 /* Nib Support */ = {
@@ -1647,6 +1667,8 @@
 				F92AB7E81768F29A0090CE21 /* UIImage+AppKit.h in Headers */,
 				F9767490176940CB0073489E /* UIStoryboard.h in Headers */,
 				F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */,
+				F91AA505176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h in Headers */,
+				F91AA50A176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2024,6 +2046,8 @@
 				F9EB69501768EB0200EBBD4C /* UIScrollViewAnimation.m in Sources */,
 				F9EB69531768EBE700EBBD4C /* UIColorRep.m in Sources */,
 				F9767491176940CB0073489E /* UIStoryboard.m in Sources */,
+				F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */,
+				F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
