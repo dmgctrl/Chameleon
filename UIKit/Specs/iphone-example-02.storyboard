@@ -14,7 +14,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <segue destination="wV7-Vq-hFp" kind="modal" identifier="Identifier" modalTransitionStyle="coverVertical" id="qUW-bF-y12"/>
+                        <segue destination="wV7-Vq-hFp" kind="modal" identifier="Modal" modalTransitionStyle="coverVertical" id="qUW-bF-y12"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cAB-sH-5SJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
