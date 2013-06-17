@@ -34,15 +34,8 @@
 #import "UIControlAction.h"
 
 @implementation UIControl {
-    NSMutableArray *_registeredActions;
+    NSMutableArray* _registeredActions;
 }
-@synthesize tracking = _tracking;
-@synthesize touchInside = _touchInside;
-@synthesize selected = _selected;
-@synthesize enabled = _enabled;
-@synthesize highlighted = _highlighted;
-@synthesize contentHorizontalAlignment = _contentHorizontalAlignment;
-@synthesize contentVerticalAlignment = _contentVerticalAlignment;
 
 - (void) _commonInitForUIControl
 {
@@ -68,11 +61,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_registeredActions release];
-    [super dealloc];
-}
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
 {
@@ -81,7 +69,6 @@
     controlAction.action = action;
     controlAction.controlEvents = controlEvents;
     [_registeredActions addObject:controlAction];
-    [controlAction release];
 }
 
 - (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
@@ -95,7 +82,6 @@
     }
     
     [_registeredActions removeObjectsInArray:discard];
-    [discard release];
 }
 
 - (NSArray *)actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent
@@ -109,10 +95,9 @@
     }
     
     if ([actions count] == 0) {
-        [actions release];
         return nil;
     } else {
-        return [actions autorelease];
+        return actions;
     }
 }
 

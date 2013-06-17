@@ -51,8 +51,6 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
 
 
 @implementation UIScroller
-@synthesize delegate=_delegate, contentOffset=_contentOffset, contentSize=_contentSize;
-@synthesize indicatorStyle=_indicatorStyle, alwaysVisible=_alwaysVisible;
 
 - (id)initWithFrame:(CGRect)frame
 {

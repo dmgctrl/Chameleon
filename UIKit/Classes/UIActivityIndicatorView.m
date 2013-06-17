@@ -224,7 +224,6 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     
     [self.layer addAnimation:animation forKey:@"contents"];
     
-    [images release];
 }
 
 - (void)_stopAnimation

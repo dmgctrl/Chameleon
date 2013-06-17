@@ -171,7 +171,7 @@ typedef NSUInteger UIViewAnimationOptions;
 @property (nonatomic) CGAffineTransform transform;
 @property (nonatomic, readonly) UIView *superview;
 @property (nonatomic, readonly) UIWindow *window;
-@property (nonatomic, readonly) NSArray *subviews;
+@property (nonatomic, readonly, copy) NSArray *subviews;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic, getter=isOpaque) BOOL opaque;
 @property (nonatomic) BOOL clearsContextBeforeDrawing;

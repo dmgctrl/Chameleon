@@ -29,10 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface UIAppearanceProperty : NSObject <NSCopying> {
-    SEL cmd;
-    NSArray *axisValues;
-}
+@interface UIAppearanceProperty : NSObject <NSCopying> 
 
 - (id)initWithSelector:(SEL)sel axisValues:(NSArray *)values;
 - (void)invokeSetterUsingTarget:(id)target withValue:(NSValue *)value;

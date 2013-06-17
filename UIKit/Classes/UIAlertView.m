@@ -35,7 +35,7 @@
 #import <AppKit/NSButton.h>
 
 @interface UIAlertView ()
-@property (nonatomic, retain) NSMutableArray *buttonTitles;
+@property (nonatomic, strong) NSMutableArray *buttonTitles;
 @end
 
 @implementation UIAlertView {
@@ -48,11 +48,6 @@
         BOOL didDismissWithButtonIndex : 1;
     } _delegateHas;
 }
-@synthesize title = _title;
-@synthesize message = _message;
-@synthesize delegate = _delegate;
-@synthesize cancelButtonIndex = _cancelButtonIndex;
-@synthesize buttonTitles = _buttonTitles;
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...
 {
@@ -84,13 +79,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_title release];
-    [_message release];
-    [_buttonTitles release];
-    [super dealloc];
-}
 
 - (void)setDelegate:(id<UIAlertViewDelegate>)newDelegate
 {
@@ -129,8 +117,8 @@
     // NSAlert does have a mode that doesn't block the runloop, but it has other drawbacks that I didn't like
     // so opting to do it this way here. :/
 
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-    NSMutableArray *buttonOrder = [[[NSMutableArray alloc] initWithCapacity:self.numberOfButtons] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
+    NSMutableArray *buttonOrder = [[NSMutableArray alloc] initWithCapacity:self.numberOfButtons];
     
     if (self.title) {
         [alert setMessageText:self.title];
@@ -143,7 +131,7 @@
     for (NSInteger buttonIndex=0; buttonIndex<self.numberOfButtons; buttonIndex++) {
         if (buttonIndex != self.cancelButtonIndex) {
             [alert addButtonWithTitle:[self.buttonTitles objectAtIndex:buttonIndex]];
-            [buttonOrder addObject:[NSNumber numberWithInt:buttonIndex]];
+            [buttonOrder addObject:@(buttonIndex)];
         }
     }
     
@@ -155,7 +143,7 @@
             [btn setKeyEquivalent:@"\033"];		// this should make the escape key trigger the cancel option
         }
 
-        [buttonOrder addObject:[NSNumber numberWithInt:self.cancelButtonIndex]];
+        [buttonOrder addObject:@(self.cancelButtonIndex)];
     }
     
     if (_delegateHas.willPresentAlertView) {
@@ -163,11 +151,12 @@
     }
     
     [self performSelector:@selector(_showAlertWithOptions:)
-               withObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                           alert,		@"alert",
-                           buttonOrder, @"buttonOrder",
-                           nil]
-               afterDelay:0];
+        withObject:@{
+            @"alert":       alert,
+            @"buttonOrder": buttonOrder
+        }
+        afterDelay:0
+    ];
 }
 
 - (void)_showAlertWithOptions:(NSDictionary *)options

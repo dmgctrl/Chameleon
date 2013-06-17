@@ -74,23 +74,13 @@ extern CGFloat _UITableViewDefaultRowHeight;
         BOOL highlighted : 1;
     } _tableCellFlags;
 }
-@synthesize accessoryType=_accessoryType; 
-@synthesize accessoryView=_accessoryView;
-@synthesize backgroundView=_backgroundView;
-@synthesize contentView=_contentView;
+@synthesize contentView = _contentView;
+@synthesize accessoryView = _accessoryView;
+@synthesize backgroundView = _backgroundView;
 @synthesize detailTextLabel = _detailTextLabel;
-@synthesize editing = _editing;
-@synthesize editingAccessoryType=_editingAccessoryType;
-@synthesize imageView=_imageView;
-@synthesize indentationLevel=_indentationLevel;
-@synthesize indentationWidth=_indentationWidth;
-@synthesize reuseIdentifier=_reuseIdentifier;
-@synthesize sectionLocation=_sectionLocation;
-@synthesize selected=_selected;
-@synthesize selectedBackgroundView=_selectedBackgroundView;
-@synthesize selectionStyle=_selectionStyle;
-@synthesize showingDeleteConfirmation = _showingDeleteConfirmation;
-@synthesize textLabel=_textLabel;
+@synthesize imageView = _imageView;
+@synthesize selectedBackgroundView = _selectedBackgroundView;
+@synthesize textLabel = _textLabel;
 
 static UIImage* accessoryCheckmarkImage;
 static UIImage* accessoryCheckmarkImageHighlighted;
@@ -104,10 +94,10 @@ static Class kUIButtonClass;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSBundle* bundle = [NSBundle bundleForClass:[self class]];
-        accessoryCheckmarkImage = [[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryCheckmark"]] retain];
-        accessoryCheckmarkImageHighlighted = [[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryCheckmarkHighlighted"]] retain];
-        accessoryDisclosureIndicatorImage = [[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryDisclosureIndicator"]] retain];
-        accessoryDisclosureIndicatorImageHighlighted = [[UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryDisclosureIndicatorHighlighted"]] retain];
+        accessoryCheckmarkImage = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryCheckmark"]];
+        accessoryCheckmarkImageHighlighted = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryCheckmarkHighlighted"]];
+        accessoryDisclosureIndicatorImage = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryDisclosureIndicator"]];
+        accessoryDisclosureIndicatorImageHighlighted = [UIImage imageWithContentsOfFile:[bundle pathForImageResource:@"<UITableViewCell> accessoryDisclosureIndicatorHighlighted"]];
         kUIButtonClass = [UIButton class];
     });
 }
@@ -117,18 +107,7 @@ static Class kUIButtonClass;
     if (_unhighlightedStates) {
         CFRelease(_unhighlightedStates);
     }
-	[_separatorView release];
-	[_contentView release];
-    [_accessoryView release];
-	[_textLabel release];
-    [_detailTextLabel release];
-	[_imageView release];
-	[_backgroundView release];
-	[_selectedBackgroundView release];
-	[_reuseIdentifier release];
-	[_layoutManager release];
     
-	[super dealloc];
 }
 
 - (void) _commonInitForUITableViewCell
@@ -142,7 +121,7 @@ static Class kUIButtonClass;
 
 - (void) _configureContentViewAndLayoutManager
 {
-    _layoutManager = [[UITableViewCellLayoutManager layoutManagerForTableViewCellStyle:_style] retain];
+    _layoutManager = [UITableViewCellLayoutManager layoutManagerForTableViewCellStyle:_style];
     if (!_contentView) {
         _contentView = [[UIView alloc] initWithFrame:[_layoutManager contentViewRectForCell:self]];
     }
@@ -173,10 +152,10 @@ static Class kUIButtonClass;
 {
     if (nil != (self = [super initWithCoder:coder])) {
         [self _commonInitForUITableViewCell];
-        _reuseIdentifier = [[coder decodeObjectForKey:kUIReuseIdentifierKey] retain];
-        _contentView = [[coder decodeObjectForKey:kUIContentViewKey] retain];
-        _detailTextLabel = [[coder decodeObjectForKey:kUIDetailTextLabelKey] retain];
-        _imageView = [[coder decodeObjectForKey:kUIImageViewKey] retain];
+        _reuseIdentifier = [coder decodeObjectForKey:kUIReuseIdentifierKey];
+        _contentView = [coder decodeObjectForKey:kUIContentViewKey];
+        _detailTextLabel = [coder decodeObjectForKey:kUIDetailTextLabelKey];
+        _imageView = [coder decodeObjectForKey:kUIImageViewKey];
         [self _configureContentViewAndLayoutManager];
     }
     return self;
@@ -237,7 +216,7 @@ static Class kUIButtonClass;
 {
     if (_accessoryType != accessoryType) {
         [_accessoryView removeFromSuperview];
-        [_accessoryView release], _accessoryView = nil;
+        _accessoryView = nil;
         _accessoryType = accessoryType;
         [self _setupDefaultAccessoryView];
     }
@@ -255,10 +234,10 @@ static Class kUIButtonClass;
 {
 	if (_accessoryView != accessoryView) {
         [_accessoryView removeFromSuperview];
-        [_accessoryView release], _accessoryView = nil;
+        _accessoryView = nil;
         if (accessoryView) {
             _tableCellFlags.usingDefaultAccessoryView = NO;
-            _accessoryView = [accessoryView retain];
+            _accessoryView = accessoryView;
             _accessoryView.frame = [_layoutManager accessoryViewRectForCell:self];
             [self addSubview:_accessoryView];
         } else {
@@ -295,9 +274,8 @@ static Class kUIButtonClass;
 {
 	if (backgroundView != _backgroundView) {
 		[_backgroundView removeFromSuperview];
-		[_backgroundView release];
         if (backgroundView) {
-            _backgroundView = [backgroundView retain];
+            _backgroundView = backgroundView;
             [self insertSubview:_backgroundView atIndex:0];
         }
 	}
@@ -315,11 +293,10 @@ static Class kUIButtonClass;
 {
 	if (selectedBackgroundView != _selectedBackgroundView) {
 		[_selectedBackgroundView removeFromSuperview];
-		[_selectedBackgroundView release];
 
         _tableCellFlags.usingDefaultSelectedBackgroundView = NO;
         if (selectedBackgroundView) {
-            _selectedBackgroundView = [selectedBackgroundView retain];
+            _selectedBackgroundView = selectedBackgroundView;
             if (self.isHighlighted) {
                 if (_backgroundView) {
                     [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
@@ -429,7 +406,7 @@ static Class kUIButtonClass;
         case UITableViewCellSeparatorStyleNone: {
             if (_separatorView) {
                 [_separatorView removeFromSuperview];
-                [_separatorView release], _separatorView = nil;
+                _separatorView = nil;
                 [self setNeedsLayout];
             }
             break;
@@ -465,8 +442,7 @@ static Class kUIButtonClass;
         state.highlighted = [view respondsToSelector:@selector(isHighlighted)] ? [(id)view isHighlighted] : NO;
         state.opaque = [view isOpaque];
         state.backgroundColor = view.backgroundColor;
-        CFDictionarySetValue(_unhighlightedStates, view, state);
-        [state release];
+        CFDictionarySetValue(_unhighlightedStates, (__bridge const void *)(view), (__bridge const void *)(state));
     }
     for (UIView* subview in view.subviews) {
         [self _saveOpaqueViewState:subview];
@@ -475,8 +451,9 @@ static Class kUIButtonClass;
 
 - (void) _clearOpaqueViewState:(UIView*)view
 {
-    UITableViewCellUnhighlightedState* state;
-    if (CFDictionaryGetValueIfPresent(_unhighlightedStates, view, (const void**)&state)) {
+    void const* pointer = nil;
+    if (CFDictionaryGetValueIfPresent(_unhighlightedStates, (__bridge const void *)(view), &pointer)) {
+        UITableViewCellUnhighlightedState* state = (__bridge id)pointer;
         if ([view respondsToSelector:@selector(setHighlighted:)]) {
             [(id)view setHighlighted:state.highlighted];
         }
@@ -542,7 +519,7 @@ static Class kUIButtonClass;
         } else {
             [_selectedBackgroundView removeFromSuperview];
             if (_tableCellFlags.usingDefaultSelectedBackgroundView) {
-                [_selectedBackgroundView release], _selectedBackgroundView = nil;
+                _selectedBackgroundView = nil;
                 _tableCellFlags.usingDefaultSelectedBackgroundView = NO;
             }
             
@@ -582,14 +559,14 @@ static Class kUIButtonClass;
             button.userInteractionEnabled = NO;
             [button setImage:accessoryCheckmarkImage forState:UIControlStateNormal];
             [button setImage:accessoryCheckmarkImageHighlighted forState:UIControlStateHighlighted];
-            _accessoryView = [button retain];
+            _accessoryView = button;
             break;
         }
 
         case UITableViewCellAccessoryDetailDisclosureButton: {
             UIButton* button = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             [button addTarget:self action:@selector(_detailDisclosurePressed:) forControlEvents:UIControlEventTouchUpInside];
-            _accessoryView = [button retain];
+            _accessoryView = button;
             break;
         }
 
@@ -598,7 +575,7 @@ static Class kUIButtonClass;
             button.userInteractionEnabled = NO;
             [button setImage:accessoryDisclosureIndicatorImage forState:UIControlStateNormal];
             [button setImage:accessoryDisclosureIndicatorImageHighlighted forState:UIControlStateHighlighted];
-            _accessoryView = [button retain];
+            _accessoryView = button;
             break;
         }
     }

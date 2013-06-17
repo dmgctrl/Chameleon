@@ -9,13 +9,12 @@ static NSString* const kUIResourceNameKey = @"UIResourceName";
 @implementation UIImageNibPlaceholder {
     CGSize _size;
 }
-@synthesize resourceName = _resourceName;
 
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
         _size = CGSizeMake([coder decodeFloatForKey:kUIImageWidthKey], [coder decodeFloatForKey:kUIImageHeightKey]);
-        _resourceName = [[coder decodeObjectForKey:kUIResourceNameKey] retain];
+        _resourceName = [coder decodeObjectForKey:kUIResourceNameKey];
     }
     return self;
 }

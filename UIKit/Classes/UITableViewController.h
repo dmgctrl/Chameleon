@@ -34,7 +34,7 @@
 
 - (id)initWithStyle:(UITableViewStyle)style;
 
-@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
 
 @end

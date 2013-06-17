@@ -51,12 +51,6 @@
         BOOL actionSheetCancel : 1;
     } _delegateHas;
 }
-@synthesize delegate = _delegate;
-@synthesize destructiveButtonIndex = _destructiveButtonIndex;
-@synthesize cancelButtonIndex = _cancelButtonIndex;
-@synthesize title = _title;
-@synthesize firstOtherButtonIndex = _firstOtherButtonIndex;
-@synthesize actionSheetStyle = _actionSheetStyle;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -102,14 +96,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_title release];
-    [_menu release];
-    [_menuTitles release];
-    [_separatorIndexes release];
-    [super dealloc];
-}
 
 - (void)setDelegate:(id<UIActionSheetDelegate>)newDelegate
 {
@@ -136,7 +122,7 @@
 
 - (void)addSeparator
 {
-    [_separatorIndexes addObject:[NSNumber numberWithInt:[_menuTitles count]]];
+    [_separatorIndexes addObject:@([_menuTitles count])];
 }
 
 - (void)setDestructiveButtonIndex:(NSInteger)index
@@ -185,7 +171,7 @@
         [_menu setAllowsContextMenuPlugIns:NO];
         
         for (NSInteger index=0; index<[_menuTitles count]; index++) {
-            if ([_separatorIndexes containsObject:[NSNumber numberWithInt:index]]) {
+            if ([_separatorIndexes containsObject:@(index)]) {
                 [_menu addItem:[NSMenuItem separatorItem]];
             }
             
@@ -197,7 +183,6 @@
                 [theItem setTag:index];
                 [theItem setTarget:self];
                 [_menu addItem:theItem];
-                [theItem release];
             }
         }
 
@@ -319,7 +304,6 @@
     }
     
     // kill off the menu
-    [_menu release];
     _menu = nil;
 
     // remove ourself from the superview that we piggy-backed on

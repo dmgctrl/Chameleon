@@ -38,13 +38,6 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
 @implementation UINavigationItem {
     UINavigationBar *_navigationBar;
 }
-@synthesize title = _title;
-@synthesize rightBarButtonItem = _rightBarButtonItem;
-@synthesize titleView = _titleView;
-@synthesize hidesBackButton = _hidesBackButton;
-@synthesize leftBarButtonItem = _leftBarButtonItem;
-@synthesize backBarButtonItem = _backBarButtonItem;
-@synthesize prompt = _prompt;
 
 + (NSSet *)_keyPathsTriggeringUIUpdates
 {
@@ -69,13 +62,6 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
     // removes automatic observation
     [self _setNavigationBar:nil];
     
-    [_backBarButtonItem release];
-    [_leftBarButtonItem release];
-    [_rightBarButtonItem release];
-    [_title release];
-    [_titleView release];
-    [_prompt release];
-    [super dealloc];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -120,8 +106,7 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
 {
     if (item != _leftBarButtonItem) {
         [self willChangeValueForKey: @"leftBarButtonItem"];
-        [_leftBarButtonItem release];
-        _leftBarButtonItem = [item retain];
+        _leftBarButtonItem = item;
         [self didChangeValueForKey: @"leftBarButtonItem"];
     }
 }
@@ -135,8 +120,7 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
 {
     if (item != _rightBarButtonItem) {
         [self willChangeValueForKey: @"rightBarButtonItem"];
-        [_rightBarButtonItem release];
-        _rightBarButtonItem = [item retain];
+        _rightBarButtonItem = item;
         [self didChangeValueForKey: @"rightBarButtonItem"];
     }
 }
@@ -163,7 +147,7 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
     if (_backBarButtonItem) {
         return _backBarButtonItem;
     } else {
-        return [[[UIBarButtonItem alloc] initWithTitle:(self.title ?: @"Back") style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
+        return [[UIBarButtonItem alloc] initWithTitle:(self.title ?: @"Back") style:UIBarButtonItemStylePlain target:nil action:nil];
     }
 }
 

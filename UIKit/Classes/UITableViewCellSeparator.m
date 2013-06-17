@@ -32,14 +32,6 @@
 #import "UIGraphics.h"
 
 @implementation UITableViewCellSeparator 
-@synthesize style = _style;
-@synthesize color = _color;
-
-- (void) dealloc
-{
-    [_color release];
-    [super dealloc];
-}
 
 - (id) initWithFrame:(CGRect)frame
 {
@@ -60,7 +52,7 @@
 - (void) setColor:(UIColor*)color
 {
     if (_color != color) {
-        [_color release], _color = [color retain];
+        _color = color;
         [self setNeedsDisplay];
     }
 }

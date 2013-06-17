@@ -37,6 +37,5 @@
 #endif
 
 #if !__has_feature(objc_arc)
-    #define __unsafe_unretained
     #define __bridge
 #endif

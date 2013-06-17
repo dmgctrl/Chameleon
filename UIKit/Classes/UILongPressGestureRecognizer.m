@@ -43,10 +43,6 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     CGPoint _beginLocation;
     BOOL _waiting;
 }
-@synthesize minimumPressDuration = _minimumPressDuration;
-@synthesize allowableMovement = _allowableMovement;
-@synthesize numberOfTapsRequired = _numberOfTapsRequired;
-@synthesize numberOfTouchesRequired=_numberOfTouchesRequired;
 
 - (id)initWithTarget:(id)target action:(SEL)action
 {

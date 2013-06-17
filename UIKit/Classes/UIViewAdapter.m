@@ -71,9 +71,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewHiddenDidChangeNotification object:nil];
-    [_view release];
-    [_clipView release];
-    [super dealloc];
 }
 
 #pragma mark -
@@ -209,8 +206,7 @@
         [self resignFirstResponder];
         [self _removeNSView];
         
-        [_view release];
-        _view = [aNSView retain];
+        _view = aNSView;
         [_clipView setDocumentView:_view];
         
         [self _updateNSViews];

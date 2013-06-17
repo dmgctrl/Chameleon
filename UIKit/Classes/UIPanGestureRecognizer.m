@@ -47,8 +47,6 @@ static UITouch *PanTouch(NSSet *touches)
     CGPoint _velocity;
     NSTimeInterval _lastMovementTime;
 }
-@synthesize maximumNumberOfTouches = _maximumNumberOfTouches;
-@synthesize minimumNumberOfTouches = _minimumNumberOfTouches;
 
 - (id)initWithTarget:(id)target action:(SEL)action
 {

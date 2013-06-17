@@ -46,32 +46,7 @@ static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
 static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 
-@implementation UILabel 
-@synthesize text = _text;
-@synthesize font = _font;
-@synthesize textColor = _textColor;
-@synthesize textAlignment = _textAlignment;
-@synthesize lineBreakMode = _lineBreakMode;
-@synthesize enabled = _enabled;
-@synthesize numberOfLines = _numberOfLines;
-@synthesize shadowColor = _shadowColor;
-@synthesize shadowOffset = _shadowOffset;
-@synthesize baselineAdjustment = _baselineAdjustment;
-@synthesize adjustsFontSizeToFitWidth = _adjustsFontSizeToFitWidth;
-@synthesize highlightedTextColor = _highlightedTextColor;
-@synthesize minimumFontSize = _minimumFontSize;
-@synthesize highlighted = _highlighted;
-@synthesize attributedText = _attributedText;
-
-- (void)dealloc
-{
-    [_text release];
-    [_font release];
-    [_textColor release];
-    [_shadowColor release];
-    [_highlightedTextColor release];
-    [super dealloc];
-}
+@implementation UILabel
 
 - (void) _commonInitForUILabel
 {
@@ -137,7 +112,6 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void)setText:(NSString *)newText
 {
     if (_text != newText) {
-        [_text release];
         _text = [newText copy];
         [self setNeedsDisplay];
     }
@@ -148,8 +122,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     assert(newFont != nil);
 
     if (newFont != _font) {
-        [_font release];
-        _font = [newFont retain];
+        _font = newFont;
         [self setNeedsDisplay];
     }
 }
@@ -157,8 +130,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void)setTextColor:(UIColor *)newColor
 {
     if (newColor != _textColor) {
-        [_textColor release];
-        _textColor = [newColor retain];
+        _textColor = newColor;
         [self setNeedsDisplay];
     }
 }
@@ -166,8 +138,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void)setShadowColor:(UIColor *)newColor
 {
     if (newColor != _shadowColor) {
-        [_shadowColor release];
-        _shadowColor = [newColor retain];
+        _shadowColor = newColor;
         [self setNeedsDisplay];
     }
 }
