@@ -10,6 +10,4 @@ UIKIT_HIDDEN
 @property (nonatomic, assign) BOOL useDefaultModalPresentationStyle;
 @property (nonatomic, assign) BOOL useDefaultModalTransitionStyle;
 
-- (void) perform;
-
 @end

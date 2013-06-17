@@ -16,6 +16,7 @@
                     <connections>
                         <segue destination="wV7-Vq-hFp" kind="modal" identifier="Modal" modalTransitionStyle="coverVertical" id="qUW-bF-y12"/>
                         <segue destination="wV7-Vq-hFp" kind="custom" identifier="Custom" customClass="_UIStoryboardSpecCustomSegue" id="gx5-T2-w8w"/>
+                        <segue destination="wV7-Vq-hFp" kind="push" identifier="Push" id="cUK-zh-Q44"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cAB-sH-5SJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -31,6 +32,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="VH1-lH-YEn"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iyN-s9-Zg8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -43,6 +45,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="gx5-T2-w8w"/>
+        <segue reference="cUK-zh-Q44"/>
     </inferredMetricsTieBreakers>
 </document>

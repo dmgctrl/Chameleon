@@ -104,6 +104,14 @@ describe(@"UIStoryboard", ^{
                     fail(@"Shoudln't throw: %@", exception);
                 }
             });
+
+            context(@"when performing a valid Push segue", ^{
+                @try {
+                    [controller performSegueWithIdentifier:@"Push" sender:nil];
+                } @catch (id exception) {
+                    fail(@"Shoudln't throw: %@", exception);
+                }
+            });
         });
     });
     
