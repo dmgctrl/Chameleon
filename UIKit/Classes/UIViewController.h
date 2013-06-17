@@ -48,9 +48,14 @@ typedef enum {
     UIModalTransitionStylePartialCurl,
 } UIModalTransitionStyle;
 
-@class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController;
+@class UINavigationItem;
+@class UINavigationController;
+@class UIBarButtonItem;
+@class UISplitViewController;
+@class UIStoryboard;
+@class UIStoryboardSegue;
 
-@interface UIViewController : UIResponder <NSCoding> 
+@interface UIViewController : UIResponder <NSCoding>
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle;	// won't load a nib no matter what you do!
 
@@ -118,6 +123,9 @@ typedef enum {
 @property (nonatomic, readonly, strong) UITabBarController *tabBarController;
 
 #pragma mark Storyboard
+@property(nonatomic, readonly, retain) UIStoryboard* storyboard;
 - (void) performSegueWithIdentifier:(NSString*)identifier sender:(id)sender;
+- (BOOL) shouldPerformSegueWithIdentifier:(NSString*)identifier sender:(id)sender;
+- (void) prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender;
 
 @end

@@ -5,12 +5,9 @@ static NSString* const kUIDestinationViewControllerIdentifierKey = @"UIDestinati
 static NSString* const kUIIdentifierKey                          = @"UIIdentifier";
 
 
-@implementation UIStoryboardSegueTemplate {
-    NSString* _segueClassName;
-    NSString* _destinationViewControllerIdentifier;
-}
+@implementation UIStoryboardSegueTemplate
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
         _destinationViewControllerIdentifier = [coder decodeObjectForKey:kUIDestinationViewControllerIdentifierKey];
@@ -24,22 +21,15 @@ static NSString* const kUIIdentifierKey                          = @"UIIdentifie
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (id) defaultSegueClassName
-{
-    return nil;
-}
-
 - (Class) effectiveSegueClass
 {
+    [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (void) perform:(id)perform
+- (UIStoryboardSegue*) segueWithDestinationViewController:(UIViewController*)destinationViewController
 {
-}
-
-- (id) segueWithDestinationViewController:(UIViewController*)destinationViewController
-{
+    [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
