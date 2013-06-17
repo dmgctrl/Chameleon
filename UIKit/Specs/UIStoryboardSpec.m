@@ -75,9 +75,6 @@ describe(@"UIStoryboard", ^{
                     it(@"is an NSInvalidArgumentException", ^{
                         [[[exception name] should] equal:NSInvalidArgumentException];
                     });
-                    it(@"has the right message", ^{
-                        [[[exception reason] should] equal:[NSString stringWithFormat:@"Receiver (%@) has no segue with identifier '(null)'", controller]];
-                    });
                 }
             });
 
@@ -88,9 +85,6 @@ describe(@"UIStoryboard", ^{
                 } @catch (NSException* exception) {
                     it(@"is an NSInvalidArgumentException", ^{
                         [[[exception name] should] equal:NSInvalidArgumentException];
-                    });
-                    it(@"has the right message", ^{
-                        [[[exception reason] should] equal:[NSString stringWithFormat:@"Receiver (%@) has no segue with identifier 'unknown'", controller]];
                     });
                 }
             });

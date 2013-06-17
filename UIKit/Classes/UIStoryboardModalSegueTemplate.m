@@ -1,4 +1,6 @@
 #import "UIStoryboardModalSegueTemplate.h"
+#import "UIStoryboardModalSegue.h"
+#import "UIStoryboardSegue+UIPrivate.h"
 
 
 static NSString* const kUIModalTransitionStyleKey   = @"UIModalTransitionStyle";
@@ -8,7 +10,7 @@ static NSString* const kUIAnimatesKey               = @"UIAnimates";
 
 @implementation UIStoryboardModalSegueTemplate
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
         if ([coder containsValueForKey:kUIModalTransitionStyleKey]) {
@@ -30,6 +32,22 @@ static NSString* const kUIAnimatesKey               = @"UIAnimates";
         }
     }
     return self;
+}
+
+- (Class) effectiveSegueClass
+{
+    return [UIStoryboardModalSegue class];
+}
+
+- (UIStoryboardSegue*) segueWithDestinationViewController:(UIViewController*)destinationViewController
+{
+    UIStoryboardModalSegue* segue = [[UIStoryboardModalSegue alloc] initWithIdentifier:[self identifier] source:[self viewController] destination:destinationViewController];
+    [segue setAnimates:[self animates]];
+    [segue setModalPresentationStyle:[self modalPresentationStyle]];
+    [segue setModalTransitionStyle:[self modalTransitionStyle]];
+    [segue setUseDefaultModalPresentationStyle:[self useDefaultModalPresentationStyle]];
+    [segue setUseDefaultModalTransitionStyle:[self useDefaultModalTransitionStyle]];
+    return segue;
 }
 
 @end

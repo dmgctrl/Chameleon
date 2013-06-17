@@ -44,6 +44,7 @@
 #import "UIStoryboard.h"
 #import "UIStoryboard+UIPrivate.h"
 #import "UIStoryboardSegueTemplate.h"
+#import "UIStoryboardSegue.h"
 
 
 static NSString* const kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
@@ -514,10 +515,32 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 
 - (void) performSegueWithIdentifier:(NSString*)identifier sender:(id)sender
 {
+    if (![self shouldPerformSegueWithIdentifier:identifier sender:sender]) {
+        return;
+    }
+
     UIStoryboardSegueTemplate* segueTemplate = [self _segueTemplateForIdentifier:identifier];
     if (!segueTemplate) {
         [NSException raise:NSInvalidArgumentException format:@"Receiver (%@) has no segue with identifier '%@'", self, identifier];
     }
+
+    UIViewController* destination = [[self storyboard] instantiateViewControllerWithIdentifier:[segueTemplate destinationViewControllerIdentifier]];
+    if (destination) {
+        UIStoryboardSegue* segue = [segueTemplate segueWithDestinationViewController:destination];
+        if (segue) {
+            [self prepareForSegue:segue sender:sender];
+            [segue perform];
+        }
+    }
+}
+
+- (BOOL) shouldPerformSegueWithIdentifier:(NSString*)identifier sender:(id)sender
+{
+    return YES;
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
+{
 }
 
 - (UIStoryboardSegueTemplate*) _segueTemplateForIdentifier:(NSString*)identifier

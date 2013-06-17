@@ -326,6 +326,11 @@
 		F92EA5A5176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */; };
 		F935331D13DF0733003C7D3A /* UINibDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = F935331B13DF0733003C7D3A /* UINibDecoder.h */; };
 		F935331E13DF0733003C7D3A /* UINibDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F935331C13DF0733003C7D3A /* UINibDecoder.m */; };
+		F9379199176F3F4C006439EC /* UIStoryboardModalSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F9379197176F3F4C006439EC /* UIStoryboardModalSegue.h */; };
+		F937919A176F3F4C006439EC /* UIStoryboardModalSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9379198176F3F4C006439EC /* UIStoryboardModalSegue.m */; };
+		F937919D176F3F96006439EC /* UIStoryboardSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F937919B176F3F96006439EC /* UIStoryboardSegue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F937919E176F3F96006439EC /* UIStoryboardSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = F937919C176F3F96006439EC /* UIStoryboardSegue.m */; };
+		F93791A2176F4396006439EC /* UIStoryboardSegue+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
 		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; };
 		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; };
@@ -353,7 +358,7 @@
 		F9647EE513B91BDC0040B2D6 /* UITableViewCellBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9647EE313B91BDC0040B2D6 /* UITableViewCellBackgroundView.m */; };
 		F9647EE913B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = F9647EE713B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.h */; };
 		F9647EEA13B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9647EE813B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m */; };
-		F9767490176940CB0073489E /* UIStoryboard.h in Headers */ = {isa = PBXBuildFile; fileRef = F976748E176940CB0073489E /* UIStoryboard.h */; };
+		F9767490176940CB0073489E /* UIStoryboard.h in Headers */ = {isa = PBXBuildFile; fileRef = F976748E176940CB0073489E /* UIStoryboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9767491176940CB0073489E /* UIStoryboard.m in Sources */ = {isa = PBXBuildFile; fileRef = F976748F176940CB0073489E /* UIStoryboard.m */; };
 		F97674951769433E0073489E /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
 		F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
@@ -770,6 +775,11 @@
 		F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "iphone-example-02.storyboard"; sourceTree = "<group>"; };
 		F935331B13DF0733003C7D3A /* UINibDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDecoder.h; sourceTree = "<group>"; };
 		F935331C13DF0733003C7D3A /* UINibDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibDecoder.m; sourceTree = "<group>"; };
+		F9379197176F3F4C006439EC /* UIStoryboardModalSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardModalSegue.h; sourceTree = "<group>"; };
+		F9379198176F3F4C006439EC /* UIStoryboardModalSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardModalSegue.m; sourceTree = "<group>"; };
+		F937919B176F3F96006439EC /* UIStoryboardSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardSegue.h; sourceTree = "<group>"; };
+		F937919C176F3F96006439EC /* UIStoryboardSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardSegue.m; sourceTree = "<group>"; };
+		F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboardSegue+UIPrivate.h"; sourceTree = "<group>"; };
 		F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableViewCell> accessoryDisclosureIndicatorHighlighted.png"; path = "Resources/<UITableViewCell> accessoryDisclosureIndicatorHighlighted.png"; sourceTree = "<group>"; };
 		F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+UIPrivate.h"; sourceTree = "<group>"; };
 		F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+UIPrivate.h"; sourceTree = "<group>"; };
@@ -1156,6 +1166,8 @@
 				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
 				F976748E176940CB0073489E /* UIStoryboard.h */,
 				F976748F176940CB0073489E /* UIStoryboard.m */,
+				F937919B176F3F96006439EC /* UIStoryboardSegue.h */,
+				F937919C176F3F96006439EC /* UIStoryboardSegue.m */,
 				1489854912EE2CFE003D4751 /* UIStringDrawing.h */,
 				1489854A12EE2CFE003D4751 /* UIStringDrawing.m */,
 				1489860412EE2DBD003D4751 /* UISwipeGestureRecognizer.h */,
@@ -1341,10 +1353,10 @@
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
 			isa = PBXGroup;
 			children = (
+				F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */,
 				F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */,
 				F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */,
-				F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */,
-				F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */,
+				F9379196176F3F1F006439EC /* Modal Segue */,
 			);
 			name = "Storyboard Support";
 			sourceTree = "<group>";
@@ -1372,6 +1384,17 @@
 				F99E83FC13D05A3D00107358 /* UIRuntimeOutletConnection.m */,
 			);
 			name = "Nib Support";
+			sourceTree = "<group>";
+		};
+		F9379196176F3F1F006439EC /* Modal Segue */ = {
+			isa = PBXGroup;
+			children = (
+				F9379197176F3F4C006439EC /* UIStoryboardModalSegue.h */,
+				F9379198176F3F4C006439EC /* UIStoryboardModalSegue.m */,
+				F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */,
+				F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */,
+			);
+			name = "Modal Segue";
 			sourceTree = "<group>";
 		};
 		F94CB9C513C89EAB001DF656 /* AppKit Integration */ = {
@@ -1669,6 +1692,9 @@
 				F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */,
 				F91AA505176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h in Headers */,
 				F91AA50A176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h in Headers */,
+				F9379199176F3F4C006439EC /* UIStoryboardModalSegue.h in Headers */,
+				F937919D176F3F96006439EC /* UIStoryboardSegue.h in Headers */,
+				F93791A2176F4396006439EC /* UIStoryboardSegue+UIPrivate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2048,6 +2074,8 @@
 				F9767491176940CB0073489E /* UIStoryboard.m in Sources */,
 				F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */,
 				F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */,
+				F937919A176F3F4C006439EC /* UIStoryboardModalSegue.m in Sources */,
+				F937919E176F3F96006439EC /* UIStoryboardSegue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

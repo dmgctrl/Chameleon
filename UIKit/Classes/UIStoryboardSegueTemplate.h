@@ -1,14 +1,14 @@
 @class UIViewController;
+@class UIStoryboardSegue;
 
 @interface UIStoryboardSegueTemplate : NSObject <NSCoding> 
 
-@property (readonly, assign, nonatomic) NSString* identifier;
+@property (readonly, strong, nonatomic) NSString* identifier;
+@property (readonly, strong, nonatomic) NSString* destinationViewControllerIdentifier;
 @property (assign, nonatomic) BOOL performOnViewLoad;
 @property (assign, nonatomic) UIViewController* viewController;
 
-- (id) defaultSegueClassName;
 - (Class) effectiveSegueClass;
-- (void) perform:(id)perform;
-- (id) segueWithDestinationViewController:(UIViewController*)destinationViewController;
+- (UIStoryboardSegue*) segueWithDestinationViewController:(UIViewController*)destinationViewController;
 
 @end

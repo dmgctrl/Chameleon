@@ -105,6 +105,7 @@
 #import "UIPinchGestureRecognizer.h"
 #import "UIRotationGestureRecognizer.h"
 #import "UIStoryboard.h"
+#import "UIStoryboardSegue.h"
 #import "UISwipeGestureRecognizer.h"
 #import "UIDatePicker.h"
 
