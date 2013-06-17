@@ -1356,6 +1356,7 @@
 				F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */,
 				F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */,
 				F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */,
+				F93791A4176F558D006439EC /* Custom Segue */,
 				F9379196176F3F1F006439EC /* Modal Segue */,
 			);
 			name = "Storyboard Support";
@@ -1395,6 +1396,13 @@
 				F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */,
 			);
 			name = "Modal Segue";
+			sourceTree = "<group>";
+		};
+		F93791A4176F558D006439EC /* Custom Segue */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Custom Segue";
 			sourceTree = "<group>";
 		};
 		F94CB9C513C89EAB001DF656 /* AppKit Integration */ = {

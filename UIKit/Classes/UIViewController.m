@@ -53,7 +53,6 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 
 
 @interface UIViewController ()
-@property (nonatomic, strong, readwrite) UIStoryboard* storyboard;
 @property (nonatomic, readonly) NSArray* storyboardSegueTemplates;
 @end
 

@@ -89,8 +89,12 @@ describe(@"UIStoryboard", ^{
                 }
             });
 
-            context(@"when performing a segue with a valid identifier", ^{
+            context(@"when performing a valid Modal segue", ^{
                 [controller performSegueWithIdentifier:@"Modal" sender:nil];
+            });
+
+            context(@"when performing a valid Custom segue", ^{
+                [controller performSegueWithIdentifier:@"Custom" sender:nil];
             });
         });
     });
@@ -99,3 +103,14 @@ describe(@"UIStoryboard", ^{
 });
 
 SPEC_END
+
+
+@interface _UIStoryboardSpecCustomSegue : UIStoryboardSegue
+@end
+
+@implementation _UIStoryboardSpecCustomSegue
+- (void) perform
+{
+    // DO NOTHING
+}
+@end

@@ -1,6 +1,7 @@
 #import "UIStoryboardSegueTemplate.h"
 #import "UIViewController.h"
 
+UIKIT_HIDDEN
 @interface UIStoryboardModalSegueTemplate : UIStoryboardSegueTemplate
 
 @property (nonatomic, assign) BOOL animates;

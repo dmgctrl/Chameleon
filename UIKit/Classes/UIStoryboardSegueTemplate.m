@@ -1,17 +1,22 @@
 #import "UIStoryboardSegueTemplate.h"
+#import "UIStoryboardSegue.h"
 
 
 static NSString* const kUIDestinationViewControllerIdentifierKey = @"UIDestinationViewControllerIdentifier";
 static NSString* const kUIIdentifierKey                          = @"UIIdentifier";
+static NSString* const kUISegueClassNameKey                      = @"UISegueClassName";
 
 
-@implementation UIStoryboardSegueTemplate
+@implementation UIStoryboardSegueTemplate {
+    NSString* _segueClassName;
+}
 
 - (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
         _destinationViewControllerIdentifier = [coder decodeObjectForKey:kUIDestinationViewControllerIdentifierKey];
         _identifier = [coder decodeObjectForKey:kUIIdentifierKey];
+        _segueClassName = [coder decodeObjectForKey:kUISegueClassNameKey];
     }
     return self;
 }
@@ -23,14 +28,12 @@ static NSString* const kUIIdentifierKey                          = @"UIIdentifie
 
 - (Class) effectiveSegueClass
 {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return NSClassFromString(_segueClassName);
 }
 
 - (UIStoryboardSegue*) segueWithDestinationViewController:(UIViewController*)destinationViewController
 {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return [[[self effectiveSegueClass] alloc] initWithIdentifier:[self identifier] source:[self viewController] destination:destinationViewController];
 }
 
 @end
