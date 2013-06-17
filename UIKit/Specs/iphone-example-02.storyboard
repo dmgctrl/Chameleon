@@ -15,6 +15,7 @@
                     </view>
                     <connections>
                         <segue destination="wV7-Vq-hFp" kind="modal" identifier="Modal" modalTransitionStyle="coverVertical" id="qUW-bF-y12"/>
+                        <segue destination="wV7-Vq-hFp" kind="custom" identifier="Custom" customClass="_UIStoryboardSpecCustomSegue" id="gx5-T2-w8w"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cAB-sH-5SJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -41,4 +42,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="gx5-T2-w8w"/>
+    </inferredMetricsTieBreakers>
 </document>

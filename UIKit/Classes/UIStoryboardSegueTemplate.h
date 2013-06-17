@@ -1,7 +1,8 @@
 @class UIViewController;
 @class UIStoryboardSegue;
 
-@interface UIStoryboardSegueTemplate : NSObject <NSCoding> 
+UIKIT_HIDDEN
+@interface UIStoryboardSegueTemplate : NSObject <NSCoding>
 
 @property (readonly, strong, nonatomic) NSString* identifier;
 @property (readonly, strong, nonatomic) NSString* destinationViewControllerIdentifier;

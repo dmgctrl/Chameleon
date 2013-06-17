@@ -26,7 +26,7 @@
     if (_performHandler) {
         _performHandler();
     } else {
-        [self doesNotRecognizeSelector:_cmd];
+        [NSException raise:NSInternalInconsistencyException format:@"Subclasses of UIStoryboardSegue must override -perform."];
     }
 }
 
