@@ -90,11 +90,19 @@ describe(@"UIStoryboard", ^{
             });
 
             context(@"when performing a valid Modal segue", ^{
-                [controller performSegueWithIdentifier:@"Modal" sender:nil];
+                @try {
+                    [controller performSegueWithIdentifier:@"Modal" sender:nil];
+                } @catch (id exception) {
+                    fail(@"Shoudln't throw: %@", exception);
+                }
             });
 
             context(@"when performing a valid Custom segue", ^{
-                [controller performSegueWithIdentifier:@"Custom" sender:nil];
+                @try {
+                    [controller performSegueWithIdentifier:@"Custom" sender:nil];
+                } @catch (id exception) {
+                    fail(@"Shoudln't throw: %@", exception);
+                }
             });
         });
     });
