@@ -94,6 +94,10 @@ describe(@"UIStoryboard", ^{
                     });
                 }
             });
+
+            context(@"when performing a segue with a valid identifier", ^{
+                [controller performSegueWithIdentifier:@"Modal" sender:nil];
+            });
         });
     });
     
