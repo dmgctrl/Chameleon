@@ -396,6 +396,8 @@
 		F99E83FA13D05A1F00107358 /* UIRuntimeEventConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E83F813D05A1E00107358 /* UIRuntimeEventConnection.m */; };
 		F99E83FD13D05A3D00107358 /* UIRuntimeOutletConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F99E83FB13D05A3C00107358 /* UIRuntimeOutletConnection.h */; };
 		F99E83FE13D05A3D00107358 /* UIRuntimeOutletConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E83FC13D05A3D00107358 /* UIRuntimeOutletConnection.m */; };
+		F9B3C1F4177111C900C92009 /* UILabelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F3177111C900C92009 /* UILabelSpec.m */; };
+		F9B3C1F5177111C900C92009 /* UILabelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F3177111C900C92009 /* UILabelSpec.m */; };
 		F9D9773013B794710086F226 /* UITextInput.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D9772F13B794700086F226 /* UITextInput.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9D9774113B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */; };
 		F9D9774213B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */; };
@@ -856,6 +858,7 @@
 		F99E83F813D05A1E00107358 /* UIRuntimeEventConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIRuntimeEventConnection.m; sourceTree = "<group>"; };
 		F99E83FB13D05A3C00107358 /* UIRuntimeOutletConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIRuntimeOutletConnection.h; sourceTree = "<group>"; };
 		F99E83FC13D05A3D00107358 /* UIRuntimeOutletConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIRuntimeOutletConnection.m; sourceTree = "<group>"; };
+		F9B3C1F3177111C900C92009 /* UILabelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILabelSpec.m; sourceTree = "<group>"; };
 		F9D9772F13B794700086F226 /* UITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITextInput.h; sourceTree = "<group>"; };
 		F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UINavigationBarBackground> blackOpaque.png"; path = "Resources/<UINavigationBarBackground> blackOpaque.png"; sourceTree = "<group>"; };
 		F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UINavigationBarBackground> blackTranslucent.png"; path = "Resources/<UINavigationBarBackground> blackTranslucent.png"; sourceTree = "<group>"; };
@@ -1471,6 +1474,7 @@
 			isa = PBXGroup;
 			children = (
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
+				F9B3C1F1177111AA00C92009 /* UILabel */,
 				F97674921769431C0073489E /* UIStoryboard */,
 				F95F640D15C34C6100F3523B /* Supporting Files */,
 			);
@@ -1497,6 +1501,14 @@
 				F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */,
 			);
 			name = UIStoryboard;
+			sourceTree = "<group>";
+		};
+		F9B3C1F1177111AA00C92009 /* UILabel */ = {
+			isa = PBXGroup;
+			children = (
+				F9B3C1F3177111C900C92009 /* UILabelSpec.m */,
+			);
+			name = UILabel;
 			sourceTree = "<group>";
 		};
 		F9FFDDE315C5A8C5000EDAA0 /* UIImage */ = {
@@ -2110,6 +2122,7 @@
 				F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */,
 				F95F645F15C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */,
 				F97674951769433E0073489E /* UIStoryboardSpec.m in Sources */,
+				F9B3C1F4177111C900C92009 /* UILabelSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2129,6 +2142,7 @@
 				F9FFDE4E15C6E9D2000EDAA0 /* NSBundle+TestUtilities.m in Sources */,
 				F9FFDE4815C6E9D2000EDAA0 /* UIImageSpec.m in Sources */,
 				F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */,
+				F9B3C1F5177111C900C92009 /* UILabelSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
