@@ -30,28 +30,40 @@
 #import "UIView.h"
 #import "UIStringDrawing.h"
 
-@class UIFont, UIColor;
+@class UIFont;
+@class UIColor;
 
 @interface UILabel : UIView <NSCoding>
 
-@property (nonatomic, copy) NSString *text;
-@property (nonatomic, strong) UIFont *font;
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, strong) UIColor *highlightedTextColor;
-@property (nonatomic, strong) UIColor *shadowColor;
-@property (nonatomic) CGSize shadowOffset;
+#pragma mark Accessing the Text Attributes
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, copy) NSAttributedString* attributedText;
+@property (nonatomic, strong) UIFont* font;
+@property (nonatomic, strong) UIColor* textColor;
 @property (nonatomic) UITextAlignment textAlignment;
 @property (nonatomic) UILineBreakMode lineBreakMode;
 @property (nonatomic, getter=isEnabled) BOOL enabled;
-@property (nonatomic) NSInteger numberOfLines;					// currently only supports 0 or 1
-@property (nonatomic) UIBaselineAdjustment baselineAdjustment;	// not implemented
-@property (nonatomic) BOOL adjustsFontSizeToFitWidth;			// not implemented
-@property (nonatomic) CGFloat minimumFontSize;					// not implemented
+
+#pragma mark Sizing the Label’s Text
+@property (nonatomic) BOOL adjustsFontSizeToFitWidth; // NI
+@property (nonatomic) BOOL adjustsLetterSpacingToFitWidth; // NI
+@property (nonatomic) UIBaselineAdjustment baselineAdjustment; // NI
+@property (nonatomic) CGFloat minimumScaleFactor;
+@property (nonatomic) NSInteger numberOfLines; // PI: supports 0 or 1
+
+#pragma mark Managing Highlight Values
+@property (nonatomic, strong) UIColor* highlightedTextColor;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
-@property (nonatomic, copy) NSAttributedString *attributedText;
 
+#pragma mark Drawing a Shadow
+@property (nonatomic, strong) UIColor* shadowColor;
+@property (nonatomic) CGSize shadowOffset;
 
-- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
-- (void)drawTextInRect:(CGRect)rect;
+#pragma mark Drawing and Positioning Overrides
+- (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
+- (void) drawTextInRect:(CGRect)rect;
+
+#pragma mark Getting the Layout Constraints
+@property (nonatomic) CGFloat preferredMaxLayoutWidth;
 
 @end
