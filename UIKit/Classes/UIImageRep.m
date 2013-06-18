@@ -105,13 +105,13 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
     NSMutableArray* reps = [NSMutableArray array];
     
     if (file) {
-        UIImageRep* repAt1x = [[self alloc] initWithContentsOfFile:file scale:1.0];
+        UIImageRep* repAt1x = [[[self class] alloc] initWithContentsOfFile:file scale:1.0];
         if (repAt1x) {
             [reps addObject:repAt1x];
         }
     }
     if (fileAt2x) {
-        UIImageRep* repAt2x = [[self alloc] initWithContentsOfFile:fileAt2x scale:2.0];
+        UIImageRep* repAt2x = [[[self class] alloc] initWithContentsOfFile:fileAt2x scale:2.0];
         if (repAt2x) {
             [reps addObject:repAt2x];
         }
@@ -125,10 +125,11 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
     NSAssert(file != nil, @"???");
     NSAssert(scale > 0, @"???");
     CGImageSourceRef source = CreateCGImageSourceWithFile(file);
-    if (source) {
-        self = [self initWithCGImageSource:source imageIndex:0 scale:scale];
-        CFRelease(source);
+    if (!source) {
+        return nil;
     }
+    self = [self initWithCGImageSource:source imageIndex:0 scale:scale];
+    CFRelease(source);
     return self;
 }
 
