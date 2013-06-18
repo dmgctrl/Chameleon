@@ -24,6 +24,7 @@ enum {
     kValueTypeFloat32               = 0x06,
     kValueTypeFloat64               = 0x07,
     kValueTypeData                  = 0x08,
+    kValueTypeNull                  = 0x09,
     kValueTypeObject                = 0x0A,
 };
 
@@ -267,6 +268,10 @@ static inline double decodeFloat64(void const** pp);
                 case kValueTypeFloat64: {
                     data = vp;
                     decodeFloat64(&vp);
+                    break;
+                }
+                
+                case kValueTypeNull: {
                     break;
                 }
                     
@@ -795,6 +800,10 @@ static Class kClassForUIImageNibPlaceholder;
                 [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(object)];
             }
             return object;
+        }
+            
+        case kValueTypeNull: {
+            return nil;
         }
             
         case kValueTypeByte: {
