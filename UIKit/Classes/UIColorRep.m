@@ -40,24 +40,7 @@ static void drawPatternImage(void *info, CGContextRef ctx)
     UIGraphicsPushContext(ctx);
     CGContextSaveGState(ctx);
     
-    const CGRect patternRect = {CGPointZero, rep.imageSize};
-    const CGRect deviceRect = CGContextConvertRectToDeviceSpace(ctx, patternRect);
-
-    // this attempts to detect a flipped context and then counter-flips it.
-    // I don't like this because it seems like it shouldn't be necessary and that I'm missing something more fundamental.
-    // If a pattern color is used as a backgroundColor on a UIView with no drawRect:, it will set the backgrounColor of
-    // the view's layer directly with the CGColor (which is made from this pattern image). In that case, the pattern
-    // appears flipped for reasons I don't fully understand unless I apply this counter-flip transform. If the UIView does
-    // have a drawRect:, then the different way that the background color is set (UIView draws it directly into the
-    // CGContext that Core Animation gives it before calling drawRect:), causes the pattern to appear right-side-up.
-    if (floorf(NSAppKitVersionNumber) != NSAppKitVersionNumber10_7) {
-        if (CGPointEqualToPoint(patternRect.origin, deviceRect.origin)) {
-            CGContextTranslateCTM(ctx, 0, patternRect.size.height);
-            CGContextScaleCTM(ctx, 1, -1);
-        }
-    }
-    
-    [rep drawInRect:patternRect fromRect:CGRectNull];
+    [rep drawInRect:(CGRect){CGPointZero, rep.imageSize} fromRect:CGRectNull];
     
     CGContextRestoreGState(ctx);
     UIGraphicsPopContext();
@@ -95,7 +78,6 @@ static void drawPatternImage(void *info, CGContextRef ctx)
     if (!_CGColor && _patternImageRep) {
         const CGSize imageSize = _patternImageRep.imageSize;
         const CGFloat scaler = 1/_patternImageRep.scale;
-        //const CGAffineTransform t = CGAffineTransformScale(CGAffineTransformMake(1, 0, 0, -1, 0, imageSize.height), scaler, scaler);
         const CGAffineTransform t = CGAffineTransformMakeScale(scaler, scaler);
         static const CGPatternCallbacks callbacks = {0, &drawPatternImage, NULL};
         
