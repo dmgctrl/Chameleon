@@ -400,6 +400,7 @@
 		F9B3C1F5177111C900C92009 /* UILabelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F3177111C900C92009 /* UILabelSpec.m */; };
 		F9B3C1F9177119CB00C92009 /* UIFontSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F8177119CB00C92009 /* UIFontSpec.m */; };
 		F9B3C1FA177119CB00C92009 /* UIFontSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F8177119CB00C92009 /* UIFontSpec.m */; };
+		F9B3C2071771FCD100C92009 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
 		F9D9773013B794710086F226 /* UITextInput.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D9772F13B794700086F226 /* UITextInput.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9D9774113B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */; };
 		F9D9774213B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */; };
@@ -411,7 +412,6 @@
 		F9EB69531768EBE700EBBD4C /* UIColorRep.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EB69511768EBE700EBBD4C /* UIColorRep.m */; };
 		F9EB69541768EBE700EBBD4C /* UIColorRep.h in Headers */ = {isa = PBXBuildFile; fileRef = F9EB69521768EBE700EBBD4C /* UIColorRep.h */; };
 		F9EB69561768EE6B00EBBD4C /* AppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = F9EB69551768EE6B00EBBD4C /* AppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F9FFDE2115C6E88A000EDAA0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
 		F9FFDE2915C6E88A000EDAA0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2815C6E88A000EDAA0 /* main.m */; };
 		F9FFDE2D15C6E88A000EDAA0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2C15C6E88A000EDAA0 /* AppDelegate.m */; };
 		F9FFDE3415C6E88A000EDAA0 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
@@ -902,6 +902,7 @@
 				F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */,
 				F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */,
 				F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */,
+				F9B3C2071771FCD100C92009 /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -911,7 +912,6 @@
 			files = (
 				F976749F176945910073489E /* Foundation.framework in Frameworks */,
 				F976749E1769458C0073489E /* UIKit.framework in Frameworks */,
-				F9FFDE2115C6E88A000EDAA0 /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

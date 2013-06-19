@@ -44,6 +44,24 @@ describe(@"UILabel", ^{
             });
         });
     });
+    
+    context(@"-textRectForBounds:limitedToNumberOfLines:", ^{
+        context(@"when given a string", ^{
+            UILabel* label = [[UILabel alloc] initWithFrame:CGRectZero];
+            label.text = \
+                @"The quick brown\n" \
+                @"fox jumps over\n"
+                @"the lazy dog";
+            
+            context(@"constrained to 100x100 and one line", ^{
+                CGRect rect = [label textRectForBounds:CGRectMake(0, 0, 100, 100) limitedToNumberOfLines:1];
+                
+                it(@"should compute a size of 91x21", ^{
+                    [[NSStringFromCGRect(rect) should] equal:NSStringFromCGRect(CGRectMake(0, 0, 91, 21))];
+                });
+            });
+        });
+    });
 });
 
 SPEC_END
