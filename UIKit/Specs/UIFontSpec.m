@@ -46,15 +46,15 @@ describe(@"UIFont", ^{
         });
     });
     context(@"familyNames", ^{
-        NSArray* fonts = [UIFont familyNames];
+        NSArray* families = [UIFont familyNames];
         it(@"should return an NSArray", ^{
-            [[fonts should] beKindOfClass:[NSArray class]];
+            [[families should] beKindOfClass:[NSArray class]];
         });
         it(@"should be non zero in count", ^{
-            [[@([fonts count]) should] beGreaterThan:@(0)];
+            [[@([families count]) should] beGreaterThan:@(0)];
         });
         it(@"elements should be NSStrings", ^{
-            [[[fonts lastObject] should] beKindOfClass:[NSString class]];
+            [[[families lastObject] should] beKindOfClass:[NSString class]];
         });
     });
     context(@"fontNamesForFamilyName", ^{
