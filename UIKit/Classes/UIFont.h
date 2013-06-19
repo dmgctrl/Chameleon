@@ -46,7 +46,7 @@
 
 #pragma mark Getting Font Name Attributes
 @property (nonatomic, readonly, retain) NSString* familyName;
-@property (nonatomic, readonly, strong) NSString* fontName;
+@property (nonatomic, readonly, retain) NSString* fontName;
 
 #pragma mark Getting Font Metrics
 @property (nonatomic, readonly) CGFloat pointSize;
