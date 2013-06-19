@@ -15,7 +15,9 @@ describe(@"UIFont", ^{
             UIFont* font2 = [font1 fontWithSize:-13];
             [[@([font2 pointSize]) should] equal:@(-13)];
         });
-
+        context(@"systemFontOfSize", ^{
+            
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
