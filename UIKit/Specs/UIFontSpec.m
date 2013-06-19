@@ -60,6 +60,15 @@ describe(@"UIFont", ^{
         });
         context(@"fontNamesForFamilyName", ^{
             NSArray* fonts = [UIFont fontNamesForFamilyName:[families lastObject]];
+            it(@"should return an NSArray", ^{
+                [[fonts should] beKindOfClass:[NSArray class]];
+            });
+            it(@"should be non zero in count", ^{
+                [[@([fonts count]) should] beGreaterThan:@(0)];
+            });
+            it(@"elements should be NSStrings", ^{
+                [[[fonts lastObject] should] beKindOfClass:[NSString class]];
+            });            
             it(@"should be full of font names with which one can instantiate a font", ^{
                 UIFont* font = [UIFont fontWithName:[fonts lastObject] size:10];
                 [[font should] beNonNil];
