@@ -7,9 +7,6 @@ describe(@"UIFont", ^{
             it(@"returns same bogus size", ^{
                 [[theValue([font1 pointSize]) should] equal:theValue(-10.0)];
             });
-            it(@"returns same font name", ^{
-                [[[font1 fontName] should] equal:@"TimesNewRomanPSMT"];
-            });
         });
         context(@"-fontWithSize:", ^{
             UIFont* font2 = [font1 fontWithSize:-13];
@@ -22,26 +19,17 @@ describe(@"UIFont", ^{
             it(@"should return same bogus number", ^{
                 [[@([font2 pointSize]) should] equal:@(-10)];
             });
-            it(@"should have the correct name", ^{
-                [[[font2 fontName] should] equal:@".HelveticaNeueUI"];
-            });
         });
         context(@"boldSystemFontOfSize", ^{
             UIFont* font2 = [UIFont boldSystemFontOfSize:-10];
             it(@"should return same bogus number", ^{
                 [[@([font2 pointSize]) should] equal:@(-10)];
             });
-            it(@"should have the correct name", ^{
-                [[[font2 fontName] should] equal:@".HelveticaNeueUI-Bold"];
-            });
         });
         context(@"italicSystemFontOfSize", ^{
             UIFont* font2 = [UIFont italicSystemFontOfSize:-10];
             it(@"should return same bogus number", ^{
                 [[@([font2 pointSize]) should] equal:@(-10)];
-            });
-            it(@"should have the correct name", ^{
-                [[[font2 fontName] should] equal:@".HelveticaNeueUI-Italic"];
             });
         });
     });
