@@ -56,4 +56,7 @@
 @property (nonatomic, readonly) CGFloat xHeight;
 @property (nonatomic, readonly) CGFloat lineHeight;
 
+#pragma mark Getting System Font Information
++ (CGFloat)labelFontSize;
+
 @end
