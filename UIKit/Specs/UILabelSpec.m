@@ -47,7 +47,7 @@ describe(@"UILabel", ^{
     
     context(@"-textRectForBounds:limitedToNumberOfLines:", ^{
         context(@"when given a string", ^{
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectZero];
+            UILabel* label = [[UILabel alloc] initWithFrame:(CGRect){}];
             label.text = \
                 @"The quick brown\n" \
                 @"fox jumps over\n"
