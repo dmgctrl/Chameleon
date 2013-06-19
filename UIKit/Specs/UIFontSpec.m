@@ -1,6 +1,9 @@
 SPEC_BEGIN(UIFontSpec)
 
 describe(@"UIFont", ^{
+    context(@"+fontWithName:size:", ^{
+        
+    });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
             UIFont* font1 = [UIFont systemFontOfSize:17.0];
