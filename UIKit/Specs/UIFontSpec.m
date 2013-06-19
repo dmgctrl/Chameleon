@@ -97,7 +97,9 @@ describe(@"UIFont", ^{
         });
     });
     context(@"system font info", ^{
-        
+        it(@"labelFontSize should return a font size", ^{
+            [[@([UIFont labelFontSize]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
