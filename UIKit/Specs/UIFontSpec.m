@@ -22,7 +22,9 @@ describe(@"UIFont", ^{
             it(@"should return same bogus number", ^{
                 [[@([font2 pointSize]) should] equal:@(-10)];
             });
-            
+            it(@"should have the correct name", ^{
+                [[[font2 fontName] should] equal:@".HelveticaNeueUI"];
+            });
         });
     });
     context(@"+systemFontOfSize:", ^{
