@@ -49,7 +49,11 @@ typedef enum {
     UITextFieldViewModeAlways
 } UITextFieldViewMode;
 
-@class UIFont, UIColor, UITextField, UIImage, UITextLayer;
+//@class UIFont;
+//@class UIColor;
+@class UIImage;
+
+@class UITextField;
 
 @protocol UITextFieldDelegate <NSObject>
 @optional

@@ -75,7 +75,9 @@ enum {
 };
 typedef NSUInteger UITableViewCellStateMask;
 
-@class UITableViewCellSeparator, UILabel, UIImageView;
+@class UITableViewCellSeparator;
+@class UILabel;
+@class UIImageView;
 
 @interface UITableViewCell : UIView <NSCoding>
 

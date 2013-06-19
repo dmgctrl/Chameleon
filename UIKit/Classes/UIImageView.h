@@ -30,7 +30,6 @@
 #import <UIKit/UIView.h>
 
 @class UIImage;
-@class CAKeyframeAnimation;
 
 @interface UIImageView : UIView <NSCoding>
 
