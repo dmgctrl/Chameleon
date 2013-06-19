@@ -66,14 +66,6 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     self.baselineAdjustment = UIBaselineAdjustmentAlignBaselines;
 }
 
-- (id) initWithFrame:(CGRect)frame
-{
-    if (nil != (self = [super initWithFrame:frame])) {
-        [self _commonInitForUILabel];
-    }
-    return self;
-}
-
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
@@ -109,10 +101,21 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return self;
 }
 
-- (void) setText:(NSString*)newText
+- (id) initWithFrame:(CGRect)frame
 {
-    if (_text != newText) {
-        _text = [newText copy];
+    if (nil != (self = [super initWithFrame:frame])) {
+        [self _commonInitForUILabel];
+    }
+    return self;
+}
+
+
+#pragma mark Properties
+
+- (void) setEnabled:(BOOL)newEnabled
+{
+    if (newEnabled != _enabled) {
+        _enabled = newEnabled;
         [self setNeedsDisplay];
     }
 }
@@ -127,10 +130,35 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void) setTextColor:(UIColor*)newColor
+- (void) setFrame:(CGRect)newFrame
 {
-    if (newColor != _textColor) {
-        _textColor = newColor;
+    const BOOL redisplay = !CGSizeEqualToSize(newFrame.size,self.frame.size);
+    [super setFrame:newFrame];
+    if (redisplay) {
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setHighlighted:(BOOL)highlighted
+{
+    if (highlighted != _highlighted) {
+        _highlighted = highlighted;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setLineBreakMode:(UILineBreakMode)newMode
+{
+    if (newMode != _lineBreakMode) {
+        _lineBreakMode = newMode;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setNumberOfLines:(NSInteger)lines
+{
+    if (lines != _numberOfLines) {
+        _numberOfLines = lines;
         [self setNeedsDisplay];
     }
 }
@@ -151,6 +179,14 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
+- (void) setText:(NSString*)newText
+{
+    if (_text != newText) {
+        _text = [newText copy];
+        [self setNeedsDisplay];
+    }
+}
+
 - (void) setTextAlignment:(UITextAlignment)newAlignment
 {
     if (newAlignment != _textAlignment) {
@@ -159,28 +195,21 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void) setLineBreakMode:(UILineBreakMode)newMode
+- (void) setTextColor:(UIColor*)newColor
 {
-    if (newMode != _lineBreakMode) {
-        _lineBreakMode = newMode;
+    if (newColor != _textColor) {
+        _textColor = newColor;
         [self setNeedsDisplay];
     }
 }
 
-- (void) setEnabled:(BOOL)newEnabled
-{
-    if (newEnabled != _enabled) {
-        _enabled = newEnabled;
-        [self setNeedsDisplay];
-    }
-}
 
-- (void) setNumberOfLines:(NSInteger)lines
+#pragma mark Metrics
+
+- (CGSize) sizeThatFits:(CGSize)size
 {
-    if (lines != _numberOfLines) {
-        _numberOfLines = lines;
-        [self setNeedsDisplay];
-    }
+    size = CGSizeMake(((_numberOfLines > 0)? CGFLOAT_MAX : size.width), ((_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight*_numberOfLines)));
+    return [_text sizeWithFont:_font constrainedToSize:size lineBreakMode:_lineBreakMode];
 }
 
 - (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
@@ -196,10 +225,8 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return (CGRect){bounds.origin, {0, 0}};
 }
 
-- (void) drawTextInRect:(CGRect)rect
-{
-    [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
-}
+
+#pragma mark Drawing
 
 - (void) drawRect:(CGRect)rect
 {
@@ -241,27 +268,9 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 	}
 }
 
-- (void) setFrame:(CGRect)newFrame
+- (void) drawTextInRect:(CGRect)rect
 {
-    const BOOL redisplay = !CGSizeEqualToSize(newFrame.size,self.frame.size);
-    [super setFrame:newFrame];
-    if (redisplay) {
-        [self setNeedsDisplay];
-    }
-}
-
-- (CGSize) sizeThatFits:(CGSize)size
-{
-    size = CGSizeMake(((_numberOfLines > 0)? CGFLOAT_MAX : size.width), ((_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight*_numberOfLines)));
-    return [_text sizeWithFont:_font constrainedToSize:size lineBreakMode:_lineBreakMode];
-}
-
-- (void) setHighlighted:(BOOL)highlighted
-{
-    if (highlighted != _highlighted) {
-        _highlighted = highlighted;
-        [self setNeedsDisplay];
-    }
+    [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
 }
 
 @end
