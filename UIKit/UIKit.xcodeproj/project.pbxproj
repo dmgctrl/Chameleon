@@ -382,6 +382,9 @@
 		F97BE02115AFD6E00081F45A /* UIAppearanceProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */; };
 		F97BE02215AFD6E00081F45A /* UIAppearanceProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */; };
 		F97BE02315AFD6E00081F45A /* UIAppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */; };
+		F99115461772230200B4389A /* UIKitDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115451772230200B4389A /* UIKitDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F99115481772236700B4389A /* UINibDeclarations.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115471772236700B4389A /* UINibDeclarations.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F991154A177223D600B4389A /* NSAttributedString.h in Headers */ = {isa = PBXBuildFile; fileRef = F9911549177223D600B4389A /* NSAttributedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F99E83AD13CF7E7F00107358 /* UICustomObject.h in Headers */ = {isa = PBXBuildFile; fileRef = F99E83AB13CF7E7F00107358 /* UICustomObject.h */; };
 		F99E83AE13CF7E7F00107358 /* UICustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E83AC13CF7E7F00107358 /* UICustomObject.m */; };
 		F99E83B213CF7EEE00107358 /* UIProxyObject.h in Headers */ = {isa = PBXBuildFile; fileRef = F99E83B013CF7EEE00107358 /* UIProxyObject.h */; };
@@ -846,6 +849,9 @@
 		F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProperty.m; sourceTree = "<group>"; };
 		F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearanceProxy.h; sourceTree = "<group>"; };
 		F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProxy.m; sourceTree = "<group>"; };
+		F99115451772230200B4389A /* UIKitDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKitDefines.h; sourceTree = "<group>"; };
+		F99115471772236700B4389A /* UINibDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDeclarations.h; sourceTree = "<group>"; };
+		F9911549177223D600B4389A /* NSAttributedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedString.h; sourceTree = "<group>"; };
 		F99E83AB13CF7E7F00107358 /* UICustomObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICustomObject.h; sourceTree = "<group>"; };
 		F99E83AC13CF7E7F00107358 /* UICustomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICustomObject.m; sourceTree = "<group>"; };
 		F99E83B013CF7EEE00107358 /* UIProxyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIProxyObject.h; sourceTree = "<group>"; };
@@ -1060,10 +1066,14 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1489851E12EE2CFE003D4751 /* UIKit.h */,
+				F99115451772230200B4389A /* UIKitDefines.h */,
+				F99115471772236700B4389A /* UINibDeclarations.h */,
 				789CF896133A3CD500250AB4 /* NSFetchedResultsController.h */,
 				789CF897133A3CD500250AB4 /* NSFetchedResultsController.m */,
 				148984E512EE2CFE003D4751 /* NSIndexPath+UITableView.h */,
 				148984E612EE2CFE003D4751 /* NSIndexPath+UITableView.m */,
+				F9911549177223D600B4389A /* NSAttributedString.h */,
 				148984E712EE2CFE003D4751 /* UIAcceleration.h */,
 				148984E812EE2CFE003D4751 /* UIAcceleration.m */,
 				148984E912EE2CFE003D4751 /* UIAccelerometer.h */,
@@ -1123,7 +1133,6 @@
 				1489851B12EE2CFE003D4751 /* UIImageView.m */,
 				537472D3133ADD4B00EBD5EA /* UIInterface.h */,
 				537472D4133ADD4B00EBD5EA /* UIInterface.m */,
-				1489851E12EE2CFE003D4751 /* UIKit.h */,
 				1489852112EE2CFE003D4751 /* UILabel.h */,
 				1489852212EE2CFE003D4751 /* UILabel.m */,
 				1489852312EE2CFE003D4751 /* UILongPressGestureRecognizer.h */,
@@ -1741,6 +1750,9 @@
 				F93791A2176F4396006439EC /* UIStoryboardSegue+UIPrivate.h in Headers */,
 				F947AF14176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h in Headers */,
 				F947AF18176F5E060057FC9A /* UIStoryboardPushSegue.h in Headers */,
+				F99115461772230200B4389A /* UIKitDefines.h in Headers */,
+				F99115481772236700B4389A /* UINibDeclarations.h in Headers */,
+				F991154A177223D600B4389A /* NSAttributedString.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
