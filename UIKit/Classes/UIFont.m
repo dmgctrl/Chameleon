@@ -244,7 +244,7 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
     return (__bridge NSFont*)_font;
 }
 
-- (CTFontRef) _CTFont
+- (CTFontRef) CTFont
 {
     return _font;
 }
