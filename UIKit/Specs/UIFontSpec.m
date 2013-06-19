@@ -79,7 +79,10 @@ describe(@"UIFont", ^{
         });
     });
     context(@"properties", ^{
-        
+        UIFont* font = [UIFont systemFontOfSize:10];
+        it(@"ascender should exist", ^{
+            [[@([font ascender]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
