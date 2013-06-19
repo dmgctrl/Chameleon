@@ -2,7 +2,7 @@ SPEC_BEGIN(UIFontSpec)
 
 describe(@"UIFont", ^{
     context(@"with negative sizes", ^{
-        UIFont* font1 = [UIFont fontWithName:@"Times" size:-10.0];
+        UIFont* font1 = [UIFont fontWithName:@"Times" size:(CGFloat)-10];
         context(@"+fontWithName:size:", ^{
             it(@"returns same bogus size", ^{
                 [[theValue([font1 pointSize]) should] equal:theValue(-10.0)];
@@ -11,10 +11,11 @@ describe(@"UIFont", ^{
                 [[[font1 fontName] should] equal:@"TimesNewRomanPSMT"];
             });
         });
-    });
         context(@"-fontWithSize:", ^{
-        
+            UIFont* font2 = [font1 fontWithSize:(CGFloat)13];
         });
+    });
+
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
             UIFont* font1 = [UIFont systemFontOfSize:17.0];
