@@ -106,6 +106,9 @@ describe(@"UIFont", ^{
         it(@"smallSystemFontSize should return a font size", ^{
             [[@([UIFont smallSystemFontSize]) should] beNonNil];
         });
+        it(@"systemFontSize should return a font size", ^{
+            [[@([UIFont systemFontSize]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
