@@ -2,8 +2,8 @@ SPEC_BEGIN(UIFontSpec)
 
 describe(@"UIFont", ^{
     context(@"with negative sizes", ^{
+        UIFont* font1 = [UIFont fontWithName:@"Times" size:-10.0];
         context(@"+fontWithName:size:", ^{
-            UIFont* font1 = [UIFont fontWithName:@"Times" size:-10.0];
             it(@"returns same bogus size", ^{
                 [[theValue([font1 pointSize]) should] equal:theValue(-10.0)];
             });
