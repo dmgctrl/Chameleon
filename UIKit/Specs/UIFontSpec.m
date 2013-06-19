@@ -13,11 +13,11 @@ describe(@"UIFont", ^{
         });
         context(@"-fontWithSize:", ^{
             UIFont* font2 = [font1 fontWithSize:-13];
-            [[@([font2 pointSize]) should] equal:@(-13)];
+            it(@"should return same bogus size", ^{
+                [[@([font2 pointSize]) should] equal:@(-13.0)];
+            });
         });
-        context(@"systemFontOfSize", ^{
-            
-        });
+        
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
