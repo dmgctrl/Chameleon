@@ -27,11 +27,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Quartz/Quartz.h>
-#import "UIToolbar.h"
-#import "UIView.h"
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <UIKit/UIToolbar.h>
+#import <UIKit/UIView.h>
 
-@class UIColor, UINavigationItem, UINavigationBar;
+@class UIColor;
+@class UINavigationItem;
+@class UINavigationBar;
+@class UIBarButtonItem;
 
 @protocol UINavigationBarDelegate <NSObject>
 @optional
@@ -53,5 +57,23 @@
 @property (nonatomic, readonly, strong) UINavigationItem *backItem;
 @property (nonatomic, copy) NSArray *items;
 @property (nonatomic, assign) id delegate;
+
+@end
+
+
+@interface UINavigationItem : NSObject
+
+- (id)initWithTitle:(NSString *)title;
+- (void)setLeftBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;
+- (void)setRightBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;
+- (void)setHidesBackButton:(BOOL)hidesBackButton animated:(BOOL)animated;
+
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *prompt;
+@property (nonatomic, strong) UIBarButtonItem *backBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *rightBarButtonItem;
+@property (nonatomic, strong) UIView *titleView;
+@property (nonatomic, assign) BOOL hidesBackButton;
 
 @end

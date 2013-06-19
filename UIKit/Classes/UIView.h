@@ -27,9 +27,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIResponder.h"
-#import "UIGeometry.h"
-#import "UIAppearance.h"
+#import <UIKit/UIResponder.h>
+#import <UIKit/UIGeometry.h>
+#import <UIKit/UIAppearance.h>
 
 
 enum {
@@ -101,7 +101,10 @@ enum {
 };
 typedef NSUInteger UIViewAnimationOptions;
 
-@class UIColor, CALayer, UIViewController, UIGestureRecognizer;
+@class UIColor;
+@class CALayer;
+@class UIViewController;
+@class UIGestureRecognizer;
 
 @interface UIView : UIResponder <NSCoding>
 

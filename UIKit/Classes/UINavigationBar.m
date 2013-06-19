@@ -32,7 +32,6 @@
 #import "UIGraphics.h"
 #import "UIColor.h"
 #import "UILabel.h"
-#import "UINavigationItem.h"
 #import "UINavigationItem+UIPrivate.h"
 #import "UIFont.h"
 #import "UIImage+UIPrivate.h"

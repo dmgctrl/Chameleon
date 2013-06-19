@@ -30,7 +30,7 @@
 #import "UIApplication.h"
 #import <AppKit/NSApplication.h>
 
-extern NSString *const UIApplicationNetworkActivityIndicatorChangedNotification;
+UIKIT_EXTERN NSString *const UIApplicationNetworkActivityIndicatorChangedNotification;
 
 @interface UIApplication (AppKitIntegration)
 

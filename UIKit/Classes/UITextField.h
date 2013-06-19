@@ -27,13 +27,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
-#import "UIStringDrawing.h"
-#import "UITextInputTraits.h"
+#import <UIKit/UIControl.h>
+#import <UIKit/UIStringDrawing.h>
+#import <UIKit/UITextInputTraits.h>
 
-extern NSString *const UITextFieldTextDidBeginEditingNotification;
-extern NSString *const UITextFieldTextDidChangeNotification;
-extern NSString *const UITextFieldTextDidEndEditingNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidBeginEditingNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidEndEditingNotification;
 
 typedef enum {
     UITextBorderStyleNone,
@@ -49,7 +49,9 @@ typedef enum {
     UITextFieldViewModeAlways
 } UITextFieldViewMode;
 
-@class UIFont, UIColor, UITextField, UIImage, UITextLayer;
+@class UIImage;
+
+@class UITextField;
 
 @protocol UITextFieldDelegate <NSObject>
 @optional

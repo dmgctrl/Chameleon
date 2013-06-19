@@ -40,6 +40,8 @@
 #import "UIWindow.h"
 #import "UIKitView.h"
 #import "UIView+UIPrivate.h"
+#import "UIPopoverController.h"
+
 
 NSString *const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
 NSString *const UIScreenDidDisconnectNotification = @"UIScreenDidDisconnectNotification";

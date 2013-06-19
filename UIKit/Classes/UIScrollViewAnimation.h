@@ -40,5 +40,5 @@
 
 @end
 
-extern CGFloat UILinearInterpolation(CGFloat t, CGFloat start, CGFloat end);
-extern CGFloat UIQuadraticEaseOut(CGFloat t, CGFloat start, CGFloat end);
+UIKIT_EXTERN CGFloat UILinearInterpolation(CGFloat t, CGFloat start, CGFloat end);
+UIKIT_EXTERN CGFloat UIQuadraticEaseOut(CGFloat t, CGFloat start, CGFloat end);

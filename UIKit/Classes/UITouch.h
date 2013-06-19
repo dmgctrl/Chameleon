@@ -52,7 +52,8 @@ typedef enum {
     _UITouchDiscreteGestureMouseMove    // the mouse moved but wasn't in a gesture or the button was not being held down
 } _UITouchGesture;
 
-@class UIView, UIWindow;
+@class UIView;
+@class UIWindow;
 
 @interface UITouch : NSObject 
 

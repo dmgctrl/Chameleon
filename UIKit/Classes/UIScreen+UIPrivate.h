@@ -29,7 +29,11 @@
 
 #import "UIScreen.h"
 
-@class UIView, UIEvent;
+@class CALayer;
+@class UIView;
+@class UIEvent;
+@class UIPopoverController;
+@class UIKitView;
 
 @interface UIScreen () {
     UIKitView *_UIKitView;

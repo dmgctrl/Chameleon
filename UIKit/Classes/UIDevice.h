@@ -28,8 +28,9 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitDefines.h>
 
-extern NSString *const UIDeviceOrientationDidChangeNotification;
+UIKIT_EXTERN NSString *const UIDeviceOrientationDidChangeNotification;
 
 typedef enum {
     UIDeviceOrientationUnknown,
