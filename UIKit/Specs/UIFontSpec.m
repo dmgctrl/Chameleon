@@ -50,6 +50,9 @@ describe(@"UIFont", ^{
         it(@"should return an NSArray", ^{
             [[fonts should] beKindOfClass:[NSArray class]];
         });
+        it(@"should be non zero in count", ^{
+            [[@([fonts count]) should] beGreaterThan:@(0)];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
