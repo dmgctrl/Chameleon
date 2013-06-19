@@ -45,22 +45,23 @@ describe(@"UIFont", ^{
             });
         });
     });
-    context(@"familyNames", ^{
+    context(@"fonty arrays", ^{
         NSArray* families = [UIFont familyNames];
-        it(@"should return an NSArray", ^{
-            [[families should] beKindOfClass:[NSArray class]];
+        context(@"familyNames", ^{
+            it(@"should return an NSArray", ^{
+                [[families should] beKindOfClass:[NSArray class]];
+            });
+            it(@"should be non zero in count", ^{
+                [[@([families count]) should] beGreaterThan:@(0)];
+            });
+            it(@"elements should be NSStrings", ^{
+                [[[families lastObject] should] beKindOfClass:[NSString class]];
+            });
         });
-        it(@"should be non zero in count", ^{
-            [[@([families count]) should] beGreaterThan:@(0)];
-        });
-        it(@"elements should be NSStrings", ^{
-            [[[families lastObject] should] beKindOfClass:[NSString class]];
+        context(@"fontNamesForFamilyName", ^{
+            
         });
     });
-    context(@"fontNamesForFamilyName", ^{
-        
-    });
-
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
             UIFont* font1 = [UIFont systemFontOfSize:17.0];
