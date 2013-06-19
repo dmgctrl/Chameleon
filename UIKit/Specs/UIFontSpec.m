@@ -46,7 +46,9 @@ describe(@"UIFont", ^{
         });
     });
     context(@"familyNames", ^{
-        
+        it(@"should return an NSArray", ^{
+            [[[UIFont familyNames] should] beKindOfClass:[NSArray class]];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
