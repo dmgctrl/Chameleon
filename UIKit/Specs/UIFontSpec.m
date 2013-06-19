@@ -18,6 +18,10 @@ describe(@"UIFont", ^{
             });
         });
         context(@"systemFontOfSize", ^{
+            UIFont* font2 = [UIFont systemFontOfSize:-10];
+            it(@"should return same bogus number", ^{
+                [[@([font2 pointSize]) should] equal:@(-10)];
+            });
             
         });
     });
