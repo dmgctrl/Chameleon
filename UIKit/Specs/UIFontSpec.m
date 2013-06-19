@@ -86,6 +86,9 @@ describe(@"UIFont", ^{
         it(@"descender should exist", ^{
             [[@([font descender]) should] beNonNil];
         });
+        it(@"capHeight should exist", ^{
+            [[@([font capHeight]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
