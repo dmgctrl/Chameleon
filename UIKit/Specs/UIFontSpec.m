@@ -100,6 +100,9 @@ describe(@"UIFont", ^{
         it(@"labelFontSize should return a font size", ^{
             [[@([UIFont labelFontSize]) should] beNonNil];
         });
+        it(@"buttonFontSize should return a font size", ^{
+            [[@([UIFont buttonFontSize]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
