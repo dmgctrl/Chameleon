@@ -38,7 +38,10 @@ typedef enum {
 UIKIT_EXTERN const float UIScrollViewDecelerationRateNormal;
 UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 
-@class UIScroller, UIImageView, UIScrollView, UIPanGestureRecognizer, UIScrollWheelGestureRecognizer;
+@class UIScroller;
+@class UIScrollView;
+@class UIPanGestureRecognizer;
+@class UIScrollWheelGestureRecognizer;
 
 @protocol UIScrollViewDelegate <NSObject>
 @optional

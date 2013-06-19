@@ -121,7 +121,9 @@ typedef NSUInteger UIBackgroundTaskIdentifier;
 UIKIT_EXTERN const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXTERN const NSTimeInterval UIMinimumKeepAliveTimeout;
 
-@class UIWindow, UIApplication, UILocalNotification;
+@class UIWindow;
+@class UIApplication;
+@class UILocalNotification;
 
 @interface UIApplication : UIResponder
 

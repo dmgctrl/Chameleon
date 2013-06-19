@@ -29,7 +29,9 @@
 
 #import <UIKit/UIViewController.h>
 
-@class UINavigationBar, UIToolbar, UIViewController;
+@class UINavigationBar;
+@class UIToolbar;
+@class UIViewController;
 
 @protocol UINavigationControllerDelegate <NSObject>
 @optional

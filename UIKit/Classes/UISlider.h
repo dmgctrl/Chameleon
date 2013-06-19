@@ -35,7 +35,7 @@
 
 #import <UIKit/UIControl.h>
 
-@class UIImageView, UIImage;
+@class UIImage;
 
 @interface UISlider : UIControl
 

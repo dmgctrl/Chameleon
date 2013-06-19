@@ -30,7 +30,7 @@
 #import "UIView.h"
 #import "UIScrollView.h"
 
-@class UIImageView, UIScroller;
+@class UIScroller;
 
 CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize);
 

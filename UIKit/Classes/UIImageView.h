@@ -29,7 +29,8 @@
 
 #import <UIKit/UIView.h>
 
-@class UIImage, CAKeyframeAnimation;
+@class UIImage;
+@class CAKeyframeAnimation;
 
 @interface UIImageView : UIView <NSCoding>
 

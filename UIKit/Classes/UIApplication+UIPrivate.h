@@ -29,7 +29,10 @@
 
 #import "UIApplication.h"
 
-@class UIWindow, UIScreen, NSEvent, UIPopoverController;
+@class UIWindow;
+@class UIScreen;
+@class NSEvent;
+@class UIPopoverController;
 
 UIKIT_EXTERN CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent);
 

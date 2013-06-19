@@ -35,8 +35,8 @@
 
 #import <UIKit/UITableView.h>
 
-@class UISearchBar, UITableView, UIViewController, UIPopoverController;
-@protocol UITableViewDataSource, UITableViewDelegate, UISearchDisplayDelegate;
+@class UISearchBar;
+@protocol UISearchDisplayDelegate;
 
 @interface UISearchDisplayController : NSObject 
 

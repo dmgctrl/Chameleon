@@ -34,7 +34,7 @@ UIKIT_EXTERN NSString *const UIScreenDidConnectNotification;
 UIKIT_EXTERN NSString *const UIScreenDidDisconnectNotification;
 UIKIT_EXTERN NSString *const UIScreenModeDidChangeNotification;
 
-@class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
+@class UIScreenMode;
 
 @interface UIScreen : NSObject
 

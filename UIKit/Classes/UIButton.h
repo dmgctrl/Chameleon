@@ -38,7 +38,9 @@ typedef enum {
     UIButtonTypeContactAdd,
 } UIButtonType;
 
-@class UILabel, UIImageView, UIImage;
+@class UILabel;
+@class UIImageView;
+@class UIImage;
 
 @interface UIButton : UIControl <NSCoding>
 

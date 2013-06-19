@@ -41,7 +41,12 @@ enum {
 };
 typedef NSUInteger UIPopoverArrowDirection;
 
-@class UIView, UIViewController, UIPopoverController, UIBarButtonItem, UIPopoverView, UIImage;
+@class UIView;
+@class UIViewController;
+@class UIPopoverController;
+@class UIBarButtonItem;
+@class UIPopoverView;
+@class UIImage;
 
 @protocol UIPopoverControllerDelegate <NSObject>
 @optional
