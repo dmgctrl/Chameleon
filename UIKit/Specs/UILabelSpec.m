@@ -35,6 +35,14 @@ describe(@"UILabel", ^{
                 [[textColor should] equal:[UIColor blackColor]];
             });
         });
+
+        context(@"textAlignment", ^{
+            UITextAlignment textAlignment = [label textAlignment];
+            
+            it(@"is NSTextAlignmentLeft", ^{
+                [[@(textAlignment) should] equal:@(UITextAlignmentLeft)];
+            });
+        });
     });
 });
 
