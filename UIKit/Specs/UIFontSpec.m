@@ -2,7 +2,10 @@ SPEC_BEGIN(UIFontSpec)
 
 describe(@"UIFont", ^{
     context(@"+fontWithName:size:", ^{
-        
+        UIFont* font1 = [UIFont fontWithName:@"Times" size:-10];
+        it(@"returns same bogus size", ^{
+            [[theValue([font1 pointSize]) should] equal:theValue(-10.0)];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
