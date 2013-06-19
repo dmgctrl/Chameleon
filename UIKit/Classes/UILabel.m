@@ -109,7 +109,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return self;
 }
 
-- (void)setText:(NSString *)newText
+- (void) setText:(NSString*)newText
 {
     if (_text != newText) {
         _text = [newText copy];
@@ -117,7 +117,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setFont:(UIFont *)newFont
+- (void) setFont:(UIFont*)newFont
 {
     assert(newFont != nil);
 
@@ -127,7 +127,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setTextColor:(UIColor *)newColor
+- (void) setTextColor:(UIColor*)newColor
 {
     if (newColor != _textColor) {
         _textColor = newColor;
@@ -135,7 +135,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setShadowColor:(UIColor *)newColor
+- (void) setShadowColor:(UIColor*)newColor
 {
     if (newColor != _shadowColor) {
         _shadowColor = newColor;
@@ -143,7 +143,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setShadowOffset:(CGSize)newOffset
+- (void) setShadowOffset:(CGSize)newOffset
 {
     if (!CGSizeEqualToSize(newOffset,_shadowOffset)) {
         _shadowOffset = newOffset;
@@ -151,7 +151,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setTextAlignment:(UITextAlignment)newAlignment
+- (void) setTextAlignment:(UITextAlignment)newAlignment
 {
     if (newAlignment != _textAlignment) {
         _textAlignment = newAlignment;
@@ -159,7 +159,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setLineBreakMode:(UILineBreakMode)newMode
+- (void) setLineBreakMode:(UILineBreakMode)newMode
 {
     if (newMode != _lineBreakMode) {
         _lineBreakMode = newMode;
@@ -167,7 +167,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setEnabled:(BOOL)newEnabled
+- (void) setEnabled:(BOOL)newEnabled
 {
     if (newEnabled != _enabled) {
         _enabled = newEnabled;
@@ -175,7 +175,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setNumberOfLines:(NSInteger)lines
+- (void) setNumberOfLines:(NSInteger)lines
 {
     if (lines != _numberOfLines) {
         _numberOfLines = lines;
@@ -183,7 +183,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
+- (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
     if ([_text length] > 0) {
         CGSize maxSize = bounds.size;
@@ -196,12 +196,12 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return (CGRect){bounds.origin, {0, 0}};
 }
 
-- (void)drawTextInRect:(CGRect)rect
+- (void) drawTextInRect:(CGRect)rect
 {
     [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
 }
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)rect
 {
     if ([_text length] > 0) {
         CGContextSaveGState(UIGraphicsGetCurrentContext());
@@ -241,7 +241,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 	}
 }
 
-- (void)setFrame:(CGRect)newFrame
+- (void) setFrame:(CGRect)newFrame
 {
     const BOOL redisplay = !CGSizeEqualToSize(newFrame.size,self.frame.size);
     [super setFrame:newFrame];
@@ -250,13 +250,13 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (CGSize)sizeThatFits:(CGSize)size
+- (CGSize) sizeThatFits:(CGSize)size
 {
     size = CGSizeMake(((_numberOfLines > 0)? CGFLOAT_MAX : size.width), ((_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight*_numberOfLines)));
     return [_text sizeWithFont:_font constrainedToSize:size lineBreakMode:_lineBreakMode];
 }
 
-- (void)setHighlighted:(BOOL)highlighted
+- (void) setHighlighted:(BOOL)highlighted
 {
     if (highlighted != _highlighted) {
         _highlighted = highlighted;
