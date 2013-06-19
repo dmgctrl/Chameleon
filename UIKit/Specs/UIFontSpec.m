@@ -92,6 +92,9 @@ describe(@"UIFont", ^{
         it(@"xHeight should exist", ^{
             [[@([font xHeight]) should] beNonNil];
         });
+        it(@"lineHeight should exist", ^{
+            [[@([font lineHeight]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
