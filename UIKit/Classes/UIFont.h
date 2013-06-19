@@ -60,5 +60,6 @@
 + (CGFloat)labelFontSize;
 + (CGFloat)buttonFontSize;
 + (CGFloat)smallSystemFontSize;
++ (CGFloat)systemFontSize;
 
 @end
