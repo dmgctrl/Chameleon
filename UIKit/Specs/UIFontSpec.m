@@ -59,7 +59,11 @@ describe(@"UIFont", ^{
             });
         });
         context(@"fontNamesForFamilyName", ^{
-            
+            NSArray* fonts = [UIFont fontNamesForFamilyName:[families lastObject]];
+            it(@"should be full of font names with which one can instantiate a font", ^{
+                UIFont* font = [UIFont fontWithName:[fonts lastObject] size:10];
+                [[font should] beNonNil];
+            });
         });
     });
     context(@"+systemFontOfSize:", ^{
