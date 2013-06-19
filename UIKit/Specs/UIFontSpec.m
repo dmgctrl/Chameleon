@@ -6,6 +6,9 @@ describe(@"UIFont", ^{
         it(@"returns same bogus size", ^{
             [[theValue([font1 pointSize]) should] equal:theValue(-10.0)];
         });
+        it(@"returns same font name", ^{
+            [[[font1 fontName] should] equal:@"TimesNewRomanPSMT"];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
