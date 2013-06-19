@@ -78,6 +78,9 @@ describe(@"UIFont", ^{
             });
         });
     });
+    context(@"properties", ^{
+        
+    });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
             UIFont* font1 = [UIFont systemFontOfSize:17.0];
