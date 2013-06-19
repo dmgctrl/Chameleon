@@ -27,9 +27,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
-#import "UIStringDrawing.h"
-#import "UITextInputTraits.h"
+#import <UIKit/UIControl.h>
+#import <UIKit/UIStringDrawing.h>
+#import <UIKit/UITextInputTraits.h>
 
 extern NSString *const UITextFieldTextDidBeginEditingNotification;
 extern NSString *const UITextFieldTextDidChangeNotification;

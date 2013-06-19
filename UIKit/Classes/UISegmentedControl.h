@@ -11,9 +11,9 @@
 // - Setting item width is not supported
 // - Setting item content offset is not supported
 
-#import "UIControl.h"
-#import "UIImage.h"
-#import "UIFont.h"
+#import <UIKit/UIControl.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIFont.h>
 
 typedef enum {
   UISegmentedControlStylePlain,     // large plain

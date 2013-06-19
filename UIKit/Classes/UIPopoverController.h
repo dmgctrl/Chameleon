@@ -28,7 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "UIGeometry.h"
+#import <UIKit/UIGeometry.h>
 
 enum {
     UIPopoverArrowDirectionUp = 1UL << 0,

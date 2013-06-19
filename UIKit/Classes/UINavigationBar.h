@@ -27,9 +27,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Quartz/Quartz.h>
-#import "UIToolbar.h"
-#import "UIView.h"
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <UIKit/UIToolbar.h>
+#import <UIKit/UIView.h>
 
 @class UIColor;
 @class UINavigationItem;

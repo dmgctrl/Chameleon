@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UINavigationController.h"
+#import <UIKit/UINavigationController.h>
 
 enum {
     UIImagePickerControllerSourceTypePhotoLibrary,

@@ -27,32 +27,27 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <UIKit/UIKitDefines.h>
 
 @class UIImage;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void UIGraphicsPushContext(CGContextRef ctx);
-void UIGraphicsPopContext(void);
-CGContextRef UIGraphicsGetCurrentContext(void);
+UIKIT_EXTERN void UIGraphicsPushContext(CGContextRef ctx);
+UIKIT_EXTERN void UIGraphicsPopContext(void);
+UIKIT_EXTERN CGContextRef UIGraphicsGetCurrentContext(void);
     
-CGFloat _UIGraphicsGetContextScaleFactor(CGContextRef ctx);
+UIKIT_EXTERN CGFloat _UIGraphicsGetContextScaleFactor(CGContextRef ctx);
 
-void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat scale);
-void UIGraphicsBeginImageContext(CGSize size);
-UIImage *UIGraphicsGetImageFromCurrentImageContext(void);
-void UIGraphicsEndImageContext(void);
+UIKIT_EXTERN void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat scale);
+UIKIT_EXTERN void UIGraphicsBeginImageContext(CGSize size);
+UIKIT_EXTERN UIImage *UIGraphicsGetImageFromCurrentImageContext(void);
+UIKIT_EXTERN void UIGraphicsEndImageContext(void);
 
-void UIRectClip(CGRect rect);
+UIKIT_EXTERN void UIRectClip(CGRect rect);
     
-void UIRectFill(CGRect rect);
-void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode);
+UIKIT_EXTERN void UIRectFill(CGRect rect);
+UIKIT_EXTERN void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode);
 
-void UIRectFrame(CGRect rect);
-void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode);
-
-#ifdef __cplusplus
-}
-#endif
+UIKIT_EXTERN void UIRectFrame(CGRect rect);
+UIKIT_EXTERN void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode);
