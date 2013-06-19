@@ -53,6 +53,9 @@ describe(@"UIFont", ^{
         it(@"should be non zero in count", ^{
             [[@([fonts count]) should] beGreaterThan:@(0)];
         });
+        it(@"elements should be NSStrings", ^{
+            [[[fonts lastObject] should] beKindOfClass:[NSString class]];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
