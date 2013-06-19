@@ -26,6 +26,16 @@ describe(@"UIFont", ^{
                 [[[font2 fontName] should] equal:@".HelveticaNeueUI"];
             });
         });
+        context(@"boldSystemFontOfSize", ^{
+            UIFont* font2 = [UIFont boldSystemFontOfSize:-10];
+            it(@"should return same bogus number", ^{
+                [[@([font2 pointSize]) should] equal:@(-10)];
+            });
+            it(@"should have the correct name", ^{
+                [[[font2 fontName] should] equal:@".HelveticaNeueUI-Bold"];
+            });
+        });
+        
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
