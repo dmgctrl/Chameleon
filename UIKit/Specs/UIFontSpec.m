@@ -83,6 +83,9 @@ describe(@"UIFont", ^{
         it(@"ascender should exist", ^{
             [[@([font ascender]) should] beNonNil];
         });
+        it(@"descender should exist", ^{
+            [[@([font descender]) should] beNonNil];
+        });
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
