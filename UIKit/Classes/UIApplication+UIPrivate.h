@@ -31,7 +31,7 @@
 
 @class UIWindow, UIScreen, NSEvent, UIPopoverController;
 
-extern CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent);
+UIKIT_EXTERN CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent);
 
 @interface UIApplication (UIPrivate)
 - (void)_setKeyWindow:(UIWindow *)newKeyWindow;

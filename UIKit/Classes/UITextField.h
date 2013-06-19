@@ -31,9 +31,9 @@
 #import <UIKit/UIStringDrawing.h>
 #import <UIKit/UITextInputTraits.h>
 
-extern NSString *const UITextFieldTextDidBeginEditingNotification;
-extern NSString *const UITextFieldTextDidChangeNotification;
-extern NSString *const UITextFieldTextDidEndEditingNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidBeginEditingNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidEndEditingNotification;
 
 typedef enum {
     UITextBorderStyleNone,

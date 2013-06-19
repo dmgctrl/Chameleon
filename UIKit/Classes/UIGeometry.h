@@ -28,6 +28,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitDefines.h>
+
 
 typedef struct UIEdgeInsets {
     CGFloat top, left, bottom, right;  // specify amount to inset (positive) for each of the edges. values can be negative to 'outset'
@@ -50,7 +52,7 @@ static inline BOOL UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsets insets1, UIEdgeIns
                              CGRectMake(insets2.left, insets2.top, insets2.right, insets2.bottom));
 }
 
-extern const UIEdgeInsets UIEdgeInsetsZero;
+UIKIT_EXTERN const UIEdgeInsets UIEdgeInsetsZero;
 
 typedef struct UIOffset {
     CGFloat horizontal, vertical;
@@ -64,19 +66,19 @@ static inline BOOL UIOffsetEqualToOffset(UIOffset offset1, UIOffset offset2) {
     return offset1.horizontal == offset2.horizontal && offset1.vertical == offset2.vertical;
 }
 
-extern const UIOffset UIOffsetZero;
+UIKIT_EXTERN const UIOffset UIOffsetZero;
 
-extern NSString *NSStringFromCGPoint(CGPoint p);
-extern NSString *NSStringFromCGRect(CGRect r);
-extern NSString *NSStringFromCGSize(CGSize s);
+UIKIT_EXTERN NSString *NSStringFromCGPoint(CGPoint p);
+UIKIT_EXTERN NSString *NSStringFromCGRect(CGRect r);
+UIKIT_EXTERN NSString *NSStringFromCGSize(CGSize s);
 
-extern NSString *NSStringFromCGAffineTransform(CGAffineTransform transform);
+UIKIT_EXTERN NSString *NSStringFromCGAffineTransform(CGAffineTransform transform);
 
-extern NSString *NSStringFromUIEdgeInsets(UIEdgeInsets insets);
-extern UIEdgeInsets UIEdgeInsetsFromString(NSString* string);
+UIKIT_EXTERN NSString *NSStringFromUIEdgeInsets(UIEdgeInsets insets);
+UIKIT_EXTERN UIEdgeInsets UIEdgeInsetsFromString(NSString* string);
 
-extern CGRect CGRectFromString(NSString* string);
-extern CGPoint CGPointFromString(NSString* string);
+UIKIT_EXTERN CGRect CGRectFromString(NSString* string);
+UIKIT_EXTERN CGPoint CGPointFromString(NSString* string);
 
 NSString *NSStringFromUIOffset(UIOffset offset);
 

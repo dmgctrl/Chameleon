@@ -32,9 +32,9 @@
 #import <UIKit/UIDataDetectors.h>
 #import <UIKit/UITextInputTraits.h>
 
-extern NSString *const UITextViewTextDidBeginEditingNotification;
-extern NSString *const UITextViewTextDidChangeNotification;
-extern NSString *const UITextViewTextDidEndEditingNotification;
+UIKIT_EXTERN NSString *const UITextViewTextDidBeginEditingNotification;
+UIKIT_EXTERN NSString *const UITextViewTextDidChangeNotification;
+UIKIT_EXTERN NSString *const UITextViewTextDidEndEditingNotification;
 
 @class UIColor, UIFont, UITextLayer, UITextView;
 

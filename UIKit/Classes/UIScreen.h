@@ -28,10 +28,11 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitDefines.h>
 
-extern NSString *const UIScreenDidConnectNotification;
-extern NSString *const UIScreenDidDisconnectNotification;
-extern NSString *const UIScreenModeDidChangeNotification;
+UIKIT_EXTERN NSString *const UIScreenDidConnectNotification;
+UIKIT_EXTERN NSString *const UIScreenDidDisconnectNotification;
+UIKIT_EXTERN NSString *const UIScreenModeDidChangeNotification;
 
 @class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
 

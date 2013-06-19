@@ -35,8 +35,8 @@ typedef enum {
     UIScrollViewIndicatorStyleWhite
 } UIScrollViewIndicatorStyle;
 
-extern const float UIScrollViewDecelerationRateNormal;
-extern const float UIScrollViewDecelerationRateFast;
+UIKIT_EXTERN const float UIScrollViewDecelerationRateNormal;
+UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 
 @class UIScroller, UIImageView, UIScrollView, UIPanGestureRecognizer, UIScrollWheelGestureRecognizer;
 
