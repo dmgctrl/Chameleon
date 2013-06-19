@@ -60,6 +60,7 @@ describe(@"UIFont", ^{
         });
         context(@"fontNamesForFamilyName", ^{
             NSArray* fonts = [UIFont fontNamesForFamilyName:[families lastObject]];
+            UIFont* font = [UIFont fontWithName:[fonts lastObject] size:10];
             it(@"should return an NSArray", ^{
                 [[fonts should] beKindOfClass:[NSArray class]];
             });
@@ -70,8 +71,10 @@ describe(@"UIFont", ^{
                 [[[fonts lastObject] should] beKindOfClass:[NSString class]];
             });            
             it(@"should be full of font names with which one can instantiate a font", ^{
-                UIFont* font = [UIFont fontWithName:[fonts lastObject] size:10];
                 [[font should] beNonNil];
+            });
+            it(@"font family should be that of the one used from array used to instantiate", ^{
+                [[[font familyName] should ] equal:[families lastObject]];
             });
         });
     });
