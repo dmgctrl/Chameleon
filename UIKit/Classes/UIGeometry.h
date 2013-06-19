@@ -28,7 +28,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <ApplicationServices/ApplicationServices.h>
 
 typedef struct UIEdgeInsets {
     CGFloat top, left, bottom, right;  // specify amount to inset (positive) for each of the edges. values can be negative to 'outset'

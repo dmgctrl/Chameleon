@@ -28,7 +28,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <ApplicationServices/ApplicationServices.h>
 
 extern NSString *const UIScreenDidConnectNotification;
 extern NSString *const UIScreenDidDisconnectNotification;
