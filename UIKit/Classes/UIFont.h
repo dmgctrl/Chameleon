@@ -59,5 +59,6 @@
 #pragma mark Getting System Font Information
 + (CGFloat)labelFontSize;
 + (CGFloat)buttonFontSize;
++ (CGFloat)smallSystemFontSize;
 
 @end
