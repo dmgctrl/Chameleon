@@ -40,7 +40,7 @@ enum {
 };
 typedef NSUInteger UIWebViewNavigationType;
 
-@class UIWebView, UIViewAdapter, WebView;
+@class UIWebView;
 
 @protocol UIWebViewDelegate <NSObject>
 @optional

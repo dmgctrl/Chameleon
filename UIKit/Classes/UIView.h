@@ -101,7 +101,10 @@ enum {
 };
 typedef NSUInteger UIViewAnimationOptions;
 
-@class UIColor, CALayer, UIViewController, UIGestureRecognizer;
+@class UIColor;
+@class CALayer;
+@class UIViewController;
+@class UIGestureRecognizer;
 
 @interface UIView : UIResponder <NSCoding>
 

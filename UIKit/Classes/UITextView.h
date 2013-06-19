@@ -36,7 +36,10 @@ UIKIT_EXTERN NSString *const UITextViewTextDidBeginEditingNotification;
 UIKIT_EXTERN NSString *const UITextViewTextDidChangeNotification;
 UIKIT_EXTERN NSString *const UITextViewTextDidEndEditingNotification;
 
-@class UIColor, UIFont, UITextLayer, UITextView;
+@class UIColor;
+@class UIFont;
+@class UITextLayer;
+@class UITextView;
 
 @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
 @optional

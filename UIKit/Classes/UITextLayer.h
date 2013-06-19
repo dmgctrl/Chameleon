@@ -31,7 +31,13 @@
 #import <Foundation/Foundation.h>
 #import "UIStringDrawing.h"
 
-@class UICustomNSClipView, UICustomNSTextView, UIColor, UIFont, UIScrollView, UIWindow, UIView;
+@class UICustomNSClipView;
+@class UICustomNSTextView;
+@class UIColor;
+@class UIFont;
+@class UIScrollView;
+@class UIWindow;
+@class UIView;
 
 @protocol UITextLayerContainerViewProtocol <NSObject>
 @required

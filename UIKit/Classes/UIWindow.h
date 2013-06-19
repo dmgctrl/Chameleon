@@ -55,7 +55,8 @@ UIKIT_EXTERN NSString *const UIKeyboardCenterEndUserInfoKey;
 UIKIT_EXTERN NSString *const UIKeyboardBoundsUserInfoKey;
 
 
-@class UIScreen, UIViewController;
+@class UIScreen;
+@class UIViewController;
 
 @interface UIWindow : UIView 
 
