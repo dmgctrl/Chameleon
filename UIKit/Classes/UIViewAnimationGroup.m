@@ -28,8 +28,9 @@
  */
 
 #import "UIViewAnimationGroup.h"
-#import <QuartzCore/QuartzCore.h>
 #import "UIColor.h"
+//
+#import <QuartzCore/QuartzCore.h>
 
 static CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIViewAnimationCurve curve)
 {
