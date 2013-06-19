@@ -139,7 +139,6 @@
 		148985CD12EE2CFF003D4751 /* UISplitViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854712EE2CFE003D4751 /* UISplitViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985CE12EE2CFF003D4751 /* UISplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854812EE2CFE003D4751 /* UISplitViewController.m */; };
 		148985CF12EE2CFF003D4751 /* UIStringDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854912EE2CFE003D4751 /* UIStringDrawing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985D012EE2CFF003D4751 /* UIStringDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854A12EE2CFE003D4751 /* UIStringDrawing.m */; };
 		148985D112EE2CFF003D4751 /* UISwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854B12EE2CFE003D4751 /* UISwitch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985D212EE2CFF003D4751 /* UISwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854C12EE2CFE003D4751 /* UISwitch.m */; };
 		148985D312EE2CFF003D4751 /* UITabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854D12EE2CFE003D4751 /* UITabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -309,7 +308,7 @@
 		F91AA50A176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */; };
 		F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */; };
 		F91AA510176E6A82001B6D5F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
-		F91AA511176E6A89001B6D5F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
+		F91D4D84177246F7004119BF /* UIStringDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854A12EE2CFE003D4751 /* UIStringDrawing.m */; };
 		F922DB5B13D32D6C00469869 /* UIClassSwapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5913D32D6B00469869 /* UIClassSwapper.h */; };
 		F922DB5C13D32D6C00469869 /* UIClassSwapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F922DB5A13D32D6B00469869 /* UIClassSwapper.m */; };
 		F922DB6113D3310000469869 /* UITextSelectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5F13D3310000469869 /* UITextSelectionView.h */; };
@@ -926,7 +925,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F91AA511176E6A89001B6D5F /* UIKit.framework in Frameworks */,
 				F976749D176945330073489E /* Foundation.framework in Frameworks */,
 				F9FFDE5015C6EA05000EDAA0 /* libKiwi.a in Frameworks */,
 				F9FFDE3415C6E88A000EDAA0 /* SenTestingKit.framework in Frameworks */,
@@ -2086,7 +2084,6 @@
 				148985CA12EE2CFF003D4751 /* UIScreenMode.m in Sources */,
 				148985CC12EE2CFF003D4751 /* UIScrollView.m in Sources */,
 				148985CE12EE2CFF003D4751 /* UISplitViewController.m in Sources */,
-				148985D012EE2CFF003D4751 /* UIStringDrawing.m in Sources */,
 				148985D212EE2CFF003D4751 /* UISwitch.m in Sources */,
 				148985D412EE2CFF003D4751 /* UITabBarController.m in Sources */,
 				148985D612EE2CFF003D4751 /* UITableView.m in Sources */,
@@ -2154,6 +2151,7 @@
 				F937919E176F3F96006439EC /* UIStoryboardSegue.m in Sources */,
 				F947AF15176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m in Sources */,
 				F947AF19176F5E060057FC9A /* UIStoryboardPushSegue.m in Sources */,
+				F91D4D84177246F7004119BF /* UIStringDrawing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
