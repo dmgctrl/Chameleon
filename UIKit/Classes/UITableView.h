@@ -147,3 +147,5 @@ typedef enum {
 @property (nonatomic) CGFloat sectionFooterHeight;
 
 @end
+
+#import <UIKit/NSIndexPath+UITableView.h>

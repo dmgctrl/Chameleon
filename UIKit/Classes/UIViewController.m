@@ -32,7 +32,7 @@
 #import "UIScreen.h"
 #import "UIWindow.h"
 #import "UIScreen.h"
-#import "UINavigationItem.h"
+#import "UINavigationBar.h"
 #import "UIBarButtonItem.h"
 #import "UINavigationController.h"
 #import "UISplitViewController.h"

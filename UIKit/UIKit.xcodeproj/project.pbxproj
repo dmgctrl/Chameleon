@@ -111,7 +111,6 @@
 		148985B012EE2CFF003D4751 /* UINavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489852A12EE2CFE003D4751 /* UINavigationBar.m */; };
 		148985B112EE2CFF003D4751 /* UINavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489852B12EE2CFE003D4751 /* UINavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985B212EE2CFF003D4751 /* UINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489852C12EE2CFE003D4751 /* UINavigationController.m */; };
-		148985B312EE2CFF003D4751 /* UINavigationItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489852D12EE2CFE003D4751 /* UINavigationItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985B412EE2CFF003D4751 /* UINavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489852E12EE2CFE003D4751 /* UINavigationItem.m */; };
 		148985B512EE2CFF003D4751 /* UINibLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489852F12EE2CFE003D4751 /* UINibLoading.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985B612EE2CFF003D4751 /* UINibLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853012EE2CFE003D4751 /* UINibLoading.m */; };
@@ -385,6 +384,9 @@
 		F99115461772230200B4389A /* UIKitDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115451772230200B4389A /* UIKitDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F99115481772236700B4389A /* UINibDeclarations.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115471772236700B4389A /* UINibDeclarations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F991154A177223D600B4389A /* NSAttributedString.h in Headers */ = {isa = PBXBuildFile; fileRef = F9911549177223D600B4389A /* NSAttributedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F99115581772269C00B4389A /* UIAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115571772269C00B4389A /* UIAlert.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F991155A177228D100B4389A /* UIKit+CoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = F9911559177228D100B4389A /* UIKit+CoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F991155C1772290600B4389A /* UIKit+SystemConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = F991155B1772290600B4389A /* UIKit+SystemConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F99E83AD13CF7E7F00107358 /* UICustomObject.h in Headers */ = {isa = PBXBuildFile; fileRef = F99E83AB13CF7E7F00107358 /* UICustomObject.h */; };
 		F99E83AE13CF7E7F00107358 /* UICustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E83AC13CF7E7F00107358 /* UICustomObject.m */; };
 		F99E83B213CF7EEE00107358 /* UIProxyObject.h in Headers */ = {isa = PBXBuildFile; fileRef = F99E83B013CF7EEE00107358 /* UIProxyObject.h */; };
@@ -555,7 +557,6 @@
 		1489852A12EE2CFE003D4751 /* UINavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationBar.m; sourceTree = "<group>"; };
 		1489852B12EE2CFE003D4751 /* UINavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINavigationController.h; sourceTree = "<group>"; };
 		1489852C12EE2CFE003D4751 /* UINavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationController.m; sourceTree = "<group>"; };
-		1489852D12EE2CFE003D4751 /* UINavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINavigationItem.h; sourceTree = "<group>"; };
 		1489852E12EE2CFE003D4751 /* UINavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationItem.m; sourceTree = "<group>"; };
 		1489852F12EE2CFE003D4751 /* UINibLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibLoading.h; sourceTree = "<group>"; };
 		1489853012EE2CFE003D4751 /* UINibLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibLoading.m; sourceTree = "<group>"; };
@@ -852,6 +853,9 @@
 		F99115451772230200B4389A /* UIKitDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKitDefines.h; sourceTree = "<group>"; };
 		F99115471772236700B4389A /* UINibDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDeclarations.h; sourceTree = "<group>"; };
 		F9911549177223D600B4389A /* NSAttributedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedString.h; sourceTree = "<group>"; };
+		F99115571772269C00B4389A /* UIAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAlert.h; sourceTree = "<group>"; };
+		F9911559177228D100B4389A /* UIKit+CoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+CoreData.h"; sourceTree = "<group>"; };
+		F991155B1772290600B4389A /* UIKit+SystemConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+SystemConfiguration.h"; sourceTree = "<group>"; };
 		F99E83AB13CF7E7F00107358 /* UICustomObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICustomObject.h; sourceTree = "<group>"; };
 		F99E83AC13CF7E7F00107358 /* UICustomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICustomObject.m; sourceTree = "<group>"; };
 		F99E83B013CF7EEE00107358 /* UIProxyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIProxyObject.h; sourceTree = "<group>"; };
@@ -1067,6 +1071,8 @@
 			isa = PBXGroup;
 			children = (
 				1489851E12EE2CFE003D4751 /* UIKit.h */,
+				F9911559177228D100B4389A /* UIKit+CoreData.h */,
+				F991155B1772290600B4389A /* UIKit+SystemConfiguration.h */,
 				F99115451772230200B4389A /* UIKitDefines.h */,
 				F99115471772236700B4389A /* UINibDeclarations.h */,
 				789CF896133A3CD500250AB4 /* NSFetchedResultsController.h */,
@@ -1086,6 +1092,7 @@
 				148984F012EE2CFE003D4751 /* UIActionSheet.m */,
 				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
 				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
+				F99115571772269C00B4389A /* UIAlert.h */,
 				148984F412EE2CFE003D4751 /* UIAlertView.h */,
 				148984F512EE2CFE003D4751 /* UIAlertView.m */,
 				F97BE01615AFD6E00081F45A /* UIAppearance.h */,
@@ -1145,7 +1152,6 @@
 				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
 				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
 				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
-				1489852D12EE2CFE003D4751 /* UINavigationItem.h */,
 				1489852E12EE2CFE003D4751 /* UINavigationItem.m */,
 				F99E83B413CF836900107358 /* UINib.h */,
 				F99E83B513CF836900107358 /* UINib.m */,
@@ -1661,7 +1667,6 @@
 				14C0716213CF66B800B76E35 /* UIScrollWheelGestureRecognizer.h in Headers */,
 				38E523B513396B5B00E041B3 /* UINavigationBar+UIPrivate.h in Headers */,
 				38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */,
-				148985B312EE2CFF003D4751 /* UINavigationItem.h in Headers */,
 				148985B512EE2CFF003D4751 /* UINibLoading.h in Headers */,
 				148985B712EE2CFF003D4751 /* UIPageControl.h in Headers */,
 				148985B912EE2CFF003D4751 /* UIPasteboard.h in Headers */,
@@ -1753,6 +1758,9 @@
 				F99115461772230200B4389A /* UIKitDefines.h in Headers */,
 				F99115481772236700B4389A /* UINibDeclarations.h in Headers */,
 				F991154A177223D600B4389A /* NSAttributedString.h in Headers */,
+				F99115581772269C00B4389A /* UIAlert.h in Headers */,
+				F991155A177228D100B4389A /* UIKit+CoreData.h in Headers */,
+				F991155C1772290600B4389A /* UIKit+SystemConfiguration.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

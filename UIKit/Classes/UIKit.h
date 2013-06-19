@@ -34,7 +34,7 @@
 //#import <UIKit/UIActivity.h>
 //#import <UIKit/UIActivityItemProvider.h>
 //#import <UIKit/UIActivityViewController.h>
-//#import <UIKit/UIAlert.h>
+#import <UIKit/UIAlert.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIBarButtonItem.h>
 #import <UIKit/UIBarItem.h>
@@ -134,9 +134,5 @@
 //#import <UIKit/NSLayoutConstraint.h>
 //#import <UIKit/UIStateRestoration.h>
 
-// only add if core data is included on 10.6
-#import "NSFetchedResultsController.h"
-#import "NSIndexPath+UITableView.h"
-
-// SystemConfiguration-Helper
-#define kSCNetworkReachabilityFlagsIsWWAN kSCNetworkReachabilityFlagsConnectionOnDemand
+#import <UIKit/UIKit+CoreData.h>
+#import <UIKit/UIKit+SystemConfiguration.h>
