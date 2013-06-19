@@ -28,8 +28,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitDefines.h>
 
-extern NSString* const UINibExternalObjects;
+
+UIKIT_EXTERN NSString* const UINibExternalObjects;
 
 @interface NSBundle (UINibLoading)
 - (NSArray *)loadNibNamed:(NSString *)name owner:(id)owner options:(NSDictionary *)options;		// not implemented, but here to avoid some warnings

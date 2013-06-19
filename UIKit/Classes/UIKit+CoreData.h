@@ -1,0 +1,1 @@
+#import <UIKit/NSFetchedResultsController.h>

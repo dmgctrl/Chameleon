@@ -33,9 +33,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
+#import <UIKit/UIControl.h>
 
-@class UIImageView, UIImage;
+@class UIImage;
 
 @interface UISlider : UIControl
 

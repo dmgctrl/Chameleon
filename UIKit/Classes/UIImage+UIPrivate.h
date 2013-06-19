@@ -29,7 +29,8 @@
 
 #import "UIImage.h"
 
-@class NSImage, UIImageRep;
+@class NSImage;
+@class UIImageRep;
 
 @interface UIImage (UIPrivate)
 

@@ -29,7 +29,8 @@
 
 #import "UIScrollView.h"
 
-@class NSView, UINSClipView;
+@class NSView;
+@class UINSClipView;
 
 @interface UIViewAdapter : UIScrollView {
 @private

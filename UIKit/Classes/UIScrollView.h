@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
+#import <UIKit/UIView.h>
 
 typedef enum {
     UIScrollViewIndicatorStyleDefault,
@@ -35,10 +35,13 @@ typedef enum {
     UIScrollViewIndicatorStyleWhite
 } UIScrollViewIndicatorStyle;
 
-extern const float UIScrollViewDecelerationRateNormal;
-extern const float UIScrollViewDecelerationRateFast;
+UIKIT_EXTERN const float UIScrollViewDecelerationRateNormal;
+UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 
-@class UIScroller, UIImageView, UIScrollView, UIPanGestureRecognizer, UIScrollWheelGestureRecognizer;
+@class UIScroller;
+@class UIScrollView;
+@class UIPanGestureRecognizer;
+@class UIScrollWheelGestureRecognizer;
 
 @protocol UIScrollViewDelegate <NSObject>
 @optional

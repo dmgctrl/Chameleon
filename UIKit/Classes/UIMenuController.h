@@ -28,12 +28,13 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitDefines.h>
 
-extern NSString *const UIMenuControllerWillShowMenuNotification;
-extern NSString *const UIMenuControllerDidShowMenuNotification;
-extern NSString *const UIMenuControllerWillHideMenuNotification;
-extern NSString *const UIMenuControllerDidHideMenuNotification;
-extern NSString *const UIMenuControllerMenuFrameDidChangeNotification;
+UIKIT_EXTERN NSString *const UIMenuControllerWillShowMenuNotification;
+UIKIT_EXTERN NSString *const UIMenuControllerDidShowMenuNotification;
+UIKIT_EXTERN NSString *const UIMenuControllerWillHideMenuNotification;
+UIKIT_EXTERN NSString *const UIMenuControllerDidHideMenuNotification;
+UIKIT_EXTERN NSString *const UIMenuControllerMenuFrameDidChangeNotification;
 
 @class UIView, UIWindow;
 

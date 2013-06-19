@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UINavigationItem.h"
+#import "UINavigationBar.h"
 #import "UIBarButtonItem.h"
 #import "UINavigationItem+UIPrivate.h"
 #import "UINavigationBar.h"

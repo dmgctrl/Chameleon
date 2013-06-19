@@ -29,7 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class UIImage, UIColor, NSPasteboard;
+@class UIImage;
+@class UIColor;
 
 @interface UIPasteboard : NSObject 
 

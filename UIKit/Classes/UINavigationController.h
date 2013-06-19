@@ -27,9 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
+#import <UIKit/UIViewController.h>
 
-@class UINavigationBar, UIToolbar, UIViewController;
+@class UINavigationBar;
+@class UIToolbar;
+@class UIViewController;
 
 @protocol UINavigationControllerDelegate <NSObject>
 @optional

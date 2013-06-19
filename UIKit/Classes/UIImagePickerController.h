@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UINavigationController.h"
+#import <UIKit/UINavigationController.h>
 
 enum {
     UIImagePickerControllerSourceTypePhotoLibrary,
@@ -36,11 +36,11 @@ enum {
 };
 typedef NSUInteger UIImagePickerControllerSourceType;
 
-extern NSString *const UIImagePickerControllerMediaType;
-extern NSString *const UIImagePickerControllerOriginalImage;
-extern NSString *const UIImagePickerControllerEditedImage;
-extern NSString *const UIImagePickerControllerCropRect;
-extern NSString *const UIImagePickerControllerMediaURL;
+UIKIT_EXTERN NSString *const UIImagePickerControllerMediaType;
+UIKIT_EXTERN NSString *const UIImagePickerControllerOriginalImage;
+UIKIT_EXTERN NSString *const UIImagePickerControllerEditedImage;
+UIKIT_EXTERN NSString *const UIImagePickerControllerCropRect;
+UIKIT_EXTERN NSString *const UIImagePickerControllerMediaURL;
 
 @protocol UIImagePickerControllerDelegate <NSObject>
 @end
