@@ -44,9 +44,9 @@ describe(@"UIFont", ^{
                 [[[font2 fontName] should] equal:@".HelveticaNeueUI-Italic"];
             });
         });
-        context(@"familyNames", ^{
-            
-        });
+    });
+    context(@"familyNames", ^{
+        
     });
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
