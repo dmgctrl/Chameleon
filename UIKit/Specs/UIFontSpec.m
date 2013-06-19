@@ -46,8 +46,9 @@ describe(@"UIFont", ^{
         });
     });
     context(@"familyNames", ^{
+        NSArray* fonts = [UIFont familyNames];
         it(@"should return an NSArray", ^{
-            [[[UIFont familyNames] should] beKindOfClass:[NSArray class]];
+            [[fonts should] beKindOfClass:[NSArray class]];
         });
     });
     context(@"+systemFontOfSize:", ^{
