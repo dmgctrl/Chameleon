@@ -76,6 +76,9 @@ describe(@"UIFont", ^{
             it(@"font family should be that of the one used from array used to instantiate", ^{
                 [[[font familyName] should ] equal:[families lastObject]];
             });
+            it(@"font family should be that of the one used from array used to instantiate", ^{
+                [[[font fontName] should ] equal:[fonts lastObject]];
+            });            
         });
     });
     context(@"properties", ^{
