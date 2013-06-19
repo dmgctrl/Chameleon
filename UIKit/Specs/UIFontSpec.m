@@ -57,6 +57,10 @@ describe(@"UIFont", ^{
             [[[fonts lastObject] should] beKindOfClass:[NSString class]];
         });
     });
+    context(@"fontNamesForFamilyName", ^{
+        
+    });
+
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
             UIFont* font1 = [UIFont systemFontOfSize:17.0];
