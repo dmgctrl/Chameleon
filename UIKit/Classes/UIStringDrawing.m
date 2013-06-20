@@ -50,75 +50,61 @@ static CTLineTruncationType CTLineTruncationTypeFromUILineBreakMode(UILineBreakM
 
 static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize *renderSize)
 {
-    CFMutableArrayRef lines = CFArrayCreateMutable(NULL, 0, &kCFTypeArrayCallBacks);
-    CGSize drawSize = CGSizeZero;
-
-    if (font) {
-        NSDictionary* attributes = @{
-            (id)kCTFontAttributeName: (id)[font CTFont],
-            (id)kCTForegroundColorFromContextAttributeName: @(YES)
-        };
-        CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, (__bridge CFDictionaryRef)attributes);
-        
-        CTTypesetterRef typesetter = CTTypesetterCreateWithAttributedString(attributedString);
-        
-        const CFIndex stringLength = CFAttributedStringGetLength(attributedString);
-        const CGFloat lineHeight = font.lineHeight;
-        const CGFloat capHeight = font.capHeight;
-        
-        CFIndex start = 0;
-        BOOL isLastLine = NO;
-        
-        while (start < stringLength && !isLastLine) {
-            drawSize.height += lineHeight;
-            isLastLine = (drawSize.height+capHeight >= constrainedToSize.height);
-            
-            CFIndex usedCharacters = 0;
-            CTLineRef line = NULL;
-            
-            if (isLastLine && (lineBreakMode != UILineBreakModeWordWrap && lineBreakMode != UILineBreakModeCharacterWrap)) {
-                if (lineBreakMode == UILineBreakModeClip) {
-                    usedCharacters = CTTypesetterSuggestClusterBreak(typesetter, start, constrainedToSize.width);
-                    line = CTTypesetterCreateLine(typesetter, CFRangeMake(start, usedCharacters));
-                } else {
-                    CTLineTruncationType truncType = CTLineTruncationTypeFromUILineBreakMode(lineBreakMode);
-                    usedCharacters = stringLength - start;
-                    CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), (__bridge CFDictionaryRef)attributes);
-                    CTLineRef ellipsisLine = CTLineCreateWithAttributedString(ellipsisString);
-                    CTLineRef tempLine = CTTypesetterCreateLine(typesetter, CFRangeMake(start, usedCharacters));
-                    line = CTLineCreateTruncatedLine(tempLine, constrainedToSize.width, truncType, ellipsisLine);
-                    CFRelease(tempLine);
-                    CFRelease(ellipsisLine);
-                    CFRelease(ellipsisString);
-                }
-            } else {
-                if (lineBreakMode == UILineBreakModeCharacterWrap) {
-                    usedCharacters = CTTypesetterSuggestClusterBreak(typesetter, start, constrainedToSize.width);
-                } else {
-                    usedCharacters = CTTypesetterSuggestLineBreak(typesetter, start, constrainedToSize.width);
-                }
-                line = CTTypesetterCreateLine(typesetter, CFRangeMake(start, usedCharacters));
-            }
-            
-            if (line) {
-                CGFloat leading = 0;
-                CGFloat width = CTLineGetTypographicBounds(line,NULL,NULL,&leading);
-                drawSize.width = MAX(drawSize.width, ceilf(width));
-                
-                CFArrayAppendValue(lines, line);
-                CFRelease(line);
-            }
-            
-            start += usedCharacters;
+    if (!font) {
+        if (renderSize) {
+            *renderSize = CGSizeZero;
         }
+        return nil;
+    }
+    
+    NSDictionary* attributes = @{
+        (id)kCTFontAttributeName: (id)[font CTFont],
+        (id)kCTForegroundColorFromContextAttributeName: @(YES)
+    };
+    CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, (__bridge CFDictionaryRef)attributes);
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attributedString);
+    CFRelease(attributedString), attributedString = nil;
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, (CGRect){ .size = constrainedToSize});
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFRelease(path), path = nil;
+
+    CFArrayRef lines = CTFrameGetLines(frame);
+    CFIndex numberOfLines = CFArrayGetCount(lines);
+    if (!numberOfLines) {
+        CFRelease(framesetter);
+        CFRelease(lines);
+        if (renderSize) {
+            *renderSize = CGSizeZero;
+        }
+        return nil;
+    }
         
-        CFRelease(typesetter);
-        CFRelease(attributedString);
+    CGPoint* origins = calloc(numberOfLines, sizeof(CGPoint));
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins);
+
+    CGFloat height = 0;
+    CGFloat width = 0;
+    for (CFIndex i = 0; i < numberOfLines; i++) {
+        CTLineRef line = CFArrayGetValueAtIndex(lines, numberOfLines - 1);
+        CGFloat ascender;
+        CGFloat descender;
+        CGFloat leading;
+        CGFloat widthOfLine = CTLineGetTypographicBounds(line, &ascender, &descender, &leading);
+        width = MAX(width, widthOfLine);
+        height = ((origins[i].y == DBL_MAX)? 0.0 : origins[i].y) + ascender + leading;
+        NSLog(@"%g, %g, %g, %g, %g", origins[i].x, origins[i].y, ascender, descender, leading);
     }
     
     if (renderSize) {
-        *renderSize = drawSize;
+        *renderSize = (CGSize){
+            .width = round(width),
+            .height = round(height)
+        };
     }
+    
+    CFRelease(framesetter);
     
     return lines;
 }
