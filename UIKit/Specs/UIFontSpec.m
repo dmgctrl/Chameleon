@@ -2,40 +2,42 @@ SPEC_BEGIN(UIFontSpec)
 
 describe(@"UIFont", ^{
     context(@"with negative sizes", ^{
-        UIFont* font1 = [UIFont fontWithName:@"Times" size:-10];
+        CGFloat negativeSize = -10;
+        UIFont* font1 = [UIFont fontWithName:@"Times" size:negativeSize];
         context(@"+fontWithName:size:", ^{
             it(@"returns same bogus size", ^{
-                [[theValue([font1 pointSize]) should] equal:theValue(-10.0)];
+                [[@([font1 pointSize]) should] equal:@(negativeSize)];
             });
         });
         context(@"-fontWithSize:", ^{
-            UIFont* font2 = [font1 fontWithSize:-13];
+            UIFont* font2 = [font1 fontWithSize:negativeSize];
             it(@"should return same bogus size", ^{
-                [[@([font2 pointSize]) should] equal:@(-13.0)];
+                [[@([font2 pointSize]) should] equal:@(negativeSize)];
             });
         });
-        context(@"systemFontOfSize", ^{
-            UIFont* font2 = [UIFont systemFontOfSize:-10];
+        context(@"+systemFontOfSize:", ^{
+            UIFont* font2 = [UIFont systemFontOfSize:negativeSize];
             it(@"should return same bogus number", ^{
-                [[@([font2 pointSize]) should] equal:@(-10)];
+                [[@([font2 pointSize]) should] equal:@(negativeSize)];
             });
         });
-        context(@"boldSystemFontOfSize", ^{
-            UIFont* font2 = [UIFont boldSystemFontOfSize:-10];
+        context(@"+boldSystemFontOfSize:", ^{
+            UIFont* font2 = [UIFont boldSystemFontOfSize:negativeSize];
             it(@"should return same bogus number", ^{
-                [[@([font2 pointSize]) should] equal:@(-10)];
+                [[@([font2 pointSize]) should] equal:@(negativeSize)];
             });
         });
-        context(@"italicSystemFontOfSize", ^{
-            UIFont* font2 = [UIFont italicSystemFontOfSize:-10];
+        context(@"+italicSystemFontOfSize:", ^{
+            UIFont* font2 = [UIFont italicSystemFontOfSize:negativeSize];
             it(@"should return same bogus number", ^{
-                [[@([font2 pointSize]) should] equal:@(-10)];
+                [[@([font2 pointSize]) should] equal:@(negativeSize)];
             });
         });
     });
-    context(@"fonty arrays", ^{
-        NSArray* families = [UIFont familyNames];
+    
+    context(@"font arrays", ^{
         context(@"familyNames", ^{
+            NSArray* families = [UIFont familyNames];
             it(@"should return an NSArray", ^{
                 [[families should] beKindOfClass:[NSArray class]];
             });
@@ -46,29 +48,32 @@ describe(@"UIFont", ^{
                 [[[families lastObject] should] beKindOfClass:[NSString class]];
             });
         });
+        
         context(@"fontNamesForFamilyName", ^{
-            NSArray* fonts = [UIFont fontNamesForFamilyName:[families lastObject]];
+            NSString* familyName = [[UIFont familyNames] lastObject];
+            NSArray* fonts = [UIFont fontNamesForFamilyName:familyName];
             UIFont* font = [UIFont fontWithName:[fonts lastObject] size:10];
-            it(@"should return an NSArray", ^{
+            it(@"returns an NSArray", ^{
                 [[fonts should] beKindOfClass:[NSArray class]];
             });
-            it(@"should be non zero in count", ^{
+            it(@"has a non zero count", ^{
                 [[@([fonts count]) should] beGreaterThan:@(0)];
             });
-            it(@"elements should be NSStrings", ^{
+            it(@"has elements that are NSString", ^{
                 [[[fonts lastObject] should] beKindOfClass:[NSString class]];
             });            
             it(@"should be full of font names with which one can instantiate a font", ^{
                 [[font should] beNonNil];
             });
             it(@"font family should be that of the one used from array used to instantiate", ^{
-                [[[font familyName] should ] equal:[families lastObject]];
+                [[[font familyName] should] equal:familyName];
             });
             it(@"font family should be that of the one used from array used to instantiate", ^{
-                [[[font fontName] should ] equal:[fonts lastObject]];
+                [[[font fontName] should] equal:[fonts lastObject]];
             });            
         });
     });
+    
     context(@"properties", ^{
         UIFont* font = [UIFont systemFontOfSize:10];
         it(@"ascender should exist", ^{
@@ -87,6 +92,7 @@ describe(@"UIFont", ^{
             [[@([font lineHeight]) should] beNonNil];
         });
     });
+    
     context(@"system font info", ^{
         it(@"labelFontSize should return a font size", ^{
             [[@([UIFont labelFontSize]) should] beNonNil];
@@ -101,6 +107,7 @@ describe(@"UIFont", ^{
             [[@([UIFont systemFontSize]) should] beNonNil];
         });
     });
+    
     context(@"+systemFontOfSize:", ^{
         context(@"when called with 17.0", ^{
             UIFont* font1 = [UIFont systemFontOfSize:17.0];
