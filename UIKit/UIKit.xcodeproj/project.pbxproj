@@ -380,6 +380,8 @@
 		F97BE02115AFD6E00081F45A /* UIAppearanceProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */; };
 		F97BE02215AFD6E00081F45A /* UIAppearanceProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */; };
 		F97BE02315AFD6E00081F45A /* UIAppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */; };
+		F98A10AC17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */; };
+		F98A10AD17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */; };
 		F99115461772230200B4389A /* UIKitDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115451772230200B4389A /* UIKitDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F99115481772236700B4389A /* UINibDeclarations.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115471772236700B4389A /* UINibDeclarations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F991154A177223D600B4389A /* NSAttributedString.h in Headers */ = {isa = PBXBuildFile; fileRef = F9911549177223D600B4389A /* NSAttributedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -846,6 +848,7 @@
 		F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProperty.m; sourceTree = "<group>"; };
 		F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearanceProxy.h; sourceTree = "<group>"; };
 		F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProxy.m; sourceTree = "<group>"; };
+		F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStringDrawingSpec.m; sourceTree = "<group>"; };
 		F99115451772230200B4389A /* UIKitDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIKitDefines.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F99115471772236700B4389A /* UINibDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDeclarations.h; sourceTree = "<group>"; };
 		F9911549177223D600B4389A /* NSAttributedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedString.h; sourceTree = "<group>"; };
@@ -1483,6 +1486,7 @@
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				F9B3C1F1177111AA00C92009 /* UILabel */,
 				F97674921769431C0073489E /* UIStoryboard */,
+				F98A10AA1773754000BF8586 /* UIStringDrawing */,
 				F95F640D15C34C6100F3523B /* Supporting Files */,
 			);
 			path = Specs;
@@ -1508,6 +1512,14 @@
 				F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */,
 			);
 			name = UIStoryboard;
+			sourceTree = "<group>";
+		};
+		F98A10AA1773754000BF8586 /* UIStringDrawing */ = {
+			isa = PBXGroup;
+			children = (
+				F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */,
+			);
+			name = UIStringDrawing;
 			sourceTree = "<group>";
 		};
 		F9B3C1F1177111AA00C92009 /* UILabel */ = {
@@ -2164,6 +2176,7 @@
 				F97674951769433E0073489E /* UIStoryboardSpec.m in Sources */,
 				F9B3C1F4177111C900C92009 /* UILabelSpec.m in Sources */,
 				F9B3C1F9177119CB00C92009 /* UIFontSpec.m in Sources */,
+				F98A10AC17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2185,6 +2198,7 @@
 				F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */,
 				F9B3C1F5177111C900C92009 /* UILabelSpec.m in Sources */,
 				F9B3C1FA177119CB00C92009 /* UIFontSpec.m in Sources */,
+				F98A10AD17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
