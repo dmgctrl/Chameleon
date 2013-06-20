@@ -242,15 +242,7 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
 
 - (CGFloat) lineHeight
 {
-    // SEE: Listing 2-10
-    //      http://developer.apple.com/library/ios/#documentation/StringsTextFonts/Conceptual/CoreText_Programming/Operations/Operations.html
-    //
-    return CTFontGetAscent(_font) + CTFontGetDescent(_font) + CTFontGetLeading(_font);
-}
-
-- (CGFloat) leading
-{
-    return CTFontGetLeading(_font);
+    return roundf(CTFontGetSize(_font) * 1.1478f + 0.8607f);
 }
 
 - (NSString*) familyName

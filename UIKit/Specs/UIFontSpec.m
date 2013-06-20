@@ -123,7 +123,7 @@ describe(@"UIFont", ^{
         });
     });
     
-    context(@"with a known font, of a known size", ^{
+    context(@"with Baskerville 17.0", ^{
         NSString* name = @"Baskerville";
         CGFloat pointSize = 17.0;
         UIFont* font = [UIFont fontWithName:name size:pointSize];
@@ -158,6 +158,44 @@ describe(@"UIFont", ^{
 
         it(@"has the correct lineHeight", ^{
             [[@([font lineHeight]) should] equal:@(21.0f)];
+        });
+    });
+
+    context(@"with Georgia 34.0", ^{
+        NSString* name = @"Georgia";
+        CGFloat pointSize = 34.0;
+        UIFont* font = [UIFont fontWithName:name size:pointSize];
+        
+        it(@"has the correct fontName", ^{
+            [[[font fontName] should] equal:name];
+        });
+        
+        it(@"has the correct familyName", ^{
+            [[[font fontName] should] equal:name];
+        });
+        
+        it(@"has the correct pointSize", ^{
+            [[@([font pointSize]) should] equal:@(pointSize)];
+        });
+        
+        it(@"has the correct ascender", ^{
+            [[@([font ascender]) should] equal:31.179f withDelta:0.01f];
+        });
+        
+        it(@"has the correct descender", ^{
+            [[@([font descender]) should] equal:-7.454f withDelta:0.01f];
+        });
+        
+        it(@"has the correct capHeight", ^{
+            [[@([font capHeight]) should] equal:23.562f withDelta:0.01f];
+        });
+        
+        it(@"has the correct xHeight", ^{
+            [[@([font xHeight]) should] equal:16.36f withDelta:0.01f];
+        });
+        
+        it(@"has the correct lineHeight", ^{
+            [[@([font lineHeight]) should] equal:@(40.0f)];
         });
     });
 });
