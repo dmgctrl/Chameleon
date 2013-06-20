@@ -215,11 +215,15 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
 
 - (CGFloat) lineHeight
 {
-    // this seems to compute heights that are very close to what I'm seeing on iOS for fonts at
-    // the same point sizes. however there's still subtle differences between fonts on the two
-    // platforms (iOS and Mac) and I don't know if it's ever going to be possible to make things
-    // return exactly the same values in all cases.
-    return ceilf(self.ascender) - floorf(self.descender) + ceilf(CTFontGetLeading(_font));
+    // SEE: Listing 2-10
+    //      http://developer.apple.com/library/ios/#documentation/StringsTextFonts/Conceptual/CoreText_Programming/Operations/Operations.html
+    //
+    return CTFontGetAscent(_font) + CTFontGetDescent(_font) + CTFontGetLeading(_font);
+}
+
+- (CGFloat) leading
+{
+    return CTFontGetLeading(_font);
 }
 
 - (NSString*) familyName
@@ -237,6 +241,11 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
         return nil;
     }
     return font;
+}
+
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"<%@: %p> font-family: \"%@\"; font-size: %fpx", NSStringFromClass([self class]), self, [self familyName], [self pointSize]];
 }
 
 - (NSFont*) NSFont

@@ -142,15 +142,15 @@ describe(@"UIFont", ^{
         });
 
         it(@"has the correct descender", ^{
-            [[@([font descender]) should] equal:@(-3.909668f)];
+            [[@([font descender]) should] equal:-3.91f withDelta:0.001];
         });
 
         it(@"has the correct capHeight", ^{
-            [[@([font capHeight]) should] equal:@(12.189f)];
+            [[@([font capHeight]) should] equal:12.189f withDelta:0.005];
         });
         
         it(@"has the correct xHeight", ^{
-            [[@([font xHeight]) should] equal:@(8.891f)];
+            [[@([font xHeight]) should] equal:8.891f withDelta:0.001];
         });
 
         it(@"has the correct lineHeight", ^{
