@@ -48,6 +48,7 @@ describe(@"UILabel", ^{
     context(@"-textRectForBounds:limitedToNumberOfLines:", ^{
         context(@"when given a string", ^{
             UILabel* label = [[UILabel alloc] initWithFrame:(CGRect){}];
+            label.font = [UIFont fontWithName:@"Courier" size:17.0];
             label.text = \
                 @"The quick brown\n" \
                 @"fox jumps over\n"
@@ -56,8 +57,8 @@ describe(@"UILabel", ^{
             context(@"constrained to 100x100 and one line", ^{
                 CGRect rect = [label textRectForBounds:CGRectMake(0, 0, 100, 100) limitedToNumberOfLines:1];
                 
-                it(@"should compute a size of 91x21", ^{
-                    [[NSStringFromCGRect(rect) should] equal:NSStringFromCGRect(CGRectMake(0, 0, 91, 21))];
+                it(@"should compute a size of 92x21", ^{
+                    [[NSStringFromCGRect(rect) should] equal:NSStringFromCGRect(CGRectMake(0, 0, 92, 21))];
                 });
             });
         });
