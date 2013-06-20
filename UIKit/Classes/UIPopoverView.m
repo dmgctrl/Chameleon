@@ -115,8 +115,9 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
         _contentContainerView.layer.cornerRadius = 3;
         _contentContainerView.clipsToBounds = YES;
 
-        [self addSubview:_backgroundView];
-        [self addSubview:_arrowView];
+        //[self addSubview:_backgroundView];
+        //[self addSubview:_arrowView];
+        //self.backgroundColor = [UIColor redColor];
         [self addSubview:_contentContainerView];
         [_contentContainerView addSubview:_contentView];
         

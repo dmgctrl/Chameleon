@@ -38,6 +38,7 @@
 #import "UIPopoverView.h"
 #import "UIPopoverNSWindow.h"
 #import "UIPopoverOverlayNSView.h"
+#import "UIPopoverNSView.h"
 #import "UIImage+UIPrivate.h"
 
 
@@ -165,8 +166,13 @@
         _popoverWindow = [[UIPopoverNSWindow alloc] initWithContentRect:[hostingView bounds] styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:YES];
         [_popoverWindow setPopoverController:self];
         [_popoverWindow setOpaque:NO];
+        [_popoverWindow setHasShadow:YES];
         [_popoverWindow setBackgroundColor:[NSColor clearColor]];
-        [_popoverWindow setContentView:hostingView];
+        
+        UIPopoverNSView* popoverContainerView = [[UIPopoverNSView alloc] initWithFrame:overlayContentRect];
+        [popoverContainerView addSubview:hostingView];
+        [_popoverWindow setContentView:popoverContainerView];
+        //[_popoverWindow setContentView:hostingView];
         [viewNSWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
         [_popoverWindow makeFirstResponder:hostingView];
 
