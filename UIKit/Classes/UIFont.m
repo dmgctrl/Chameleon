@@ -28,6 +28,7 @@
  */
 
 #import "UIFont.h"
+#import "UIFont+UIPrivate.h"
 #import <Cocoa/Cocoa.h>
 
 static NSString *UIFontSystemFontName = nil;
@@ -59,21 +60,27 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
     UIFontItalicSystemFontName = [name copy];
 }
 
-+ (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)fontSize
++ (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)pointSize
 {
-    return [self fontWithNSFont:[NSFont fontWithName:fontName size:fontSize]];
+    CTFontRef ctfont = CTFontCreateWithName((__bridge CFStringRef)fontName, pointSize, NULL);
+    if (!ctfont) {
+        return nil;
+    }
+    UIFont* font = [UIFont fontWithCTFont:ctfont];
+    CFRelease(ctfont);
+    return font;
 }
 
-+ (UIFont*) fontWithNSFont:(NSFont*)nsfont
++ (UIFont*) fontWithCTFont:(CTFontRef)ctfont
 {
     static NSCache* cache;
-    UIFont* font = [cache objectForKey:nsfont];
+    UIFont* font = [cache objectForKey:(__bridge id)ctfont];
     if (!font) {
         if (!cache) {
             cache = [[NSCache alloc] init];
         }
-        font = [[UIFont alloc] initWithCTFont:(__bridge CTFontRef)nsfont];
-        [cache setObject:font forKey:nsfont];
+        font = [[UIFont alloc] initWithCTFont:ctfont];
+        [cache setObject:font forKey:(__bridge id)ctfont];
     }
     return font;
 }
@@ -169,18 +176,18 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
 + (UIFont*) systemFontOfSize:(CGFloat)fontSize
 {
     NSFont* systemFont = UIFontSystemFontName? [NSFont fontWithName:UIFontSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
 + (UIFont*) boldSystemFontOfSize:(CGFloat)fontSize
 {
     NSFont* systemFont = UIFontBoldSystemFontName? [NSFont fontWithName:UIFontBoldSystemFontName size:fontSize] : [NSFont boldSystemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
 + (UIFont*) italicSystemFontOfSize:(CGFloat)fontSize {
     NSFont* systemFont = UIFontItalicSystemFontName? [NSFont fontWithName:UIFontItalicSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
 - (NSString*) fontName
