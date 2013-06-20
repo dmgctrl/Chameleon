@@ -119,6 +119,48 @@ describe(@"UIFont", ^{
             });
         });
     });
+    
+    context(@"with a known font, of a known size", ^{
+        NSString* name = @"Helvetica";
+        CGFloat pointSize = 17.0;
+        UIFont* font = [UIFont fontWithName:name size:pointSize];
+
+        it(@"has the correct fontName", ^{
+            [[[font fontName] should] equal:name];
+        });
+
+        it(@"has the correct familyName", ^{
+            [[[font fontName] should] equal:name];
+        });
+
+        it(@"has the correct pointSize", ^{
+            [[@([font pointSize]) should] equal:@(pointSize)];
+        });
+
+        it(@"has the correct ascender", ^{
+            [[@([font ascender]) should] equal:@(16.09375f)];
+        });
+
+        it(@"has the correct descender", ^{
+            [[@([font descender]) should] equal:@(-3.909668f)];
+        });
+
+        it(@"has the correct capHeight", ^{
+            [[@([font capHeight]) should] equal:@(12.189f)];
+        });
+        
+        it(@"has the correct xHeight", ^{
+            [[@([font xHeight]) should] equal:@(8.891f)];
+        });
+
+        it(@"has the correct lineHeight", ^{
+            [[@([font lineHeight]) should] equal:@(21.0f)];
+        });
+        
+        it(@"has the correct leading", ^{
+            [[@([font leading]) should] equal:@(21.0f)];
+        });
+    });
 });
 
 SPEC_END
