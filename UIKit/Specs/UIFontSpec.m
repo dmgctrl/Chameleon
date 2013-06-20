@@ -39,7 +39,7 @@ describe(@"UIFont", ^{
     });
     
     context(@"font arrays", ^{
-        context(@"familyNames", ^{
+        context(@"-familyNames", ^{
             NSArray* families = [UIFont familyNames];
             it(@"should return an NSArray", ^{
                 [[families should] beKindOfClass:[NSArray class]];
@@ -52,7 +52,7 @@ describe(@"UIFont", ^{
             });
         });
         
-        context(@"fontNamesForFamilyName", ^{
+        context(@"-fontNamesForFamilyName", ^{
             NSString* familyName = [[UIFont familyNames] lastObject];
             NSArray* fontNames = [UIFont fontNamesForFamilyName:familyName];
             UIFont* font = [UIFont fontWithName:[fontNames lastObject] size:10];
@@ -97,16 +97,16 @@ describe(@"UIFont", ^{
     });
     
     context(@"system font info", ^{
-        it(@"labelFontSize should return a font size", ^{
+        it(@"-labelFontSize should return a font size", ^{
             [[@([UIFont labelFontSize]) should] beNonNil];
         });
-        it(@"buttonFontSize should return a font size", ^{
+        it(@"-buttonFontSize should return a font size", ^{
             [[@([UIFont buttonFontSize]) should] beNonNil];
         });
-        it(@"smallSystemFontSize should return a font size", ^{
+        it(@"-smallSystemFontSize should return a font size", ^{
             [[@([UIFont smallSystemFontSize]) should] beNonNil];
         });
-        it(@"systemFontSize should return a font size", ^{
+        it(@"-systemFontSize should return a font size", ^{
             [[@([UIFont systemFontSize]) should] beNonNil];
         });
     });
