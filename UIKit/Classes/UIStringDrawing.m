@@ -40,12 +40,11 @@ NSString *const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOff
 
 static CTLineTruncationType CTLineTruncationTypeFromUILineBreakMode(UILineBreakMode lineBreakMode)
 {
-    if (lineBreakMode == UILineBreakModeHeadTruncation) {
-        return kCTLineTruncationStart;
-    } else if (lineBreakMode == UILineBreakModeTailTruncation) {
-        return kCTLineTruncationEnd;
-    } else {
-        return kCTLineTruncationMiddle;
+    switch (lineBreakMode) {
+        case UILineBreakModeHeadTruncation:   return kCTLineTruncationStart;
+        case UILineBreakModeTailTruncation:   return kCTLineTruncationEnd;
+        case UILineBreakModeMiddleTruncation: return kCTLineTruncationMiddle;
+        default: @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"TODO" userInfo:nil];
     }
 }
 
