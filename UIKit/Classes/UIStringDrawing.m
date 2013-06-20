@@ -38,17 +38,28 @@ NSString *const UITextAttributeTextColor = @"UITextAttributeTextColor";
 NSString *const UITextAttributeTextShadowColor = @"UITextAttributeTextShadowColor";
 NSString *const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOffset";
 
+static CTLineTruncationType CTLineTruncationTypeFromUILineBreakMode(UILineBreakMode lineBreakMode)
+{
+    if (lineBreakMode == UILineBreakModeHeadTruncation) {
+        return kCTLineTruncationStart;
+    } else if (lineBreakMode == UILineBreakModeTailTruncation) {
+        return kCTLineTruncationEnd;
+    } else {
+        return kCTLineTruncationMiddle;
+    }
+}
+
 static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize *renderSize)
 {
     CFMutableArrayRef lines = CFArrayCreateMutable(NULL, 0, &kCFTypeArrayCallBacks);
     CGSize drawSize = CGSizeZero;
 
     if (font) {
-        CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 2, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CFDictionarySetValue(attributes, kCTFontAttributeName, [font CTFont]);
-        CFDictionarySetValue(attributes, kCTForegroundColorFromContextAttributeName, kCFBooleanTrue);
-        
-        CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, attributes);
+        NSDictionary* attributes = @{
+            (id)kCTFontAttributeName: (id)[font CTFont],
+            (id)kCTForegroundColorFromContextAttributeName: @(YES)
+        };
+        CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, (__bridge CFDictionaryRef)attributes);
         
         CTTypesetterRef typesetter = CTTypesetterCreateWithAttributedString(attributedString);
         
@@ -71,18 +82,9 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
                     usedCharacters = CTTypesetterSuggestClusterBreak(typesetter, start, constrainedToSize.width);
                     line = CTTypesetterCreateLine(typesetter, CFRangeMake(start, usedCharacters));
                 } else {
-                    CTLineTruncationType truncType;
-                    
-                    if (lineBreakMode == UILineBreakModeHeadTruncation) {
-                        truncType = kCTLineTruncationStart;
-                    } else if (lineBreakMode == UILineBreakModeTailTruncation) {
-                        truncType = kCTLineTruncationEnd;
-                    } else {
-                        truncType = kCTLineTruncationMiddle;
-                    }
-                    
+                    CTLineTruncationType truncType = CTLineTruncationTypeFromUILineBreakMode(lineBreakMode);
                     usedCharacters = stringLength - start;
-                    CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), attributes);
+                    CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), (__bridge CFDictionaryRef)attributes);
                     CTLineRef ellipsisLine = CTLineCreateWithAttributedString(ellipsisString);
                     CTLineRef tempLine = CTTypesetterCreateLine(typesetter, CFRangeMake(start, usedCharacters));
                     line = CTLineCreateTruncatedLine(tempLine, constrainedToSize.width, truncType, ellipsisLine);
@@ -100,7 +102,9 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
             }
             
             if (line) {
-                drawSize.width = MAX(drawSize.width, ceilf(CTLineGetTypographicBounds(line,NULL,NULL,NULL)));
+                CGFloat leading = 0;
+                CGFloat width = CTLineGetTypographicBounds(line,NULL,NULL,&leading);
+                drawSize.width = MAX(drawSize.width, ceilf(width));
                 
                 CFArrayAppendValue(lines, line);
                 CFRelease(line);
@@ -111,7 +115,6 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         
         CFRelease(typesetter);
         CFRelease(attributedString);
-        CFRelease(attributes);
     }
     
     if (renderSize) {
