@@ -53,28 +53,3 @@ static UIColor* groupTableViewBackgroundColor;
 }
 
 @end
-
-
-@implementation UIFont (UIFontSystemFonts)
-
-+ (CGFloat)systemFontSize
-{
-    return [NSFont systemFontSize];
-}
-
-+ (CGFloat)smallSystemFontSize
-{
-    return [NSFont smallSystemFontSize];
-}
-
-+ (CGFloat)labelFontSize
-{
-    return [NSFont labelFontSize];
-}
-
-+ (CGFloat)buttonFontSize
-{
-    return [NSFont systemFontSizeForControlSize:NSRegularControlSize];
-}
-
-@end

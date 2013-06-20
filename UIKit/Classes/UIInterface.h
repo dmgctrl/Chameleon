@@ -42,11 +42,3 @@ typedef enum {
 @interface UIColor (UIColorSystemColors)
 + (UIColor *)groupTableViewBackgroundColor;
 @end
-
-
-@interface UIFont (UIFontSystemFonts)
-+ (CGFloat)systemFontSize;
-+ (CGFloat)smallSystemFontSize;
-+ (CGFloat)labelFontSize;
-+ (CGFloat)buttonFontSize;
-@end

@@ -45,6 +45,26 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
     CTFontRef _font;
 }
 
++ (CGFloat) systemFontSize
+{
+    return [NSFont systemFontSize];
+}
+
++ (CGFloat) smallSystemFontSize
+{
+    return [NSFont smallSystemFontSize];
+}
+
++ (CGFloat) labelFontSize
+{
+    return [NSFont labelFontSize];
+}
+
++ (CGFloat) buttonFontSize
+{
+    return [NSFont systemFontSizeForControlSize:NSRegularControlSize];
+}
+
 + (void) setSystemFontName:(NSString*)name
 {
     UIFontSystemFontName = [name copy];
