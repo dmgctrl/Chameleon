@@ -28,6 +28,7 @@
  */
 
 #import "UIPopoverNSView.h"
+#import "UIPopoverController.h"
 #import <AppKit/AppKit.h>
 
 /** The arrow height **/
@@ -38,6 +39,8 @@
 #define INPOPOVER_CORNER_RADIUS 4.0
 
 @implementation UIPopoverNSView
+
+@synthesize arrowDirection = arrowDirection_;
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -64,22 +67,6 @@
     //[[self window] display];
     [[self window] setHasShadow:NO];
     [[self window] setHasShadow:YES];
-	
-     
-    /*
-	if (self.topHighlightColor) {
-		[self.topHighlightColor set];
-		NSRect bounds = NSInsetRect([self bounds], INPOPOVER_ARROW_HEIGHT, INPOPOVER_ARROW_HEIGHT);
-		NSRect lineRect = NSMakeRect(floor(NSMinX(bounds) + (INPOPOVER_CORNER_RADIUS / 2.0)), NSMaxY(bounds) - self.borderWidth - 1, NSWidth(bounds) - INPOPOVER_CORNER_RADIUS, 1.0);
-		
-		if (self.arrowDirection == INPopoverArrowDirectionUp) {
-			CGFloat width = floor((lineRect.size.width / 2.0) - (INPOPOVER_ARROW_WIDTH / 2.0));
-			NSRectFill(NSMakeRect(lineRect.origin.x, lineRect.origin.y, width, lineRect.size.height));
-			NSRectFill(NSMakeRect(floor(lineRect.origin.x + (lineRect.size.width / 2.0) + (INPOPOVER_ARROW_WIDTH / 2.0)), lineRect.origin.y, width, lineRect.size.height));
-		} else {
-			NSRectFill(lineRect);
-		}
-	}*/
 }
 
 #pragma mark -
@@ -100,7 +87,7 @@
 	
 	// Bottom left corner
 	[path appendBezierPathWithArcWithCenter:NSMakePoint(minX, minY) radius:radius startAngle:180.0 endAngle:270.0];
-	if (NO) { // TODO: self.arrowDirection == INPopoverArrowDirectionDown {
+	if (self.arrowDirection == UIPopoverArrowDirectionDown) {
 		CGFloat midX = NSMidX(drawingRect);
 		NSPoint points[3];
 		points[0] = NSMakePoint(floor(midX - (INPOPOVER_ARROW_WIDTH / 2.0)), minY - radius); // Starting point
@@ -110,7 +97,7 @@
 	}
 	// Bottom right corner
 	[path appendBezierPathWithArcWithCenter:NSMakePoint(maxX, minY) radius:radius startAngle:270.0 endAngle:360.0];
-    if (NO) { // TODO: self.arrowDirection == INPopoverArrowDirectionRight {
+    if (self.arrowDirection == UIPopoverArrowDirectionRight) {
 		CGFloat midY = NSMidY(drawingRect);
 		NSPoint points[3];
 		points[0] = NSMakePoint(maxX + radius, floor(midY - (INPOPOVER_ARROW_WIDTH / 2.0)));
@@ -120,7 +107,7 @@
 	}
 	// Top right corner
 	[path appendBezierPathWithArcWithCenter:NSMakePoint(maxX, maxY) radius:radius startAngle:0.0 endAngle:90.0];
-    if (NO) { // TODO: self.arrowDirection == INPopoverArrowDirectionUp {
+    if (self.arrowDirection == UIPopoverArrowDirectionUp) {
 		CGFloat midX = NSMidX(drawingRect);
 		NSPoint points[3];
 		points[0] = NSMakePoint(floor(midX + (INPOPOVER_ARROW_WIDTH / 2.0)), maxY + radius);
@@ -130,7 +117,7 @@
 	}
 	// Top left corner
 	[path appendBezierPathWithArcWithCenter:NSMakePoint(minX, maxY) radius:radius startAngle:90.0 endAngle:180.0];
-	if (YES) { // TODO: self.arrowDirection == INPopoverArrowDirectionLeft {
+	if (self.arrowDirection == UIPopoverArrowDirectionLeft) {
 		CGFloat midY = NSMidY(drawingRect);
 		NSPoint points[3];
 		points[0] = NSMakePoint(minX - radius, floor(midY + (INPOPOVER_ARROW_WIDTH / 2.0)));

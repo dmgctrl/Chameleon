@@ -32,4 +32,6 @@
 @interface UIPopoverNSView : NSView {
 }
 
+@property (nonatomic, assign) int arrowDirection;
+
 @end

@@ -51,6 +51,7 @@
     UIPopoverTheme _theme;
     /**/
     CGRect _desktopScreenRect;
+    UIPopoverNSView* _popoverContainerView;
     UIPopoverArrowDirection _arrowDirections;
 
     struct {
@@ -169,9 +170,9 @@
         [_popoverWindow setHasShadow:YES];
         [_popoverWindow setBackgroundColor:[NSColor clearColor]];
         
-        UIPopoverNSView* popoverContainerView = [[UIPopoverNSView alloc] initWithFrame:overlayContentRect];
-        [popoverContainerView addSubview:hostingView];
-        [_popoverWindow setContentView:popoverContainerView];
+        _popoverContainerView = [[UIPopoverNSView alloc] initWithFrame:overlayContentRect];
+        [_popoverContainerView addSubview:hostingView];
+        [_popoverWindow setContentView:_popoverContainerView];
         //[_popoverWindow setContentView:hostingView];
         [viewNSWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
         [_popoverWindow makeFirstResponder:hostingView];
@@ -417,19 +418,19 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
     if (allowBottomQuad && SizeIsLessThanOrEqualSize(popoverSize, bq)) {
         pointTo.y = _desktopScreenRect.origin.y;
         origin.y = _desktopScreenRect.origin.y - popoverSize.height + kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionUp;
+        _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionUp;
     } else if (allowRightQuad && SizeIsLessThanOrEqualSize(popoverSize, rq)) {
         pointTo.x = _desktopScreenRect.origin.x + _desktopScreenRect.size.width;
         origin.x = pointTo.x - kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionLeft;
+        _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionLeft;
     } else if (allowLeftQuad && SizeIsLessThanOrEqualSize(popoverSize, lq)) {
         pointTo.x = _desktopScreenRect.origin.x;
         origin.x = _desktopScreenRect.origin.x - popoverSize.width + kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionRight;
+        _popoverContainerView.arrowDirection =  _popoverArrowDirection = UIPopoverArrowDirectionRight;
     } else if (allowTopQuad && SizeIsLessThanOrEqualSize(popoverSize, tq)) {
         pointTo.y = _desktopScreenRect.origin.y + _desktopScreenRect.size.height;
         origin.y = pointTo.y - kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionDown;
+        _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionDown;
     } else {
         CGFloat maxArea = -1;
         CGFloat popoverWidthDelta = -1;
@@ -449,7 +450,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
                     popoverWidthDelta = popoverWidth - quadWidth;
                 }
                 origin.x = pointTo.x - kArrowPadding;
-                _popoverArrowDirection = UIPopoverArrowDirectionLeft;
+                _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionLeft;
             }
         }
         if (allowLeftQuad) {
@@ -465,7 +466,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
                     popoverWidthDelta = popoverWidth - quadWidth;
                 }
                 origin.x = pointTo.x - popoverSize.width + kArrowPadding;
-                _popoverArrowDirection = UIPopoverArrowDirectionRight;
+                _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionRight;
             }
         }
         if (allowTopQuad) {
@@ -475,7 +476,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
             popoverSize.width -= popoverWidthDelta;
         }
         if (-1 == maxArea) {
-            _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
+            _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
         }
     }
     
