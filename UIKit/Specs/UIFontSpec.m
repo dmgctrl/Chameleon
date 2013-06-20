@@ -1,3 +1,5 @@
+#import <CoreText/CoreText.h>
+
 SPEC_BEGIN(UIFontSpec)
 
 describe(@"UIFont", ^{
@@ -121,7 +123,7 @@ describe(@"UIFont", ^{
     });
     
     context(@"with a known font, of a known size", ^{
-        NSString* name = @"Helvetica";
+        NSString* name = @"Baskerville";
         CGFloat pointSize = 17.0;
         UIFont* font = [UIFont fontWithName:name size:pointSize];
 
@@ -138,19 +140,19 @@ describe(@"UIFont", ^{
         });
 
         it(@"has the correct ascender", ^{
-            [[@([font ascender]) should] equal:@(16.09375f)];
+            [[@([font ascender]) should] equal:15.265f withDelta:0.01f];
         });
 
         it(@"has the correct descender", ^{
-            [[@([font descender]) should] equal:-3.91f withDelta:0.001];
+            [[@([font descender]) should] equal:-4.183f withDelta:0.01f];
         });
 
         it(@"has the correct capHeight", ^{
-            [[@([font capHeight]) should] equal:12.189f withDelta:0.005];
+            [[@([font capHeight]) should] equal:11.363f withDelta:0.01f];
         });
         
         it(@"has the correct xHeight", ^{
-            [[@([font xHeight]) should] equal:8.891f withDelta:0.001];
+            [[@([font xHeight]) should] equal:6.939f withDelta:0.01f];
         });
 
         it(@"has the correct lineHeight", ^{
