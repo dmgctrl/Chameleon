@@ -162,6 +162,7 @@
         // gets down farther in this method where the actual origin is calculated and set. since the window is transparent, simply setting the UIView
         // hidden gets around the problem since you then can't see any of the actual content that's in the window :)
         _popoverView.hidden = YES;
+        _popoverContainerView.hidden = YES;
 
         // now finally make the actual popover window itself and attach it to the overlay window
         _popoverWindow = [[UIPopoverNSWindow alloc] initWithContentRect:[hostingView bounds] styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:YES];
@@ -485,6 +486,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         .size = popoverSize
     };
     
+    /*
     if (NSMaxX(windowRect) > NSMaxX(screenRect)) {
         windowRect.origin.x = NSMaxX(screenRect) - popoverSize.width;
     }
@@ -496,7 +498,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
     }
     if (NSMinY(windowRect) < NSMinY(screenRect)) {
         windowRect.origin.y = NSMinY(screenRect);
-    }
+    }*/
     
     if (!CGRectEqualToRect(windowRect, [_popoverWindow frame])) {
         CGRect popoverFrame = _popoverView.frame;
@@ -504,6 +506,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         
         _popoverView.frame = popoverFrame;
         _popoverView.hidden = NO;
+        _popoverContainerView.hidden = NO;
         
         UIKitView* hostingView = [_popoverWindow contentView];
         [hostingView setFrame:(CGRect){ .size = popoverSize }];    
