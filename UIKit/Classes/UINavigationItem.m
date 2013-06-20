@@ -49,6 +49,14 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
     return __keyPaths;
 }
 
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super init])) {
+        
+    }
+    return self;
+}
+
 - (id)initWithTitle:(NSString *)theTitle
 {
     if ((self=[super init])) {
