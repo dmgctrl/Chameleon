@@ -40,5 +40,5 @@
 @interface UIFont (UIPrivate)
 + (UIFont*) fontWithNSFont:(NSFont*)aFont;
 - (NSFont*) NSFont;
-- (CTFontRef) CTFont;
+- (CTFontRef) ctFontRef;
 @end

@@ -48,6 +48,18 @@ static CTLineTruncationType CTLineTruncationTypeFromUILineBreakMode(UILineBreakM
     }
 }
 
+static CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBreakMode)
+{
+    switch (lineBreakMode) {
+        case UILineBreakModeWordWrap:         return kCTLineBreakByWordWrapping;
+        case UILineBreakModeCharacterWrap:    return kCTLineBreakByCharWrapping;
+        case UILineBreakModeClip:             return kCTLineBreakByClipping;
+        case UILineBreakModeHeadTruncation:   return kCTLineBreakByTruncatingHead;
+        case UILineBreakModeTailTruncation:   return kCTLineBreakByTruncatingTail;
+        case UILineBreakModeMiddleTruncation: return kCTLineBreakByTruncatingMiddle;
+    }
+}
+
 static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize *renderSize)
 {
     if (!font) {
@@ -57,19 +69,34 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         return nil;
     }
     
-    NSDictionary* attributes = @{
-        (id)kCTFontAttributeName: (id)[font CTFont],
-        (id)kCTForegroundColorFromContextAttributeName: @(YES)
+    CGFloat lineHeight = [font lineHeight];
+    CTLineBreakMode ctlineBreakMode = CTLineBreakModeFromUILineBreakMode(lineBreakMode);
+    CTParagraphStyleSetting settings[] = {
+        { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight),      &lineHeight },
+        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight),      &lineHeight },
+        { kCTParagraphStyleSpecifierLineBreakMode,     sizeof(ctlineBreakMode), &ctlineBreakMode },
     };
+    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
+    
+    NSDictionary* attributes = @{
+        (id)kCTFontAttributeName: (id)[font ctFontRef],
+        (id)kCTForegroundColorFromContextAttributeName: @(YES),
+        (id)kCTKernAttributeName: @(0.02),
+        (id)kCTParagraphStyleAttributeName: (__bridge id)paragraphStyle,
+    };
+    CFRelease(paragraphStyle);
+    
     CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, (__bridge CFDictionaryRef)attributes);
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attributedString);
     CFRelease(attributedString), attributedString = nil;
     
+    CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, NULL);
+    
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, (CGRect){ .size = constrainedToSize});
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CGPathAddRect(path, NULL, (CGRect){ .size = suggestedSize });
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, (CFRange){}, path, NULL);
     CFRelease(path), path = nil;
-
+    
     CFArrayRef lines = CTFrameGetLines(frame);
     CFIndex numberOfLines = CFArrayGetCount(lines);
     if (!numberOfLines) {
@@ -80,27 +107,18 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         }
         return nil;
     }
-        
-    CGPoint* origins = calloc(numberOfLines, sizeof(CGPoint));
-    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins);
-
-    CGFloat height = 0;
-    CGFloat width = 0;
-    for (CFIndex i = 0; i < numberOfLines; i++) {
-        CTLineRef line = CFArrayGetValueAtIndex(lines, numberOfLines - 1);
-        CGFloat ascender;
-        CGFloat descender;
-        CGFloat leading;
-        CGFloat widthOfLine = CTLineGetTypographicBounds(line, &ascender, &descender, &leading);
-        width = MAX(width, widthOfLine);
-        height = ((origins[i].y == DBL_MAX)? 0.0 : origins[i].y) + ascender + leading;
-        NSLog(@"%g, %g, %g, %g, %g", origins[i].x, origins[i].y, ascender, descender, leading);
-    }
+    
+    CGPoint lastLineOrigin;
+    CTFrameGetLineOrigins(frame, CFRangeMake(numberOfLines - 1, 1), &lastLineOrigin);
+    
+    CGFloat lastLineAscender;
+    CGFloat lastLineLeading;
+    CTLineGetTypographicBounds(CFArrayGetValueAtIndex(lines, numberOfLines - 1), &lastLineAscender, NULL, &lastLineLeading);
     
     if (renderSize) {
         *renderSize = (CGSize){
-            .width = round(width),
-            .height = round(height)
+            .width = MIN(ceilf(suggestedSize.width), constrainedToSize.width),
+            .height = MIN(ceilf(lastLineOrigin.y + lastLineAscender + lastLineLeading) + 1.0f, constrainedToSize.height),
         };
     }
     
@@ -111,22 +129,22 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
 
 @implementation NSString (UIStringDrawing)
 
-- (CGSize)sizeWithFont:(UIFont *)font
+- (CGSize) sizeWithFont:(UIFont*)font
 {
-    return [self sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX,font.lineHeight)];
+    return [self sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX, font.lineHeight)];
 }
 
-- (CGSize)sizeWithFont:(UIFont *)font forWidth:(CGFloat)width lineBreakMode:(UILineBreakMode)lineBreakMode
+- (CGSize) sizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     return [self sizeWithFont:font constrainedToSize:CGSizeMake(width,font.lineHeight) lineBreakMode:lineBreakMode];
 }
 
-- (CGSize)sizeWithFont:(UIFont *)font minFontSize:(CGFloat)minFontSize actualFontSize:(CGFloat *)actualFontSize forWidth:(CGFloat)width lineBreakMode:(UILineBreakMode)lineBreakMode
+- (CGSize) sizeWithFont:(UIFont*)font minFontSize:(CGFloat)minFontSize actualFontSize:(CGFloat *)actualFontSize forWidth:(CGFloat)width lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     return CGSizeZero;
 }
 
-- (CGSize)sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode
+- (CGSize) sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     CGSize resultingSize = CGSizeZero;
     
@@ -136,33 +154,33 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
     return resultingSize;
 }
 
-- (CGSize)sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size
+- (CGSize) sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size
 {
     return [self sizeWithFont:font constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
 }
 
-- (CGSize)drawAtPoint:(CGPoint)point withFont:(UIFont *)font
+- (CGSize) drawAtPoint:(CGPoint)point withFont:(UIFont*)font
 {
     return [self drawAtPoint:point forWidth:CGFLOAT_MAX withFont:font lineBreakMode:UILineBreakModeWordWrap];
 }
 
-- (CGSize)drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont *)font minFontSize:(CGFloat)minFontSize actualFontSize:(CGFloat *)actualFontSize lineBreakMode:(UILineBreakMode)lineBreakMode baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
+- (CGSize) drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont*)font minFontSize:(CGFloat)minFontSize actualFontSize:(CGFloat*)actualFontSize lineBreakMode:(UILineBreakMode)lineBreakMode baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
 {
     return CGSizeZero;
 }
 
-- (CGSize)drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont *)font fontSize:(CGFloat)fontSize lineBreakMode:(UILineBreakMode)lineBreakMode baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
+- (CGSize) drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont*)font fontSize:(CGFloat)fontSize lineBreakMode:(UILineBreakMode)lineBreakMode baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
 {
-    UIFont *adjustedFont = ([font pointSize] != fontSize)? [font fontWithSize:fontSize] : font;
+    UIFont* adjustedFont = ([font pointSize] != fontSize)? [font fontWithSize:fontSize] : font;
     return [self drawInRect:CGRectMake(point.x,point.y,width,adjustedFont.lineHeight) withFont:adjustedFont lineBreakMode:lineBreakMode];
 }
 
-- (CGSize)drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont *)font lineBreakMode:(UILineBreakMode)lineBreakMode
+- (CGSize) drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     return [self drawAtPoint:point forWidth:width withFont:font fontSize:[font pointSize] lineBreakMode:lineBreakMode baselineAdjustment:UIBaselineAdjustmentNone];
 }
  
-- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont *)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment
+- (CGSize) drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment
 {
     CGSize actualSize = CGSizeZero;
     CFArrayRef lines = CreateCTLinesForString(self,rect.size,font,lineBreakMode,&actualSize);
@@ -204,12 +222,12 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
     return actualSize;
 }
 
-- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont *)font
+- (CGSize) drawInRect:(CGRect)rect withFont:(UIFont*)font
 {
     return [self drawInRect:rect withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentLeft];
 }
 
-- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont *)font lineBreakMode:(UILineBreakMode)lineBreakMode
+- (CGSize) drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     return [self drawInRect:rect withFont:font lineBreakMode:lineBreakMode alignment:UITextAlignmentLeft];
 }

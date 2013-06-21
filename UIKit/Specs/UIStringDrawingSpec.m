@@ -1,3 +1,4 @@
+
 SPEC_BEGIN(UIStringDrawing)
 
 static NSString* const string1 = @"The quick brown fox";
