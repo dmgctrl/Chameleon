@@ -477,7 +477,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
             popoverSize.width -= popoverWidthDelta;
         }
         if (-1 == maxArea) {
-            _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
+            _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionRight;
         }
     }
     
@@ -486,7 +486,6 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         .size = popoverSize
     };
     
-    /*
     if (NSMaxX(windowRect) > NSMaxX(screenRect)) {
         windowRect.origin.x = NSMaxX(screenRect) - popoverSize.width;
     }
@@ -498,7 +497,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
     }
     if (NSMinY(windowRect) < NSMinY(screenRect)) {
         windowRect.origin.y = NSMinY(screenRect);
-    }*/
+    }
     
     if (!CGRectEqualToRect(windowRect, [_popoverWindow frame])) {
         CGRect popoverFrame = _popoverView.frame;
