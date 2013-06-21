@@ -67,7 +67,7 @@ static CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBr
     }
 }
 
-static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize* renderSize)
+static NSArray* CTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize* renderSize)
 {
     if (!font) {
         if (renderSize) {
@@ -75,44 +75,44 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         }
         return nil;
     }
+
+    CGSize size = {};
+    NSArray* lines = nil;
     
     NSAttributedString* attributedString = [NSAttributedString attributedStringWithString:string font:font color:nil lineBreakMode:lineBreakMode shadow:nil];
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedString);
-    
-    CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, NULL);
-    
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, (CGRect){ .size = suggestedSize });
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, (CFRange){}, path, NULL);
-    CFRelease(path), path = nil;
-    
-    CFArrayRef lines = CTFrameGetLines(frame);
-    CFIndex numberOfLines = CFArrayGetCount(lines);
-    if (!numberOfLines) {
-        CFRelease(framesetter);
-        CFRelease(lines);
-        if (renderSize) {
-            *renderSize = CGSizeZero;
+    if (framesetter) {
+        CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, NULL);
+        CGMutablePathRef path = CGPathCreateMutable();
+        if (path) {
+            CGPathAddRect(path, NULL, (CGRect){ .size = suggestedSize });
+            CTFrameRef frame = CTFramesetterCreateFrame(framesetter, (CFRange){}, path, NULL);
+            if (frame) {
+                lines = (__bridge NSArray*)CTFrameGetLines(frame);
+                CFIndex numberOfLines = [lines count];
+                if (numberOfLines > 0) {
+                    CGPoint lastLineOrigin;
+                    CTFrameGetLineOrigins(frame, CFRangeMake(numberOfLines - 1, 1), &lastLineOrigin);
+
+                    CGFloat lastLineAscender;
+                    CGFloat lastLineLeading;
+                    CTLineGetTypographicBounds((__bridge CTLineRef)lines[numberOfLines - 1], &lastLineAscender, NULL, &lastLineLeading);
+
+                    size = (CGSize){
+                        .width = MIN(ceilf(suggestedSize.width), constrainedToSize.width),
+                        .height = MIN(ceilf(lastLineOrigin.y + lastLineAscender + lastLineLeading) + 1.0f, constrainedToSize.height),
+                    };
+                }
+                CFRelease(frame), frame = nil;
+            }
+            CFRelease(path), path = nil;
         }
-        return nil;
+        CFRelease(framesetter), framesetter = nil;
     }
-    
-    CGPoint lastLineOrigin;
-    CTFrameGetLineOrigins(frame, CFRangeMake(numberOfLines - 1, 1), &lastLineOrigin);
-    
-    CGFloat lastLineAscender;
-    CGFloat lastLineLeading;
-    CTLineGetTypographicBounds(CFArrayGetValueAtIndex(lines, numberOfLines - 1), &lastLineAscender, NULL, &lastLineLeading);
     
     if (renderSize) {
-        *renderSize = (CGSize){
-            .width = MIN(ceilf(suggestedSize.width), constrainedToSize.width),
-            .height = MIN(ceilf(lastLineOrigin.y + lastLineAscender + lastLineLeading) + 1.0f, constrainedToSize.height),
-        };
+        *renderSize = size;
     }
-    
-    CFRelease(framesetter);
-    
     return lines;
 }
 
@@ -157,10 +157,7 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
 - (CGSize) sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     CGSize resultingSize = CGSizeZero;
-    
-    CFArrayRef lines = CreateCTLinesForString(self, size, font, lineBreakMode, &resultingSize);
-    if (lines) CFRelease(lines);
-    
+    CTLinesForString(self, size, font, lineBreakMode, &resultingSize);
     return resultingSize;
 }
 
@@ -193,7 +190,7 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
 - (CGSize) drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment
 {
     CGSize actualSize = CGSizeZero;
-    CFArrayRef lines = CreateCTLinesForString(self,rect.size,font,lineBreakMode,&actualSize);
+    CFArrayRef lines = (__bridge CFArrayRef)CTLinesForString(self,rect.size,font,lineBreakMode,&actualSize);
 
     if (lines) {
         const CFIndex numberOfLines = CFArrayGetCount(lines);
@@ -222,8 +219,6 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         }
 
         CGContextRestoreGState(ctx);
-
-        CFRelease(lines);
     }
 
     // the real UIKit appears to do this.. so shall we.
