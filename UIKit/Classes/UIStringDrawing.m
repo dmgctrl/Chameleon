@@ -30,8 +30,15 @@
 #import "UIStringDrawing.h"
 #import "UIFont.h"
 #import "UIFont+UIPrivate.h"
+#import "UIColor.h"
 #import <AppKit/AppKit.h>
 #import "UIGraphics.h"
+
+
+@interface NSAttributedString (UIStringDrawing)
++ (NSAttributedString*) attributedStringWithString:(NSString*)string font:(UIFont*)font color:(UIColor*)color lineBreakMode:(UILineBreakMode)lineBreakMode shadow:(NSShadow*)shadow;
+@end
+
 
 NSString *const UITextAttributeFont = @"UITextAttributeFont";
 NSString *const UITextAttributeTextColor = @"UITextAttributeTextColor";
@@ -69,21 +76,8 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         return nil;
     }
     
-    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setTighteningFactorForTruncation:0.0f];
-    [paragraphStyle setLineBreakMode:CTLineBreakModeFromUILineBreakMode(lineBreakMode)];
-    
-    NSDictionary* attributes = @{
-        (id)kCTFontAttributeName: (id)[font ctFontRef],
-        (id)kCTForegroundColorFromContextAttributeName: @(YES),
-        (id)kCTKernAttributeName: @(0.0f),
-        (id)kCTLigatureAttributeName: @(0.0f),
-        (id)kCTParagraphStyleAttributeName: paragraphStyle,
-    };
-    
-    CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, (__bridge CFDictionaryRef)attributes);
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attributedString);
-    CFRelease(attributedString), attributedString = nil;
+    NSAttributedString* attributedString = [NSAttributedString attributedStringWithString:string font:font color:nil lineBreakMode:lineBreakMode shadow:nil];
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedString);
     
     CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, NULL);
     
@@ -121,6 +115,27 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
     
     return lines;
 }
+
+
+@implementation NSAttributedString (UIStringDrawing)
+
++ (NSAttributedString*) attributedStringWithString:(NSString*)string font:(UIFont*)font color:(UIColor*)color lineBreakMode:(UILineBreakMode)lineBreakMode shadow:(NSShadow*)shadow
+{
+    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setTighteningFactorForTruncation:0.0f];
+    [paragraphStyle setLineBreakMode:CTLineBreakModeFromUILineBreakMode(lineBreakMode)];
+    return [[NSAttributedString alloc] initWithString:string attributes:@{
+        NSFontAttributeName: (id)[font ctFontRef],
+        NSKernAttributeName: @(0.0f),
+        NSLigatureAttributeName: @(0.0f),
+        NSParagraphStyleAttributeName: paragraphStyle,
+        NSShadowAttributeName: shadow? shadow : [[NSShadow alloc] init],
+        (color? NSForegroundColorAttributeName : (id)kCTForegroundColorFromContextAttributeName): (color? (id)[color CGColor] : @(YES)),
+    }];
+}
+
+@end
+
 
 @implementation NSString (UIStringDrawing)
 
