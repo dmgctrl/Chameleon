@@ -416,6 +416,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
     const BOOL allowLeftQuad    = (_arrowDirections & UIPopoverArrowDirectionRight) && lq.width > 0 && lq.height > 0 && allowLeftOrRight;
     const BOOL allowRightQuad   = (_arrowDirections & UIPopoverArrowDirectionLeft)  && rq.width > 0 && rq.height > 0 && allowLeftOrRight;
     
+    _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionRight;
     if (allowBottomQuad && SizeIsLessThanOrEqualSize(popoverSize, bq)) {
         pointTo.y = _desktopScreenRect.origin.y;
         origin.y = _desktopScreenRect.origin.y - popoverSize.height + kArrowPadding;
@@ -507,8 +508,8 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         _popoverView.hidden = NO;
         _popoverContainerView.hidden = NO;
         
-        UIKitView* hostingView = [_popoverWindow contentView];
-        [hostingView setFrame:(CGRect){ .size = popoverSize }];    
+        UIKitView* hostingView = [[[_popoverWindow contentView] subviews] objectAtIndex:0];
+        [hostingView setFrame:(CGRect){ .size = popoverSize }];
         [_popoverWindow setFrame:windowRect display:NO animate:NO];
         
         _popoverContentSize = _contentViewController.view.bounds.size;
