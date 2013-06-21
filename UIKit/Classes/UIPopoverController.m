@@ -172,6 +172,7 @@
         [_popoverWindow setBackgroundColor:[NSColor clearColor]];
         
         _popoverContainerView = [[UIPopoverNSView alloc] initWithFrame:overlayContentRect];
+        _popoverContainerView.hidden = YES;
         [_popoverContainerView addSubview:hostingView];
         [_popoverWindow setContentView:_popoverContainerView];
         //[_popoverWindow setContentView:hostingView];
@@ -506,7 +507,6 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         
         _popoverView.frame = popoverFrame;
         _popoverView.hidden = NO;
-        _popoverContainerView.hidden = NO;
         
         UIKitView* hostingView = [[[_popoverWindow contentView] subviews] objectAtIndex:0];
         [hostingView setFrame:(CGRect){ .size = popoverSize }];
@@ -524,6 +524,8 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         CGPoint viewPointTo = [_popoverView convertPoint:windowPointTo fromView:nil];
         [_popoverView pointTo:viewPointTo inView:_popoverView];
     }
+    
+    _popoverContainerView.hidden = NO;
 }
 
 - (void) observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
