@@ -60,7 +60,7 @@ static CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBr
     }
 }
 
-static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize *renderSize)
+static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, CGSize* renderSize)
 {
     if (!font) {
         if (renderSize) {
@@ -69,22 +69,17 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
         return nil;
     }
     
-    CGFloat lineHeight = [font lineHeight];
-    CTLineBreakMode ctlineBreakMode = CTLineBreakModeFromUILineBreakMode(lineBreakMode);
-    CTParagraphStyleSetting settings[] = {
-        { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight),      &lineHeight },
-        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight),      &lineHeight },
-        { kCTParagraphStyleSpecifierLineBreakMode,     sizeof(ctlineBreakMode), &ctlineBreakMode },
-    };
-    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
+    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setTighteningFactorForTruncation:0.0f];
+    [paragraphStyle setLineBreakMode:CTLineBreakModeFromUILineBreakMode(lineBreakMode)];
     
     NSDictionary* attributes = @{
         (id)kCTFontAttributeName: (id)[font ctFontRef],
         (id)kCTForegroundColorFromContextAttributeName: @(YES),
-        (id)kCTKernAttributeName: @(0.02),
-        (id)kCTParagraphStyleAttributeName: (__bridge id)paragraphStyle,
+        (id)kCTKernAttributeName: @(0.0f),
+        (id)kCTLigatureAttributeName: @(0.0f),
+        (id)kCTParagraphStyleAttributeName: paragraphStyle,
     };
-    CFRelease(paragraphStyle);
     
     CFAttributedStringRef attributedString = CFAttributedStringCreate(NULL, (__bridge CFStringRef)string, (__bridge CFDictionaryRef)attributes);
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attributedString);
