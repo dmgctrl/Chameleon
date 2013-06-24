@@ -31,9 +31,11 @@
 #import "UIColor.h"
 #import "UIFont.h"
 #import "UIGraphics.h"
+#import "UIColor+AppKit.h"
 #import <AppKit/NSStringDrawing.h>
 #import <AppKit/NSApplication.h>
-
+#import <AppKit/NSParagraphStyle.h>
+#import <AppKit/NSShadow.h>
 
 static NSString* const kUIFontKey = @"UIFont";
 static NSString* const kUIHighlightedColorKey = @"UIHighlightedColor";
@@ -46,7 +48,15 @@ static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
 static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 
-@implementation UILabel
+@implementation UILabel {
+    enum {
+        kRenderModeNone = 0,
+        kRenderModePlainText,
+        kRenderModeAttributedText
+    } _renderMode;
+    struct {
+    } _flags;
+}
 
 - (void) _commonInitForUILabel
 {
@@ -54,9 +64,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     self.textAlignment = UITextAlignmentLeft;
     self.lineBreakMode = UILineBreakModeTailTruncation;
     self.textColor = [UIColor blackColor];
-    if (!self.backgroundColor) {
-        self.backgroundColor = [UIColor whiteColor];
-    }
+    self.backgroundColor = [UIColor whiteColor];
     self.enabled = YES;
     self.font = [UIFont systemFontOfSize:17];
     self.numberOfLines = 1;
@@ -109,28 +117,50 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return self;
 }
 
-- (void)setText:(NSString *)newText
+- (void) setText:(NSString*)text
 {
-    if (_text != newText) {
-        _text = [newText copy];
+    if (text) {
+        _renderMode = kRenderModePlainText;
+        _text = [text copy];
+    } else {
+        _renderMode = kRenderModeNone;
+        _attributedText = nil;
+        _text = nil;
+    }
+    [self setNeedsDisplay];
+}
+
+- (void) setAttributedText:(NSAttributedString*)attributedText
+{
+    if (attributedText) {
+        _renderMode = kRenderModeAttributedText;
+        _attributedText = attributedText;
+    } else {
+        _renderMode = kRenderModeNone;
+        _attributedText = nil;
+        _text = nil;
+    }
+    [self setNeedsDisplay];
+}
+
+- (void) setFont:(UIFont*)font
+{
+    if (font == nil) {
+        [NSException raise:NSInvalidArgumentException format:@"font must not be nil."];
+    }
+    if (font != _font) {
+        _font = font;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setFont:(UIFont *)newFont
+- (void) setTextColor:(UIColor*)color
 {
-    assert(newFont != nil);
-
-    if (newFont != _font) {
-        _font = newFont;
-        [self setNeedsDisplay];
+    if (color == nil) {
+        [NSException raise:NSInvalidArgumentException format:@"color must not be nil."];
     }
-}
-
-- (void)setTextColor:(UIColor *)newColor
-{
-    if (newColor != _textColor) {
-        _textColor = newColor;
+    if (color != _textColor) {
+        _textColor = color;
         [self setNeedsDisplay];
     }
 }
@@ -183,7 +213,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
+- (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
     if ([_text length] > 0) {
         CGSize maxSize = bounds.size;
@@ -196,49 +226,38 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return (CGRect){bounds.origin, {0, 0}};
 }
 
-- (void)drawTextInRect:(CGRect)rect
+- (void) drawTextInRect:(CGRect)rect
 {
-    [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
+    CGRect drawRect = CGRectZero;
+    CGSize maxSize = rect.size;
+    if (_numberOfLines > 0) {
+        maxSize.height = _font.lineHeight * (_numberOfLines + 0.5);
+    }
+    drawRect.size = [_text sizeWithFont:_font constrainedToSize:maxSize lineBreakMode:_lineBreakMode];
+    drawRect = CGRectOffset(drawRect, 0, roundf((rect.size.height - drawRect.size.height) / 2.f));
+    
+    [_text drawInRect:drawRect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
 }
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)rect
 {
-    if ([_text length] > 0) {
-        CGContextSaveGState(UIGraphicsGetCurrentContext());
-        
-        const CGRect bounds = self.bounds;
-        CGRect drawRect = CGRectZero;
-        
-        // find out the actual size of the text given the size of our bounds
-        CGSize maxSize = bounds.size;
-        if (_numberOfLines > 0) {
-            maxSize.height = _font.lineHeight * (_numberOfLines + 0.5);
+    if (_renderMode != kRenderModeNone) {
+        CGContextRef c = UIGraphicsGetCurrentContext();
+        @try {
+            CGContextSaveGState(c);
+            if (_renderMode == kRenderModePlainText) {
+                CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), _shadowOffset, 0, _shadowColor.CGColor);
+                UIColor* drawColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
+                [drawColor setFill];
+
+                [self drawTextInRect:[self bounds]];
+            } else if (_renderMode == kRenderModeAttributedText) {
+                [_attributedText drawInRect:[self bounds]];
+            }
+        } @finally {
+            CGContextRestoreGState(c);
         }
-        drawRect.size = [_text sizeWithFont:_font constrainedToSize:maxSize lineBreakMode:_lineBreakMode];
-
-        // now vertically center it
-        drawRect.origin.y = roundf((bounds.size.height - drawRect.size.height) / 2.f);
-        
-        // now position it correctly for the width
-        // this might be cheating somehow and not how the real thing does it...
-        // I didn't spend a ton of time investigating the sizes that it sends the drawTextInRect: method
-        drawRect.origin.x = 0;
-        drawRect.size.width = bounds.size.width;
-        
-        // if there's a shadow, let's set that up
-        CGSize offset = _shadowOffset;
-
-        CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), offset, 0, _shadowColor.CGColor);
-        
-        // finally, draw the real label
-        UIColor *drawColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
-        [drawColor setFill];
-        [self drawTextInRect:drawRect];
-        
-        CGContextRestoreGState(UIGraphicsGetCurrentContext());
-    } else if(self.attributedText.length > 0) {
-		[self.attributedText drawInRect:NSRectFromCGRect(self.bounds)];
-	}
+    }
 }
 
 - (void)setFrame:(CGRect)newFrame

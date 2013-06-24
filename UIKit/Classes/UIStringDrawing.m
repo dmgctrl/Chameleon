@@ -207,7 +207,7 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
 
 - (CGSize) sizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(UILineBreakMode)lineBreakMode
 {
-    return [self sizeWithFont:font constrainedToSize:CGSizeMake(width, [font lineHeight]) lineBreakMode:lineBreakMode];
+    return [self sizeWithFont:font constrainedToSize:CGSizeMake(width, [font lineHeight] * 1.5f) lineBreakMode:lineBreakMode];
 }
 
 - (CGSize) sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size
