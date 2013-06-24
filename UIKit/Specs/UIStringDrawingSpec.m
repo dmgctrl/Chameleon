@@ -57,7 +57,6 @@ describe(@"UIStringDrawing", ^{
                     }
                 });
 
-#if 0
                 context(@"using UILineBreakModeClip", ^{
                     NSDictionary* values = @{
                         @(130): @(127),
@@ -75,6 +74,7 @@ describe(@"UIStringDrawing", ^{
                     }
                 });
                 
+#if 0
                 context(@"using UILineBreakModeHeadTruncation", ^{
                     NSDictionary* values = @{
                         @(130): @(128),

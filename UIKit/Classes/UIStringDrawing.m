@@ -86,7 +86,7 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
     }
 
     CGSize size = {};
-    NSArray* lines = nil;
+    NSMutableArray* lines = nil;
     
     NSAttributedString* attributedString = [NSAttributedString attributedStringWithString:string font:font color:nil lineBreakMode:lineBreakMode textAlignment:UITextAlignmentLeft shadow:nil];
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedString);
@@ -101,40 +101,63 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
             CGPathAddRect(path, NULL, (CGRect){ .size = suggestedSize });
             CTFrameRef frame = CTFramesetterCreateFrame(framesetter, (CFRange){}, path, NULL);
             if (frame) {
-                lines = (__bridge NSArray*)CTFrameGetLines(frame);
+                lines = (__bridge NSMutableArray*)CTFrameGetLines(frame);
                 CFIndex numberOfLines = [lines count];
                 if (numberOfLines > 0) {
+                    BOOL calculateMaxWidth = YES;
+                    
+                    switch (lineBreakMode) {
+                        case UILineBreakModeWordWrap: {
+                            /*  The CoreText machinery will attempt to fill the allotted space with
+                             *  single characters (even if word wrapping is specified.)  Apple's sizing
+                             *  functions return a string width of zero.
+                             */
+                            CFStringTokenizerRef tokenizer = CFStringTokenizerCreate(NULL, (__bridge CFStringRef)string, (CFRange){.length = [string length]}, kCFStringTokenizerUnitWord, NULL);
+                            if (tokenizer) {
+                                CFStringTokenizerAdvanceToNextToken(tokenizer);
+                                CFRange range = CFStringTokenizerGetCurrentTokenRange(tokenizer);
+                                if (range.location == kCFNotFound) {
+                                    calculateMaxWidth = NO;
+                                } else {
+                                    CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
+                                    CFIndex breakIndex = CTTypesetterSuggestClusterBreak(typesetter, 0, constrainedToSize.width);
+                                    if (breakIndex < (range.location + range.length)) {
+                                        calculateMaxWidth = NO;
+                                    }
+                                }
+                                CFRelease(tokenizer), tokenizer = nil;
+                            }
+                            break;
+                        }
+                            
+                        case UILineBreakModeClip: {
+                            CTLineRef line = (__bridge CTLineRef)lines[numberOfLines - 1];
+                            CFRange range = CTLineGetStringRange(line);
+                            CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
+                            lines[numberOfLines - 1] = (__bridge_transfer id)CTTypesetterCreateLine(
+                                typesetter,
+                                (CFRange){
+                                    range.location,
+                                    CTTypesetterSuggestClusterBreak(typesetter, range.location, constrainedToSize.width)
+                                }
+                            );
+                            break;
+                        }
+                            
+                        default: {
+                            break;
+                        }
+                    }
+
                     CGFloat maxWidth = 0;
                     CGFloat ascender;
                     CGFloat leading;
-                    
                     for (NSUInteger i = 0; i < numberOfLines; i++) {
                         CTLineRef line = (__bridge CTLineRef)lines[i];
                         CGFloat width = CTLineGetTypographicBounds(line, &ascender, NULL, &leading);
                         CGFloat trailingWhitespaceWidth = CTLineGetTrailingWhitespaceWidth(line);
-                        maxWidth = MAX(maxWidth, width - trailingWhitespaceWidth);
-                    }
-
-                    /*  In the case of a single line string, where word wrapping is desired, 
-                     *  the CoreText machinery will attempt to fill the allotted space with 
-                     *  single characters (even if word wrapping is specified.)  Apple's sizing
-                     *  functions return a string width of zero.
-                     */
-                    if (UILineBreakModeWordWrap == lineBreakMode && numberOfLines == 1) {
-                        CFStringTokenizerRef tokenizer = CFStringTokenizerCreate(NULL, (__bridge CFStringRef)string, (CFRange){.length = [string length]}, kCFStringTokenizerUnitWord, NULL);
-                        if (tokenizer) {
-                            CFStringTokenizerAdvanceToNextToken(tokenizer);
-                            CFRange range = CFStringTokenizerGetCurrentTokenRange(tokenizer);
-                            if (range.location == kCFNotFound) {
-                                maxWidth = 0;
-                            } else {
-                                CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
-                                CFIndex breakIndex = CTTypesetterSuggestClusterBreak(typesetter, 0, constrainedToSize.width);
-                                if (breakIndex < (range.location + range.length)) {
-                                    maxWidth = 0;
-                                }
-                            }
-                            CFRelease(tokenizer), tokenizer = nil;
+                        if (calculateMaxWidth) {
+                            maxWidth = MAX(maxWidth, width - trailingWhitespaceWidth);
                         }
                     }
                     
