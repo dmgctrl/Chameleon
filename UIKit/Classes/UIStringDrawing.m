@@ -141,32 +141,40 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
                             break;
                         }
                         
-                        case UILineBreakModeHeadTruncation: {
-                            CTLineTruncationType truncType = CTLineTruncationTypeFromUILineBreakMode(lineBreakMode);
+                        case UILineBreakModeHeadTruncation:
+                        case UILineBreakModeMiddleTruncation:
+                        case UILineBreakModeTailTruncation: {
+                            CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
                             CTLineRef line = (__bridge CTLineRef)lines[numberOfLines - 1];
-                            NSLog(@"%@", line);
                             CFRange range = CTLineGetStringRange(line);
                             range.length = [string length] - range.location;
                             CFDictionaryRef attributes = CFAttributedStringGetAttributes((__bridge CFAttributedStringRef)attributedString, range.location, NULL);
-                            CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), attributes);
-                            if (ellipsisString) {
-                                CTLineRef ellipsisLine = CTLineCreateWithAttributedString(ellipsisString);
-                                if (ellipsisLine) {
-                                    lines[numberOfLines - 1] = (__bridge_transfer id)CTLineCreateTruncatedLine(
-                                        line,
-                                        constrainedToSize.width,
-                                        truncType,
-                                        ellipsisLine
-                                    );
-                                    NSLog(@"%@", lines[numberOfLines - 1]);
-                                    CFRelease(ellipsisLine);
+                            CTLineRef tempLine =  CTTypesetterCreateLine(typesetter, range);
+                            if (tempLine) {
+                                CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), attributes);
+                                if (ellipsisString) {
+                                    CTLineRef ellipsisLine = CTLineCreateWithAttributedString(ellipsisString);
+                                    if (ellipsisLine) {
+                                        CTLineRef newLine = CTLineCreateTruncatedLine(
+                                            tempLine,
+                                            constrainedToSize.width,
+                                            CTLineTruncationTypeFromUILineBreakMode(lineBreakMode),
+                                            ellipsisLine
+                                        );
+                                        if (newLine) {
+                                            lines[numberOfLines - 1] = (__bridge_transfer id)newLine;
+                                        }
+                                        CFRelease(ellipsisLine);
+                                    }
+                                    CFRelease(ellipsisString);
                                 }
-                                CFRelease(ellipsisString);
+                                CFRelease(tempLine);
                             }
                             break;
                         }
                             
-                        default: {
+                        case UILineBreakModeCharacterWrap: {
+                            /* Do nothing */
                             break;
                         }
                     }
