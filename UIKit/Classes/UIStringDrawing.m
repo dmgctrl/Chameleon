@@ -93,9 +93,6 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
     if (framesetter) {
         CFRange fitRange;
         CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, &fitRange);
-        if (suggestedSize.width > constrainedToSize.width) {
-            suggestedSize.width = constrainedToSize.width;
-        }
         CGMutablePathRef path = CGPathCreateMutable();
         if (path) {
             CGPathAddRect(path, NULL, (CGRect){ .size = suggestedSize });
@@ -141,6 +138,31 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
                                     CTTypesetterSuggestClusterBreak(typesetter, range.location, constrainedToSize.width)
                                 }
                             );
+                            break;
+                        }
+                        
+                        case UILineBreakModeHeadTruncation: {
+                            CTLineTruncationType truncType = CTLineTruncationTypeFromUILineBreakMode(lineBreakMode);
+                            CTLineRef line = (__bridge CTLineRef)lines[numberOfLines - 1];
+                            NSLog(@"%@", line);
+                            CFRange range = CTLineGetStringRange(line);
+                            range.length = [string length] - range.location;
+                            CFDictionaryRef attributes = CFAttributedStringGetAttributes((__bridge CFAttributedStringRef)attributedString, range.location, NULL);
+                            CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), attributes);
+                            if (ellipsisString) {
+                                CTLineRef ellipsisLine = CTLineCreateWithAttributedString(ellipsisString);
+                                if (ellipsisLine) {
+                                    lines[numberOfLines - 1] = (__bridge_transfer id)CTLineCreateTruncatedLine(
+                                        line,
+                                        constrainedToSize.width,
+                                        truncType,
+                                        ellipsisLine
+                                    );
+                                    NSLog(@"%@", lines[numberOfLines - 1]);
+                                    CFRelease(ellipsisLine);
+                                }
+                                CFRelease(ellipsisString);
+                            }
                             break;
                         }
                             
