@@ -35,8 +35,9 @@
 #import "UIWindow.h"
 #import "UIImage+UIPrivate.h"
 #import "UIScreen.h"
-#import <QuartzCore/QuartzCore.h>
 #import "UIImageRep.h"
+//
+#import <QuartzCore/QuartzCore.h>
 
 static NSString* const kUIImageKey = @"UIImage";
 

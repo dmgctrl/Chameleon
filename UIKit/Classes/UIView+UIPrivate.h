@@ -29,10 +29,10 @@
 
 #import "UIView.h"
 
-extern NSString *const UIViewFrameDidChangeNotification;
-extern NSString *const UIViewBoundsDidChangeNotification;
-extern NSString *const UIViewDidMoveToSuperviewNotification;
-extern NSString *const UIViewHiddenDidChangeNotification;
+UIKIT_EXTERN NSString *const UIViewFrameDidChangeNotification;
+UIKIT_EXTERN NSString *const UIViewBoundsDidChangeNotification;
+UIKIT_EXTERN NSString *const UIViewDidMoveToSuperviewNotification;
+UIKIT_EXTERN NSString *const UIViewHiddenDidChangeNotification;
 
 @interface UIView () {
     UIView *_nextKeyView; // NR

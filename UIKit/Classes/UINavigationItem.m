@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UINavigationItem.h"
+#import "UINavigationBar.h"
 #import "UIBarButtonItem.h"
 #import "UINavigationItem+UIPrivate.h"
 #import "UINavigationBar.h"
@@ -47,6 +47,14 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
         __keyPaths = [[NSSet alloc] initWithObjects:@"title", @"prompt", @"backBarButtonItem", @"leftBarButtonItem", @"rightBarButtonItem", @"titleView", @"hidesBackButton", nil];
     });
     return __keyPaths;
+}
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super init])) {
+        
+    }
+    return self;
 }
 
 - (id)initWithTitle:(NSString *)theTitle

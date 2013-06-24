@@ -30,7 +30,8 @@
 #import "UIView.h"
 #import "UIPopoverController+AppKit.h"
 
-@class UIImageView, UIPopoverController;
+@class UIImageView;
+@class UIPopoverController;
 
 @interface UIPopoverView : UIView {
     UIImageView *_backgroundView;

@@ -33,6 +33,9 @@
 #import "UINavigationBar.h"
 #import "UIToolbar.h"
 
+#import <Quartz/Quartz.h>
+
+
 static const NSTimeInterval kAnimationDuration = 0.22;
 static const CGFloat NavBarHeight = 44;
 static const CGFloat ToolbarHeight = 28;

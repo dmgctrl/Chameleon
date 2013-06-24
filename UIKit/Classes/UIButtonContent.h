@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 
-@class UIColor, UIImage;
+@class UIColor;
+@class UIImage;
 
 @interface UIButtonContent : NSObject <NSCoding, NSCopying>
 

@@ -29,7 +29,8 @@
 
 #import <AppKit/NSTextView.h>
 
-@class CALayer, UICustomNSTextView;
+@class CALayer;
+@class UICustomNSTextView;
 
 @protocol UICustomNSTextViewDelegate <NSTextViewDelegate>
 - (BOOL)textViewBecomeFirstResponder:(UICustomNSTextView *)textView;

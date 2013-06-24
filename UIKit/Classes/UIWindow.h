@@ -27,35 +27,36 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
+#import <UIKit/UIView.h>
 
 typedef CGFloat UIWindowLevel;
-extern const UIWindowLevel UIWindowLevelNormal;
-extern const UIWindowLevel UIWindowLevelStatusBar;
-extern const UIWindowLevel UIWindowLevelAlert;
+UIKIT_EXTERN const UIWindowLevel UIWindowLevelNormal;
+UIKIT_EXTERN const UIWindowLevel UIWindowLevelStatusBar;
+UIKIT_EXTERN const UIWindowLevel UIWindowLevelAlert;
 
-extern NSString *const UIWindowDidBecomeVisibleNotification;
-extern NSString *const UIWindowDidBecomeHiddenNotification;
-extern NSString *const UIWindowDidBecomeKeyNotification;
-extern NSString *const UIWindowDidResignKeyNotification;
+UIKIT_EXTERN NSString *const UIWindowDidBecomeVisibleNotification;
+UIKIT_EXTERN NSString *const UIWindowDidBecomeHiddenNotification;
+UIKIT_EXTERN NSString *const UIWindowDidBecomeKeyNotification;
+UIKIT_EXTERN NSString *const UIWindowDidResignKeyNotification;
 
-extern NSString *const UIKeyboardWillShowNotification;
-extern NSString *const UIKeyboardDidShowNotification;
-extern NSString *const UIKeyboardWillHideNotification;
-extern NSString *const UIKeyboardDidHideNotification;
+UIKIT_EXTERN NSString *const UIKeyboardWillShowNotification;
+UIKIT_EXTERN NSString *const UIKeyboardDidShowNotification;
+UIKIT_EXTERN NSString *const UIKeyboardWillHideNotification;
+UIKIT_EXTERN NSString *const UIKeyboardDidHideNotification;
 
-extern NSString *const UIKeyboardFrameBeginUserInfoKey;
-extern NSString *const UIKeyboardFrameEndUserInfoKey;
-extern NSString *const UIKeyboardAnimationDurationUserInfoKey;
-extern NSString *const UIKeyboardAnimationCurveUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardFrameBeginUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardFrameEndUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardAnimationDurationUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardAnimationCurveUserInfoKey;
 
 // deprecated
-extern NSString *const UIKeyboardCenterBeginUserInfoKey;
-extern NSString *const UIKeyboardCenterEndUserInfoKey;
-extern NSString *const UIKeyboardBoundsUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardCenterBeginUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardCenterEndUserInfoKey;
+UIKIT_EXTERN NSString *const UIKeyboardBoundsUserInfoKey;
 
 
-@class UIScreen, UIViewController;
+@class UIScreen;
+@class UIViewController;
 
 @interface UIWindow : UIView 
 

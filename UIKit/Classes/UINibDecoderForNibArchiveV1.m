@@ -24,6 +24,7 @@ enum {
     kValueTypeFloat32               = 0x06,
     kValueTypeFloat64               = 0x07,
     kValueTypeData                  = 0x08,
+    kValueTypeNull                  = 0x09,
     kValueTypeObject                = 0x0A,
 };
 
@@ -269,6 +270,10 @@ static inline double decodeFloat64(void const** pp);
                     decodeFloat64(&vp);
                     break;
                 }
+                
+                case kValueTypeNull: {
+                    break;
+                }
                     
                 case kValueTypeObject: {
                     data = vp;
@@ -307,13 +312,18 @@ static inline double decodeFloat64(void const** pp);
             }
             Class class = NSClassFromString(className);
             if (!class) {
-                return nil;
+                [self _throwCannotInstantiateClassWithName:className];
             }
             [classes addObject:class];
             cp += length;
         }
     }
     return self;
+}
+
+- (void) _throwCannotInstantiateClassWithName:(NSString*)name
+{
+    [NSException raise:NSInvalidUnarchiveOperationException format:@"Could not instantiate class named %@", name];
 }
 
 @end
@@ -779,6 +789,9 @@ static Class kClassForUIImageNibPlaceholder;
                     } else {
                         object = [externalObjects_ objectForKey:proxiedObjectIdentifier];
                     }
+                    if (!object) {
+                        [self _cannotDereferenceExternalObject:proxiedObjectIdentifier];
+                    }
                 } else if (class == kClassForUIImageNibPlaceholder) {
                     NSString* resourceName = [object resourceName];
                     object = [UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]];
@@ -787,6 +800,10 @@ static Class kClassForUIImageNibPlaceholder;
                 [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(object)];
             }
             return object;
+        }
+            
+        case kValueTypeNull: {
+            return nil;
         }
             
         case kValueTypeByte: {
@@ -955,14 +972,19 @@ static Class kClassForUIImageNibPlaceholder;
     return UIEdgeInsetsZero;
 }
 
+- (void) _cannotDereferenceExternalObject:(NSString*)identifier
+{
+    [NSException raise:[self className] format:@"Unable to load Nib: Unable to deference external object \"%@\"", identifier];
+}
+
 - (void) _cannotDecodeObjCType:(const char *)objcType 
 {
-    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot decode type %s", objcType];
+    [NSException raise:[self className] format:@"Unable to load Nib: Unknown Objc-Type \"%s\"", objcType];
 }
 
 - (void) _cannotDecodeType:(NSInteger)type asObjCType:(char const*)objcType 
 {
-    [NSException raise:@"UINibArchiveDecoderV1" format:@"UINibArchiveDecoder (v1) cannot decode type-code %ld as %s", type, objcType];
+    [NSException raise:[self className] format:@"Unable to load Nib: Cannot decode type-code %ld as %s", type, objcType];
 }
 
 @end

@@ -27,10 +27,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
-#import "UIInterface.h"
+#import <UIKit/UIView.h>
+#import <UIKit/UIInterface.h>
 
-@class UIActionSheet, UITabBar, UIToolbar, UIBarButtonItem;
+@class UIActionSheet;
+@class UITabBar;
+@class UIToolbar;
+@class UIBarButtonItem;
 
 @protocol UIActionSheetDelegate <NSObject>
 @optional

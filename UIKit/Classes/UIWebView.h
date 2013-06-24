@@ -27,8 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
-#import "UIDataDetectors.h"
+#import <UIKit/UIView.h>
+#import <UIKit/UIDataDetectors.h>
 
 enum {
     UIWebViewNavigationTypeLinkClicked,
@@ -40,7 +40,7 @@ enum {
 };
 typedef NSUInteger UIWebViewNavigationType;
 
-@class UIWebView, UIViewAdapter, WebView;
+@class UIWebView;
 
 @protocol UIWebViewDelegate <NSObject>
 @optional

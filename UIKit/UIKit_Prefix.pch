@@ -39,3 +39,5 @@
 #if !__has_feature(objc_arc)
     #define __bridge
 #endif
+
+#define UIKIT_HIDDEN __attribute__((visibility("hidden")))

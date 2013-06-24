@@ -29,6 +29,8 @@
 
 #import "UIScreen.h"
 
+@class UIKitView;
+
 @interface UIScreen ()
 @property (assign, nonatomic, readonly) UIKitView *UIKitView;
 @end

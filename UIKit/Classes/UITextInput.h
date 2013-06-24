@@ -144,9 +144,9 @@ typedef enum {
 //---------------------------------------------------------------------------------------------------
 
 /* Keys to style dictionaries. */
-extern NSString *const UITextInputTextBackgroundColorKey; // Key to a UIColor
-extern NSString *const UITextInputTextColorKey;           // Key to a UIColor
-extern NSString *const UITextInputTextFontKey;            // Key to a UIFont
+UIKIT_EXTERN NSString *const UITextInputTextBackgroundColorKey; // Key to a UIColor
+UIKIT_EXTERN NSString *const UITextInputTextColorKey;           // Key to a UIColor
+UIKIT_EXTERN NSString *const UITextInputTextFontKey;            // Key to a UIFont
 
 
 /* To accommodate text entry in documents that contain nested elements, or in which supplying and
@@ -208,4 +208,4 @@ extern NSString *const UITextInputTextFontKey;            // Key to a UIFont
 
 @end
 
-extern NSString *const UITextInputCurrentInputModeDidChangeNotification;
+UIKIT_EXTERN NSString *const UITextInputCurrentInputModeDidChangeNotification;

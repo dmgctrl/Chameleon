@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
+#import <UIKit/UIControl.h>
 
 typedef enum {
     UIButtonTypeCustom = 0,
@@ -38,7 +38,9 @@ typedef enum {
     UIButtonTypeContactAdd,
 } UIButtonType;
 
-@class UILabel, UIImageView, UIImage;
+@class UILabel;
+@class UIImageView;
+@class UIImage;
 
 @interface UIButton : UIControl <NSCoding>
 

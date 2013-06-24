@@ -30,7 +30,8 @@
 #import <Cocoa/Cocoa.h>
 #import "UIApplicationDelegate.h"
 
-@class UIScreen, UIWindow;
+@class UIScreen;
+@class UIWindow;
 
 @interface UIKitView : NSView {
     UIScreen *_screen;

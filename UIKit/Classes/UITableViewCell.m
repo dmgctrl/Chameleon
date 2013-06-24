@@ -40,6 +40,8 @@
 #import "UITableViewCellBackgroundView.h"
 #import "UITableViewCellSelectedBackgroundView.h"
 #import "UITableViewCellLayoutManager.h"
+//
+#import <AppKit/AppKit.h>
 
 
 static NSString* const kUIContentViewKey = @"UIContentView";

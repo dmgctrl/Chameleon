@@ -32,7 +32,7 @@
 #import "UIScreen.h"
 #import "UIWindow.h"
 #import "UIScreen.h"
-#import "UINavigationItem.h"
+#import "UINavigationBar.h"
 #import "UIBarButtonItem.h"
 #import "UINavigationController.h"
 #import "UISplitViewController.h"
@@ -40,8 +40,27 @@
 #import "UIScreen.h"
 #import "UITabBarController.h"
 #import "UINib.h"
+#import "UINibLoading.h"
+#import "UIStoryboard.h"
+#import "UIStoryboard+UIPrivate.h"
+#import "UIStoryboardSegueTemplate.h"
+#import "UIStoryboardSegue.h"
+
+
+static NSString* const kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
+static NSString* const kUINibNameKey                            = @"UINibName";
+static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboardSegueTemplates";
+
+
+@interface UIViewController ()
+@property (nonatomic, readonly) NSArray* storyboardSegueTemplates;
+@end
+
 
 @implementation UIViewController {
+    NSString* _storyboardIdentifier;
+    NSString* _topLevelObjectsToKeepAliveFromStoryboard;
+
     UIViewControllerAppearState _appearState;
     
     struct {
@@ -75,6 +94,27 @@
         _contentSizeForViewInPopover = CGSizeMake(320,1100);
     }
     return self;
+}
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super init])) {
+        if ([coder containsValueForKey:kUINibNameKey]) {
+            _storyboardIdentifier = [[coder decodeObjectForKey:kUINibNameKey] copy];
+        }
+        if ([coder containsValueForKey:kUIExternalObjectsTableForViewLoadingKey]) {
+            _topLevelObjectsToKeepAliveFromStoryboard = [coder decodeObjectForKey:kUIExternalObjectsTableForViewLoadingKey];
+        }
+        if ([coder containsValueForKey:kUIStoryboardSegueTemplatesKey]) {
+            _storyboardSegueTemplates = [coder decodeObjectForKey:kUIStoryboardSegueTemplatesKey];
+        }
+    }
+    return self;
+}
+
+- (void) encodeWithCoder:(NSCoder *)aCoder
+{
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void)dealloc
@@ -143,7 +183,11 @@
 
 - (void)loadView
 {
-    if (self.nibName) {
+    if (self.storyboard) {
+        [[self.storyboard nibForStoryboardNibNamed:_storyboardIdentifier] instantiateWithOwner:self options:@{
+            UINibExternalObjects: _topLevelObjectsToKeepAliveFromStoryboard,
+        }];
+    } else if (self.nibName) {
         [[UINib nibWithNibName:self.nibName bundle:self.nibBundle] instantiateWithOwner:self options:nil];
     } else {
         self.view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)];
@@ -465,5 +509,47 @@
     return nil;
 }
 
+
+#pragma mark Storyboard
+
+- (void) performSegueWithIdentifier:(NSString*)identifier sender:(id)sender
+{
+    if (![self shouldPerformSegueWithIdentifier:identifier sender:sender]) {
+        return;
+    }
+
+    UIStoryboardSegueTemplate* segueTemplate = [self _segueTemplateForIdentifier:identifier];
+    if (!segueTemplate) {
+        [NSException raise:NSInvalidArgumentException format:@"Receiver (%@) has no segue with identifier '%@'", self, identifier];
+    }
+
+    UIViewController* destination = [[self storyboard] instantiateViewControllerWithIdentifier:[segueTemplate destinationViewControllerIdentifier]];
+    if (destination) {
+        UIStoryboardSegue* segue = [segueTemplate segueWithDestinationViewController:destination];
+        if (segue) {
+            [self prepareForSegue:segue sender:sender];
+            [segue perform];
+        }
+    }
+}
+
+- (BOOL) shouldPerformSegueWithIdentifier:(NSString*)identifier sender:(id)sender
+{
+    return YES;
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
+{
+}
+
+- (UIStoryboardSegueTemplate*) _segueTemplateForIdentifier:(NSString*)identifier
+{
+    for (UIStoryboardSegueTemplate* segueTemplate in _storyboardSegueTemplates) {
+        if ([[segueTemplate identifier] isEqualToString:identifier]) {
+            return segueTemplate;
+        }
+    }
+    return nil;
+}
 
 @end

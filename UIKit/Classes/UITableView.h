@@ -27,11 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIScrollView.h"
-#import "UITableViewCell.h"
-#import "NSIndexPath+UITableView.h"
+#import <UIKit/UIScrollView.h>
+#import <UIKit/UITableViewCell.h>
+#import <UIKit/NSIndexPath+UITableView.h>
 
-extern NSString *const UITableViewIndexSearch;
+UIKIT_EXTERN NSString *const UITableViewIndexSearch;
 
 @class UITableView;
 
