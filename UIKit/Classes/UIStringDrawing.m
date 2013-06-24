@@ -102,83 +102,40 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
                 CFIndex numberOfLines = [lines count];
                 if (numberOfLines > 0) {
                     BOOL calculateMaxWidth = YES;
-                    
-                    switch (lineBreakMode) {
-                        case UILineBreakModeWordWrap: {
-                            /*  The CoreText machinery will attempt to fill the allotted space with
-                             *  single characters (even if word wrapping is specified.)  Apple's sizing
-                             *  functions return a string width of zero.
-                             */
-                            CFStringTokenizerRef tokenizer = CFStringTokenizerCreate(NULL, (__bridge CFStringRef)string, (CFRange){.length = [string length]}, kCFStringTokenizerUnitWord, NULL);
-                            if (tokenizer) {
-                                CFStringTokenizerAdvanceToNextToken(tokenizer);
-                                CFRange range = CFStringTokenizerGetCurrentTokenRange(tokenizer);
-                                if (range.location == kCFNotFound) {
+
+                    if (lineBreakMode == UILineBreakModeClip) {
+                        CTLineRef line = (__bridge CTLineRef)lines[numberOfLines - 1];
+                        CFRange range = CTLineGetStringRange(line);
+                        CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
+                        lines[numberOfLines - 1] = (__bridge_transfer id)CTTypesetterCreateLine(
+                            typesetter,
+                            (CFRange){
+                                range.location,
+                                CTTypesetterSuggestClusterBreak(typesetter, range.location, constrainedToSize.width)
+                            }
+                        );
+                    } else {
+                        /*  The CoreText machinery will attempt to fill the allotted space with
+                         *  single characters (even if word wrapping is specified.)  Apple's sizing
+                         *  functions return a string width of zero.
+                         */
+                        CFStringTokenizerRef tokenizer = CFStringTokenizerCreate(NULL, (__bridge CFStringRef)string, (CFRange){.length = [string length]}, kCFStringTokenizerUnitWord, NULL);
+                        if (tokenizer) {
+                            CFStringTokenizerAdvanceToNextToken(tokenizer);
+                            CFRange range = CFStringTokenizerGetCurrentTokenRange(tokenizer);
+                            if (range.location == kCFNotFound) {
+                                calculateMaxWidth = NO;
+                            } else {
+                                CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
+                                CFIndex breakIndex = CTTypesetterSuggestClusterBreak(typesetter, 0, constrainedToSize.width);
+                                if (breakIndex < (range.location + range.length)) {
                                     calculateMaxWidth = NO;
-                                } else {
-                                    CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
-                                    CFIndex breakIndex = CTTypesetterSuggestClusterBreak(typesetter, 0, constrainedToSize.width);
-                                    if (breakIndex < (range.location + range.length)) {
-                                        calculateMaxWidth = NO;
-                                    }
                                 }
-                                CFRelease(tokenizer), tokenizer = nil;
                             }
-                            break;
-                        }
-                            
-                        case UILineBreakModeClip: {
-                            CTLineRef line = (__bridge CTLineRef)lines[numberOfLines - 1];
-                            CFRange range = CTLineGetStringRange(line);
-                            CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
-                            lines[numberOfLines - 1] = (__bridge_transfer id)CTTypesetterCreateLine(
-                                typesetter,
-                                (CFRange){
-                                    range.location,
-                                    CTTypesetterSuggestClusterBreak(typesetter, range.location, constrainedToSize.width)
-                                }
-                            );
-                            break;
-                        }
-                        
-                        case UILineBreakModeHeadTruncation:
-                        case UILineBreakModeMiddleTruncation:
-                        case UILineBreakModeTailTruncation: {
-                            CTTypesetterRef typesetter = CTFramesetterGetTypesetter(framesetter);
-                            CTLineRef line = (__bridge CTLineRef)lines[numberOfLines - 1];
-                            CFRange range = CTLineGetStringRange(line);
-                            range.length = [string length] - range.location;
-                            CFDictionaryRef attributes = CFAttributedStringGetAttributes((__bridge CFAttributedStringRef)attributedString, range.location, NULL);
-                            CTLineRef tempLine =  CTTypesetterCreateLine(typesetter, range);
-                            if (tempLine) {
-                                CFAttributedStringRef ellipsisString = CFAttributedStringCreate(NULL, CFSTR("…"), attributes);
-                                if (ellipsisString) {
-                                    CTLineRef ellipsisLine = CTLineCreateWithAttributedString(ellipsisString);
-                                    if (ellipsisLine) {
-                                        CTLineRef newLine = CTLineCreateTruncatedLine(
-                                            tempLine,
-                                            constrainedToSize.width,
-                                            CTLineTruncationTypeFromUILineBreakMode(lineBreakMode),
-                                            ellipsisLine
-                                        );
-                                        if (newLine) {
-                                            lines[numberOfLines - 1] = (__bridge_transfer id)newLine;
-                                        }
-                                        CFRelease(ellipsisLine);
-                                    }
-                                    CFRelease(ellipsisString);
-                                }
-                                CFRelease(tempLine);
-                            }
-                            break;
-                        }
-                            
-                        case UILineBreakModeCharacterWrap: {
-                            /* Do nothing */
-                            break;
+                            CFRelease(tokenizer), tokenizer = nil;
                         }
                     }
-
+                    
                     CGFloat maxWidth = 0;
                     CGFloat ascender;
                     CGFloat leading;
