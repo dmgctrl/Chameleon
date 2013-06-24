@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		03E591AA13E863E100C6D194 /* UITableView+AppKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 03E591A913E863E100C6D194 /* UITableView+AppKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		049203D617739A56007CC337 /* UIPopoverNSView.m in Sources */ = {isa = PBXBuildFile; fileRef = 049203D417739A55007CC337 /* UIPopoverNSView.m */; };
+		049203D717739A56007CC337 /* UIPopoverNSView.h in Headers */ = {isa = PBXBuildFile; fileRef = 049203D517739A55007CC337 /* UIPopoverNSView.h */; };
 		1413D21513D72A06004D77E9 /* UIScrollViewAnimationDeceleration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1413D20F13D72A06004D77E9 /* UIScrollViewAnimationDeceleration.m */; };
 		1413D21713D72A06004D77E9 /* UIScrollViewAnimationScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 1413D21113D72A06004D77E9 /* UIScrollViewAnimationScroll.m */; };
 		1426FFDD129ADEA300BD31E5 /* UIControlAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 1426FFDB129ADEA300BD31E5 /* UIControlAction.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -442,6 +444,8 @@
 
 /* Begin PBXFileReference section */
 		03E591A913E863E100C6D194 /* UITableView+AppKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+AppKit.h"; path = "Classes/UITableView+AppKit.h"; sourceTree = "<group>"; };
+		049203D417739A55007CC337 /* UIPopoverNSView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPopoverNSView.m; sourceTree = "<group>"; };
+		049203D517739A55007CC337 /* UIPopoverNSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPopoverNSView.h; sourceTree = "<group>"; };
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -1239,6 +1243,8 @@
 		147A838C120C902C00422EDC /* Private Classes */ = {
 			isa = PBXGroup;
 			children = (
+				049203D417739A55007CC337 /* UIPopoverNSView.m */,
+				049203D517739A55007CC337 /* UIPopoverNSView.h */,
 				F922DB5E13D3308800469869 /* Nib Support */,
 				F91AA507176E5A8B001B6D5F /* Storyboard Support */,
 				14C0715C13CF5A2300B76E35 /* UIAction.h */,
@@ -1754,6 +1760,7 @@
 				F9EB69541768EBE700EBBD4C /* UIColorRep.h in Headers */,
 				F9EB69561768EE6B00EBBD4C /* AppKitIntegration.h in Headers */,
 				F92AB7E81768F29A0090CE21 /* UIImage+AppKit.h in Headers */,
+				049203D717739A56007CC337 /* UIPopoverNSView.h in Headers */,
 				F9767490176940CB0073489E /* UIStoryboard.h in Headers */,
 				F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */,
 				F91AA505176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h in Headers */,
@@ -2144,6 +2151,7 @@
 				F97BE02315AFD6E00081F45A /* UIAppearanceProxy.m in Sources */,
 				F9EB69501768EB0200EBBD4C /* UIScrollViewAnimation.m in Sources */,
 				F9EB69531768EBE700EBBD4C /* UIColorRep.m in Sources */,
+				049203D617739A56007CC337 /* UIPopoverNSView.m in Sources */,
 				F9767491176940CB0073489E /* UIStoryboard.m in Sources */,
 				F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */,
 				F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */,

@@ -27,58 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIPopoverOverlayNSView.h"
-#import "UIPopoverController+UIPrivate.h"
-#import <AppKit/AppKit.h>
+#import <AppKit/NSView.h>
 
-@implementation UIPopoverOverlayNSView
-
-- (id)initWithFrame:(NSRect)frame popoverController:(UIPopoverController *)controller
-{
-    if ((self=[super initWithFrame:frame])) {
-        _popoverController = controller;
-    }
-    return self;
+@interface UIPopoverNSView : NSView {
 }
 
-- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
-{
-    return YES;
-}
-
-- (BOOL)canBecomeKeyView
-{
-    return NO;
-}
-
-- (void)mouseDown:(NSEvent *)theEvent
-{
-    [_popoverController _sendLeftMouseDownWithEvent:theEvent];
-}
-
-- (void)mouseDragged:(NSEvent *)theEvent
-{
-    [_popoverController _sendLeftMouseDraggedWithEvent:theEvent];
-}
-
-- (void)mouseUp:(NSEvent *)theEvent
-{
-    [_popoverController _sendLeftMouseUpWithEvent:theEvent];
-}
-
-- (void) rightMouseDown:(NSEvent *)theEvent
-{
-    [_popoverController _sendRightMouseDownWithEvent:theEvent];
-}
-
-- (void) rightMouseDragged:(NSEvent *)theEvent
-{
-    [_popoverController _sendRightMouseDraggedWithEvent:theEvent];
-}
-
-- (void) rightMouseUp:(NSEvent *)theEvent
-{
-    [_popoverController _sendRightMouseUpWithEvent:theEvent];
-}
+@property (nonatomic, assign) int arrowDirection;
 
 @end
