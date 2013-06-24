@@ -154,6 +154,10 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 {
     [super displayLayer:theLayer];
     
+    if (![self window]) {
+        return;
+    }
+    
     UIImage *displayImage = (_highlighted && _highlightedImage)? _highlightedImage : _image;
     const CGFloat scale = self.window.screen.scale;
     const CGRect bounds = self.bounds;

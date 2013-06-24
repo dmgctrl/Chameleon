@@ -364,6 +364,7 @@ static NSCache* imageCache = nil;
 
 - (UIImageRep *)_bestRepresentationForProposedScale:(CGFloat)scale
 {
+    NSAssert(scale >= 1.0, @"???");
     NSArray* reps = [self _representations];
     NSUInteger count = [reps count];
     if (count == 0) {

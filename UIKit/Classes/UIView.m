@@ -571,6 +571,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     
     // note that the last time I checked this, the layer's background color was being set immediately on call to -setBackgroundColor:
     // when there was no -drawRect: implementation, but I needed to change this to work around issues with pattern image colors in HiDPI.
+    if (![self window]) {
+        return;
+    }
     _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
 }
 
