@@ -76,9 +76,9 @@ static NSTextAlignment NSTextAlignmentFromUITextAlignment(UITextAlignment textAl
     }
 }
 
-static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIFont*font, UILineBreakMode lineBreakMode, CGSize* renderSize)
+static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIFont*font, UILineBreakMode lineBreakMode, CGSize* renderSize, void(^block)(CTFrameRef, CGSize))
 { 
-    if (!font) {
+    if (!font || constrainedToSize.height == 0 || constrainedToSize.width == 0) {
         if (renderSize) {
             *renderSize = CGSizeZero;
         }
@@ -93,9 +93,13 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
     if (framesetter) {
         CFRange fitRange;
         CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, &fitRange);
+        CGSize boundingBox = {
+            suggestedSize.width = MIN(ceil(suggestedSize.width), constrainedToSize.width),
+            suggestedSize.height = MIN(ceil(suggestedSize.height), constrainedToSize.height)
+        };
         CGMutablePathRef path = CGPathCreateMutable();
         if (path) {
-            CGPathAddRect(path, NULL, (CGRect){ .size = suggestedSize });
+            CGPathAddRect(path, NULL, (CGRect){ .size = boundingBox });
             CTFrameRef frame = CTFramesetterCreateFrame(framesetter, (CFRange){}, path, NULL);
             if (frame) {
                 lines = (__bridge NSMutableArray*)CTFrameGetLines(frame);
@@ -114,7 +118,7 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
                                 CTTypesetterSuggestClusterBreak(typesetter, range.location, constrainedToSize.width)
                             }
                         );
-                    } else {
+                    } else if (lineBreakMode != UILineBreakModeCharacterWrap) {
                         /*  The CoreText machinery will attempt to fill the allotted space with
                          *  single characters (even if word wrapping is specified.)  Apple's sizing
                          *  functions return a string width of zero.
@@ -152,8 +156,12 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
                     CTFrameGetLineOrigins(frame, CFRangeMake(numberOfLines - 1, 1), &lastLineOrigin);
                     size = (CGSize){
                         .width = ceilf(maxWidth),
-                        .height = ceilf(lastLineOrigin.y + ascender + leading) + 1.0f,
+                        .height = MAX(ceilf(lastLineOrigin.y + ascender + leading) + 1.0f, boundingBox.height),
                     };
+                    
+                    if (block) {
+                        block(frame, size);
+                    }
                 }
                 CFRelease(frame), frame = nil;
             }
@@ -210,7 +218,7 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
 - (CGSize) sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode
 {
     CGSize resultingSize = CGSizeZero;
-    CTLinesForString(self, size, font, lineBreakMode, &resultingSize);
+    CTLinesForString(self, size, font, lineBreakMode, &resultingSize, nil);
     return resultingSize;
 }
 
@@ -242,41 +250,21 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
  
 - (CGSize) drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment
 {
-    CGSize actualSize = CGSizeZero;
-    CFArrayRef lines = (__bridge CFArrayRef)CTLinesForString(self,rect.size,font,lineBreakMode,&actualSize);
-
-    if (lines) {
-        const CFIndex numberOfLines = CFArrayGetCount(lines);
-        const CGFloat fontLineHeight = font.lineHeight;
-        CGFloat textOffset = 0;
-
+    CGSize actualSize;
+    CTLinesForString(self, rect.size, font, lineBreakMode, &actualSize, ^(CTFrameRef frame, CGSize actualSize) {
         CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGContextSaveGState(ctx);
-        CGContextTranslateCTM(ctx, rect.origin.x, rect.origin.y+font.ascender);
-        CGContextSetTextMatrix(ctx, CGAffineTransformMakeScale(1,-1));
-        
-        for (CFIndex lineNumber=0; lineNumber<numberOfLines; lineNumber++) {
-            CTLineRef line = CFArrayGetValueAtIndex(lines, lineNumber);
-            float flush;
-            switch (alignment) {
-                case UITextAlignmentCenter:	flush = 0.5;	break;
-                case UITextAlignmentRight:	flush = 1;		break;
-                case UITextAlignmentLeft:
-                default:					flush = 0;		break;
-            }
+        @try {
+            CGContextSaveGState(ctx);
             
-            CGFloat penOffset = CTLineGetPenOffsetForFlush(line, flush, rect.size.width);
-            CGContextSetTextPosition(ctx, penOffset, textOffset);
-            CTLineDraw(line, ctx);
-            textOffset += fontLineHeight;
+            CGContextTranslateCTM(ctx, rect.origin.x, rect.origin.y);
+            CGContextScaleCTM(ctx, 1.0f, -1.0f);
+            CGContextTranslateCTM(ctx, 0, -rect.size.height);
+            
+            CTFrameDraw(frame, ctx);
+        } @finally {
+            CGContextRestoreGState(ctx);
         }
-
-        CGContextRestoreGState(ctx);
-    }
-
-    // the real UIKit appears to do this.. so shall we.
-    actualSize.height = MIN(actualSize.height, rect.size.height);
-
+    });
     return actualSize;
 }
 

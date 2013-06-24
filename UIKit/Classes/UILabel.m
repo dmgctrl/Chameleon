@@ -212,7 +212,7 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
         // find out the actual size of the text given the size of our bounds
         CGSize maxSize = bounds.size;
         if (_numberOfLines > 0) {
-            maxSize.height = _font.lineHeight * _numberOfLines;
+            maxSize.height = _font.lineHeight * (_numberOfLines + 0.5);
         }
         drawRect.size = [_text sizeWithFont:_font constrainedToSize:maxSize lineBreakMode:_lineBreakMode];
 
