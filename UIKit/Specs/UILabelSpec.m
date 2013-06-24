@@ -43,6 +43,45 @@ describe(@"UILabel", ^{
                 [[@(textAlignment) should] equal:@(UITextAlignmentLeft)];
             });
         });
+        context(@"with number of lines", ^{
+            context(@"0, 2,3,...", ^{
+                context(@"plain text", ^{
+                    context(@"unconstrained", ^{
+                        NSString* text = @"The quick brown\nfox jumped over the lazy\ndog.";
+
+                        context(@"numberOfLines is 0", ^{
+                            UILabel* label = [[UILabel alloc] init];
+                            [label setText:text];
+                            [label setNumberOfLines:0];
+                            [label sizeToFit];
+                            it(@"computes the right size", ^{
+                                [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
+                            });
+                        });
+
+                        context(@"numberOfLines is 2", ^{
+                            UILabel* label = [[UILabel alloc] init];
+                            [label setText:text];
+                            [label setNumberOfLines:2];
+                            [label sizeToFit];
+                            it(@"computes the right size", ^{
+                                [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
+                            });
+                        });
+
+                        context(@"numberOfLines is 3", ^{
+                            UILabel* label = [[UILabel alloc] init];
+                            [label setText:text];
+                            [label setNumberOfLines:3];
+                            [label sizeToFit];
+                            it(@"computes the right size", ^{
+                                [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
+                            });
+                        });
+                    });
+                });
+            });
+        });
     });
 });
 
