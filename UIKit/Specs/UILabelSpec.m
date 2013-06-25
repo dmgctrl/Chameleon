@@ -54,7 +54,6 @@ describe(@"UILabel", ^{
                 label = [[UILabel alloc] init];
             });
 
-                
             context(@"plain text", ^{
                 
                 beforeEach(^{
@@ -115,12 +114,12 @@ describe(@"UILabel", ^{
                         [label setNumberOfLines:3];
                     });
                     
-                    it(@"computes the right size", ^{
+                    it(@"computes the right size when unconstrained", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                     });
                     
-                    it(@"computes the right size", ^{
+                    it(@"computes the right size when height is constrained to 50", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                     });
                 });
