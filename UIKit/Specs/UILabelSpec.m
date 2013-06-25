@@ -80,7 +80,7 @@ describe(@"UILabel", ^{
                         });
                     });
                     
-                    context(@"constrained to hight of 100", ^{
+                    context(@"constrained to hight of 50", ^{
                         CGSize size = CGSizeMake(187, 50);
                         context(@"numberOfLines is 0", ^{
                             UILabel* label = [[UILabel alloc] init];
