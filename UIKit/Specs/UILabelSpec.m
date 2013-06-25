@@ -47,6 +47,8 @@ describe(@"UILabel", ^{
         context(@"with number of lines", ^{
             
             NSString* text = @"The quick brown \nfox jumped over the lazy \ndog.";
+            NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:text];
+
             context(@"0, 2,3,...", ^{
                 
                 context(@"plain text", ^{
@@ -123,7 +125,7 @@ describe(@"UILabel", ^{
                 });
                 
                 context(@"attributed text", ^{
-                    NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:text];
+
                     context(@"unconstrained", ^{
                         
                         context(@"numberOfLines is 0", ^{
@@ -218,8 +220,7 @@ describe(@"UILabel", ^{
                     });
                     
                     context(@"attributed text", ^{
-                        NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:text];
-
+                        
                         context(@"unconstrained", ^{
                             
                             UILabel* label = [[UILabel alloc] init];
