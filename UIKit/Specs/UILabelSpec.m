@@ -59,6 +59,7 @@ describe(@"UILabel", ^{
                             [label setText:text];
                             [label setNumberOfLines:0];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                             });
@@ -69,6 +70,7 @@ describe(@"UILabel", ^{
                             [label setText:text];
                             [label setNumberOfLines:2];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 42))];
                             });
@@ -79,6 +81,7 @@ describe(@"UILabel", ^{
                             [label setText:text];
                             [label setNumberOfLines:3];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                             });
@@ -92,6 +95,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setText:text];
                             [label setNumberOfLines:0];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                             });
@@ -101,6 +105,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setText:text];
                             [label setNumberOfLines:2];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
                             });
@@ -110,6 +115,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setText:text];
                             [label setNumberOfLines:3];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                             });
@@ -126,6 +132,7 @@ describe(@"UILabel", ^{
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:0];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                             });
@@ -136,6 +143,7 @@ describe(@"UILabel", ^{
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:2];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(218, 42))];
                             });
@@ -146,6 +154,7 @@ describe(@"UILabel", ^{
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:3];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                             });
@@ -159,6 +168,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:0];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                             });
@@ -168,6 +178,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:2];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
                             });
@@ -177,6 +188,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:3];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                             });
@@ -193,6 +205,7 @@ describe(@"UILabel", ^{
                             [label setText:text];
                             [label setNumberOfLines:1];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
                             });
@@ -203,6 +216,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setText:text];
                             [label setNumberOfLines:1];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
                             });
@@ -216,6 +230,7 @@ describe(@"UILabel", ^{
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:1];
                             [label sizeToFit];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
                             });
@@ -226,6 +241,7 @@ describe(@"UILabel", ^{
                             UILabel* label = [[UILabel alloc] init];
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:1];
+                            
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
                             });
