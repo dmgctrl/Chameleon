@@ -47,6 +47,7 @@ describe(@"UILabel", ^{
         context(@"with number of lines", ^{
             NSString* text = @"The quick brown \nfox jumped over the lazy \ndog.";
             NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:text];
+            CGSize size = CGSizeMake(187, 50);
 
             context(@"0, 2,3,...", ^{
                 
@@ -89,7 +90,6 @@ describe(@"UILabel", ^{
                     });
                     
                     context(@"constrained to hight of 50", ^{
-                        CGSize size = CGSizeMake(187, 50);
                         
                         context(@"numberOfLines is 0", ^{
                             UILabel* label = [[UILabel alloc] init];
@@ -162,7 +162,6 @@ describe(@"UILabel", ^{
                     });
                     
                     context(@"constrained to 50", ^{
-                        CGSize size = CGSizeMake(187, 50);
 
                         context(@"numberOfLines is 0", ^{
                             UILabel* label = [[UILabel alloc] init];
@@ -212,7 +211,6 @@ describe(@"UILabel", ^{
                         });
                         
                         context(@"constrained height to 50", ^{
-                            CGSize size = CGSizeMake(187, 50);
                             UILabel* label = [[UILabel alloc] init];
                             [label setText:text];
                             [label setNumberOfLines:1];
@@ -237,7 +235,6 @@ describe(@"UILabel", ^{
                         });
                         
                         context(@"constrained height to 50", ^{
-                            CGSize size = CGSizeMake(187, 50);
                             UILabel* label = [[UILabel alloc] init];
                             [label setAttributedText:attributedText];
                             [label setNumberOfLines:1];
