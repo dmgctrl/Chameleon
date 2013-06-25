@@ -45,9 +45,9 @@ describe(@"UILabel", ^{
         });
         
         context(@"with number of lines", ^{
+            NSString* text = @"The quick brown \nfox jumped over the lazy \ndog.";
             context(@"0, 2,3,...", ^{
                 context(@"plain text", ^{
-                    NSString* text = @"The quick brown \nfox jumped over the lazy \ndog.";
                     context(@"unconstrained", ^{
                         context(@"numberOfLines is 0", ^{
                             UILabel* label = [[UILabel alloc] init];
@@ -107,7 +107,27 @@ describe(@"UILabel", ^{
                             it(@"computes the right size", ^{
                                 [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                             });
-                        });                    
+                        });
+                    });
+                });
+                context(@"attributed text", ^{
+                });
+                context(@"number of lines is 1", ^{
+                    context(@"plain text", ^{
+                        context(@"unconstrained", ^{
+                            UILabel* label = [[UILabel alloc] init];
+                            [label setText:text];
+                            [label setNumberOfLines:1];
+                            [label sizeToFit];
+                            it(@"computes the right size", ^{
+                                [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
+                            });
+
+                        });
+                        context(@"constrained height to 50", ^{
+                        });
+                    });
+                    context(@"attributed text", ^{
                     });
                 });
             });
