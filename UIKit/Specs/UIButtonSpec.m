@@ -19,6 +19,14 @@ describe(@"UIButton", ^{
             [[[[button titleLabel] lineBreakMode] == UILineBreakModeTailTruncation should] beYes];
         });
         
+        it(@"shouldn't vertically clip line", ^{
+            CGRect frame = CGRectMake(0,0,40,3);
+            [button setFrame:frame];
+            [[NSStringFromCGSize([[button titleLabel]bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(38, 19))];
+
+            //CGRect titleRect = [button titleRectForContentRect:frame];
+            //[[NSStringFromCGSize(titleRect.size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+        });
     });
 });
 
