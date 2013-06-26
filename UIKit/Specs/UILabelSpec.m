@@ -1,7 +1,7 @@
 SPEC_BEGIN(UILabelSpec)
 
 describe(@"UILabel", ^{
-    context(@"when using the default constructor", ^{
+    context(@"default", ^{
         UILabel* label = [[UILabel alloc] init];
         
         context(@"text", ^{
@@ -43,154 +43,159 @@ describe(@"UILabel", ^{
                 [[@(textAlignment) should] equal:@(UITextAlignmentLeft)];
             });
         });
-        
-        context(@"with number of lines", ^{
-            NSString* text = @"The quick brown \nfox jumped over the lazy \ndog.";
-            NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:text];
-            CGSize size = CGSizeMake(187, 50);
-            __block UILabel* label;
-            
-            beforeEach(^{
-                label = [[UILabel alloc] init];
-            });
+    });
+    
+    context(@"with text", ^{
+        NSString* text = @"The quick brown \nfox jumped over the lazy \ndog.";
+        CGSize size = CGSizeMake(187, 50);
+        __block UILabel* label;
+        beforeEach(^{
+            label = [[UILabel alloc] init];
+        });
 
-            context(@"plain text", ^{
+        context(@"that is plain", ^{
+            beforeEach(^{
+                [label setText:text];
+            });
                 
+            context(@"has '0' lines", ^{
                 beforeEach(^{
-                    [label setText:text];
+                    [label setNumberOfLines:0];
                 });
-                    
-                context(@"numberOfLines is 0", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:0];
-                    });
-                    
-                    it(@"computes the right size when unconstrained", ^{
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                     });
-                    
-                    it(@"computes the right size when heigh is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                     });
                 });
-                
-                context(@"numberOfLines is 1", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:1];
-                    });
-                    
-                    it(@"computes the right size when unconstrained", ^{
+            });
+            
+            context(@"has 1 line", ^{
+                beforeEach(^{
+                    [label setNumberOfLines:1];
+                });
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
                     });
-                    
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
                     });
                 });
+            });
 
-                context(@"numberOfLines is 2", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:2];
-                    });
-                    
-                    it(@"computes the right size when unconstrained", ^{
+            context(@"has 2 lines", ^{
+                beforeEach(^{
+                    [label setNumberOfLines:2];
+                });
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 42))];
                     });
-                    
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
                     });
                 });
+            });
 
-                context(@"numberOfLines is 3", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:3];
-                    });
-                    
-                    it(@"computes the right size when unconstrained", ^{
+            context(@"has 3 lines", ^{
+                beforeEach(^{
+                    [label setNumberOfLines:3];
+                });
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                     });
-                    
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                     });
                 });
             });
-            
-            context(@"attributed text", ^{
+        });
+        
+        context(@"that is attributed", ^{
+            NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:text];
+            beforeEach(^{
+                [label setAttributedText:attributedText];
+            });
                 
+            context(@"has '0' lines", ^{
                 beforeEach(^{
-                    [label setAttributedText:attributedText];
+                    [label setNumberOfLines:0];
                 });
-                    
-                context(@"numberOfLines is 0", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:0];
-                    });
-                    
-                    it(@"computes the right size when unconstrained", ^{
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                     });
-                    
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                     });
                 });
+            });
 
-                context(@"numberOfLines is 1", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:1];
-                    });
-                    
-                    it(@"computes the right size when unconstrained", ^{
+            context(@"has 1 line", ^{
+                beforeEach(^{
+                    [label setNumberOfLines:1];
+                });
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
                     });
-                    
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
                     });
                 });
-                
-                context(@"numberOfLines is 2", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:2];
-                    });
-                   
-                    it(@"computes the right size when unconstrained", ^{
+            });
+            
+            context(@"has 2 lines", ^{
+                beforeEach(^{
+                    [label setNumberOfLines:2];
+                });
+               context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(218, 42))];
                     });
-
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
                     });
                 });
-                
-                context(@"numberOfLines is 3", ^{
-                    
-                    beforeEach(^{
-                        [label setNumberOfLines:3];
-                    });
-
-                    it(@"computes the right size when unconstrained", ^{
+            });
+            
+            context(@"has 3 lines", ^{
+                beforeEach(^{
+                    [label setNumberOfLines:3];
+                });
+                context(@"when unconstrained", ^{
+                    it(@"has correct size", ^{
                         [label sizeToFit];
                         [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
                     });
-
-                    it(@"computes the right size when height is constrained to 50", ^{
+                });
+                context(@"with constrained height", ^{
+                    it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
                     });
                 });
