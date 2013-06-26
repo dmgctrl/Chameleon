@@ -238,6 +238,8 @@
 		38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38615C77133A81B900841EEA /* UIFont+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B11339680400E041B3 /* UINavigationItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523AF1339680400E041B3 /* UINavigationItem+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B513396B5B00E041B3 /* UINavigationBar+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523B413396B5B00E041B3 /* UINavigationBar+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		3A1D44E5177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
+		3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
 		66371E3913674EF1007B9873 /* <UIBarButtonSystemItem> add.png in Resources */ = {isa = PBXBuildFile; fileRef = 66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */; };
@@ -702,6 +704,7 @@
 		38615C77133A81B900841EEA /* UIFont+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIPrivate.h"; sourceTree = "<group>"; };
 		38E523AF1339680400E041B3 /* UINavigationItem+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationItem+UIPrivate.h"; sourceTree = "<group>"; };
 		38E523B413396B5B00E041B3 /* UINavigationBar+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+UIPrivate.h"; sourceTree = "<group>"; };
+		3A1D44E4177A3460004DE61D /* UIButtonSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButtonSpec.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
 		66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIBarButtonSystemItem> add.png"; path = "Resources/<UIBarButtonSystemItem> add.png"; sourceTree = "<group>"; };
@@ -1376,6 +1379,14 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		3A1D44E2177A3384004DE61D /* UIButton */ = {
+			isa = PBXGroup;
+			children = (
+				3A1D44E4177A3460004DE61D /* UIButtonSpec.m */,
+			);
+			name = UIButton;
+			sourceTree = "<group>";
+		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -1479,6 +1490,7 @@
 		F95F640C15C34C6100F3523B /* Specs */ = {
 			isa = PBXGroup;
 			children = (
+				3A1D44E2177A3384004DE61D /* UIButton */,
 				F9B3C1F6177119B800C92009 /* UIFont */,
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				F9B3C1F1177111AA00C92009 /* UILabel */,
@@ -2164,6 +2176,7 @@
 				F97674951769433E0073489E /* UIStoryboardSpec.m in Sources */,
 				F9B3C1F4177111C900C92009 /* UILabelSpec.m in Sources */,
 				F9B3C1F9177119CB00C92009 /* UIFontSpec.m in Sources */,
+				3A1D44E5177A3460004DE61D /* UIButtonSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2185,6 +2198,7 @@
 				F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */,
 				F9B3C1F5177111C900C92009 /* UILabelSpec.m in Sources */,
 				F9B3C1FA177119CB00C92009 /* UIFontSpec.m in Sources */,
+				3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
