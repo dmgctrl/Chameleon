@@ -238,8 +238,11 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 - (CGSize) sizeThatFits:(CGSize)size
 {
-    size = CGSizeMake(((_numberOfLines > 0)? CGFLOAT_MAX : size.width), ((_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight*_numberOfLines)));
-    return [_text sizeWithFont:_font constrainedToSize:size lineBreakMode:_lineBreakMode];
+    CGSize constrainedToSize = {
+        .width = (_numberOfLines > 0)? CGFLOAT_MAX : size.width,
+        .height = (_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight * _numberOfLines)
+    };
+    return [_text sizeWithFont:_font constrainedToSize:constrainedToSize lineBreakMode:_lineBreakMode];
 }
 
 
