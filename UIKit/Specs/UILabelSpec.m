@@ -1,5 +1,7 @@
 SPEC_BEGIN(UILabelSpec)
 
+static CGSize kUnconstrainedSize = (CGSize){ CGFLOAT_MAX, CGFLOAT_MAX };
+
 describe(@"UILabel", ^{
     context(@"default", ^{
         UILabel* label = [[UILabel alloc] init];
@@ -64,13 +66,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -81,13 +90,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(367, 21))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -98,13 +114,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(191, 42))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 42))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -115,13 +138,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -139,13 +169,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -156,13 +193,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(132, 21))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -171,15 +215,22 @@ describe(@"UILabel", ^{
                 beforeEach(^{
                     [label setNumberOfLines:2];
                 });
-               context(@"when unconstrained", ^{
+                context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(218, 42))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(218, 42))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 42))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
@@ -190,13 +241,20 @@ describe(@"UILabel", ^{
                 });
                 context(@"when unconstrained", ^{
                     it(@"has correct size", ^{
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
                         [label sizeToFit];
-                        [[NSStringFromCGSize([label bounds].size) should] equal:NSStringFromCGSize(CGSizeMake(191, 63))];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
                 context(@"with constrained height", ^{
                     it(@"has correct size", ^{
                         [[NSStringFromCGSize([label sizeThatFits:size]) should] equal:NSStringFromCGSize(CGSizeMake(187, 63))];
+                    });
+                    it(@"-sizeToFit agrees", ^{
+                        [label sizeToFit];
+                        [[NSStringFromCGSize([label sizeThatFits:kUnconstrainedSize]) should] equal:NSStringFromCGSize([label bounds].size)];
                     });
                 });
             });
