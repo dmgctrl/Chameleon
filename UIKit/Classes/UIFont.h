@@ -45,8 +45,8 @@
 + (NSArray*) fontNamesForFamilyName:(NSString*)familyName;
 
 #pragma mark Getting Font Name Attributes
-@property (nonatomic, readonly, strong) NSString* familyName;
-@property (nonatomic, readonly, strong) NSString* fontName;
+@property (nonatomic, readonly, retain) NSString* familyName;
+@property (nonatomic, readonly, retain) NSString* fontName;
 
 #pragma mark Getting Font Metrics
 @property (nonatomic, readonly) CGFloat pointSize;
@@ -55,5 +55,11 @@
 @property (nonatomic, readonly) CGFloat capHeight;
 @property (nonatomic, readonly) CGFloat xHeight;
 @property (nonatomic, readonly) CGFloat lineHeight;
+
+#pragma mark Getting System Font Information
++ (CGFloat)labelFontSize;
++ (CGFloat)buttonFontSize;
++ (CGFloat)smallSystemFontSize;
++ (CGFloat)systemFontSize;
 
 @end

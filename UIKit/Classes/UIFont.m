@@ -28,6 +28,7 @@
  */
 
 #import "UIFont.h"
+#import "UIFont+UIPrivate.h"
 #import <Cocoa/Cocoa.h>
 
 static NSString *UIFontSystemFontName = nil;
@@ -42,6 +43,26 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
 
 @implementation UIFont {
     CTFontRef _font;
+}
+
++ (CGFloat) systemFontSize
+{
+    return [NSFont systemFontSize];
+}
+
++ (CGFloat) smallSystemFontSize
+{
+    return [NSFont smallSystemFontSize];
+}
+
++ (CGFloat) labelFontSize
+{
+    return [NSFont labelFontSize];
+}
+
++ (CGFloat) buttonFontSize
+{
+    return [NSFont systemFontSizeForControlSize:NSRegularControlSize];
 }
 
 + (void) setSystemFontName:(NSString*)name
@@ -59,21 +80,27 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
     UIFontItalicSystemFontName = [name copy];
 }
 
-+ (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)fontSize
++ (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)pointSize
 {
-    return [self fontWithNSFont:[NSFont fontWithName:fontName size:fontSize]];
+    CTFontRef ctfont = CTFontCreateWithName((__bridge CFStringRef)fontName, pointSize, NULL);
+    if (!ctfont) {
+        return nil;
+    }
+    UIFont* font = [UIFont fontWithCTFont:ctfont];
+    CFRelease(ctfont);
+    return font;
 }
 
-+ (UIFont*) fontWithNSFont:(NSFont*)nsfont
++ (UIFont*) fontWithCTFont:(CTFontRef)ctfont
 {
     static NSCache* cache;
-    UIFont* font = [cache objectForKey:nsfont];
+    UIFont* font = [cache objectForKey:(__bridge id)ctfont];
     if (!font) {
         if (!cache) {
             cache = [[NSCache alloc] init];
         }
-        font = [[UIFont alloc] initWithCTFont:(__bridge CTFontRef)nsfont];
-        [cache setObject:font forKey:nsfont];
+        font = [[UIFont alloc] initWithCTFont:ctfont];
+        [cache setObject:font forKey:(__bridge id)ctfont];
     }
     return font;
 }
@@ -169,18 +196,18 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
 + (UIFont*) systemFontOfSize:(CGFloat)fontSize
 {
     NSFont* systemFont = UIFontSystemFontName? [NSFont fontWithName:UIFontSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
 + (UIFont*) boldSystemFontOfSize:(CGFloat)fontSize
 {
     NSFont* systemFont = UIFontBoldSystemFontName? [NSFont fontWithName:UIFontBoldSystemFontName size:fontSize] : [NSFont boldSystemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
 + (UIFont*) italicSystemFontOfSize:(CGFloat)fontSize {
     NSFont* systemFont = UIFontItalicSystemFontName? [NSFont fontWithName:UIFontItalicSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
 - (NSString*) fontName
@@ -215,11 +242,7 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
 
 - (CGFloat) lineHeight
 {
-    // this seems to compute heights that are very close to what I'm seeing on iOS for fonts at
-    // the same point sizes. however there's still subtle differences between fonts on the two
-    // platforms (iOS and Mac) and I don't know if it's ever going to be possible to make things
-    // return exactly the same values in all cases.
-    return ceilf(self.ascender) - floorf(self.descender) + ceilf(CTFontGetLeading(_font));
+    return roundf(CTFontGetSize(_font) * 1.1478f + 0.8607f);
 }
 
 - (NSString*) familyName
@@ -237,6 +260,11 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
         return nil;
     }
     return font;
+}
+
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"<%@: %p> font-family: \"%@\"; font-size: %fpx", NSStringFromClass([self class]), self, [self familyName], [self pointSize]];
 }
 
 - (NSFont*) NSFont
