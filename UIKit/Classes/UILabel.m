@@ -117,18 +117,8 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     return self;
 }
 
-- (void) setText:(NSString*)text
-{
-    if (text) {
-        _renderMode = kRenderModePlainText;
-        _text = [text copy];
-    } else {
-        _renderMode = kRenderModeNone;
-        _attributedText = nil;
-        _text = nil;
-    }
-    [self setNeedsDisplay];
-}
+
+#pragma mark Properties
 
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
@@ -143,6 +133,23 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     [self setNeedsDisplay];
 }
 
+- (void) setEnabled:(BOOL)newEnabled
+{
+    if (newEnabled != _enabled) {
+        _enabled = newEnabled;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setFrame:(CGRect)frame
+{
+    const BOOL redisplay = !CGSizeEqualToSize(frame.size, [self frame].size);
+    [super setFrame:frame];
+    if (redisplay) {
+        [self setNeedsDisplay];
+    }
+}
+
 - (void) setFont:(UIFont*)font
 {
     if (font == nil) {
@@ -150,6 +157,67 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
     if (font != _font) {
         _font = font;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setHighlighted:(BOOL)highlighted
+{
+    if (highlighted != _highlighted) {
+        _highlighted = highlighted;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setLineBreakMode:(UILineBreakMode)mode
+{
+    if (mode != _lineBreakMode) {
+        _lineBreakMode = mode;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setNumberOfLines:(NSInteger)lines
+{
+    if (lines != _numberOfLines) {
+        _numberOfLines = lines;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setShadowColor:(UIColor*)color
+{
+    if (color != _shadowColor) {
+        _shadowColor = color;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setShadowOffset:(CGSize)offset
+{
+    if (!CGSizeEqualToSize(offset,_shadowOffset)) {
+        _shadowOffset = offset;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void) setText:(NSString*)text
+{
+    if (text) {
+        _renderMode = kRenderModePlainText;
+        _text = [text copy];
+    } else {
+        _renderMode = kRenderModeNone;
+        _attributedText = nil;
+        _text = nil;
+    }
+    [self setNeedsDisplay];
+}
+
+- (void) setTextAlignment:(UITextAlignment)alignment
+{
+    if (alignment != _textAlignment) {
+        _textAlignment = alignment;
         [self setNeedsDisplay];
     }
 }
@@ -165,53 +233,17 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setShadowColor:(UIColor *)newColor
+
+#pragma mark Geometry
+
+- (CGSize) sizeThatFits:(CGSize)size
 {
-    if (newColor != _shadowColor) {
-        _shadowColor = newColor;
-        [self setNeedsDisplay];
-    }
+    size = CGSizeMake(((_numberOfLines > 0)? CGFLOAT_MAX : size.width), ((_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight*_numberOfLines)));
+    return [_text sizeWithFont:_font constrainedToSize:size lineBreakMode:_lineBreakMode];
 }
 
-- (void)setShadowOffset:(CGSize)newOffset
-{
-    if (!CGSizeEqualToSize(newOffset,_shadowOffset)) {
-        _shadowOffset = newOffset;
-        [self setNeedsDisplay];
-    }
-}
 
-- (void)setTextAlignment:(UITextAlignment)newAlignment
-{
-    if (newAlignment != _textAlignment) {
-        _textAlignment = newAlignment;
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)setLineBreakMode:(UILineBreakMode)newMode
-{
-    if (newMode != _lineBreakMode) {
-        _lineBreakMode = newMode;
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)setEnabled:(BOOL)newEnabled
-{
-    if (newEnabled != _enabled) {
-        _enabled = newEnabled;
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)setNumberOfLines:(NSInteger)lines
-{
-    if (lines != _numberOfLines) {
-        _numberOfLines = lines;
-        [self setNeedsDisplay];
-    }
-}
+#pragma mark Drawing
 
 - (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
@@ -228,6 +260,9 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 - (void) drawTextInRect:(CGRect)rect
 {
+//    NSDictionary* attributes = [self _synthesizeTextAttributes];
+//    NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:_text attributes:attributes];
+    
     CGRect drawRect = CGRectZero;
     CGSize maxSize = rect.size;
     if (_numberOfLines > 0) {
@@ -237,6 +272,11 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     drawRect = CGRectOffset(drawRect, 0, roundf((rect.size.height - drawRect.size.height) / 2.f));
     
     [_text drawInRect:drawRect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
+
+    [[UIColor blueColor] set];
+    UIRectFrame(drawRect);
+    [[UIColor redColor] set];
+    UIRectFrame(rect);
 }
 
 - (void) drawRect:(CGRect)rect
@@ -260,27 +300,25 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
     }
 }
 
-- (void)setFrame:(CGRect)newFrame
+- (NSDictionary*) _synthesizeTextAttributes
 {
-    const BOOL redisplay = !CGSizeEqualToSize(newFrame.size,self.frame.size);
-    [super setFrame:newFrame];
-    if (redisplay) {
-        [self setNeedsDisplay];
-    }
-}
-
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    size = CGSizeMake(((_numberOfLines > 0)? CGFLOAT_MAX : size.width), ((_numberOfLines <= 0)? CGFLOAT_MAX : (_font.lineHeight*_numberOfLines)));
-    return [_text sizeWithFont:_font constrainedToSize:size lineBreakMode:_lineBreakMode];
-}
-
-- (void)setHighlighted:(BOOL)highlighted
-{
-    if (highlighted != _highlighted) {
-        _highlighted = highlighted;
-        [self setNeedsDisplay];
-    }
+    UIColor* textColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
+    
+    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setTighteningFactorForTruncation:0.0f];
+    [paragraphStyle setLineBreakMode:(CTLineBreakMode)_lineBreakMode];
+    [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
+    NSShadow* shadow = [[NSShadow alloc] init];
+    [shadow setShadowColor:[[self shadowColor] NSColor]];
+    [shadow setShadowOffset:[self shadowOffset]];
+    return @{
+        NSFontAttributeName: _font,
+        NSKernAttributeName: @(0.0f),
+        NSLigatureAttributeName: @(0.0f),
+        NSParagraphStyleAttributeName: paragraphStyle,
+        NSShadowAttributeName: shadow,
+        (textColor? NSForegroundColorAttributeName : (id)kCTForegroundColorFromContextAttributeName): (textColor? (id)[_textColor CGColor] : @(YES)),
+    };
 }
 
 @end
