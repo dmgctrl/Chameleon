@@ -45,6 +45,125 @@ describe(@"UILabel", ^{
                 [[@(textAlignment) should] equal:@(UITextAlignmentLeft)];
             });
         });
+        
+        context(@"lineBreakMode", ^{ //Deprecated. Use NSLineBreakMode instead.
+            UILineBreakMode lineBreakMode = [label lineBreakMode];
+            it(@"is TailTruncation'", ^{
+                [[@(lineBreakMode) should] equal:@(UILineBreakModeTailTruncation)];
+            });
+        });
+
+        context(@"lineBreakMode", ^{
+            NSLineBreakMode lineBreakMode = [label lineBreakMode];
+            it(@"is TailTruncation'", ^{
+                [[@(lineBreakMode) should] equal:@(NSLineBreakByTruncatingTail)];
+            });
+        });
+        
+        context(@"enabled", ^{
+            BOOL enabled = [label isEnabled];
+            it(@"YES", ^{
+                [[@(enabled) should] beYes];
+            });
+        });
+
+        context(@"adjustsFontSizeToFitWidth", ^{
+            BOOL adjustsFontSizeToFitWidth = [label adjustsFontSizeToFitWidth];
+            // More tests to add:
+            // This property is effective only when the numberOfLines property is set to 1.
+            // If you change it to YES, you should also set an appropriate minimum font size by modifying the minimumFontSize property.
+            // If this property is set to YES, it is a programmer error to set the lineBreakMode property to a value that causes text to wrap to another line.
+            it(@"is NO'", ^{
+                [[@(adjustsFontSizeToFitWidth) should] beNo];
+            });
+        });
+        
+        context(@"adjustsLetterSpacingToFitWidth", ^{
+            BOOL adjustsLetterSpacingToFitWidth = [label adjustsLetterSpacingToFitWidth];
+            // More tests to add:
+            // When this property is YES, the label may alter the letter spacing of the label text to make that text fit better within the label’s bounds.
+            // This property is applied to the string regardless of the current line break mode.
+            // If YES, ignore attempts by tighteningFactorForTruncation on any NSParagraphStyle objects associated with the label text.
+            // If this property is set to YES, it is a programmer error to set the lineBreakMode property to a value that causes text to wrap to another line.
+            it(@"NO", ^{
+                [[@(adjustsLetterSpacingToFitWidth) should] beNo];
+            });
+        });
+        
+        context(@"baselineAdjustment", ^{
+            int baselineAdjustment = [label baselineAdjustment];
+            it(@"UIBaselineAdjustmentAlignBaselines", ^{
+                [[@(baselineAdjustment) should] equal:@(UIBaselineAdjustmentAlignBaselines)];
+            });
+        });
+        
+        context(@"minimumScaleFactor", ^{
+            CGFloat minimumScaleFactor = [label minimumScaleFactor];
+            // More tests to add:
+            // If you specify a value of 0 for this property, the current font size is used as the smallest font size.
+            it(@"0", ^{
+                [[@(minimumScaleFactor) should] equal:@(0)];
+            });
+        });
+        
+        context(@"numberOfLines", ^{
+            NSInteger numberOfLines = [label numberOfLines];
+            it(@"1", ^{
+                [[@(numberOfLines) should] equal:@(1)];
+            });
+        });
+        
+        context(@"highlightedTextColor", ^{
+            UIColor *highlightedTextColor = [label highlightedTextColor];
+            it(@"nil", ^{
+                [[highlightedTextColor should] beNil];
+            });
+        });
+        
+        context(@"highlighted", ^{
+            BOOL highlighted = [label isHighlighted];
+            it(@"No", ^{
+                [[@(highlighted) should] beNo];
+            });
+        });
+        
+        context(@"shadowColor", ^{
+            UIColor *shadowColor = [label shadowColor];
+            it(@"nil", ^{
+                [[shadowColor should] beNil];
+            });
+        });
+        
+        context(@"shadowColor", ^{
+            UIColor *shadowColor = [label shadowColor];
+            it(@"nil", ^{
+                [[shadowColor should] beNil];
+            });
+        });
+        
+        context(@"shadowOffset", ^{
+            CGSize shadowOffset = [label shadowOffset];
+            it(@"width is 0", ^{
+                [[@(shadowOffset.width) should] equal:@(0)];
+            });
+            it(@"height is -1", ^{
+                [[@(shadowOffset.height) should] equal:@(-1)];
+            });
+        });
+        
+        context(@"userInteractionEnabled", ^{
+            BOOL userInteractionEnabled = [label isUserInteractionEnabled];
+            it(@"No", ^{
+                [[@(userInteractionEnabled) should] beNo];
+            });
+        });
+        
+        context(@"preferredMaxLayoutWidth", ^{
+            CGFloat preferredMaxLayoutWidth = [label preferredMaxLayoutWidth];
+            it(@"No", ^{
+                [[@(preferredMaxLayoutWidth) should] equal:@(0)];
+            });
+        });
     });
     
     context(@"with text", ^{

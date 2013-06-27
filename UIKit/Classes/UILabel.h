@@ -41,7 +41,7 @@
 @property (nonatomic, strong) UIFont* font;
 @property (nonatomic, strong) UIColor* textColor;
 @property (nonatomic) UITextAlignment textAlignment;
-@property (nonatomic) UILineBreakMode lineBreakMode;
+@property (nonatomic) UILineBreakMode lineBreakMode; //Deprecated. Use NSLineBreakMode instead.
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 
 #pragma mark Sizing the Label’s Text
