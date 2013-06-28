@@ -47,7 +47,7 @@ describe(@"UITextField", ^{
         
         context(@"textAlignment", ^{
             it(@"should be left", ^{
-                [[@([textField textAlignment]) should] equal:@(UITextAlignmentLeft)];
+                [[@([textField textAlignment]) should] equal:@(UITextAlignmentLeft)];//Deprecated use NSTextAlignment
             });
         });
         
@@ -159,6 +159,63 @@ describe(@"UITextField", ^{
             });
         });
     });
+    context(@"with text types", ^{
+        NSString* string = @"The quick brown \nfox jumped over the lazy \ndog.";
+        NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:string];
 
+        context(@"with attributedText", ^{
+            __block UITextField* textField;
+            beforeEach(^{
+                textField = [[UITextField alloc] init];
+                [textField setAttributedText:attributedString];
+            });
+            it(@"has similar text. space substitutes for linebreak", ^{
+                [[[textField text] should] equal:@"The quick brown  fox jumped over the lazy  dog."];
+            });
+            context(@"with minimumFontSize", ^{
+                beforeEach(^{
+                    [textField setMinimumFontSize:11];
+                });
+                it(@"can setFont lower", ^{
+                    UIFont *font = [UIFont fontWithName:@"Times" size:(CGFloat)10.0];
+                    [textField setFont:font];
+                    [[[textField font]should ] equal:font];
+                });
+            });
+            context(@"TextAlignment", ^{
+                beforeEach(^{
+                    [textField setTextAlignment:UITextAlignmentCenter];
+                });
+                it(@"should set", ^{
+                    [[@([textField textAlignment]) should] equal:@(UITextAlignmentCenter)];
+                });
+            });
+            context(@"TextColor", ^{
+                beforeEach(^{
+                    [textField setTextColor:[UIColor purpleColor]];
+                });
+                it(@"should set", ^{
+                    [[[textField textColor] should] equal:[UIColor purpleColor]];
+                });
+            });
+        });       
+        context(@"attributedPlaceholder", ^{
+            UITextField* textField = [[UITextField alloc] init];
+            [textField setAttributedPlaceholder:attributedString];
+            it(@"should set placeholder", ^{
+                [[[textField placeholder] should]equal:string];
+            });
+        });
+        context(@"with text", ^{
+            __block UITextField* textField;
+            beforeEach(^{
+                textField = [[UITextField alloc] init];
+                [textField setText:string];
+            });
+            it(@"sets", ^{
+                [[[textField text] should] equal:string];
+            });
+        });
+    });
 });
 SPEC_END
