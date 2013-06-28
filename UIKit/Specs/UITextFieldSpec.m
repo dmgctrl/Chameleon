@@ -159,19 +159,28 @@ describe(@"UITextField", ^{
             });
         });
     });
-    context(@"with text types", ^{
+    context(@"with text of type", ^{
         NSString* string = @"The quick brown \nfox jumped over the lazy \ndog.";
+        NSString* stringSubstitutingSpaceForLineBreak = @"The quick brown  fox jumped over the lazy  dog.";
         NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:string];
+        NSAttributedString* attributedStringSubstitutingSpaceForLineBreak = [[NSAttributedString alloc] initWithString:stringSubstitutingSpaceForLineBreak];
 
-        context(@"with attributedText", ^{
+        context(@"attributedText", ^{
             __block UITextField* textField;
             beforeEach(^{
                 textField = [[UITextField alloc] init];
                 [textField setAttributedText:attributedString];
             });
             it(@"has similar text. space substitutes for linebreak", ^{
-                [[[textField text] should] equal:@"The quick brown  fox jumped over the lazy  dog."];
+                [[[textField text] should] equal:stringSubstitutingSpaceForLineBreak];
             });
+            context(@"when scaled", ^{
+                it(@"should be same", ^{
+                    [textField setAdjustsFontSizeToFitWidth:YES];
+                    [[[textField attributedText] should] equal:attributedStringSubstitutingSpaceForLineBreak];
+                });
+            });
+
             context(@"with minimumFontSize", ^{
                 beforeEach(^{
                     [textField setMinimumFontSize:11];
@@ -182,6 +191,7 @@ describe(@"UITextField", ^{
                     [[[textField font]should ] equal:font];
                 });
             });
+            
             context(@"TextAlignment", ^{
                 beforeEach(^{
                     [textField setTextAlignment:UITextAlignmentCenter];
@@ -190,6 +200,7 @@ describe(@"UITextField", ^{
                     [[@([textField textAlignment]) should] equal:@(UITextAlignmentCenter)];
                 });
             });
+            
             context(@"TextColor", ^{
                 beforeEach(^{
                     [textField setTextColor:[UIColor purpleColor]];
@@ -198,7 +209,8 @@ describe(@"UITextField", ^{
                     [[[textField textColor] should] equal:[UIColor purpleColor]];
                 });
             });
-        });       
+        });
+        
         context(@"attributedPlaceholder", ^{
             UITextField* textField = [[UITextField alloc] init];
             [textField setAttributedPlaceholder:attributedString];
@@ -206,14 +218,22 @@ describe(@"UITextField", ^{
                 [[[textField placeholder] should]equal:string];
             });
         });
-        context(@"with text", ^{
+        
+        context(@"plain", ^{
             __block UITextField* textField;
             beforeEach(^{
                 textField = [[UITextField alloc] init];
                 [textField setText:string];
             });
-            it(@"sets", ^{
+            it(@"should set", ^{
                 [[[textField text] should] equal:string];
+            });
+            
+            context(@"when scaled", ^{
+                it(@"should be same", ^{
+                    [textField setAdjustsFontSizeToFitWidth:YES];
+                    [[[textField text] should] equal:string];
+                });
             });
         });
     });
