@@ -13,6 +13,7 @@
 
 @end
 
+#ifndef _APPKITDEFINES_H
 @interface NSAttributedString (NSStringDrawing)
 - (CGSize) size;
 - (void) drawAtPoint:(CGPoint)point;
@@ -25,8 +26,9 @@ typedef NS_ENUM(NSInteger, NSStringDrawingOptions) {
     NSStringDrawingUsesFontLeading = 1 << 1,
     NSStringDrawingUsesDeviceMetrics = 1 << 3,
 };
+#endif
 
-@interface NSAttributedString (NSExtendedStringDrawing)
+@interface NSAttributedString (NSExtendedStringDrawing_UIKit)
 - (void) drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
 - (CGRect) boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
 @end
