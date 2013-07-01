@@ -32,7 +32,7 @@
 #import "UIFont.h"
 #import "UIGraphics.h"
 #import "UIColor+AppKit.h"
-#import <AppKit/NSStringDrawing.h>
+#import "NSStringDrawing.h"
 #import <AppKit/NSApplication.h>
 #import <AppKit/NSParagraphStyle.h>
 #import <AppKit/NSShadow.h>
@@ -47,6 +47,7 @@ static NSString* const kUITextAlignmentKey = @"UITextAlignment";
 static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
 static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
+typedef void DrawTextInRectMethod(id, SEL, CGRect);
 
 @implementation UILabel {
     enum {
@@ -55,11 +56,28 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
         kRenderModeAttributedText
     } _renderMode;
     struct {
+        BOOL overridesDrawTextInRect : 1;
     } _flags;
+    
+    NSStringDrawingContext* _stringDrawingContext;
+    NSAttributedString* _attributedTextForDrawing;
+}
+
+static SEL kDrawTextInRectSelector;
+static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
+
++ (void) initialize
+{
+    if (self == [UILabel class]) {
+        kDrawTextInRectSelector = @selector(drawTextInRect:);
+        kDefaultImplementationOfDrawTextInRect = (DrawTextInRectMethod*)[UILabel instanceMethodForSelector:kDrawTextInRectSelector];
+    }
 }
 
 - (void) _commonInitForUILabel
 {
+    _flags.overridesDrawTextInRect = (kDefaultImplementationOfDrawTextInRect != (DrawTextInRectMethod*)[[self class] instanceMethodForSelector:kDrawTextInRectSelector]);
+
     self.userInteractionEnabled = NO;
     self.textAlignment = UITextAlignmentLeft;
     self.lineBreakMode = UILineBreakModeTailTruncation;
@@ -285,43 +303,61 @@ static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 - (void) drawRect:(CGRect)rect
 {
     if (_renderMode != kRenderModeNone) {
-        CGContextRef c = UIGraphicsGetCurrentContext();
-        @try {
-            CGContextSaveGState(c);
-            if (_renderMode == kRenderModePlainText) {
+        if (_flags.overridesDrawTextInRect) {
+            CGContextRef c = UIGraphicsGetCurrentContext();
+            @try {
+                CGContextSaveGState(c);
                 CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), _shadowOffset, 0, _shadowColor.CGColor);
                 UIColor* drawColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
                 [drawColor setFill];
 
-                [self drawTextInRect:[self bounds]];
-            } else if (_renderMode == kRenderModeAttributedText) {
-                [_attributedText drawInRect:[self bounds]];
+                [self drawTextInRect:[self textRectForBounds:[self bounds] limitedToNumberOfLines:[self numberOfLines]]];
+            } @finally {
+                CGContextRestoreGState(c);
             }
-        } @finally {
-            CGContextRestoreGState(c);
+        } else {
+            [self drawTextInRect:[self textRectForBounds:[self bounds] limitedToNumberOfLines:[self numberOfLines]]];
         }
     }
 }
 
-- (NSDictionary*) _synthesizeTextAttributes
+- (NSString*) _preprocessText:(NSString*)text
 {
-    UIColor* textColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
-    
-    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setTighteningFactorForTruncation:0.0f];
-    [paragraphStyle setLineBreakMode:(CTLineBreakMode)_lineBreakMode];
-    [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
-    NSShadow* shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor:[[self shadowColor] NSColor]];
-    [shadow setShadowOffset:[self shadowOffset]];
-    return @{
-        NSFontAttributeName: _font,
-        NSKernAttributeName: @(0.0f),
-        NSLigatureAttributeName: @(0.0f),
-        NSParagraphStyleAttributeName: paragraphStyle,
-        NSShadowAttributeName: shadow,
-        (textColor? NSForegroundColorAttributeName : (id)kCTForegroundColorFromContextAttributeName): (textColor? (id)[_textColor CGColor] : @(YES)),
-    };
+    return text;
+}
+
+- (NSAttributedString*) _preprocessAttributedText:(NSAttributedString*)text
+{
+    return text;
+}
+
+- (NSAttributedString*) _attributedTextForDrawing
+{
+    if (!_attributedTextForDrawing) {
+        if (_renderMode == kRenderModePlainText) {
+            UIColor* textColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
+            NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            [paragraphStyle setTighteningFactorForTruncation:0.0f];
+            [paragraphStyle setLineBreakMode:(CTLineBreakMode)_lineBreakMode];
+            [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
+            NSShadow* shadow = [[NSShadow alloc] init];
+            [shadow setShadowColor:[[self shadowColor] NSColor]];
+            [shadow setShadowOffset:[self shadowOffset]];
+            
+            _attributedTextForDrawing = [[NSAttributedString alloc] initWithString:[self _preprocessText:_text] attributes:@{
+                NSFontAttributeName: _font,
+                NSKernAttributeName: @(0.0f),
+                NSLigatureAttributeName: @(0.0f),
+                NSParagraphStyleAttributeName: paragraphStyle,
+                NSShadowAttributeName: shadow,
+                (textColor? NSForegroundColorAttributeName : (id)kCTForegroundColorFromContextAttributeName): (textColor? (id)[_textColor CGColor] : @(YES)),
+            }];
+        } else if (_renderMode == kRenderModeAttributedText) {
+            _attributedTextForDrawing = [self _preprocessAttributedText:_attributedText];
+        }
+        _stringDrawingContext = [[NSStringDrawingContext alloc] init];
+    }
+    return _attributedTextForDrawing;
 }
 
 @end
