@@ -82,7 +82,13 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     if (nibPath && bundle) {
         return [self initWithNibName:NSStringFromClass([self class]) bundle:bundle];
     } else {
-        return [self initWithNibName:nil bundle:nil];
+        bundle = [NSBundle mainBundle];
+        nibPath = [bundle pathForResource:NSStringFromClass([self class]) ofType:@"nib"];
+        if (bundle && nibPath) {
+            return [self initWithNibName:NSStringFromClass([self class]) bundle:bundle];
+        } else {
+            return [self initWithNibName:nil bundle:nil];
+        }
     }
 }
 
