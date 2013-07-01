@@ -45,12 +45,12 @@ describe(@"UITextView", ^{
                 });
             });
             context(@"typingAttributes", ^{
-                NSMutableDictionary* typingAttributesCopy;
-                [textView  performSelector:@selector(typingAttributes) withObject:nil afterDelay:0.1];
-                //NSMutableDictionary* typingAttributes = [[textView typingAttributes] mutableCopyWithZone:NULL];
-                //it(@"should left", ^{
-                //    [[[textView typingAttributes] should] beNil];
-                //});
+                // The getter of this property causes and error. According to stack overflow
+                // one needs to delay it similar to the following
+                // [textView  performSelector:@selector(typingAttributes) withObject:nil afterDelay:0.1];
+                // Because performSelector:withObject:afterDelay returns a void, the above line is not useful.
+                // It might be necessary to extent the UITextView to have an instance method that will
+                // accept and modify but not return a mutable dictionary and delay a call to that.
             });
             context(@"selectedRange", ^{
                 it(@"should have max location and zero size", ^{
