@@ -167,7 +167,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void)setDataSource:(id<UITableViewDataSource>)newSource
 {
     _dataSource = newSource;
-
+    
     _dataSourceHas.numberOfSectionsInTableView = [_dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)];
     _dataSourceHas.titleForHeaderInSection = [_dataSource respondsToSelector:@selector(tableView:titleForHeaderInSection:)];
     _dataSourceHas.titleForFooterInSection = [_dataSource respondsToSelector:@selector(tableView:titleForFooterInSection:)];
@@ -178,7 +178,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void)setDelegate:(id<UITableViewDelegate>)newDelegate
 {
     [super setDelegate:newDelegate];
-
+    
     _delegateHas.heightForRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)];
     _delegateHas.heightForHeaderInSection = [newDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)];
     _delegateHas.heightForFooterInSection = [newDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)];
@@ -204,7 +204,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     // if there's no dataSource, this can't do anything else.
     // note that I'm presently caching and hanging on to views and titles for section headers which is something
     // the real UIKit appears to fetch more on-demand than this. so far this has not been a problem.
-
+    
     // remove all previous section header/footer views
     for (UITableViewSection *sectionRecord in _sections) {
         [sectionRecord.headerView removeFromSuperview];
@@ -302,7 +302,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     
     // We subtract 1 here to cut off the last separator line, this should
     // probably be done a better way but this works for now
-    self.contentSize = CGSizeMake(0,height - 1);	
+    self.contentSize = CGSizeMake(0,height - 1);
 }
 
 - (UITableViewCell*) _ensureCellExistsAtIndexPath:(NSIndexPath*)indexPath
@@ -352,7 +352,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     // dequeuing and keep a list of all existing cells that are visible and those
     // that exist but are not visible and are reusable
     // if there's no section cache, no rows will be laid out but the header/footer will (if any).
-
+    
     NSMutableDictionary* usedCells = [[NSMutableDictionary alloc] init];
     const CGSize boundsSize = self.bounds.size;
     const CGFloat contentOffset = self.contentOffset.y;
@@ -402,7 +402,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
             }
         }
     }
-
+    
     // remove old cells, but save off any that might be reusable
     for (NSIndexPath* indexPath in [_cachedCells allKeys]) {
         if (![usedCells objectForKey:indexPath]) {
@@ -494,7 +494,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (CGRect) rectForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     [self _updateSectionsCacheIfNeeded];
-
+    
     if (!indexPath || indexPath.section >= [_sections count]) {
         return CGRectZero;
     }
@@ -533,9 +533,9 @@ static NSString* const kUIStyleKey = @"UIStyle";
     // This needs to return the index paths even if the cells don't exist in any caches or are not on screen
     // For now I'm assuming the cells stretch all the way across the view. It's not clear to me if the real
     // implementation gets anal about this or not (haven't tested it).
-
+    
     [self _updateSectionsCacheIfNeeded];
-
+    
     NSMutableArray *results = [[NSMutableArray alloc] init];
     const NSInteger numberOfSections = [_sections count];
     CGFloat offset = _tableHeaderView? _tableHeaderView.frame.size.height : 0;
@@ -545,7 +545,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
         const NSInteger numberOfRows = sectionRecord.numberOfRows;
         
         offset += sectionRecord.headerHeight;
-
+        
         if (offset + sectionRecord.rowsHeight >= rect.origin.y) {
             for (NSInteger row=0; row<numberOfRows; row++) {
                 const CGFloat height = [sectionRecord heightForRowAtIndex:row];
@@ -578,10 +578,10 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (NSArray *)indexPathsForVisibleRows
 {
     [self _layoutTableView];
-
+    
     NSMutableArray *indexes = [NSMutableArray arrayWithCapacity:[_cachedCells count]];
     const CGRect bounds = self.bounds;
-
+    
     // Special note - it's unclear if UIKit returns these in sorted order. Because we're assuming that visibleCells returns them in order (top-bottom)
     // and visibleCells uses this method, I'm going to make the executive decision here and assume that UIKit probably does return them sorted - since
     // there's nothing warning that they aren't. :)
@@ -591,7 +591,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
             [indexes addObject:indexPath];
         }
     }
-
+    
     return indexes;
 }
 
@@ -648,7 +648,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     [_reusableCells makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_reusableCells removeAllObjects];
     [_cachedCells removeAllObjects];
-
+    
     // clear prior selection
     [_selectedRows removeAllObjects];
     
@@ -684,11 +684,11 @@ static NSString* const kUIStyleKey = @"UIStyle";
     const CGRect oldFrame = self.frame;
     if (!CGRectEqualToRect(oldFrame,frame)) {
         [super setFrame:frame];
-
+        
         if (oldFrame.size.width != frame.size.width) {
             [self _updateSectionsCache];
         }
-
+        
         [self _setContentSize];
     }
 }
@@ -729,7 +729,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void)selectRowAtIndexPath:(NSIndexPath *)indexPath exclusively:(BOOL)exclusively animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition
 {
     [self _reloadDataIfNeeded];
-
+    
     [self scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
     
     if (!self.allowsMultipleSelection) {
@@ -758,13 +758,13 @@ static NSString* const kUIStyleKey = @"UIStyle";
                 aRect.size.height = self.bounds.size.height;
                 break;
             }
-
+                
             case UITableViewScrollPositionMiddle: {
                 aRect.origin.y -= (self.bounds.size.height / 2.f) - aRect.size.height;
                 aRect.size.height = self.bounds.size.height;
                 break;
             }
-
+                
             case UITableViewScrollPositionBottom: {
                 aRect.origin.y -= self.bounds.size.height - aRect.size.height;
                 aRect.size.height = self.bounds.size.height;
@@ -775,7 +775,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
                 break;
             }
         }
-
+        
         [self scrollRectToVisible:aRect animated:animated];
     }
 }
@@ -854,7 +854,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInView:self];
     NSIndexPath *touchedRow = [self indexPathForRowAtPoint:location];
-
+    
     if (touchedRow) {
         BOOL commandKeyDown = ([NSEvent modifierFlags] & NSCommandKeyMask) == NSCommandKeyMask;
         BOOL exclusively = !commandKeyDown;
@@ -885,7 +885,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     }
 }
 
-- (NSIndexPath *)_selectRowAtIndexPath:(NSIndexPath *)indexPath exclusively:(BOOL)exclusively sendDelegateMessages:(BOOL)sendDelegateMessages animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition {	
+- (NSIndexPath *)_selectRowAtIndexPath:(NSIndexPath *)indexPath exclusively:(BOOL)exclusively sendDelegateMessages:(BOOL)sendDelegateMessages animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition {
     if (!self.allowsMultipleSelection) {
         exclusively = YES;
     }
@@ -950,7 +950,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 {
     if (self.editing) {
         self.editing = NO;
-
+        
         if (_delegateHas.didEndEditingRowAtIndexPath) {
             [self.delegate tableView:self didEndEditingRowAtIndexPath:indexPath];
         }
@@ -971,11 +971,11 @@ static NSString* const kUIStyleKey = @"UIStyle";
         if ([menuItemTitle length] == 0) {
             menuItemTitle = @"Delete";
         }
-
+        
         cell.highlighted = YES;
         
         NSMenuItem *theItem = [[NSMenuItem alloc] initWithTitle:menuItemTitle action:NULL keyEquivalent:@""];
-
+        
         NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
         [menu setAutoenablesItems:NO];
         [menu setAllowsContextMenuPlugIns:NO];
@@ -984,20 +984,20 @@ static NSString* const kUIStyleKey = @"UIStyle";
         // calculate the mouse's current position so we can present the menu from there since that's normal OSX behavior
         NSPoint mouseLocation = [NSEvent mouseLocation];
         CGPoint screenPoint = [self.window.screen convertPoint:NSPointToCGPoint(mouseLocation) fromScreen:nil];
-
+        
         // modally present a menu with the single delete option on it, if it was selected, then do the delete, otherwise do nothing
         const BOOL didSelectItem = [menu popUpMenuPositioningItem:nil atLocation:NSPointFromCGPoint(screenPoint) inView:[self.window.screen UIKitView]];
         
         
         [[UIApplication sharedApplication] _cancelTouches];
-
+        
         if (didSelectItem) {
             [_dataSource tableView:self commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:indexPath];
         }
-
+        
         cell.highlighted = NO;
     }
-
+    
     // all done
     [self _endEditingRowAtIndexPath:indexPath];
 }
@@ -1019,13 +1019,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (void) moveUp:(id)sender
 {
-    NSIndexPath* indexPath = [self indexPathForSelectedRow];
-    NSIndexPath* newIndexPath = nil;
-    if (indexPath.row > 0) {
-        newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
-    } else if (indexPath.section > 0) {
-        newIndexPath = [NSIndexPath indexPathForRow:[self numberOfRowsInSection:indexPath.section - 1] - 1 inSection:indexPath.section - 1];
-    }
+    NSIndexPath* newIndexPath = [self _firstValidIndexPathBeforeIndexPath:[self indexPathForSelectedRow]];
     if (newIndexPath) {
         [self _selectRowAtIndexPath:newIndexPath exclusively:YES sendDelegateMessages:YES animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
@@ -1034,17 +1028,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (void) moveDown:(id)sender
 {
-    NSIndexPath* indexPath = [self indexPathForSelectedRow];
-    NSIndexPath* newIndexPath = nil;
-    if(indexPath == nil && [self numberOfSections]) {
-        newIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    } else if (indexPath && indexPath.section <= self.numberOfSections) {
-        if (indexPath.row < [self numberOfRowsInSection:indexPath.section] - 1) {
-            newIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-        } else if (indexPath.section < [self numberOfSections] - 1) {
-            newIndexPath = [NSIndexPath indexPathForRow:0 inSection:indexPath.section + 1];
-        }
-    }
+    NSIndexPath* newIndexPath = [self _firstValidIndexPathAfterIndexPath:[self indexPathForSelectedRow]];
     if (newIndexPath) {
         [self _selectRowAtIndexPath:newIndexPath exclusively:YES sendDelegateMessages:YES animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
@@ -1059,6 +1043,40 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void) pageDown:(id)sender
 {
     [self scrollRectToVisible:CGRectMake(0.0f, MIN(self.contentOffset.y + self.bounds.size.height, self.contentSize.height), self.bounds.size.width, self.bounds.size.height) animated:YES];
+}
+
+
+#pragma mark Private Functions
+
+- (NSIndexPath*) _firstValidIndexPathBeforeIndexPath:(NSIndexPath*)indexPath
+{
+    NSInteger section = [indexPath section];
+    NSInteger row = [indexPath row] - 1;
+    while (section >= 0) {
+        if (row >= 0) {
+            return [NSIndexPath indexPathForRow:row inSection:section];
+        } else if (!section) {
+            break;
+        }
+        section--;
+        row = [self numberOfRowsInSection:section] - 1;
+    }
+    return nil;
+}
+
+- (NSIndexPath*) _firstValidIndexPathAfterIndexPath:(NSIndexPath*)indexPath
+{
+    NSInteger section = [indexPath section];
+    NSInteger row = [indexPath row] + 1;
+    NSInteger numberOfSections = [self numberOfSections];
+    while (section < numberOfSections) {
+        if (row < [self numberOfRowsInSection:section]) {
+            return [NSIndexPath indexPathForRow:row inSection:section];
+        }
+        section++;
+        row = 0;
+    }
+    return nil;
 }
 
 @end
