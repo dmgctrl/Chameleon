@@ -321,6 +321,8 @@
 		F922DB6B13D3506300469869 /* UITableViewCellContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = F922DB6913D3506300469869 /* UITableViewCellContentView.m */; };
 		F926DEC81781CF88009C3D88 /* NSStringDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = F926DEC71781CF88009C3D88 /* NSStringDrawing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F926DECD1781E53C009C3D88 /* NSStringDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = F926DECC1781E53C009C3D88 /* NSStringDrawing.m */; };
+		F926DECF178205F9009C3D88 /* NSText.m in Sources */ = {isa = PBXBuildFile; fileRef = F926DECE178205F9009C3D88 /* NSText.m */; };
+		F926DED117820670009C3D88 /* NSText.h in Headers */ = {isa = PBXBuildFile; fileRef = F926DED017820608009C3D88 /* NSText.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F92AB7E81768F29A0090CE21 /* UIImage+AppKit.h in Headers */ = {isa = PBXBuildFile; fileRef = F92AB7E71768F29A0090CE21 /* UIImage+AppKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F92CB50F13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h in Headers */ = {isa = PBXBuildFile; fileRef = F92CB50D13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h */; };
 		F92CB51113E067F900A50B9F /* UINibDecoderForNibArchiveV1.m in Sources */ = {isa = PBXBuildFile; fileRef = F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */; };
@@ -792,6 +794,8 @@
 		F922DB6913D3506300469869 /* UITableViewCellContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellContentView.m; sourceTree = "<group>"; };
 		F926DEC71781CF88009C3D88 /* NSStringDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringDrawing.h; sourceTree = "<group>"; };
 		F926DECC1781E53C009C3D88 /* NSStringDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringDrawing.m; sourceTree = "<group>"; };
+		F926DECE178205F9009C3D88 /* NSText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSText.m; sourceTree = "<group>"; };
+		F926DED017820608009C3D88 /* NSText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSText.h; sourceTree = "<group>"; };
 		F92AB7E71768F29A0090CE21 /* UIImage+AppKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+AppKit.h"; path = "Classes/UIImage+AppKit.h"; sourceTree = "<group>"; };
 		F92CB50D13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDecoderForNibArchiveV1.h; sourceTree = "<group>"; };
 		F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibDecoderForNibArchiveV1.m; sourceTree = "<group>"; };
@@ -1092,6 +1096,8 @@
 				F9911549177223D600B4389A /* NSAttributedString.h */,
 				F926DEC71781CF88009C3D88 /* NSStringDrawing.h */,
 				F926DECC1781E53C009C3D88 /* NSStringDrawing.m */,
+				F926DED017820608009C3D88 /* NSText.h */,
+				F926DECE178205F9009C3D88 /* NSText.m */,
 				148984E712EE2CFE003D4751 /* UIAcceleration.h */,
 				148984E812EE2CFE003D4751 /* UIAcceleration.m */,
 				148984E912EE2CFE003D4751 /* UIAccelerometer.h */,
@@ -1812,6 +1818,7 @@
 				F991155A177228D100B4389A /* UIKit+CoreData.h in Headers */,
 				F991155C1772290600B4389A /* UIKit+SystemConfiguration.h in Headers */,
 				F926DEC81781CF88009C3D88 /* NSStringDrawing.h in Headers */,
+				F926DED117820670009C3D88 /* NSText.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2196,6 +2203,7 @@
 				F947AF19176F5E060057FC9A /* UIStoryboardPushSegue.m in Sources */,
 				F91D4D84177246F7004119BF /* UIStringDrawing.m in Sources */,
 				F926DECD1781E53C009C3D88 /* NSStringDrawing.m in Sources */,
+				F926DECF178205F9009C3D88 /* NSText.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
