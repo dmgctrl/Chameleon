@@ -99,6 +99,65 @@ describe(@"UITableView", ^{
                 });
             });
         });
+        context(@"Method", ^{
+            context(@"numberOfRowsInSection", ^{
+                it(@"should be nil", ^{
+                    [[[tableView numberOfRowsInSection:0] should] beNil];
+                });
+            });
+            // the following test crashes
+//            context(@"numberOfSections", ^{
+//                it(@"should be nil", ^{
+//                    [[[tableView numberOfSections] should] beNil];
+//                });
+//            });
+            context(@"headerViewForSection", ^{
+                it(@"should be nil", ^{
+                    [[[tableView headerViewForSection:0] should] beNil];
+                });
+            });
+            context(@"footerViewForSection", ^{
+                it(@"should be nil", ^{
+                    [[[tableView footerViewForSection:0] should] beNil];
+                });
+            });
+            context(@"visibleCells", ^{
+                it(@"should be empty", ^{
+                    [[@([[tableView visibleCells] count]) should] equal:@(0)];
+                });
+            });
+            context(@"indexPathsForVisibleRows", ^{
+                it(@"should be empty", ^{
+                    [[@([[tableView indexPathsForVisibleRows] count]) should] equal:@(0)];
+                });
+            });
+            context(@"indexPathForSelectedRow", ^{
+                it(@"should be empty", ^{
+                    [[@([[tableView indexPathForSelectedRow] length]) should] equal:@(0)];
+                });
+            });
+            context(@"indexPathsForSelectedRows", ^{
+                it(@"should be empty", ^{
+                    [[@([[tableView indexPathsForSelectedRows] count]) should] equal:@(0)];
+                });
+            });
+            context(@"rectForSection", ^{
+                it(@"should be origin with zero size", ^{
+                    [[@(CGRectEqualToRect([tableView rectForSection:0], CGRectMake(0,0,0,0))) should] beYes];
+                });
+            });
+            context(@"rectForFooterInSection", ^{
+                it(@"should be origin with zero size", ^{
+                    [[@(CGRectEqualToRect([tableView rectForFooterInSection:0], CGRectMake(0,0,0,0))) should] beYes];
+                });
+            });
+            context(@"rectForHeaderInSection", ^{
+                it(@"should be origin with zero size", ^{
+                    [[@(CGRectEqualToRect([tableView rectForHeaderInSection:0], CGRectMake(0,0,0,0))) should] beYes];
+                });
+            });
+            
+        });
     });
 });
 SPEC_END
