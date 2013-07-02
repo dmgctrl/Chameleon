@@ -28,6 +28,12 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitDefines.h>
+
+UIKIT_EXTERN NSString* const UITextAttributeFont;
+UIKIT_EXTERN NSString* const UITextAttributeTextColor;
+UIKIT_EXTERN NSString* const UITextAttributeTextShadowColor;
+UIKIT_EXTERN NSString* const UITextAttributeTextShadowOffset;
 
 typedef enum {
     UILineBreakModeWordWrap = 0,
