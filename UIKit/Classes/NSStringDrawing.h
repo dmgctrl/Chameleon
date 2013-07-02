@@ -4,12 +4,12 @@
 
 @interface NSStringDrawingContext : NSObject
 
-@property(nonatomic) CGFloat minimumScaleFactor;
-@property(nonatomic) CGFloat minimumTrackingAdjustment;
+@property (nonatomic) CGFloat minimumScaleFactor;
+@property (nonatomic) CGFloat minimumTrackingAdjustment;
 
-@property(nonatomic, readonly) CGFloat actualScaleFactor;
-@property(nonatomic, readonly) CGFloat actualTrackingAdjustment;
-@property(nonatomic, readonly) CGRect totalBounds;
+@property (nonatomic, readonly) CGFloat actualScaleFactor;
+@property (nonatomic, readonly) CGFloat actualTrackingAdjustment;
+@property (nonatomic, readonly) CGRect totalBounds;
 
 @end
 
