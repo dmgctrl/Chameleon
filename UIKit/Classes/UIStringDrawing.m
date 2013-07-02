@@ -94,8 +94,8 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
         CFRange fitRange;
         CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, &fitRange);
         CGSize boundingBox = {
-            suggestedSize.width = MIN(ceil(suggestedSize.width), constrainedToSize.width),
-            suggestedSize.height = MIN(ceil(suggestedSize.height), constrainedToSize.height)
+            .width = MIN(ceil(suggestedSize.width), constrainedToSize.width),
+            .height = MIN(ceil(suggestedSize.height), constrainedToSize.height)
         };
         CGMutablePathRef path = CGPathCreateMutable();
         if (path) {
