@@ -127,7 +127,7 @@
 #import <UIKit/UIWebView.h>
 #import <UIKit/UIWindow.h>
 #import <UIKit/NSAttributedString.h>
-//#import <UIKit/NSText.h>
+#import <UIKit/NSText.h>
 //#import <UIKit/NSParagraphStyle.h>
 //#import <UIKit/NSShadow.h>
 #import <UIKit/NSStringDrawing.h>
