@@ -70,10 +70,10 @@ extern CGFloat _UITableViewDefaultRowHeight;
     UITableViewCellLayoutManager* _layoutManager;
 
     struct {
-        BOOL tableViewStyleIsGrouped : 1;
-        BOOL usingDefaultSelectedBackgroundView : 1;
-        BOOL usingDefaultAccessoryView : 1;
-        BOOL highlighted : 1;
+        bool tableViewStyleIsGrouped : 1;
+        bool usingDefaultSelectedBackgroundView : 1;
+        bool usingDefaultAccessoryView : 1;
+        bool highlighted : 1;
     } _tableCellFlags;
 }
 @synthesize contentView = _contentView;
@@ -444,7 +444,7 @@ static Class kUIButtonClass;
         state.highlighted = [view respondsToSelector:@selector(isHighlighted)] ? [(id)view isHighlighted] : NO;
         state.opaque = [view isOpaque];
         state.backgroundColor = view.backgroundColor;
-        CFDictionarySetValue(_unhighlightedStates, (__bridge const void *)(view), (__bridge const void *)(state));
+        CFDictionarySetValue(_unhighlightedStates, (__bridge CFTypeRef)view, (__bridge CFTypeRef)state);
     }
     for (UIView* subview in view.subviews) {
         [self _saveOpaqueViewState:subview];
@@ -454,7 +454,7 @@ static Class kUIButtonClass;
 - (void) _clearOpaqueViewState:(UIView*)view
 {
     void const* pointer = nil;
-    if (CFDictionaryGetValueIfPresent(_unhighlightedStates, (__bridge const void *)(view), &pointer)) {
+    if (CFDictionaryGetValueIfPresent(_unhighlightedStates, (__bridge CFTypeRef)view, &pointer)) {
         UITableViewCellUnhighlightedState* state = (__bridge id)pointer;
         if ([view respondsToSelector:@selector(setHighlighted:)]) {
             [(id)view setHighlighted:state.highlighted];
