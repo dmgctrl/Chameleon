@@ -30,6 +30,7 @@
 #import "UILabel.h"
 #import "UIColor.h"
 #import "UIFont.h"
+#import "UIFont+UIPrivate.h"
 #import "UIGraphics.h"
 #import "UIColor+AppKit.h"
 #import "NSStringDrawing.h"
@@ -56,7 +57,7 @@ typedef void DrawTextInRectMethod(id, SEL, CGRect);
         kRenderModeAttributedText
     } _renderMode;
     struct {
-        BOOL overridesDrawTextInRect : 1;
+        bool overridesDrawTextInRect : 1;
     } _flags;
     
     NSStringDrawingContext* _stringDrawingContext;
@@ -133,6 +134,15 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
         }
     }
     return self;
+}
+
+
+#pragma mark UIView overrides
+
+- (void) setNeedsDisplay
+{
+    _attributedTextForDrawing = nil;
+    [super setNeedsDisplay];
 }
 
 
@@ -263,9 +273,6 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
     return [_text sizeWithFont:_font constrainedToSize:constrainedToSize lineBreakMode:_lineBreakMode];
 }
 
-
-#pragma mark Drawing
-
 - (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
     if ([_text length] > 0) {
@@ -274,30 +281,34 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
             maxSize.height = _font.lineHeight * numberOfLines;
         }
         CGSize size = [_text sizeWithFont: _font constrainedToSize: maxSize lineBreakMode: _lineBreakMode];
-        return (CGRect){bounds.origin, size};
+        return (CGRect){
+            .origin = {
+                .x = bounds.origin.x,
+                .y = round(CGRectGetMidY(bounds) - (size.height * 0.5f)),
+            },
+            .size = size,
+        };
     }
     return (CGRect){bounds.origin, {0, 0}};
 }
 
+
+#pragma mark Drawing
+
 - (void) drawTextInRect:(CGRect)rect
 {
-//    NSDictionary* attributes = [self _synthesizeTextAttributes];
-//    NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:_text attributes:attributes];
-    
-    CGRect drawRect = CGRectZero;
-    CGSize maxSize = rect.size;
-    if (_numberOfLines > 0) {
-        maxSize.height = _font.lineHeight * (_numberOfLines + 0.5);
-    }
-    drawRect.size = [_text sizeWithFont:_font constrainedToSize:maxSize lineBreakMode:_lineBreakMode];
-    drawRect = CGRectOffset(drawRect, 0, roundf((rect.size.height - drawRect.size.height) / 2.f));
-    
-    [_text drawInRect:drawRect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
+    [[self _preprocessText:_text] drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
+}
 
-    [[UIColor blueColor] set];
-    UIRectFrame(drawRect);
-    [[UIColor redColor] set];
-    UIRectFrame(rect);
+static CGRect CGRectVerticallyCenteredInRect(CGRect a, CGRect b)
+{
+    return (CGRect){
+        .origin = {
+            .x = a.origin.x,
+            .y = round(CGRectGetMidY(b) - (CGRectGetHeight(a) * 0.5f)),
+        },
+        .size = a.size,
+    };
 }
 
 - (void) drawRect:(CGRect)rect
@@ -308,7 +319,7 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
             @try {
                 CGContextSaveGState(c);
                 CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), _shadowOffset, 0, _shadowColor.CGColor);
-                UIColor* drawColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
+                UIColor* drawColor = _highlighted ? (_highlightedTextColor ?: [UIColor whiteColor]) : (_textColor ?: [UIColor blackColor]);
                 [drawColor setFill];
 
                 [self drawTextInRect:[self textRectForBounds:[self bounds] limitedToNumberOfLines:[self numberOfLines]]];
@@ -316,7 +327,13 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
                 CGContextRestoreGState(c);
             }
         } else {
-            [self drawTextInRect:[self textRectForBounds:[self bounds] limitedToNumberOfLines:[self numberOfLines]]];
+            NSStringDrawingContext* context = [[NSStringDrawingContext alloc] init];
+            NSAttributedString* string = [self _attributedTextForDrawing];
+            NSUInteger const options = NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+            CGRect bounds = [self bounds];
+            CGRect textRect = [string boundingRectWithSize:bounds.size options:options context:context];
+            CGRect centeredTextRect = CGRectVerticallyCenteredInRect(textRect, bounds);
+            [string drawWithRect:centeredTextRect options:options context:context];
         }
     }
 }
@@ -335,7 +352,7 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
 {
     if (!_attributedTextForDrawing) {
         if (_renderMode == kRenderModePlainText) {
-            UIColor* textColor = (_highlighted && _highlightedTextColor)? _highlightedTextColor : _textColor;
+            UIColor* textColor = _highlighted ? (_highlightedTextColor ?: [UIColor whiteColor]) : _textColor;
             NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             [paragraphStyle setTighteningFactorForTruncation:0.0f];
             [paragraphStyle setLineBreakMode:(CTLineBreakMode)_lineBreakMode];
@@ -345,17 +362,16 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
             [shadow setShadowOffset:[self shadowOffset]];
             
             _attributedTextForDrawing = [[NSAttributedString alloc] initWithString:[self _preprocessText:_text] attributes:@{
-                NSFontAttributeName: _font,
+                NSFontAttributeName: (id)[_font ctFontRef],
                 NSKernAttributeName: @(0.0f),
                 NSLigatureAttributeName: @(0.0f),
                 NSParagraphStyleAttributeName: paragraphStyle,
                 NSShadowAttributeName: shadow,
-                (textColor? NSForegroundColorAttributeName : (id)kCTForegroundColorFromContextAttributeName): (textColor? (id)[_textColor CGColor] : @(YES)),
+                (textColor? (id)kCTForegroundColorAttributeName : (id)kCTForegroundColorFromContextAttributeName): (textColor? textColor : @(YES)),
             }];
         } else if (_renderMode == kRenderModeAttributedText) {
             _attributedTextForDrawing = [self _preprocessAttributedText:_attributedText];
         }
-        _stringDrawingContext = [[NSStringDrawingContext alloc] init];
     }
     return _attributedTextForDrawing;
 }
