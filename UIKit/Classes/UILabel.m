@@ -38,6 +38,7 @@
 #import <AppKit/NSParagraphStyle.h>
 #import <AppKit/NSShadow.h>
 
+
 static NSString* const kUIFontKey = @"UIFont";
 static NSString* const kUIHighlightedColorKey = @"UIHighlightedColor";
 static NSString* const kUIShadowColorKey = @"UIShadowColor";
@@ -49,6 +50,18 @@ static NSString* const kUIBaselineAdjustmentKey = @"UIBaselineAdjustment";
 static NSString* const kUIAdjustsFontSizeToFitKey = @"UIAdjustsFontSizeToFit";
 
 typedef void DrawTextInRectMethod(id, SEL, CGRect);
+
+static CGRect CGRectVerticallyCenteredInRect(CGRect a, CGRect b)
+{
+    return (CGRect){
+        .origin = {
+            .x = a.origin.x,
+            .y = round(CGRectGetMidY(b) - (CGRectGetHeight(a) * 0.5f)),
+        },
+        .size = a.size,
+    };
+}
+
 
 @implementation UILabel {
     enum {
@@ -298,17 +311,6 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
 - (void) drawTextInRect:(CGRect)rect
 {
     [[self _preprocessText:_text] drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
-}
-
-static CGRect CGRectVerticallyCenteredInRect(CGRect a, CGRect b)
-{
-    return (CGRect){
-        .origin = {
-            .x = a.origin.x,
-            .y = round(CGRectGetMidY(b) - (CGRectGetHeight(a) * 0.5f)),
-        },
-        .size = a.size,
-    };
 }
 
 - (void) drawRect:(CGRect)rect
