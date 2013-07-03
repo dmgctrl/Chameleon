@@ -1028,7 +1028,13 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (void) moveDown:(id)sender
 {
-    NSIndexPath* newIndexPath = [self _firstValidIndexPathAfterIndexPath:[self indexPathForSelectedRow]];
+    NSIndexPath* indexPath = [self indexPathForSelectedRow];
+    NSIndexPath* newIndexPath = nil;
+    if (indexPath) {
+        newIndexPath = [self _firstValidIndexPathAfterIndexPath:indexPath];
+    } else {
+        newIndexPath = [self _firstVisibileIndexPath];
+    }
     if (newIndexPath) {
         [self _selectRowAtIndexPath:newIndexPath exclusively:YES sendDelegateMessages:YES animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
@@ -1047,6 +1053,15 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 
 #pragma mark Private Functions
+
+- (NSIndexPath*) _firstVisibileIndexPath
+{
+    NSArray* indexPaths = [self indexPathsForVisibleRows];
+    if ([indexPaths count]) {
+        return [indexPaths objectAtIndex:0];
+    }
+    return nil;
+}
 
 - (NSIndexPath*) _firstValidIndexPathBeforeIndexPath:(NSIndexPath*)indexPath
 {
