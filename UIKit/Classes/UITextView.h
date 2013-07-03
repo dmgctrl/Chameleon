@@ -38,7 +38,6 @@ UIKIT_EXTERN NSString *const UITextViewTextDidEndEditingNotification;
 
 @class UIColor;
 @class UIFont;
-@class UITextLayer;
 @class UITextView;
 
 @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
