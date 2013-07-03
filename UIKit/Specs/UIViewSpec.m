@@ -119,11 +119,108 @@ describe(@"UIView", ^{
                 });
             });
             context(@"tag", ^{
-                it(@"should not be", ^{
+                it(@"should be 0", ^{
                     [[@([view tag]) should] equal:@(0)];
                 });
             });
-        });//
+        });
+        context(@"instance method", ^{
+            context(@"sizeThatFits", ^{
+                it(@"should work", ^{
+                    [[@(CGSizeEqualToSize([view sizeThatFits:CGSizeZero],CGSizeZero)) should] beYes];
+                });
+            });
+            context(@"constraints", ^{
+                it(@"should be empty", ^{
+                    [[@([[view constraints] count ]) should] equal:@(0)];
+                });
+            });
+            context(@"systemLayoutSizeFittingSize", ^{
+                it(@"should work", ^{
+                    [[@(CGSizeEqualToSize([view systemLayoutSizeFittingSize:CGSizeZero], CGSizeZero)) should] beYes];
+                });
+            });
+            context(@"contentCompressionResistancePriorityForAxis", ^{
+                it(@"should work", ^{
+                    [[@([view contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]) should] equal:@(750)];
+                });
+            });
+            context(@"contentHuggingPriorityForAxis", ^{
+                it(@"should work", ^{
+                    [[@([view contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]) should] equal:@(250)];
+                });
+            });
+            context(@"alignmentRectForFrame", ^{
+                it(@"should work", ^{
+                    [[@(CGRectEqualToRect([view alignmentRectForFrame:CGRectZero], CGRectZero)) should] beYes];
+                });
+            });
+            context(@"frameForAlignmentRect", ^{
+                it(@"should work", ^{
+                    [[@(CGRectEqualToRect([view frameForAlignmentRect:CGRectZero], CGRectZero)) should] beYes];
+                });
+            });
+            context(@"alignmentRectInsets", ^{
+                it(@"should work", ^{
+                    [[@(UIEdgeInsetsEqualToEdgeInsets([view alignmentRectInsets], UIEdgeInsetsZero)) should] beYes];
+                });
+            });
+            context(@"viewForBaselineLayout", ^{
+                it(@"should not be", ^{
+                    [[[view viewForBaselineLayout] should] beNonNil];
+                });
+            });
+            context(@"needsUpdateConstraints", ^{
+                it(@"should be yes", ^{
+                    [[@([view needsUpdateConstraints]) should] beYes];
+                });
+            });
+            context(@"constraintsAffectingLayoutForAxis", ^{
+                it(@"should be empty", ^{
+                    [[@([[view constraintsAffectingLayoutForAxis:UILayoutConstraintAxisVertical] count ]) should] equal:@(0)];
+                });
+            });
+            context(@"hasAmbiguousLayout", ^{
+                it(@"should be no", ^{
+                    [[@([view hasAmbiguousLayout]) should] beNo];
+                });
+            });
+            context(@"viewWithTag", ^{
+                it(@"should be no", ^{
+                    [[[view viewWithTag:0] should] beNonNil];
+                });
+            });
+            context(@"convertPoint:toView", ^{
+                it(@"should work", ^{
+                    [[@(CGPointEqualToPoint([view convertPoint:CGPointZero toView:nil], CGPointZero)) should] beYes];
+                });
+            });
+            context(@"convertPoint:fromView", ^{
+                it(@"should work", ^{
+                    [[@(CGPointEqualToPoint([view convertPoint:CGPointZero fromView:nil], CGPointZero)) should] beYes];
+                });
+            });
+            context(@"convertRect:toView", ^{
+                it(@"should work", ^{
+                    [[@(CGRectEqualToRect([view convertRect:CGRectZero toView:nil], CGRectZero)) should] beYes];
+                });
+            });
+            context(@"convertRect:fromView", ^{
+                it(@"should work", ^{
+                    [[@(CGRectEqualToRect([view convertRect:CGRectZero fromView:nil], CGRectZero)) should] beYes];
+                });
+            });
+            context(@"hitTest:withEvent", ^{
+                it(@"should not be", ^{
+                    [[[view hitTest:CGPointZero withEvent:nil] should] beNil];
+                });
+            });
+            context(@"pointInside:withEvent", ^{
+                it(@"should be no", ^{
+                    [[@([view pointInside:CGPointZero withEvent:nil]) should] beNo];
+                });
+            });
+        });
     });
 });
 SPEC_END
