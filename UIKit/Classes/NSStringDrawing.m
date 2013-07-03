@@ -46,17 +46,17 @@
         [self boundingRectWithSize:rect.size options:options context:contextToUse];
     }
     
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextRef c = UIGraphicsGetCurrentContext();
     @try {
-        CGContextSaveGState(ctx);
+        CGContextSaveGState(c);
         
-        CGContextTranslateCTM(ctx, rect.origin.x, rect.origin.y);
-        CGContextScaleCTM(ctx, 1.0f, -1.0f);
-        CGContextTranslateCTM(ctx, 0, -rect.size.height);
+        CGContextTranslateCTM(c, rect.origin.x, rect.origin.y);
+        CGContextScaleCTM(c, 1.0f, -1.0f);
+        CGContextTranslateCTM(c, 0, -rect.size.height);
         
-        CTFrameDraw([context CTFrame], UIGraphicsGetCurrentContext());
+        CTFrameDraw([context CTFrame], c);
     } @finally {
-        CGContextRestoreGState(ctx);
+        CGContextRestoreGState(c);
     }
 }
 
