@@ -33,6 +33,7 @@
 #import "UITextLayer.h"
 #import "UIScrollView.h"
 #import <AppKit/NSCursor.h>
+#import <AppKit/NSTextContainer.h>
 
 NSString *const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidBeginEditingNotification";
 NSString *const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeNotification";
@@ -90,7 +91,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if (nil != (self = [super initWithFrame:frame])) {
         _commonInitForUITextView(self);
-        _textContainer = textContainer;
+        _textContainer = textContainer ?: [[NSTextContainer alloc] initWithContainerSize:frame.size];
     }
     return self;
 }
@@ -110,6 +111,22 @@ static void _commonInitForUITextView(UITextView* self)
     }
     return self;
 }
+
+
+#pragma mark Properties
+
+- (NSLayoutManager*) layoutManager
+{
+    return [[self textContainer] layoutManager];
+}
+
+- (NSTextStorage*) textStorage
+{
+    return [[[self textContainer] layoutManager] textStorage];
+}
+
+
+#pragma mark Layout
 
 - (void)layoutSubviews
 {
