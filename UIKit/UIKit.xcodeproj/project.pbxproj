@@ -1412,12 +1412,14 @@
 				3A1A397317834F2C00644CCB /* UITableViewCellSpecCell.m */,
 			);
 			name = UITableViewCell;
+		};
 		3A1A39661781CB4600644CCB /* UITextView */ = {
 			isa = PBXGroup;
 			children = (
 				3A1A39681781CB7800644CCB /* UITextViewSpec.m */,
 			);
 			name = UITextView;
+		};
 		3A1A396C17822D7700644CCB /* UITableView */ = {
 			isa = PBXGroup;
 			children = (
