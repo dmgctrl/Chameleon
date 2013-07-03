@@ -86,15 +86,21 @@ static void _commonInitForUITextView(UITextView* self)
     self.clipsToBounds = YES;
 }
 
-- (id) initWithFrame:(CGRect)frame
+- (instancetype) initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)textContainer
 {
     if (nil != (self = [super initWithFrame:frame])) {
         _commonInitForUITextView(self);
+        _textContainer = textContainer;
     }
     return self;
 }
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithFrame:(CGRect)frame
+{
+    return [self initWithFrame:frame textContainer:nil];
+}
+
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
         _commonInitForUITextView(self);
