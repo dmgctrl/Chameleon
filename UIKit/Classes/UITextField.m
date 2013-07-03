@@ -95,14 +95,14 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     [_textLayer removeFromSuperlayer];
 }
 
-- (void) _commonInitForUITextField
+static void _commonInitForUITextField(UITextField* self)
 {
-    _placeholderTextLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
-    _placeholderTextLayer.textColor = [UIColor colorWithWhite:0.6f alpha:1.0f];
-    [self.layer addSublayer:_placeholderTextLayer];
+    self->_placeholderTextLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
+    self->_placeholderTextLayer.textColor = [UIColor colorWithWhite:0.6f alpha:1.0f];
+    [self.layer addSublayer:self->_placeholderTextLayer];
     
-    _textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
-    [self.layer addSublayer:_textLayer];
+    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
+    [self.layer addSublayer:self->_textLayer];
     
     self.textAlignment = UITextAlignmentLeft;
     self.font = [UIFont systemFontOfSize:17];
@@ -117,7 +117,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 - (id)initWithFrame:(CGRect)frame
 {
     if (nil != (self = [super initWithFrame:frame])) {
-        [self _commonInitForUITextField];
+        _commonInitForUITextField(self);
     }
     return self;
 }
@@ -125,7 +125,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
-        [self _commonInitForUITextField];
+        _commonInitForUITextField(self);
         if ([coder containsValueForKey:kUIPlaceholderKey]) {
             self.placeholder = [coder decodeObjectForKey:kUIPlaceholderKey];
         }
