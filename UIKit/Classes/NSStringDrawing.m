@@ -8,26 +8,63 @@
 
 @interface NSStringDrawingContext ()
 @property (nonatomic, readonly) CTFrameRef CTFrame;
+@property (nonatomic, readonly) NSAttributedString* attributedString;
 @end
 
 @implementation NSStringDrawingContext
 
 - (void) dealloc
 {
-    self.CTFrame = nil;
+    if (_CTFrame) {
+        CFRelease(_CTFrame), _CTFrame = nil;
+    }
 }
 
-- (void) setCTFrame:(CTFrameRef)frame
+- (void) setCTFrame:(CTFrameRef)frame forAttributedString:(NSAttributedString*)attributedString
 {
-    if (frame != _CTFrame) {
+    if (frame != _CTFrame || attributedString != _attributedString) {
         if (_CTFrame) {
             CFRelease(_CTFrame), _CTFrame = nil;
         }
+        _attributedString = attributedString;
         _CTFrame = frame;
         if (frame) {
             CFRetain(frame);
         }
     }
+}
+
+- (CGSize) renderedSize
+{
+    if (!_CTFrame) {
+        return CGSizeZero;
+    }
+
+    NSArray* lines = (__bridge NSArray*)CTFrameGetLines(_CTFrame);
+    CFIndex numberOfLines = [lines count];
+    if (numberOfLines == 0) {
+        return CGSizeZero;
+    }
+    
+    CGFloat maxWidth = 0;
+    CGFloat ascender;
+    CGFloat leading;
+    for (NSUInteger i = 0; i < numberOfLines; i++) {
+        CTLineRef line = (__bridge CTLineRef)lines[i];
+        CGFloat width = CTLineGetTypographicBounds(line, &ascender, NULL, &leading);
+        CGFloat trailingWhitespaceWidth = CTLineGetTrailingWhitespaceWidth(line);
+        maxWidth = MAX(maxWidth, width - trailingWhitespaceWidth);
+    }
+    
+    CGPathRef path = CTFrameGetPath(_CTFrame);
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    
+    CGPoint lastLineOrigin;
+    CTFrameGetLineOrigins(_CTFrame, CFRangeMake(numberOfLines - 1, 1), &lastLineOrigin);
+    return (CGSize){
+        .width = ceilf(maxWidth),
+        .height = MAX(ceilf(lastLineOrigin.y + ascender + leading) + 1.0f, boundingBox.size.height),
+    };
 }
 
 @end
@@ -42,7 +79,7 @@
 - (void) drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context
 {
     NSStringDrawingContext* contextToUse = context ?: [[NSStringDrawingContext alloc] init];
-    if (![context CTFrame]) {
+    if (self != [context attributedString]) {
         [self boundingRectWithSize:rect.size options:options context:contextToUse];
     }
     
@@ -60,50 +97,25 @@
     }
 }
 
-- (CGRect) boundingRectWithSize:(CGSize)constrainedToSize options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context
+- (CGRect) boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context
 {
-    CGSize size = {};
-    NSMutableArray* lines = nil;
-    
+    NSStringDrawingContext* contextToUse = context ?: [[NSStringDrawingContext alloc] init];
+
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)self);
     if (framesetter) {
         CFRange fitRange;
-        CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, constrainedToSize, &fitRange);
+        CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, (CFRange){}, NULL, size, &fitRange);
         CGSize boundingBox = {
-            suggestedSize.width = MIN(ceil(suggestedSize.width), constrainedToSize.width),
-            suggestedSize.height = MIN(ceil(suggestedSize.height), constrainedToSize.height)
+            MIN(ceil(suggestedSize.width), size.width),
+            MIN(ceil(suggestedSize.height), size.height)
         };
         CGMutablePathRef path = CGPathCreateMutable();
         if (path) {
             CGPathAddRect(path, NULL, (CGRect){ .size = boundingBox });
             CTFrameRef frame = CTFramesetterCreateFrame(framesetter, (CFRange){}, path, NULL);
             if (frame) {
-                lines = (__bridge NSMutableArray*)CTFrameGetLines(frame);
-                CFIndex numberOfLines = [lines count];
-                if (numberOfLines > 0) {
-                    BOOL calculateMaxWidth = YES;
-                    
-                    CGFloat maxWidth = 0;
-                    CGFloat ascender;
-                    CGFloat leading;
-                    for (NSUInteger i = 0; i < numberOfLines; i++) {
-                        CTLineRef line = (__bridge CTLineRef)lines[i];
-                        CGFloat width = CTLineGetTypographicBounds(line, &ascender, NULL, &leading);
-                        CGFloat trailingWhitespaceWidth = CTLineGetTrailingWhitespaceWidth(line);
-                        if (calculateMaxWidth) {
-                            maxWidth = MAX(maxWidth, width - trailingWhitespaceWidth);
-                        }
-                    }
-                    
-                    CGPoint lastLineOrigin;
-                    CTFrameGetLineOrigins(frame, CFRangeMake(numberOfLines - 1, 1), &lastLineOrigin);
-                    size = (CGSize){
-                        .width = ceilf(maxWidth),
-                        .height = MAX(ceilf(lastLineOrigin.y + ascender + leading) + 1.0f, boundingBox.height),
-                    };
-                    
-                    [context setCTFrame:frame];
-                }
+                [context setCTFrame:frame forAttributedString:self];
+
                 CFRelease(frame), frame = nil;
             }
             CFRelease(path), path = nil;
@@ -112,7 +124,7 @@
     }
     
     return (CGRect){
-        .size = size
+        .size = [contextToUse renderedSize]
     };
 }
 
