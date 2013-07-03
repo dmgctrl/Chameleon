@@ -76,7 +76,6 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 @implementation UITextField {
     UITextLayer *_textLayer;
 	UITextLayer *_placeholderTextLayer;
-    NSString *_placeholder;
     
     struct {
         BOOL shouldBeginEditing : 1;
