@@ -72,11 +72,11 @@ static NSString* const kUIEditableKey = @"UIEditable";
     [_textLayer removeFromSuperlayer];
 }
 
-- (void) _commonInitForUITextView
+static void _commonInitForUITextView(UITextView* self)
 {
-    _textLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
-    _textLayer.delegate = self;
-    [self.layer insertSublayer:_textLayer atIndex:0];
+    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
+    self->_textLayer.delegate = self;
+    [self.layer insertSublayer:self->_textLayer atIndex:0];
     
     self.textColor = [UIColor blackColor];
     self.font = [UIFont systemFontOfSize:17];
@@ -89,7 +89,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 - (id) initWithFrame:(CGRect)frame
 {
     if (nil != (self = [super initWithFrame:frame])) {
-        [self _commonInitForUITextView];
+        _commonInitForUITextView(self);
     }
     return self;
 }
@@ -97,7 +97,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
-        [self _commonInitForUITextView];
+        _commonInitForUITextView(self);
         if ([coder containsValueForKey:kUIEditableKey]) {
             self.editable = [coder decodeBoolForKey:kUIEditableKey];
         }
