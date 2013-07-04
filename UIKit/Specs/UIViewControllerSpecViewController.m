@@ -139,6 +139,63 @@ describe(@"UIViewController", ^{
                 });
             });
         });
+        context(@"instance method", ^{
+            context(@"isViewLoaded", ^{
+                it(@"should be yes", ^{
+                    [[@([viewController isViewLoaded]) should] beYes];
+                });
+            });
+            context(@"isMovingFromParentViewController", ^{
+                it(@"should be no", ^{
+                    [[@([viewController isMovingFromParentViewController]) should] beNo];
+                });
+            });
+            context(@"isMovingToParentViewController", ^{
+                it(@"should be no", ^{
+                    [[@([viewController isMovingToParentViewController]) should] beNo];
+                });
+            });
+            context(@"isBeingPresented", ^{
+                it(@"should be no", ^{
+                    [[@([viewController isBeingPresented]) should] beNo];
+                });
+            });
+            context(@"isBeingDismissed", ^{
+                it(@"should be no", ^{
+                    [[@([viewController isBeingDismissed]) should] beNo];
+                });
+            });
+            context(@"shouldAutorotate", ^{
+                it(@"should be yes", ^{
+                    [[@([viewController shouldAutorotate]) should] beYes];
+                });
+            });
+            context(@"supportedInterfaceOrientations", ^{
+                it(@"should be 30", ^{
+                    [[@([viewController supportedInterfaceOrientations]) should] equal:@(30)];
+                });
+            });
+            context(@"preferredInterfaceOrientationForPresentation", ^{
+                it(@"should be portrait", ^{
+                    [[@([viewController preferredInterfaceOrientationForPresentation]) should] equal:@(UIInterfaceOrientationPortrait)];
+                });
+            });
+            context(@"shouldAutomaticallyForwardRotationMethods", ^{
+                it(@"should be yes", ^{
+                    [[@([viewController shouldAutomaticallyForwardRotationMethods]) should] beYes];
+                });
+            });
+            context(@"shouldAutomaticallyForwardAppearanceMethods", ^{
+                it(@"should be yes", ^{
+                    [[@([viewController shouldAutomaticallyForwardAppearanceMethods]) should] beYes];
+                });
+            });
+            context(@"editButtonItem", ^{
+                it(@"should be", ^{
+                    [[[viewController editButtonItem] should] beNonNil];
+                });
+            });
+        });
     });
 });
 SPEC_END
