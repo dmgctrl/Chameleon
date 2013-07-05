@@ -357,7 +357,13 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) scrollRangeToVisible:(NSRange)range
 {
-    [_textLayer scrollRangeToVisible:range];
+    NSLayoutManager* layoutManager = [self layoutManager];
+    NSRange glyphRange = [layoutManager glyphRangeForCharacterRange:range actualCharacterRange:NULL];
+    if (glyphRange.length) {
+        CGRect boundingRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:[self textContainer]];
+        [super scrollRectToVisible:boundingRect animated:NO];
+    }
+    [_textLayer setContentOffset:[self contentOffset]];
 }
 
 
@@ -365,7 +371,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (BOOL) hasText
 {
-    return [_textLayer.text length] > 0;
+    return [_textStorage length] > 0;
 }
 
 
