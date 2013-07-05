@@ -70,19 +70,19 @@
             break;
         }
         case UIKeyTypeUpArrow: {
-            command = @selector(moveUp:);
+            command = [key isShiftKeyPressed] ? @selector(moveUpAndModifySelection:) : @selector(moveUp:);
             break;
         }
         case UIKeyTypeDownArrow: {
-            command = @selector(moveDown:);
+            command = [key isShiftKeyPressed] ? @selector(moveDownAndModifySelection:) : @selector(moveDown:);
             break;
         }
         case UIKeyTypeLeftArrow: {
-            command = @selector(moveLeft:);
+            command = [key isShiftKeyPressed] ? @selector(moveLeftAndModifySelection:) : @selector(moveLeft:);
             break;
         }
         case UIKeyTypeRightArrow: {
-            command = @selector(moveRight:);
+            command = [key isShiftKeyPressed] ? @selector(moveRightAndModifySelection:) : @selector(moveRight:);
             break;
         }
         case UIKeyTypePageUp: {
@@ -114,11 +114,18 @@
             break;
         }
         case UIKeyTypeCharacter: {
-            if (key.keyCode == 48) {
-                if ([key isShiftKeyPressed]) {
-                    command = @selector(insertBacktab:);
-                } else {
-                    command = @selector(insertTab:);
+            switch ([key keyCode]) {
+                case 48: {
+                    command = [key isShiftKeyPressed]? @selector(insertBacktab:) : @selector(insertTab:);
+                    break;
+                }
+                    
+                default: {
+                    if ([self respondsToSelector:@selector(insertText:)]) {
+                        [self insertText:[key characters]];
+                        return YES;
+                    }
+                    break;
                 }
             }
             break;

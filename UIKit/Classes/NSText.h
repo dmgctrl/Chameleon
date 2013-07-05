@@ -21,8 +21,7 @@ typedef NS_ENUM(NSInteger, NSWritingDirection) {
     NSWritingDirectionLeftToRight   =  0,
     NSWritingDirectionRightToLeft   =  1
 };
-#endif
 
 UIKIT_EXTERN CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment nsTextAlignment);
 UIKIT_EXTERN NSTextAlignment NSTextAlignmentFromCTTextAlignment(CTTextAlignment ctTextAlignment);
-
+#endif

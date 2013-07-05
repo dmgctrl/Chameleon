@@ -30,6 +30,7 @@
 #import "UIResponder.h"
 #import "UIWindow+UIPrivate.h"
 
+
 @implementation UIResponder
 
 - (UIResponder *)nextResponder

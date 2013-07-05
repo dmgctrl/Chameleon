@@ -87,6 +87,8 @@
 - (void) insertBacktab:(id)sender;
 - (void) insertTab:(id)sender;
 
+- (void) insertText:(NSString*)text;
+
 @end
 
 
