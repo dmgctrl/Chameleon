@@ -157,7 +157,7 @@ static void _commonInitForUITextView(UITextView* self)
     } else {
         [_textStorage deleteCharactersInRange:(NSRange){ 0, [_textStorage length]}];
     }
-    [self setNeedsDisplay];
+    [_textContainerView setNeedsDisplay];
 }
 
 - (UITextAutocapitalizationType) autocapitalizationType
@@ -219,6 +219,7 @@ static void _commonInitForUITextView(UITextView* self)
     _textLayer.font = font;
     _font = font;
     [_textStorage addAttribute:(id)kCTFontAttributeName value:font range:(NSRange){ 0, [_textStorage length] }];
+    [_textContainerView setNeedsDisplay];
 }
 
 - (void) setFrame:(CGRect)frame
@@ -293,6 +294,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     _textLayer.textAlignment = textAlignment;
     _textAlignment = textAlignment;
+    [_textContainerView setNeedsDisplay];
 }
 
 - (void) setTextColor:(UIColor*)textColor
@@ -300,6 +302,7 @@ static void _commonInitForUITextView(UITextView* self)
     _textLayer.textColor = textColor;
     _textColor = textColor;
     [_textStorage addAttribute:(id)kCTForegroundColorAttributeName value:textColor range:(NSRange){ 0, [_textStorage length] }];
+    [_textContainerView setNeedsDisplay];
 }
 
 - (NSTextStorage*) textStorage
@@ -315,6 +318,9 @@ static void _commonInitForUITextView(UITextView* self)
     [super layoutSubviews];
     _textLayer.frame = self.bounds;
     [_textContainer setContainerSize:(CGSize){ [self contentSize].width, CGFLOAT_MAX }];
+    [_textContainerView setFrame:(CGRect){
+        .size = [_textContainerView sizeThatFits:(CGSize){ [self contentSize].width, CGFLOAT_MAX }]
+    }];
 }
 
 

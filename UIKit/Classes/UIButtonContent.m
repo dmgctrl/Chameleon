@@ -13,11 +13,21 @@ static NSString* const kUITitleColorKey = @"UITitleColor";
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
-        self.backgroundImage = [coder decodeObjectForKey:kUIBackgroundImageKey];
-        self.image = [coder decodeObjectForKey:kUIImageKey];
-        self.shadowColor = [coder decodeObjectForKey:kUIShadowColorKey];
-        self.title = [coder decodeObjectForKey:kUITitleKey];
-        self.titleColor = [coder decodeObjectForKey:kUITitleColorKey];
+        if ([coder containsValueForKey:kUIBackgroundImageKey]) {
+            self.backgroundImage = [coder decodeObjectForKey:kUIBackgroundImageKey];
+        }
+        if ([coder containsValueForKey:kUIImageKey]) {
+            self.image = [coder decodeObjectForKey:kUIImageKey];
+        }
+        if ([coder containsValueForKey:kUIShadowColorKey]) {
+            self.shadowColor = [coder decodeObjectForKey:kUIShadowColorKey];
+        }
+        if ([coder containsValueForKey:kUIShadowColorKey]) {
+            self.title = [coder decodeObjectForKey:kUITitleKey];
+        }
+        if ([coder containsValueForKey:kUITitleColorKey]) {
+            self.titleColor = [coder decodeObjectForKey:kUITitleColorKey];
+        }
     }
     return self;
 }
