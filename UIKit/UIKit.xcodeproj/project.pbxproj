@@ -456,6 +456,8 @@
 		F9EB69531768EBE700EBBD4C /* UIColorRep.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EB69511768EBE700EBBD4C /* UIColorRep.m */; };
 		F9EB69541768EBE700EBBD4C /* UIColorRep.h in Headers */ = {isa = PBXBuildFile; fileRef = F9EB69521768EBE700EBBD4C /* UIColorRep.h */; };
 		F9EB69561768EE6B00EBBD4C /* AppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = F9EB69551768EE6B00EBBD4C /* AppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F9FAA3AC1787336200954470 /* UIFontDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FAA3AA1787336200954470 /* UIFontDescriptor.h */; };
+		F9FAA3AD1787336200954470 /* UIFontDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA3AB1787336200954470 /* UIFontDescriptor.m */; };
 		F9FFDE2915C6E88A000EDAA0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2815C6E88A000EDAA0 /* main.m */; };
 		F9FFDE2D15C6E88A000EDAA0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2C15C6E88A000EDAA0 /* AppDelegate.m */; };
 		F9FFDE3415C6E88A000EDAA0 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
@@ -938,6 +940,8 @@
 		F9EB69511768EBE700EBBD4C /* UIColorRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIColorRep.m; sourceTree = "<group>"; };
 		F9EB69521768EBE700EBBD4C /* UIColorRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIColorRep.h; sourceTree = "<group>"; };
 		F9EB69551768EE6B00EBBD4C /* AppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppKitIntegration.h; path = Classes/AppKitIntegration.h; sourceTree = "<group>"; };
+		F9FAA3AA1787336200954470 /* UIFontDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIFontDescriptor.h; sourceTree = "<group>"; };
+		F9FAA3AB1787336200954470 /* UIFontDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIFontDescriptor.m; sourceTree = "<group>"; };
 		F9FFDE1D15C6E88A000EDAA0 /* TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9FFDE2415C6E88A000EDAA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F9FFDE2815C6E88A000EDAA0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1190,6 +1194,8 @@
 				1489850B12EE2CFE003D4751 /* UIEvent.m */,
 				1489850C12EE2CFE003D4751 /* UIFont.h */,
 				1489850D12EE2CFE003D4751 /* UIFont.m */,
+				F9FAA3AA1787336200954470 /* UIFontDescriptor.h */,
+				F9FAA3AB1787336200954470 /* UIFontDescriptor.m */,
 				1489850F12EE2CFE003D4751 /* UIGeometry.h */,
 				1489851012EE2CFE003D4751 /* UIGeometry.m */,
 				1489851112EE2CFE003D4751 /* UIGestureRecognizer.h */,
@@ -1847,6 +1853,7 @@
 				148985A912EE2CFF003D4751 /* UILongPressGestureRecognizer.h in Headers */,
 				148985AB12EE2CFF003D4751 /* UIMenuController.h in Headers */,
 				148985AD12EE2CFF003D4751 /* UIMenuItem.h in Headers */,
+				F9FAA3AC1787336200954470 /* UIFontDescriptor.h in Headers */,
 				148985AF12EE2CFF003D4751 /* UINavigationBar.h in Headers */,
 				148985B112EE2CFF003D4751 /* UINavigationController.h in Headers */,
 				1490AFE01219C31C00774286 /* UIPopoverController+UIPrivate.h in Headers */,
@@ -2222,6 +2229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9FAA3AD1787336200954470 /* UIFontDescriptor.m in Sources */,
 				789CF899133A3CD500250AB4 /* NSFetchedResultsController.m in Sources */,
 				78CB48B1133AA536008636DA /* UITabBarItem.m in Sources */,
 				78CB48AD133A9C51008636DA /* UISearchBar.m in Sources */,

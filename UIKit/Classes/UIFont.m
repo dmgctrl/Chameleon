@@ -29,6 +29,7 @@
 
 #import "UIFont.h"
 #import "UIFont+UIPrivate.h"
+#import "UIFontDescriptor.h"
 #import <Cocoa/Cocoa.h>
 
 static NSString *UIFontSystemFontName = nil;
@@ -39,10 +40,12 @@ static NSString* const kUIFontNameKey = @"UIFontName";
 static NSString* const kUIFontPointSizeKey = @"UIFontPointSize";
 static NSString* const kUIFontTraitsKey = @"UIFontTraits";
 static NSString* const kUISystemFontKey = @"UISystemFont";
+static NSString* const kUIFontDescriptorKey = @"UIFontDescriptor";
 
 
 @implementation UIFont {
     CTFontRef _font;
+    UIFontDescriptor* _fontDescriptor;
 }
 
 + (CGFloat) systemFontSize
@@ -80,19 +83,19 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
     UIFontItalicSystemFontName = [name copy];
 }
 
++ (UIFont*) fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)pointSize
+{
+    return [[UIFont alloc] initWithFontDescriptor:descriptor size:pointSize];
+}
+
 + (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)pointSize
 {
-    CTFontRef ctfont = CTFontCreateWithName((__bridge CFStringRef)fontName, pointSize, NULL);
-    if (!ctfont) {
-        return nil;
-    }
-    UIFont* font = [UIFont fontWithCTFont:ctfont];
-    CFRelease(ctfont);
-    return font;
+    return [UIFont fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:fontName size:pointSize] size:pointSize];
 }
 
 + (UIFont*) fontWithCTFont:(CTFontRef)ctfont
 {
+    NSAssert(nil != ctfont, @"???");
     static NSCache* cache;
     UIFont* font = [cache objectForKey:(__bridge id)ctfont];
     if (!font) {
@@ -115,12 +118,32 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
 - (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
-        NSString* fontName = [coder decodeObjectForKey:kUIFontNameKey];
-        CGFloat fontPointSize = [coder decodeFloatForKey:kUIFontPointSizeKey];
-        _font = CTFontCreateWithName((__bridge CFStringRef)fontName, fontPointSize, NULL);
+        if ([coder containsValueForKey:kUIFontDescriptorKey]) {
+            _fontDescriptor = [coder decodeObjectForKey:kUIFontDescriptorKey];
+            _font = (__bridge_retained CTFontRef)[NSFont fontWithDescriptor:[NSFontDescriptor fontDescriptorWithFontAttributes:[_fontDescriptor fontAttributes]] size:[_fontDescriptor pointSize]];
+        } else {
+            NSString* fontName = [coder decodeObjectForKey:kUIFontNameKey];
+            CGFloat fontPointSize = [coder decodeFloatForKey:kUIFontPointSizeKey];
+            _font = CTFontCreateWithName((__bridge CFStringRef)fontName, fontPointSize, NULL);
+        }
         if (!_font) {
             return nil;
         }
+    }
+    return self;
+}
+
+- (instancetype) initWithFontDescriptor:(UIFontDescriptor*)fontDescriptor size:(CGFloat)size
+{
+    NSAssert(nil != fontDescriptor, @"???");
+    NSFont* font = [NSFont fontWithDescriptor:[NSFontDescriptor fontDescriptorWithFontAttributes:[fontDescriptor fontAttributes]] size:size];
+    if (!font) {
+        return nil;
+    }
+
+    if (nil != (self = [self init])) {
+        _font = (__bridge_retained CTFontRef)font;
+        _fontDescriptor = fontDescriptor;
     }
     return self;
 }
@@ -260,6 +283,11 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
         return nil;
     }
     return font;
+}
+
+- (UIFontDescriptor*) fontDescriptor
+{
+    return _fontDescriptor;
 }
 
 - (NSString*) description

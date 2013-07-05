@@ -29,6 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class UIFontDescriptor;
+
 @interface UIFont : NSObject
 
 #pragma mark Creating Arbitrary Fonts
@@ -61,5 +63,9 @@
 + (CGFloat)buttonFontSize;
 + (CGFloat)smallSystemFontSize;
 + (CGFloat)systemFontSize;
+
+#pragma mark Getting Font Descriptors
+- (UIFontDescriptor*) fontDescriptor;
++ (UIFont*) fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)pointSize;
 
 @end
