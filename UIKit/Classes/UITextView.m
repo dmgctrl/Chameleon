@@ -232,23 +232,9 @@ static void _commonInitForUITextView(UITextView* self)
 {
 }
 
-- (BOOL) isSecureTextEntry
-{
-    return [_textLayer isSecureTextEntry];
-}
-
-- (void) setSecureTextEntry:(BOOL)secure
-{
-    [_textLayer setSecureTextEntry:secure];
-}
-
-- (NSRange) selectedRange
-{
-    return _textLayer.selectedRange;
-}
-
 - (void) setSelectedRange:(NSRange)range
 {
+    _selectedRange = range;
     _textLayer.selectedRange = range;
 }
 
