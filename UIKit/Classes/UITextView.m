@@ -285,8 +285,8 @@ static void _commonInitForUITextView(UITextView* self)
         [_textContainer setWidthTracksTextView:YES];
         _textStorage = [[UITextStorage alloc] init];
         _layoutManager = [[NSLayoutManager alloc] init];
-        [_layoutManager addTextContainer:self->_textContainer];
-        [_textStorage addLayoutManager:self->_layoutManager];
+        [_layoutManager addTextContainer:_textContainer];
+        [_textStorage addLayoutManager:_layoutManager];
         [_textContainerView setTextContainer:_textContainer];
     }
     return _textContainer;
