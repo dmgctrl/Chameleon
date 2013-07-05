@@ -88,6 +88,8 @@ NSString *NSStringFromUIOffset(UIOffset offset);
 + (NSValue *)valueWithCGSize:(CGSize)size;
 + (NSValue *)valueWithUIEdgeInsets:(UIEdgeInsets)insets;
 + (NSValue *)valueWithUIOffset:(UIOffset)offset;
++ (NSValue*) valueWithCGAffineTransform:(CGAffineTransform)matrix;
+- (CGAffineTransform) CGAffineTransformValue;
 - (CGPoint)CGPointValue;
 - (CGRect)CGRectValue;
 - (CGSize)CGSizeValue;
