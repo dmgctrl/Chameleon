@@ -137,7 +137,7 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
             self.text = [coder decodeObjectForKey:kUITextKey];
         }
         if ([coder containsValueForKey:kUITextAlignmentKey]) {
-            self.textAlignment = [coder decodeBoolForKey:kUITextAlignmentKey];
+            self.textAlignment = [coder decodeIntegerForKey:kUITextAlignmentKey];
         }
         if ([coder containsValueForKey:kUIBaselineAdjustmentKey]) {
             self.baselineAdjustment = [coder decodeIntegerForKey:kUIBaselineAdjustmentKey];
