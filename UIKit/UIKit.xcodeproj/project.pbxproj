@@ -350,6 +350,8 @@
 		F92AB7E81768F29A0090CE21 /* UIImage+AppKit.h in Headers */ = {isa = PBXBuildFile; fileRef = F92AB7E71768F29A0090CE21 /* UIImage+AppKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F92B72B21784B27B00D55A2E /* NSTextStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = F92B72B11784B27B00D55A2E /* NSTextStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F92B72B41784B2B200D55A2E /* NSLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F92B72B31784B2B100D55A2E /* NSLayoutManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F92B72B71784CC0400D55A2E /* UITextStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = F92B72B51784CC0400D55A2E /* UITextStorage.h */; };
+		F92B72B81784CC0400D55A2E /* UITextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = F92B72B61784CC0400D55A2E /* UITextStorage.m */; };
 		F92CB50F13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h in Headers */ = {isa = PBXBuildFile; fileRef = F92CB50D13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h */; };
 		F92CB51113E067F900A50B9F /* UINibDecoderForNibArchiveV1.m in Sources */ = {isa = PBXBuildFile; fileRef = F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */; };
 		F92CB51413E06D9500A50B9F /* UINibDecoderForKeyedArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = F92CB51213E06D9500A50B9F /* UINibDecoderForKeyedArchive.h */; };
@@ -837,6 +839,8 @@
 		F92AB7E71768F29A0090CE21 /* UIImage+AppKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+AppKit.h"; path = "Classes/UIImage+AppKit.h"; sourceTree = "<group>"; };
 		F92B72B11784B27B00D55A2E /* NSTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextStorage.h; sourceTree = "<group>"; };
 		F92B72B31784B2B100D55A2E /* NSLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSLayoutManager.h; sourceTree = "<group>"; };
+		F92B72B51784CC0400D55A2E /* UITextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITextStorage.h; sourceTree = "<group>"; };
+		F92B72B61784CC0400D55A2E /* UITextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextStorage.m; sourceTree = "<group>"; };
 		F92CB50D13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDecoderForNibArchiveV1.h; sourceTree = "<group>"; };
 		F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibDecoderForNibArchiveV1.m; sourceTree = "<group>"; };
 		F92CB51213E06D9500A50B9F /* UINibDecoderForKeyedArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDecoderForKeyedArchive.h; sourceTree = "<group>"; };
@@ -1391,6 +1395,8 @@
 				14BF16DA12E621EB007DAA01 /* UIViewBlockAnimationDelegate.m */,
 				14FA8C5B121DA4A000C4264B /* UIViewLayoutManager.h */,
 				14FA8C5C121DA4A000C4264B /* UIViewLayoutManager.m */,
+				F92B72B51784CC0400D55A2E /* UITextStorage.h */,
+				F92B72B61784CC0400D55A2E /* UITextStorage.m */,
 			);
 			name = "Private Classes";
 			path = Classes;
@@ -1971,6 +1977,7 @@
 				F926DED117820670009C3D88 /* NSText.h in Headers */,
 				F92B72B21784B27B00D55A2E /* NSTextStorage.h in Headers */,
 				F92B72B41784B2B200D55A2E /* NSLayoutManager.h in Headers */,
+				F92B72B71784CC0400D55A2E /* UITextStorage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2356,6 +2363,7 @@
 				F91D4D84177246F7004119BF /* UIStringDrawing.m in Sources */,
 				F926DECD1781E53C009C3D88 /* NSStringDrawing.m in Sources */,
 				F926DECF178205F9009C3D88 /* NSText.m in Sources */,
+				F92B72B81784CC0400D55A2E /* UITextStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

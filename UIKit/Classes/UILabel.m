@@ -288,21 +288,19 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
 
 - (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
-    if ([_text length] > 0) {
-        CGSize maxSize = bounds.size;
-        if (numberOfLines > 0) {
-            maxSize.height = _font.lineHeight * numberOfLines;
-        }
-        CGSize size = [_text sizeWithFont: _font constrainedToSize: maxSize lineBreakMode: _lineBreakMode];
-        return (CGRect){
-            .origin = {
-                .x = bounds.origin.x,
-                .y = round(CGRectGetMidY(bounds) - (size.height * 0.5f)),
-            },
-            .size = size,
-        };
+    NSAttributedString* text = [self _attributedTextForDrawing];
+    if (![text length]) {
+        return (CGRect){bounds.origin, {0, 0}};
     }
-    return (CGRect){bounds.origin, {0, 0}};
+
+    CGSize size = [_text sizeWithFont:_font constrainedToSize:bounds.size lineBreakMode:_lineBreakMode];
+    return (CGRect){
+        .origin = {
+            .x = bounds.origin.x,
+            .y = round(CGRectGetMidY(bounds) - (size.height * 0.5f)),
+        },
+        .size = size,
+    };
 }
 
 
