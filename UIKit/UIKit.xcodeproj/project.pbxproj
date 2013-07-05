@@ -248,6 +248,8 @@
 		3A1A397A17837CB600644CCB /* UIScrollViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397817837CB600644CCB /* UIScrollViewSpec.m */; };
 		3A1A397E178471D200644CCB /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
 		3A1A397F178471D200644CCB /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
+		3A1A39841784AE6B00644CCB /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
+		3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
 		3A1D44E5177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A518087177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
@@ -737,6 +739,7 @@
 		3A1A397317834F2C00644CCB /* UITableViewCellSpecCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellSpecCell.m; sourceTree = "<group>"; };
 		3A1A397817837CB600644CCB /* UIScrollViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScrollViewSpec.m; sourceTree = "<group>"; };
 		3A1A397D178471D200644CCB /* UIViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewSpec.m; sourceTree = "<group>"; };
+		3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewSpec.m; sourceTree = "<group>"; };
 		3A1D44E4177A3460004DE61D /* UIButtonSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButtonSpec.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
 		3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageViewSpec.m; sourceTree = "<group>"; };
@@ -1468,6 +1471,13 @@
 				3A1A397D178471D200644CCB /* UIViewSpec.m */,
 			);
 			name = UIView;
+		};
+		3A1A39811784AD6200644CCB /* UICollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */,
+			);
+			name = UICollectionView;
 			sourceTree = "<group>";
 		};
 		3A1D44E2177A3384004DE61D /* UIButton */ = {
@@ -1628,6 +1638,7 @@
 				3A7E65D3178602E700218CD7 /* UIViewController */,
 				3A7E65C91785CAD500218CD7 /* UIWebView */,
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
+				3A1A39811784AD6200644CCB /* UICollectionView */,
 				3A518084177CDB3A00C9CF46 /* UITextField */,
 				3A1D44E2177A3384004DE61D /* UIButton */,
 				F9B3C1F6177119B800C92009 /* UIFont */,
@@ -2342,6 +2353,7 @@
 				3A7E65D61786031400218CD7 /* UIViewControllerSpecViewController.m in Sources */,
 				3A7E65CC1785CB0600218CD7 /* UIWebViewSpec.m in Sources */,
 				3A7E65DB17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */,
+				3A1A39841784AE6B00644CCB /* UICollectionViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2375,6 +2387,7 @@
 				3A7E65D71786031400218CD7 /* UIViewControllerSpecViewController.m in Sources */,
 				3A7E65CD1785CB0600218CD7 /* UIWebViewSpec.m in Sources */,
 				3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */,
+				3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
