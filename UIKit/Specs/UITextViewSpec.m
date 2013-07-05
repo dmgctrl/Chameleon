@@ -82,9 +82,14 @@ describe(@"UITextView", ^{
         context(@"method", ^{
             context(@"hasText", ^{
                 it(@"should be no", ^{
-                    [[@([textView hasText]) should]beNo];
+                    [[@([textView hasText]) should] beNo];
                 });
             });
+        });
+        
+        context(@"", ^{
+            NSArray* subviews = [textView subviews];
+            NSLog(@"%@", subviews);
         });
     });
 });
