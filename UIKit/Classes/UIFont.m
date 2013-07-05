@@ -118,16 +118,21 @@ static NSString* const kUIFontDescriptorKey = @"UIFontDescriptor";
 - (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
+        NSFont* font = nil;
         if ([coder containsValueForKey:kUIFontDescriptorKey]) {
             _fontDescriptor = [coder decodeObjectForKey:kUIFontDescriptorKey];
-            _font = (__bridge_retained CTFontRef)[NSFont fontWithDescriptor:[NSFontDescriptor fontDescriptorWithFontAttributes:[_fontDescriptor fontAttributes]] size:[_fontDescriptor pointSize]];
+            font = [NSFont fontWithDescriptor:[NSFontDescriptor fontDescriptorWithFontAttributes:[_fontDescriptor fontAttributes]] size:[_fontDescriptor pointSize]];
         } else {
-            NSString* fontName = [coder decodeObjectForKey:kUIFontNameKey];
-            CGFloat fontPointSize = [coder decodeFloatForKey:kUIFontPointSizeKey];
-            _font = CTFontCreateWithName((__bridge CFStringRef)fontName, fontPointSize, NULL);
+            NSString* name = [coder decodeObjectForKey:kUIFontNameKey];
+            CGFloat size = [coder decodeFloatForKey:kUIFontPointSizeKey];
+            font = [NSFont fontWithName:name size:size];
         }
-        if (!_font) {
+        if (!font) {
             return nil;
+        }
+        _font = (__bridge_retained CTFontRef)font;
+        if (!_fontDescriptor) {
+            _fontDescriptor = [[UIFontDescriptor alloc] initWithFontAttributes:[[font fontDescriptor] fontAttributes]];
         }
     }
     return self;
@@ -275,14 +280,7 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
 
 - (UIFont*) fontWithSize:(CGFloat)fontSize
 {
-    UIFont* font = nil;
-    CTFontRef newFont = CTFontCreateCopyWithAttributes(_font, fontSize, NULL, NULL);
-    if (newFont) {
-        font = [[UIFont alloc] initWithCTFont:newFont];
-        CFRelease(newFont);
-        return nil;
-    }
-    return font;
+    return [UIFont fontWithDescriptor:[self fontDescriptor] size:fontSize];
 }
 
 - (UIFontDescriptor*) fontDescriptor
