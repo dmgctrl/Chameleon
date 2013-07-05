@@ -48,6 +48,8 @@ NSString *const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeN
 NSString *const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
 
 static NSString* const kUIEditableKey = @"UIEditable";
+static CGFloat const kMarginX = 4.0f;
+static CGFloat const kMarginY = 9.0f;
 
 
 @interface UIScrollView () <UITextLayerContainerViewProtocol>
@@ -96,29 +98,21 @@ static NSString* const kUIEditableKey = @"UIEditable";
 
 static void _commonInitForUITextView(UITextView* self)
 {
-    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
-    self->_textLayer.opacity = 0.3;
-    self->_textLayer.delegate = self;
-    [self.layer insertSublayer:self->_textLayer atIndex:0];
-    
     self.textColor = [UIColor blackColor];
     self.font = [UIFont systemFontOfSize:17];
     self.dataDetectorTypes = UIDataDetectorTypeAll;
     self.editable = YES;
     self.contentMode = UIViewContentModeScaleToFill;
     self.clipsToBounds = YES;
-    
-    if (!self->_textContainer) {
-        self->_textContainer = [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
-    }
-    self->_textStorage = [[UITextStorage alloc] init];
-    self->_layoutManager = [[NSLayoutManager alloc] init];
-    [self->_layoutManager addTextContainer:self->_textContainer];
-    [self->_textStorage addLayoutManager:self->_layoutManager];
+
+    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
+    self->_textLayer.opacity = 0.3;
+    self->_textLayer.delegate = self;
+    [self.layer insertSublayer:self->_textLayer atIndex:0];
 
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
+    [self->_textContainerView setBackgroundColor:[self backgroundColor]];
     [self addSubview:self->_textContainerView];
-    [self->_textContainerView setTextContainer:self->_textContainer];
 }
 
 - (instancetype) initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)textContainer
@@ -176,27 +170,6 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setAutocorrectionType:(UITextAutocorrectionType)type
 {
-}
-
-- (void) setContentOffset:(CGPoint)theOffset animated:(BOOL)animated
-{
-    [super setContentOffset:theOffset animated:animated];
-    [_textLayer setContentOffset:theOffset];
-}
-
-- (void) setDelegate:(id<UITextViewDelegate>)delegate
-{
-    if (delegate != self.delegate) {
-        [super setDelegate:delegate];
-        _delegateHas.shouldBeginEditing = [delegate respondsToSelector:@selector(textViewShouldBeginEditing:)];
-        _delegateHas.didBeginEditing = [delegate respondsToSelector:@selector(textViewDidBeginEditing:)];
-        _delegateHas.shouldEndEditing = [delegate respondsToSelector:@selector(textViewShouldEndEditing:)];
-        _delegateHas.didEndEditing = [delegate respondsToSelector:@selector(textViewDidEndEditing:)];
-        _delegateHas.shouldChangeText = [delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)];
-        _delegateHas.didChange = [delegate respondsToSelector:@selector(textViewDidChange:)];
-        _delegateHas.didChangeSelection = [delegate respondsToSelector:@selector(textViewDidChangeSelection:)];
-        _delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textView:doCommandBySelector:)];
-    }
 }
 
 - (void) setEditable:(BOOL)editable
@@ -305,9 +278,53 @@ static void _commonInitForUITextView(UITextView* self)
     [_textContainerView setNeedsDisplay];
 }
 
+- (NSTextContainer*) textContainer
+{
+    if (!_textContainer) {
+        _textContainer = [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
+        [_textContainer setWidthTracksTextView:YES];
+        _textStorage = [[UITextStorage alloc] init];
+        _layoutManager = [[NSLayoutManager alloc] init];
+        [_layoutManager addTextContainer:self->_textContainer];
+        [_textStorage addLayoutManager:self->_layoutManager];
+        [_textContainerView setTextContainer:_textContainer];
+    }
+    return _textContainer;
+}
+
 - (NSTextStorage*) textStorage
 {
     return [[[self textContainer] layoutManager] textStorage];
+}
+
+
+#pragma mark Property Overrides
+
+- (void) setBackgroundColor:(UIColor*)backgroundColor
+{
+    [super setBackgroundColor:backgroundColor];
+    [_textContainerView setBackgroundColor:backgroundColor];
+}
+
+- (void) setContentOffset:(CGPoint)theOffset animated:(BOOL)animated
+{
+    [super setContentOffset:theOffset animated:animated];
+    [_textLayer setContentOffset:theOffset];
+}
+
+- (void) setDelegate:(id<UITextViewDelegate>)delegate
+{
+    if (delegate != self.delegate) {
+        [super setDelegate:delegate];
+        _delegateHas.shouldBeginEditing = [delegate respondsToSelector:@selector(textViewShouldBeginEditing:)];
+        _delegateHas.didBeginEditing = [delegate respondsToSelector:@selector(textViewDidBeginEditing:)];
+        _delegateHas.shouldEndEditing = [delegate respondsToSelector:@selector(textViewShouldEndEditing:)];
+        _delegateHas.didEndEditing = [delegate respondsToSelector:@selector(textViewDidEndEditing:)];
+        _delegateHas.shouldChangeText = [delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)];
+        _delegateHas.didChange = [delegate respondsToSelector:@selector(textViewDidChange:)];
+        _delegateHas.didChangeSelection = [delegate respondsToSelector:@selector(textViewDidChangeSelection:)];
+        _delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textView:doCommandBySelector:)];
+    }
 }
 
 
@@ -317,9 +334,21 @@ static void _commonInitForUITextView(UITextView* self)
 {
     [super layoutSubviews];
     _textLayer.frame = self.bounds;
-    [_textContainer setContainerSize:(CGSize){ [self contentSize].width, CGFLOAT_MAX }];
+
+    CGRect bounds = [self bounds];
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    [textContainer setContainerSize:(CGSize){
+        bounds.size.width - (kMarginX * 2.0),
+        CGFLOAT_MAX
+    }];
+    CGSize contentSize = {
+        bounds.size.width,
+        [layoutManager usedRectForTextContainer:textContainer].size.height + kMarginY
+    };
+    [self setContentSize:contentSize];
     [_textContainerView setFrame:(CGRect){
-        .size = [_textContainerView sizeThatFits:(CGSize){ [self contentSize].width, CGFLOAT_MAX }]
+        .size = contentSize
     }];
 }
 
@@ -477,7 +506,7 @@ static void _commonInitForUITextView(UITextView* self)
         [NSGraphicsContext saveGraphicsState];
         [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:c flipped:YES]];
         
-        CGPoint p = CGRectInset([self bounds], 4, 9).origin;
+        CGPoint p = { kMarginX, kMarginY };
         [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:p];
         [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:p];
         
