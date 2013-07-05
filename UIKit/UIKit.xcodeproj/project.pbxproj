@@ -254,12 +254,14 @@
 		3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A518087177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
+		3A7E65AC1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
+		3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
 		3A7E65BB1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
-		3A7E65D61786031400218CD7 /* UIViewControllerSpecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */; };
-		3A7E65D71786031400218CD7 /* UIViewControllerSpecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */; };
 		3A7E65CC1785CB0600218CD7 /* UIWebViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */; };
 		3A7E65CD1785CB0600218CD7 /* UIWebViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */; };
+		3A7E65D61786031400218CD7 /* UIViewControllerSpecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */; };
+		3A7E65D71786031400218CD7 /* UIViewControllerSpecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */; };
 		3A7E65DB17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -742,9 +744,10 @@
 		3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewSpec.m; sourceTree = "<group>"; };
 		3A1D44E4177A3460004DE61D /* UIButtonSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButtonSpec.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
+		3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCellSpec.m; sourceTree = "<group>"; };
 		3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageViewSpec.m; sourceTree = "<group>"; };
-		3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewControllerSpecViewController.m; sourceTree = "<group>"; };
 		3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIWebViewSpec.m; sourceTree = "<group>"; };
+		3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewControllerSpecViewController.m; sourceTree = "<group>"; };
 		3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewControllerSpec.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
@@ -1471,6 +1474,7 @@
 				3A1A397D178471D200644CCB /* UIViewSpec.m */,
 			);
 			name = UIView;
+			sourceTree = "<group>";
 		};
 		3A1A39811784AD6200644CCB /* UICollectionView */ = {
 			isa = PBXGroup;
@@ -1496,6 +1500,14 @@
 			name = UITextField;
 			sourceTree = "<group>";
 		};
+		3A7E65A91784C78100218CD7 /* UICollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */,
+			);
+			name = UICollectionViewCell;
+			sourceTree = "<group>";
+		};
 		3A7E65B81784EF7500218CD7 /* UIImageView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1504,19 +1516,21 @@
 			name = UIImageView;
 			sourceTree = "<group>";
 		};
-		3A7E65D3178602E700218CD7 /* UIViewController */ = {
-			isa = PBXGroup;
-			children = (
-				3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */,
-			);
-			name = UIViewController;
-		};
 		3A7E65C91785CAD500218CD7 /* UIWebView */ = {
 			isa = PBXGroup;
 			children = (
 				3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */,
 			);
 			name = UIWebView;
+			sourceTree = "<group>";
+		};
+		3A7E65D3178602E700218CD7 /* UIViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3A7E65D51786031400218CD7 /* UIViewControllerSpecViewController.m */,
+			);
+			name = UIViewController;
+			sourceTree = "<group>";
 		};
 		3A7E65D817863BB600218CD7 /* UITableViewController */ = {
 			isa = PBXGroup;
@@ -1639,6 +1653,7 @@
 				3A7E65C91785CAD500218CD7 /* UIWebView */,
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
 				3A1A39811784AD6200644CCB /* UICollectionView */,
+				3A7E65A91784C78100218CD7 /* UICollectionViewCell */,
 				3A518084177CDB3A00C9CF46 /* UITextField */,
 				3A1D44E2177A3384004DE61D /* UIButton */,
 				F9B3C1F6177119B800C92009 /* UIFont */,
@@ -2354,6 +2369,7 @@
 				3A7E65CC1785CB0600218CD7 /* UIWebViewSpec.m in Sources */,
 				3A7E65DB17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */,
 				3A1A39841784AE6B00644CCB /* UICollectionViewSpec.m in Sources */,
+				3A7E65AC1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2388,6 +2404,7 @@
 				3A7E65CD1785CB0600218CD7 /* UIWebViewSpec.m in Sources */,
 				3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */,
 				3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */,
+				3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
