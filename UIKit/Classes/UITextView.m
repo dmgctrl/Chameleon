@@ -82,7 +82,6 @@ typedef NS_ENUM(NSInteger, NSSelectionGranularity) {
     NSTextContainer* _textContainer;
     NSLayoutManager* _layoutManager;
 
-    UILabel* _placeholderTextLabel;
     _UITextContainerView* _textContainerView;
     
     struct {
