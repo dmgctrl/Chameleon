@@ -26,9 +26,9 @@ typedef NS_ENUM(NSInteger, NSStringDrawingOptions) {
     NSStringDrawingUsesFontLeading = 1 << 1,
     NSStringDrawingUsesDeviceMetrics = 1 << 3,
 };
-#endif
 
 @interface NSAttributedString (NSExtendedStringDrawing_UIKit)
 - (void) drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
 - (CGRect) boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
 @end
+#endif
