@@ -656,15 +656,9 @@ static void _commonInitForUITextView(UITextView* self)
     NSLayoutManager* layoutManager = [textContainer layoutManager];
     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
     if (glyphRange.length) {
-        CGContextRef c = UIGraphicsGetCurrentContext();
-        [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:c flipped:YES]];
-        
         CGPoint origin = [self origin];
         [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:origin];
         [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:origin];
-        
-        [NSGraphicsContext restoreGraphicsState];
     }
 }
 
