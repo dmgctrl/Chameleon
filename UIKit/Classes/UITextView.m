@@ -147,9 +147,13 @@ static void _commonInitForUITextView(UITextView* self)
 
 #pragma mark Properties
 
+- (NSAttributedString*) attributedText
+{
+    return [_textStorage attributedSubstringFromRange:(NSRange){ 0, [_textStorage length] }];
+}
+
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
-    _attributedText = [attributedText copy];
     if (attributedText) {
         [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length]} withAttributedString:attributedText];
     } else {
@@ -239,9 +243,13 @@ static void _commonInitForUITextView(UITextView* self)
     [self setSelectedRange:range affinity:_selectionAffinity stillSelecting:NO];
 }
 
+- (NSString*) text
+{
+    return [_textStorage string];
+}
+
 - (void) setText:(NSString*)text
 {
-    _text = text;
     if (text) {
         [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:[self _stringAttributes]]];
     } else {
@@ -516,6 +524,8 @@ static void _commonInitForUITextView(UITextView* self)
     if (_delegateHas.didChange) {
         [[self delegate] textViewDidChange:self];
     }
+    [self willChangeValueForKey:@"text"];
+    [self didChangeValueForKey:@"text"];
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:self];
 }
 
