@@ -120,6 +120,11 @@
                     break;
                 }
                     
+                case 51: {
+                    command = [key isShiftKeyPressed]? @selector(deleteBackward:) : @selector(deleteBackward:);
+                    break;
+                }
+                    
                 default: {
                     if ([self respondsToSelector:@selector(insertText:)]) {
                         [self insertText:[key characters]];

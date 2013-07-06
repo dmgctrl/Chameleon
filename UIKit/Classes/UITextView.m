@@ -29,12 +29,15 @@
 
 #import "UITextView.h"
 #import "UIColor.h"
+#import "UIColor+AppKit.h"
 #import "UIFont.h"
 #import "UIFont+UIPrivate.h"
-#import "UITextLayer.h"
 #import "UITextStorage.h"
 #import "UIScrollView.h"
+#import "UILabel.h"
+#import <QuartzCore/QuartzCore.h>
 #import <AppKit/NSCursor.h>
+#import <AppKit/NSColor.h>
 #import <AppKit/NSTextContainer.h>
 #import <AppKit/NSLayoutManager.h>
 #import <AppKit/NSTextStorage.h>
@@ -51,19 +54,21 @@ static NSString* const kUIEditableKey = @"UIEditable";
 static CGFloat const kMarginX = 4.0f;
 static CGFloat const kMarginY = 9.0f;
 
+typedef NS_ENUM(NSInteger, NSSelectionAffinity) {
+    NSSelectionAffinityUpstream,
+    NSSelectionAffinityDownstream,
+};
 
-@interface UIScrollView () <UITextLayerContainerViewProtocol>
-@end
-
-
-@interface UITextView () <UITextLayerTextDelegate>
-@end
+typedef NS_ENUM(NSInteger, NSSelectionGranularity) {
+    NSSelectByCharacter,
+    NSSelectByWord,
+    NSSelectByParagraph
+};
 
 
 @interface _UITextContainerView : UIView
 @property (nonatomic) NSTextContainer* textContainer;
 @property (nonatomic) NSRange selectedRange;
-@property (nonatomic) BOOL showInsertionPoint;
 @end
 
 
@@ -77,7 +82,7 @@ static CGFloat const kMarginY = 9.0f;
     NSTextContainer* _textContainer;
     NSLayoutManager* _layoutManager;
 
-    UITextLayer *_textLayer;
+    UILabel* _placeholderTextLabel;
     _UITextContainerView* _textContainerView;
     
     struct {
@@ -90,16 +95,16 @@ static CGFloat const kMarginY = 9.0f;
         BOOL didChangeSelection : 1;
         BOOL doCommandBySelector : 1;
     } _delegateHas;
+
     struct {
         bool didBeginEditing : 1;
     } _flags;
+    
+    NSUInteger _selectionOrigin;
+    NSSelectionAffinity _selectionAffinity;
+    NSSelectionGranularity _selectionGranularity;
 }
 @dynamic delegate;
-
-- (void) dealloc
-{
-    [_textLayer removeFromSuperlayer];
-}
 
 static void _commonInitForUITextView(UITextView* self)
 {
@@ -109,11 +114,6 @@ static void _commonInitForUITextView(UITextView* self)
     self.editable = YES;
     self.contentMode = UIViewContentModeScaleToFill;
     self.clipsToBounds = YES;
-
-//    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
-//    self->_textLayer.opacity = 0.3;
-//    self->_textLayer.delegate = self;
-//    [self.layer insertSublayer:self->_textLayer atIndex:0];
 
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
     [self->_textContainerView setBackgroundColor:[self backgroundColor]];
@@ -180,7 +180,6 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) setEditable:(BOOL)editable
 {
     _editable = editable;
-    _textLayer.editable = editable;
 }
 
 - (BOOL) enablesReturnKeyAutomatically
@@ -194,7 +193,6 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setFont:(UIFont*)font
 {
-    _textLayer.font = font;
     _font = font;
     [_textStorage addAttribute:(id)kCTFontAttributeName value:font range:(NSRange){ 0, [_textStorage length] }];
     [_textContainerView setNeedsDisplay];
@@ -239,16 +237,11 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setSelectedRange:(NSRange)range
 {
-    if (_selectedRange.location != range.location || _selectedRange.length != range.length) {
-        _selectedRange = range;
-        _textContainerView.selectedRange = range;
-        _textLayer.selectedRange = range;
-    }
+    [self setSelectedRange:range affinity:_selectionAffinity stillSelecting:NO];
 }
 
 - (void) setText:(NSString*)text
 {
-    _textLayer.text = text;
     _text = text;
     if (text) {
         [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:[self _stringAttributes]]];
@@ -259,14 +252,12 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setTextAlignment:(UITextAlignment)textAlignment
 {
-    _textLayer.textAlignment = textAlignment;
     _textAlignment = textAlignment;
     [_textContainerView setNeedsDisplay];
 }
 
 - (void) setTextColor:(UIColor*)textColor
 {
-    _textLayer.textColor = textColor;
     _textColor = textColor;
     [_textStorage addAttribute:(id)kCTForegroundColorAttributeName value:textColor range:(NSRange){ 0, [_textStorage length] }];
     [_textContainerView setNeedsDisplay];
@@ -300,12 +291,6 @@ static void _commonInitForUITextView(UITextView* self)
     [_textContainerView setBackgroundColor:backgroundColor];
 }
 
-- (void) setContentOffset:(CGPoint)theOffset animated:(BOOL)animated
-{
-    [super setContentOffset:theOffset animated:animated];
-    [_textLayer setContentOffset:theOffset];
-}
-
 - (void) setDelegate:(id<UITextViewDelegate>)delegate
 {
     if (delegate != self.delegate) {
@@ -327,7 +312,6 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) layoutSubviews
 {
     [super layoutSubviews];
-    _textLayer.frame = self.bounds;
 
     CGRect bounds = [self bounds];
     NSTextContainer* textContainer = [self textContainer];
@@ -338,7 +322,7 @@ static void _commonInitForUITextView(UITextView* self)
     }];
     CGSize contentSize = {
         bounds.size.width,
-        [layoutManager usedRectForTextContainer:textContainer].size.height + kMarginY
+        [layoutManager usedRectForTextContainer:textContainer].size.height + (kMarginY * 2.0)
     };
     [self setContentSize:contentSize];
     [_textContainerView setFrame:(CGRect){
@@ -357,7 +341,6 @@ static void _commonInitForUITextView(UITextView* self)
         CGRect boundingRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:[self textContainer]];
         [super scrollRectToVisible:boundingRect animated:NO];
     }
-    [_textLayer setContentOffset:[self contentOffset]];
 }
 
 
@@ -380,7 +363,6 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([super becomeFirstResponder]) {
         _flags.didBeginEditing = NO;
-        [_textContainerView setShowInsertionPoint:YES];
         return YES;
     }
     return NO;
@@ -390,7 +372,6 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _endEditingIfNecessary]) {
         if ([super resignFirstResponder]) {
-            [_textContainerView setShowInsertionPoint:NO];
             return YES;
         }
     }
@@ -419,15 +400,13 @@ static void _commonInitForUITextView(UITextView* self)
         }
         [self _replaceCharactersInRange:range withString:@""];
         [self _didChangeText];
-    } else {
-        if (range.location > 0) {
-            range.location--;
-            if (![self _canChangeTextInRange:NSMakeRange(range.location, 1) replacementText:@""]) {
-                return;
-            }
-            [self _replaceCharactersInRange:NSMakeRange(range.location,1) withString:@""];
-            [self _didChangeText];
+    } else if (range.location > 0) {
+        range.location--;
+        if (![self _canChangeTextInRange:NSMakeRange(range.location, 1) replacementText:@""]) {
+            return;
         }
+        [self _replaceCharactersInRange:NSMakeRange(range.location,1) withString:@""];
+        [self _didChangeText];
     }
 }
 
@@ -440,6 +419,21 @@ static void _commonInitForUITextView(UITextView* self)
         range.location--;
     }
     [self _setAndScrollToRange:range];
+}
+
+- (void) moveLeftAndModifySelection:(id)sender
+{
+    NSRange range = [self selectedRange];
+    BOOL upstream = (NSMaxRange(range) <= _selectionOrigin);
+    if (upstream) {
+        if (range.location > 0) {
+            range.location--;
+            range.length++;
+        }
+    } else {
+        range.length--;
+    }
+    [self _setAndScrollToRange:range upstream:upstream];
 }
 
 - (void) moveRight:(id)sender
@@ -456,6 +450,21 @@ static void _commonInitForUITextView(UITextView* self)
         }
     }
     [self _setAndScrollToRange:range];
+}
+
+- (void) moveRightAndModifySelection:(id)sender
+{
+    NSRange range = [self selectedRange];
+    BOOL downstream = (range.location >= _selectionOrigin);
+    if (downstream) {
+        if (NSMaxRange(range) < [_textStorage length]) {
+            range.length++;
+        }
+    } else {
+        range.location++;
+        range.length--;
+    }
+    [self _setAndScrollToRange:range upstream:(downstream == NO)];
 }
 
 
@@ -521,9 +530,6 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) _setAndScrollToRange:(NSRange)range upstream:(BOOL)upstream
 {
-    if (_delegateHas.didChangeSelection) {
-        [self.delegate textViewDidChangeSelection:self];
-    }
     [self setSelectedRange:range];
     if (upstream) {
         [self scrollRangeToVisible:NSMakeRange(range.location, 0)];
@@ -535,6 +541,36 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) _setAndScrollToRange:(NSRange)range
 {
     [self _setAndScrollToRange:range upstream:YES];
+}
+
+- (void) setSelectedRange:(NSRange)selectedRange affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelecting
+{
+    if (_selectedRange.location == selectedRange.location && _selectedRange.length == selectedRange.length) {
+        return;
+    }
+    if (!stillSelecting && !selectedRange.length) {
+        _selectionOrigin = selectedRange.location;
+    }
+
+    NSLayoutManager* layoutManager = [self layoutManager];
+    if (_selectedRange.length) {
+        [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:_selectedRange];
+    }
+    if (selectedRange.length) {
+        [layoutManager addTemporaryAttribute:NSBackgroundColorAttributeName value:[NSColor selectedTextBackgroundColor] forCharacterRange:selectedRange];
+    }
+    _selectedRange = selectedRange;
+    _selectionAffinity = affinity;
+    _selectionGranularity = NSSelectByCharacter;
+
+    _textContainerView.selectedRange = selectedRange;
+//    [_textContainerView setShowInsertionPoint:];
+//    _insertionPointOn = [self shouldDrawInsertionPoint];
+//    [_self setNeedsDisplay:YES];
+    
+    if (_delegateHas.didChangeSelection) {
+        [self.delegate textViewDidChangeSelection:self];
+    }
 }
 
 - (NSDictionary*) _stringAttributes
@@ -602,6 +638,7 @@ static void _commonInitForUITextView(UITextView* self)
             @"contents": [NSNull null],
             @"bounds": [NSNull null],
             @"position": [NSNull null],
+            @"hidden": [NSNull null],
         };
         [self.layer addSublayer:_insertionPoint];
     }
@@ -638,23 +675,12 @@ static void _commonInitForUITextView(UITextView* self)
     [self setNeedsDisplay];
 }
 
-- (void) setShowInsertionPoint:(BOOL)showInsertionPoint
-{
-    if (_showInsertionPoint != showInsertionPoint) {
-        _showInsertionPoint = showInsertionPoint;
-        _insertionPoint.hidden = !showInsertionPoint;
-        if (showInsertionPoint) {
-            [self _updateInsertionPointPosition];
-        }
-    }
-}
-
 - (void) _updateInsertionPointPosition
 {
     CGRect rect = [self _viewRectForCharacterRange:[self selectedRange]];
     rect.origin.x = floor(rect.origin.x);
-    NSLog(@"%@", NSStringFromRect(rect));
     _insertionPoint.frame = rect;
+    _insertionPoint.hidden = (_selectedRange.length > 0);
 }
 
 - (NSRect) _viewRectForCharacterRange:(NSRange)range
@@ -665,7 +691,7 @@ static void _commonInitForUITextView(UITextView* self)
     
     NSRect result = {};
     if (range.length == 0){
-        if (range.location >= [textStorage length]) {
+        if (range.location > [textStorage length]) {
             result = [layoutManager extraLineFragmentRect];
         } else {
             NSUInteger rectCount = 0;
