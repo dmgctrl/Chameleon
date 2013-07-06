@@ -38,7 +38,30 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-@implementation UIKitView
+@implementation UIKitView {
+    id ob1;
+    id ob2;
+    UIResponder* _firstResponder;
+}
+
+- (void) viewWillMoveToWindow:(NSWindow*)window
+{
+    if (window != nil) {
+        ob1 = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidBecomeKeyNotification object:window queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            if (_firstResponder) {
+                [_firstResponder becomeFirstResponder];
+            }
+        }];
+        ob2 = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidResignKeyNotification object:window queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            UIWindow* window = [self UIWindow];
+            _firstResponder = [window isKeyWindow]? [window _firstResponder]: nil;
+            [_firstResponder resignFirstResponder];
+        }];
+    } else {
+        ob1 = nil;
+        ob2 = nil;
+    }
+}
 
 - (id<CAAction>)actionForLayer:(CALayer *)layer forKey:(NSString *)event
 {
@@ -120,36 +143,31 @@
     [self updateUIKitView];
 }
 
-- (BOOL)acceptsFirstResponder
+- (BOOL) acceptsFirstResponder
 {
-    // only accept first responder status if something else within our view isn't already the first responder
-    // and if our screen has something that can become first responder
-    // I have no idea if this is sane behavior or not. There's an issue with things like inputAccesoryViews
-    // because the NSTextView might be the real first responder (from AppKit's point of view) and any click
-    // outside of it could change the first responder status. This means that clicks on the inputAccessoryView
-    // could "steal" first responder away from the NSTextView if this always returns YES, but on the other
-    // hand we shouldn't always return NO here because pure-UIKit objects could be first responder, too, and
-    // in theory they'd expect to get keyboard events or something like that. So....... yeah.. I dunno.
+    return [[self UIWindow] _firstResponder] != nil;
+}
 
-    NSResponder *responder = [(NSWindow *)[self window] firstResponder];
-    BOOL accept = !responder || ([[UIApplication sharedApplication] _firstResponderForScreen:_screen] != nil);
-    
-    // if we might want to accept, lets make sure that one of our children isn't already the first responder
-    // because we don't want to let the mouse just steal that away here. If a pure-UIKit object gets clicked on and
-    // decides to become first responder, it'll take it itself and things should sort itself out from there
-    // (so stuff like a selected NSTextView would be resigned in the process of the new object becoming first
-    // responder so we don't have to let AppKit handle it in that case and returning NO here should be okay)
-    if (accept) {
-        while (responder) {
-            if (responder == self) {
-                return NO;
-            } else {
-                responder = [responder nextResponder];
-            }
-        }
+- (BOOL) becomeFirstResponder
+{
+    id responder = [[self UIWindow] _firstResponder];
+    if ([responder becomeFirstResponder]) {
+        [[self UIWindow] makeKeyWindow];
+        return YES;
+    } else {
+        return NO;
     }
-    
-    return accept;
+}
+
+- (BOOL) resignFirstResponder
+{
+    id responder = [[self UIWindow] _firstResponder];
+    if ([responder resignFirstResponder]) {
+        [[self UIWindow] resignKeyWindow];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (BOOL)firstResponderCanPerformAction:(SEL)action withSender:(id)sender
