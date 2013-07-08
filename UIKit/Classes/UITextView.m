@@ -496,6 +496,16 @@ static void _commonInitForUITextView(UITextView* self)
     
 }
 
+- (void) moveDown:(id)sender
+{
+    
+}
+
+- (void) moveDownAndModifySelection:(id)sender
+{
+    
+}
+
 - (void) insertNewline:(id)sender
 {
     [self insertText:@"\n"];
