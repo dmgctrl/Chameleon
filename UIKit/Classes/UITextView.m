@@ -513,6 +513,7 @@ static void _commonInitForUITextView(UITextView* self)
     if (range.length > 0) {
         [[UIPasteboard generalPasteboard] setString:[[self text] substringWithRange:range]];
         [self _replaceCharactersInRange:range withString:@""];
+        [self _didChangeText];
     }
 }
 
@@ -528,7 +529,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSRange range = [self selectedRange];
     [self _replaceCharactersInRange:range withString:[[UIPasteboard generalPasteboard] string]];
-
+    [self _didChangeText];
 }
 
 - (void) insertNewline:(id)sender
