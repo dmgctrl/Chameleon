@@ -491,32 +491,6 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:range upstream:(downstream == NO)];
 }
 
-- (NSUInteger) _indexWhenMovingUpFromIndex:(NSUInteger)index
-{
-    NSTextStorage* textStorage = [self textStorage];
-    NSUInteger length = [textStorage length];
-    NSString* string = [textStorage string];
-    NSUInteger newIndex = index;
-
-    if (index <= length) {
-        NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
-        if (line.location > 0) {
-            NSRange prevLine = [string lineRangeForRange:(NSRange){ line.location - 1, 0 }];
-            NSUInteger offset = index - line.location;
-            NSUInteger prevLineMax = NSMaxRange(prevLine);
-            
-            newIndex = prevLine.location + offset;
-            if (newIndex >= prevLineMax) {
-                newIndex = (prevLineMax == 0) ? 0 : prevLineMax - 1;
-            }
-        } else {
-            newIndex = 0;
-        }
-    }
-
-    return newIndex;
-}
-
 - (void) moveUp:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
@@ -692,6 +666,35 @@ static void _commonInitForUITextView(UITextView* self)
 - (id) mouseCursorForEvent:(UIEvent*)event
 {
     return self.editable? [NSCursor IBeamCursor] : nil;
+}
+
+
+#pragma mark Cursor Calculations
+
+- (NSUInteger) _indexWhenMovingUpFromIndex:(NSUInteger)index
+{
+    NSTextStorage* textStorage = [self textStorage];
+    NSUInteger length = [textStorage length];
+    NSString* string = [textStorage string];
+    NSUInteger newIndex = index;
+    
+    if (index <= length) {
+        NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
+        if (line.location > 0) {
+            NSRange prevLine = [string lineRangeForRange:(NSRange){ line.location - 1, 0 }];
+            NSUInteger offset = index - line.location;
+            NSUInteger prevLineMax = NSMaxRange(prevLine);
+            
+            newIndex = prevLine.location + offset;
+            if (newIndex >= prevLineMax) {
+                newIndex = (prevLineMax == 0) ? 0 : prevLineMax - 1;
+            }
+        } else {
+            newIndex = 0;
+        }
+    }
+    
+    return newIndex;
 }
 
 @end
