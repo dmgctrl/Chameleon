@@ -427,7 +427,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) selectAll:(id)sender
 {
-    
+    [self setSelectedRange:NSMakeRange(0, [[self text] length])];
 }
 
 - (void) moveToBeginningOfParagraph:(id)sender
