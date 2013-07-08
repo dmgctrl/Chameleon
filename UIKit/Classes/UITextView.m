@@ -432,7 +432,10 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) moveToBeginningOfParagraph:(id)sender
 {
-    
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
+        0
+    }];
 }
 
 - (void) moveToBeginningOfParagraphAndModifySelection:(id)sender
@@ -442,7 +445,10 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) moveToEndOfParagraph:(id)sender
 {
-    
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
+        0
+    }];
 }
 
 - (void) moveToEndOfParagraphAndModifySelection:(id)sender
@@ -818,6 +824,22 @@ static void _commonInitForUITextView(UITextView* self)
         }
     }
 
+    return newIndex;
+}
+
+- (NSUInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSUInteger)index
+{
+    NSString* string = [[self textStorage] string];
+    return [string lineRangeForRange:(NSRange){ index, 0 }].location;
+}
+
+- (NSUInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSUInteger)index
+{
+    NSString* string = [[self textStorage] string];
+    NSUInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
+    if (newIndex > 0 && [[NSCharacterSet newlineCharacterSet] characterIsMember:[string characterAtIndex:newIndex - 1]]) {
+        newIndex--;
+    }
     return newIndex;
 }
 
