@@ -425,6 +425,32 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
+- (void) selectAll:(id)sender
+{
+    
+}
+
+- (void) moveToBeginningOfParagraph:(id)sender
+{
+    
+}
+
+- (void) moveToBeginningOfParagraphAndModifySelection:(id)sender
+{
+
+}
+
+- (void) moveToEndOfParagraph:(id)sender
+{
+    
+}
+
+- (void) moveToEndOfParagraphAndModifySelection:(id)sender
+{
+    
+}
+
+
 - (void) insertText:(NSString*)text
 {
     if (![self _beginEditingIfNecessary]) {
@@ -483,7 +509,7 @@ static void _commonInitForUITextView(UITextView* self)
     }
     [self _setAndScrollToRange:range upstream:upstream];
 }
-
+ 
 - (void) moveRight:(id)sender
 {
     NSRange range = [self selectedRange];

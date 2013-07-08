@@ -32,12 +32,8 @@
 #import "UIKey.h"
 #import "UIApplication.h"
 #import <AppKit/NSGraphics.h>
+#import <AppKit/NSEvent.h>
 
-@interface UIResponder (AppKitIntegration)
-
-- (BOOL) doDefault:(UIKey*)key;
-
-@end
 
 @implementation UIResponder (AppKitIntegration)
 
@@ -121,6 +117,47 @@
         }
         case UIKeyTypeCharacter: {
             switch ([key keyCode]) {
+                case 0: {
+                    if ([key isControlKeyPressed]) {
+                        if ([key isShiftKeyPressed]) {
+                            command = @selector(moveToBeginningOfParagraphAndModifySelection:);
+                        } else {
+                            command = @selector(moveToBeginningOfParagraph:);
+                        }
+                    } else {
+                        command = @selector(insertText:);
+                    }
+                    break;
+                }
+                    
+                case 14: {
+                    if ([key isControlKeyPressed]) {
+                        if ([key isShiftKeyPressed]) {
+                            command = @selector(moveToEndOfParagraphAndModifySelection:);
+                        } else {
+                            command = @selector(moveToEndOfParagraph:);
+                        }
+                    } else {
+                        command = @selector(insertText:);
+                    }
+                    break;
+                }
+                    
+                case 7:{
+                    command = [key isCommandKeyPressed]? @selector(cut:) : @selector(insertText:);
+                    break;
+                }
+                    
+                case 8:{
+                    command = [key isCommandKeyPressed]? @selector(copy:) : @selector(insertText:);
+                    break;
+                }
+                    
+                case 9:{
+                    command = [key isCommandKeyPressed]? @selector(paste:) : @selector(insertText:);
+                    break;
+                }
+                    
                 case 48: {
                     command = [key isShiftKeyPressed]? @selector(insertBacktab:) : @selector(insertTab:);
                     break;
@@ -131,21 +168,6 @@
                     break;
                 }
 
-                case 7:{
-                    command = [key isCommandKeyPressed]? @selector(cut:) : @selector(insertText:);
-                    break;
-                }
-               
-                case 8:{
-                    command = [key isCommandKeyPressed]? @selector(copy:) : @selector(insertText:);
-                    break;
-                }
-                    
-                case 9:{
-                    command = [key isCommandKeyPressed]? @selector(paste:) : @selector(insertText:);
-                    break;
-                }
-                
                 default: {
                     command = @selector(insertText:);
                     break;
