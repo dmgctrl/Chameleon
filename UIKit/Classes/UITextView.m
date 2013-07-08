@@ -493,24 +493,23 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) moveUp:(id)sender
 {
-    NSUInteger length = [[self textStorage] length];
+    NSTextStorage* textStorage = [self textStorage];
+    NSUInteger length = [textStorage length];
+    NSString* string = [textStorage string];
     NSRange range = [self selectedRange];
     
     range.length = 0;
     if (range.location <= length) {
-        NSRange line = [[[self textStorage] string] lineRangeForRange:range];
+        NSRange line = [string lineRangeForRange:range];
         
         if (line.location > 0) {
-            NSRange prevLine = [[[self textStorage] string] lineRangeForRange:(NSRange){line.location - 1, 0}];
+            NSRange prevLine = [string lineRangeForRange:(NSRange){line.location - 1, 0}];
             NSUInteger offset = range.location - line.location;
-            
+            NSUInteger prevLineMax = NSMaxRange(prevLine);
+
             range.location = prevLine.location + offset;
-            if (range.location >= NSMaxRange(prevLine)){
-                if (NSMaxRange(prevLine) == 0) {
-                    range.location=0;
-                } else {
-                    range.location=NSMaxRange(prevLine) - 1;
-                }
+            if (range.location >= prevLineMax) {
+                range.location = (prevLineMax == 0) ? 0 : prevLineMax - 1;
             }
         }
 
