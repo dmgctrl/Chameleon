@@ -526,7 +526,9 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) paste:(id)sender
 {
-    
+    NSRange range = [self selectedRange];
+    [self _replaceCharactersInRange:range withString:[[UIPasteboard generalPasteboard] string]];
+
 }
 
 - (void) insertNewline:(id)sender
