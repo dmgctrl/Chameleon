@@ -33,6 +33,12 @@
 #import "UIApplication.h"
 #import <AppKit/NSGraphics.h>
 
+@interface UIResponder (AppKitIntegration)
+
+- (BOOL) doDefault:(UIKey*)key;
+
+@end
+
 @implementation UIResponder (AppKitIntegration)
 
 - (void)scrollWheelMoved:(CGPoint)delta withEvent:(UIEvent *)event
@@ -124,12 +130,24 @@
                     command = [key isShiftKeyPressed]? @selector(deleteBackward:) : @selector(deleteBackward:);
                     break;
                 }
+
+                case 7:{
+                    command = [key isCommandKeyPressed]? @selector(cut:) : @selector(insertText:);
+                    break;
+                }
+               
+                case 8:{
+                    command = [key isCommandKeyPressed]? @selector(copy:) : @selector(insertText:);
+                    break;
+                }
                     
+                case 9:{
+                    command = [key isCommandKeyPressed]? @selector(paste:) : @selector(insertText:);
+                    break;
+                }
+                
                 default: {
-                    if ([self respondsToSelector:@selector(insertText:)]) {
-                        [self insertText:[key characters]];
-                        return YES;
-                    }
+                    command = @selector(insertText:);
                     break;
                 }
             }
@@ -137,7 +155,12 @@
         }
     }
 
-    if (command) {
+    if (command == @selector(insertText:)) {
+        if ([self respondsToSelector:@selector(insertText:)]) {
+            [self insertText:[key characters]];
+            return YES;
+        }
+    } else if (command) {
         UIResponder* responder = self;
         while (responder) {
             if ([responder tryToPerform:command with:self]) {
