@@ -137,11 +137,16 @@
         }
     }
 
-    if (command && [self tryToPerform:command with:self]) {
-        return YES;
-    } else {
-        return [[self nextResponder] keyPressed:key withEvent:event];
+    if (command) {
+        UIResponder* responder = self;
+        while (responder) {
+            if ([responder tryToPerform:command with:self]) {
+                return YES;
+            }
+            responder = [responder nextResponder];
+        }
     }
+    return NO;
 }
 
 - (void) doCommandBySelector:(SEL)selector

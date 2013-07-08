@@ -35,6 +35,11 @@
 #import "UITextStorage.h"
 #import "UIScrollView.h"
 #import "UILabel.h"
+#import "UIScreen.h"
+#import "UIScreen+AppKit.h"
+#import "UIWindow.h"
+#import "UIWindow+UIPrivate.h"
+#import "UIKitView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <AppKit/NSCursor.h>
 #import <AppKit/NSColor.h>
@@ -54,25 +59,15 @@ static NSString* const kUIEditableKey = @"UIEditable";
 static CGFloat const kMarginX = 4.0f;
 static CGFloat const kMarginY = 9.0f;
 
-typedef NS_ENUM(NSInteger, NSSelectionAffinity) {
-    NSSelectionAffinityUpstream,
-    NSSelectionAffinityDownstream,
-};
-
-typedef NS_ENUM(NSInteger, NSSelectionGranularity) {
-    NSSelectByCharacter,
-    NSSelectByWord,
-    NSSelectByParagraph
-};
-
 
 @interface _UITextContainerView : UIView
 @property (nonatomic) NSTextContainer* textContainer;
 @property (nonatomic) NSRange selectedRange;
+@property (nonatomic) BOOL shouldShowInsertionPoint;
 @end
 
 
-@interface NSObject (UITextViewDelegate)
+@protocol UITextViewDelegatePlus
 - (BOOL) textView:(UITextView*)textView doCommandBySelector:(SEL)selector;
 @end
 
@@ -159,6 +154,7 @@ static void _commonInitForUITextView(UITextView* self)
     } else {
         [_textStorage deleteCharactersInRange:(NSRange){ 0, [_textStorage length]}];
     }
+    [self setSelectedRange:(NSRange){ 0, [_textStorage length] }];
     [_textContainerView setNeedsDisplay];
 }
 
@@ -240,7 +236,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setSelectedRange:(NSRange)range
 {
-    [self setSelectedRange:range affinity:_selectionAffinity stillSelecting:NO];
+    [self _setSelectedRange:range affinity:_selectionAffinity stillSelecting:NO];
 }
 
 - (NSString*) text
@@ -344,10 +340,8 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSLayoutManager* layoutManager = [self layoutManager];
     NSRange glyphRange = [layoutManager glyphRangeForCharacterRange:range actualCharacterRange:NULL];
-    if (glyphRange.length) {
-        CGRect boundingRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:[self textContainer]];
-        [super scrollRectToVisible:boundingRect animated:NO];
-    }
+    CGRect boundingRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:[self textContainer]];
+    [super scrollRectToVisible:boundingRect animated:NO];
 }
 
 
@@ -361,6 +355,12 @@ static void _commonInitForUITextView(UITextView* self)
 
 #pragma mark UIResponder
 
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self becomeFirstResponder];
+    [super touchesBegan:touches withEvent:event];
+}
+
 - (BOOL) canBecomeFirstResponder
 {
     return (self.window != nil);
@@ -369,6 +369,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
+        [_textContainerView setShouldShowInsertionPoint:YES];
         _flags.didBeginEditing = NO;
         return YES;
     }
@@ -379,10 +380,20 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _endEditingIfNecessary]) {
         if ([super resignFirstResponder]) {
+            [_textContainerView setShouldShowInsertionPoint:NO];
             return YES;
         }
     }
     return NO;
+}
+
+- (BOOL) doCommandBySelector:(SEL)selector
+{
+    if (_delegateHas.doCommandBySelector) {
+        return [(id<UITextViewDelegatePlus>)[self delegate] textView:self doCommandBySelector:selector];
+    } else {
+        return NO;
+    }
 }
 
 - (void) insertText:(NSString*)text
@@ -396,6 +407,7 @@ static void _commonInitForUITextView(UITextView* self)
     }
     [self _replaceCharactersInRange:range withString:text];
     [self _didChangeText];
+    [self scrollRangeToVisible:[self selectedRange]];
 }
 
 - (void) deleteBackward:(id)sender
@@ -409,10 +421,10 @@ static void _commonInitForUITextView(UITextView* self)
         [self _didChangeText];
     } else if (range.location > 0) {
         range.location--;
-        if (![self _canChangeTextInRange:NSMakeRange(range.location, 1) replacementText:@""]) {
+        if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
             return;
         }
-        [self _replaceCharactersInRange:NSMakeRange(range.location,1) withString:@""];
+        [self _replaceCharactersInRange:(NSRange){ range.location, 1 } withString:@""];
         [self _didChangeText];
     }
 }
@@ -474,6 +486,11 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:range upstream:(downstream == NO)];
 }
 
+- (void) insertNewline:(id)sender
+{
+    [self insertText:@"\n"];
+}
+
 
 #pragma mark Private Methods
 
@@ -521,19 +538,18 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) _didChangeText
 {
+    [self setNeedsLayout];
     if (_delegateHas.didChange) {
         [[self delegate] textViewDidChange:self];
     }
-    [self willChangeValueForKey:@"text"];
-    [self didChangeValueForKey:@"text"];
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:self];
 }
 
 - (void) _replaceCharactersInRange:(NSRange)range withString:(NSString*)string
 {
     [_textStorage replaceCharactersInRange:range withString:string];
-    [_textStorage setAttributes:[self _stringAttributes] range:NSMakeRange(range.location, [string length])];
-    [self setSelectedRange:NSMakeRange(range.location + [string length], 0)];
+    [_textStorage setAttributes:[self _stringAttributes] range:(NSRange){ range.location, [string length] }];
+    [self setSelectedRange:(NSRange){ range.location + [string length], 0 }];
     [_textContainerView setNeedsDisplay];
 }
 
@@ -541,9 +557,9 @@ static void _commonInitForUITextView(UITextView* self)
 {
     [self setSelectedRange:range];
     if (upstream) {
-        [self scrollRangeToVisible:NSMakeRange(range.location, 0)];
+        [self scrollRangeToVisible:(NSRange){ range.location, 0 }];
     } else {
-        [self scrollRangeToVisible:NSMakeRange(NSMaxRange(range), 0)];
+        [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
     }
 }
 
@@ -552,7 +568,7 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:range upstream:YES];
 }
 
-- (void) setSelectedRange:(NSRange)selectedRange affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelecting
+- (void) _setSelectedRange:(NSRange)selectedRange affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelecting
 {
     if (_selectedRange.location == selectedRange.location && _selectedRange.length == selectedRange.length) {
         return;
@@ -573,9 +589,6 @@ static void _commonInitForUITextView(UITextView* self)
     _selectionGranularity = NSSelectByCharacter;
 
     _textContainerView.selectedRange = selectedRange;
-//    [_textContainerView setShowInsertionPoint:];
-//    _insertionPointOn = [self shouldDrawInsertionPoint];
-//    [_self setNeedsDisplay:YES];
     
     if (_delegateHas.didChangeSelection) {
         [self.delegate textViewDidChangeSelection:self];
@@ -595,15 +608,6 @@ static void _commonInitForUITextView(UITextView* self)
         NSParagraphStyleAttributeName: paragraphStyle,
         (id)kCTForegroundColorAttributeName: _textColor,
     };
-}
-
-- (BOOL) _textShouldDoCommandBySelector:(SEL)selector
-{
-    if (_delegateHas.doCommandBySelector) {
-        return [(id)self.delegate textView:self doCommandBySelector:selector];
-    } else {
-        return NO;
-    }
 }
 
 - (NSString*) description
@@ -678,12 +682,20 @@ static void _commonInitForUITextView(UITextView* self)
     [self setNeedsDisplay];
 }
 
+- (void) setShouldShowInsertionPoint:(BOOL)shouldShowInsertionPoint
+{
+    if (_shouldShowInsertionPoint != shouldShowInsertionPoint) {
+        _shouldShowInsertionPoint = shouldShowInsertionPoint;
+        [self _updateInsertionPointPosition];
+    }
+}
+
 - (void) _updateInsertionPointPosition
 {
     CGRect rect = [self _viewRectForCharacterRange:[self selectedRange]];
     rect.origin.x = floor(rect.origin.x);
     _insertionPoint.frame = rect;
-    _insertionPoint.hidden = (_selectedRange.length > 0);
+    _insertionPoint.hidden = !_shouldShowInsertionPoint || (_selectedRange.length > 0);
 }
 
 - (NSRect) _viewRectForCharacterRange:(NSRange)range
