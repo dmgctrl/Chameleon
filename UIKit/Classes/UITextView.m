@@ -110,6 +110,7 @@ static void _commonInitForUITextView(UITextView* self)
     self.clipsToBounds = YES;
 
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
+    [self->_textContainerView setTextContainer:[self textContainer]];
     [self->_textContainerView setBackgroundColor:[self backgroundColor]];
     [self addSubview:self->_textContainerView];
 }
@@ -144,18 +145,20 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSAttributedString*) attributedText
 {
-    return [_textStorage attributedSubstringFromRange:(NSRange){ 0, [_textStorage length] }];
+    NSTextStorage* textStorage = [self textStorage];
+    return [textStorage attributedSubstringFromRange:(NSRange){ 0, [textStorage length] }];
 }
 
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
+    NSTextStorage* textStorage = [self textStorage];
     if (attributedText) {
-        [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length]} withAttributedString:attributedText];
+        [textStorage replaceCharactersInRange:(NSRange){ 0, [textStorage length]} withAttributedString:attributedText];
     } else {
-        [_textStorage deleteCharactersInRange:(NSRange){ 0, [_textStorage length]}];
+        [textStorage deleteCharactersInRange:(NSRange){ 0, [textStorage length]}];
     }
-    [self setSelectedRange:(NSRange){ 0, [_textStorage length] }];
-    [_textContainerView setNeedsDisplay];
+    [self setSelectedRange:(NSRange){ 0, 0 }];
+    [self _didChangeText];
 }
 
 - (UITextAutocapitalizationType) autocapitalizationType
@@ -193,7 +196,8 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) setFont:(UIFont*)font
 {
     _font = font;
-    [_textStorage addAttribute:(id)kCTFontAttributeName value:font range:(NSRange){ 0, [_textStorage length] }];
+    NSTextStorage* textStorage = [self textStorage];
+    [textStorage addAttribute:(id)kCTFontAttributeName value:(id)[font ctFontRef] range:(NSRange){ 0, [textStorage length] }];
     [_textContainerView setNeedsDisplay];
 }
 
@@ -241,7 +245,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSString*) text
 {
-    return [_textStorage string];
+    return [[self textStorage] string];
 }
 
 - (void) setText:(NSString*)text
@@ -262,7 +266,8 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) setTextColor:(UIColor*)textColor
 {
     _textColor = textColor;
-    [_textStorage addAttribute:(id)kCTForegroundColorAttributeName value:textColor range:(NSRange){ 0, [_textStorage length] }];
+    NSTextStorage* textStorage = [self textStorage];
+    [textStorage addAttribute:(id)kCTForegroundColorAttributeName value:textColor range:(NSRange){ 0, [textStorage length] }];
     [_textContainerView setNeedsDisplay];
 }
 
@@ -275,7 +280,6 @@ static void _commonInitForUITextView(UITextView* self)
         _layoutManager = [[NSLayoutManager alloc] init];
         [_layoutManager addTextContainer:_textContainer];
         [_textStorage addLayoutManager:_layoutManager];
-        [_textContainerView setTextContainer:_textContainer];
     }
     return _textContainer;
 }
@@ -323,6 +327,7 @@ static void _commonInitForUITextView(UITextView* self)
         bounds.size.width - (kMarginX * 2.0),
         CGFLOAT_MAX
     }];
+    [layoutManager ensureLayoutForTextContainer:textContainer];
     CGSize contentSize = {
         bounds.size.width,
         [layoutManager usedRectForTextContainer:textContainer].size.height + (kMarginY * 2.0)
@@ -349,7 +354,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (BOOL) hasText
 {
-    return [_textStorage length] > 0;
+    return [[self textStorage] length] > 0;
 }
 
 
@@ -462,7 +467,7 @@ static void _commonInitForUITextView(UITextView* self)
         range.location = NSMaxRange(range);
         range.length = 0;
     } else {
-        NSUInteger length = [_textStorage length];
+        NSUInteger length = [[self textStorage] length];
         range.location++;
         if (range.location > length) {
             range.location = length;
@@ -476,7 +481,7 @@ static void _commonInitForUITextView(UITextView* self)
     NSRange range = [self selectedRange];
     BOOL downstream = (range.location >= _selectionOrigin);
     if (downstream) {
-        if (NSMaxRange(range) < [_textStorage length]) {
+        if (NSMaxRange(range) < [[self textStorage] length]) {
             range.length++;
         }
     } else {
@@ -488,7 +493,29 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) moveUp:(id)sender
 {
+    NSUInteger length = [[self textStorage] length];
+    NSRange range = [self selectedRange];
     
+    range.length = 0;
+    if (range.location <= length) {
+        NSRange line = [[[self textStorage] string] lineRangeForRange:range];
+        
+        if (line.location > 0) {
+            NSRange prevLine = [[[self textStorage] string] lineRangeForRange:(NSRange){line.location - 1, 0}];
+            NSUInteger offset = range.location - line.location;
+            
+            range.location = prevLine.location + offset;
+            if (range.location >= NSMaxRange(prevLine)){
+                if (NSMaxRange(prevLine) == 0) {
+                    range.location=0;
+                } else {
+                    range.location=NSMaxRange(prevLine) - 1;
+                }
+            }
+        }
+
+        [self _setAndScrollToRange:range];
+    }
 }
 
 - (void) moveUpAndModifySelection:(id)sender
@@ -557,8 +584,9 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) _replaceCharactersInRange:(NSRange)range withString:(NSString*)string
 {
-    [_textStorage replaceCharactersInRange:range withString:string];
-    [_textStorage setAttributes:[self _stringAttributes] range:(NSRange){ range.location, [string length] }];
+    NSTextStorage* textStorage = [self textStorage];
+    [textStorage replaceCharactersInRange:range withString:string];
+    [textStorage setAttributes:[self _stringAttributes] range:(NSRange){ range.location, [string length] }];
     [self setSelectedRange:(NSRange){ range.location + [string length], 0 }];
     [_textContainerView setNeedsDisplay];
 }
