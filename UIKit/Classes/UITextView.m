@@ -35,6 +35,7 @@
 #import "UITextStorage.h"
 #import "UIScrollView.h"
 #import "UILabel.h"
+#import "UIPasteboard.h"
 #import "UIScreen.h"
 #import "UIScreen+AppKit.h"
 #import "UIWindow.h"
@@ -519,6 +520,38 @@ static void _commonInitForUITextView(UITextView* self)
     }
     
     [self _setAndScrollToRange:range upstream:upstream];
+}
+
+- (void) moveDown:(id)sender
+{
+    
+}
+
+- (void) moveDownAndModifySelection:(id)sender
+{
+    
+}
+
+- (void) cut:(id)sender
+{
+    NSRange range = [self selectedRange];
+    if (range.length > 0) {
+        [[UIPasteboard generalPasteboard] setString:[[self text] substringWithRange:range]];
+        [self _replaceCharactersInRange:range withString:@""];
+    }
+}
+
+- (void) copy:(id)sender
+{
+    NSRange range = [self selectedRange];
+    if (range.length > 0) {
+        [[UIPasteboard generalPasteboard] setString:[[self text] substringWithRange:range]];
+    }
+}
+
+- (void) paste:(id)sender
+{
+    
 }
 
 - (void) insertNewline:(id)sender
