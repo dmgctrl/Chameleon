@@ -491,35 +491,60 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:range upstream:(downstream == NO)];
 }
 
-- (void) moveUp:(id)sender
+- (NSUInteger) _indexWhenMovingUpFromIndex:(NSUInteger)index
 {
     NSTextStorage* textStorage = [self textStorage];
     NSUInteger length = [textStorage length];
     NSString* string = [textStorage string];
-    NSRange range = [self selectedRange];
-    
-    range.length = 0;
-    if (range.location <= length) {
-        NSRange line = [string lineRangeForRange:range];
-        
+    NSUInteger newIndex = index;
+
+    if (index <= length) {
+        NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
         if (line.location > 0) {
-            NSRange prevLine = [string lineRangeForRange:(NSRange){line.location - 1, 0}];
-            NSUInteger offset = range.location - line.location;
+            NSRange prevLine = [string lineRangeForRange:(NSRange){ line.location - 1, 0 }];
+            NSUInteger offset = index - line.location;
             NSUInteger prevLineMax = NSMaxRange(prevLine);
-
-            range.location = prevLine.location + offset;
-            if (range.location >= prevLineMax) {
-                range.location = (prevLineMax == 0) ? 0 : prevLineMax - 1;
+            
+            newIndex = prevLine.location + offset;
+            if (newIndex >= prevLineMax) {
+                newIndex = (prevLineMax == 0) ? 0 : prevLineMax - 1;
             }
+        } else {
+            newIndex = 0;
         }
-
-        [self _setAndScrollToRange:range];
     }
+
+    return newIndex;
+}
+
+- (void) moveUp:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingUpFromIndex:[self selectedRange].location],
+        0
+    }];
 }
 
 - (void) moveUpAndModifySelection:(id)sender
 {
+    NSRange range = [self selectedRange];
+    BOOL upstream = (NSMaxRange(range) <= _selectionOrigin);
+    NSInteger index = (upstream ? range.location : NSMaxRange(range));
+    NSInteger delta = abs([self _indexWhenMovingUpFromIndex:index] - index);
     
+    if (upstream) {
+        if (range.location > 0) {
+            range.location -= delta;
+            range.length += delta;
+        }
+    } else {
+        if (delta > range.length) {
+            range.location = _selectionOrigin;
+        }
+        range.length -= MIN(delta, range.length);
+    }
+    
+    [self _setAndScrollToRange:range upstream:upstream];
 }
 
 - (void) insertNewline:(id)sender
