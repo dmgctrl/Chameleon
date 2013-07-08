@@ -486,6 +486,16 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:range upstream:(downstream == NO)];
 }
 
+- (void) moveUp:(id)sender
+{
+    
+}
+
+- (void) moveUpAndModifySelection:(id)sender
+{
+    
+}
+
 - (void) insertNewline:(id)sender
 {
     [self insertText:@"\n"];
