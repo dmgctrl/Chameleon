@@ -374,6 +374,22 @@ static void _commonInitForUITextView(UITextView* self)
     [super touchesBegan:touches withEvent:event];
 }
 
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
+{
+    UITouch* touch = [[event allTouches] anyObject];
+    NSUInteger index = [_textContainerView characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]];
+    NSRange range;
+    if (_selectionOrigin > index) {
+        range = (NSRange){ index, _selectionOrigin - index };
+        [self scrollRangeToVisible:range];
+    } else {
+        range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
+        [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
+    }
+    [self _setSelectedRange:range affinity:NSSelectByCharacter stillSelecting:YES];
+    [super touchesMoved:touches withEvent:event];
+}
+
 - (BOOL) canBecomeFirstResponder
 {
     return (self.window != nil);
