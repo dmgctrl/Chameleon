@@ -532,7 +532,24 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) moveDownAndModifySelection:(id)sender
 {
+    NSRange range = [self selectedRange];
+    BOOL downstream = (range.location >= _selectionOrigin);
+    NSInteger index = (downstream ? NSMaxRange(range) : range.location);
+    NSInteger delta = abs([self _indexWhenMovingDownFromIndex:index] - index);
     
+    if (downstream) {
+        range.length += delta;
+    } else {
+        if (delta > range.length) {
+            range.location = _selectionOrigin;
+            range.length = 0;
+        } else {
+            range.length -= delta;
+            range.location += delta;
+        }
+    }
+    
+    [self _setAndScrollToRange:range upstream:!downstream];
 }
 
 - (void) cut:(id)sender
