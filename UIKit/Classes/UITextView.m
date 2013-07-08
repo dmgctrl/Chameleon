@@ -38,6 +38,7 @@
 #import "UIPasteboard.h"
 #import "UIScreen.h"
 #import "UIScreen+AppKit.h"
+#import "UITouch.h"
 #import "UIWindow.h"
 #import "UIWindow+UIPrivate.h"
 #import "UIKitView.h"
@@ -65,6 +66,7 @@ static CGFloat const kMarginY = 9.0f;
 @property (nonatomic) NSTextContainer* textContainer;
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic) BOOL shouldShowInsertionPoint;
+- (NSUInteger) characterIndexAtPoint:(CGPoint)point;
 @end
 
 
@@ -364,6 +366,11 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self becomeFirstResponder];
+    UITouch* touch = [[event allTouches] anyObject];
+    [self _setAndScrollToRange:(NSRange){
+        [_textContainerView characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]],
+        0
+    }];
     [super touchesBegan:touches withEvent:event];
 }
 
@@ -801,6 +808,28 @@ static void _commonInitForUITextView(UITextView* self)
 - (CGPoint) origin
 {
     return (CGPoint){ kMarginX, kMarginY };
+}
+
+- (NSUInteger) characterIndexAtPoint:(CGPoint)point
+{
+    CGPoint offsetPoint = {
+        .x = point.x - kMarginX,
+        .y = point.y - kMarginY,
+    };
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSTextStorage* textStorage = [layoutManager textStorage];
+    NSUInteger length = [textStorage length];
+
+    CGFloat fraction = 0;
+    NSUInteger index = [layoutManager characterIndexForPoint:offsetPoint inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
+    if (index >= length) {
+        return length;
+    } else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[[textStorage string] characterAtIndex:index]]) {
+        return index;
+    } else {
+        return index + (fraction > 0.75);
+    }
 }
 
 - (void) drawRect:(CGRect)rect
