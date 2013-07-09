@@ -797,7 +797,6 @@ static void _commonInitForUITextView(UITextView* self)
 - (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index
 {
     NSString* text = [self text];
-    //NSInteger maxIndex = [text length];
     NSRange range = NSMakeRange(0, index);
     NSInteger __block newIndex;
     NSInteger __block counter = 0;
@@ -806,13 +805,12 @@ static void _commonInitForUITextView(UITextView* self)
         NSRange substringRange,
         NSRange enclosingRange,
         BOOL *stop){
-        newIndex = substringRange.location;// + substring.length;
+        newIndex = substringRange.location;
             counter++;
             *stop = YES;
         }
     ];
     return newIndex < 0 ? 0 : newIndex;
-
 }
 
 - (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index
