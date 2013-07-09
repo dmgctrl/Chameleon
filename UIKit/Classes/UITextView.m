@@ -810,17 +810,19 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index
 {
-    NSCharacterSet* alphaNumericCharacters = [NSCharacterSet alphanumericCharacterSet];
-    NSCharacterSet* whitespaceAndNewlineCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSString* text = [self text];
-    NSInteger maxIndex = [[self text] length];
-    while (index < maxIndex && ![alphaNumericCharacters characterIsMember:[text characterAtIndex:index]]) {
-        index++;
-    }
-    while (index < maxIndex && ![whitespaceAndNewlineCharacters characterIsMember:[text characterAtIndex:index]]) {
-        index++;
-    }
-    return index;
+    NSInteger maxIndex = [text length];
+    NSRange range = NSMakeRange(index, maxIndex - index);
+    NSInteger __block newIndex;
+    [text enumerateSubstringsInRange:range options:NSStringEnumerationByWords usingBlock:^(
+        NSString *substring,
+        NSRange substringRange,
+        NSRange enclosingRange,
+        BOOL *stop){
+        newIndex = substringRange.location + substring.length;
+        *stop = YES;
+    }];
+    return MIN(newIndex, maxIndex);
 }
 
 - (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index
