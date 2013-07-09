@@ -430,33 +430,6 @@ static void _commonInitForUITextView(UITextView* self)
     [self setSelectedRange:NSMakeRange(0, [[self text] length])];
 }
 
-- (void) moveToBeginningOfParagraph:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveToBeginningOfParagraphAndModifySelection:(id)sender
-{
-
-}
-
-- (void) moveToEndOfParagraph:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveToEndOfParagraphAndModifySelection:(id)sender
-{
-    
-}
-
-
 - (void) insertText:(NSString*)text
 {
     if (![self _beginEditingIfNecessary]) {
@@ -492,59 +465,32 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) moveLeft:(id)sender
 {
-    NSRange range = [self selectedRange];
-    if (range.length > 0) {
-        range.length = 0;
-    } else if (range.location > 0) {
-        range.location--;
-    }
-    [self _setAndScrollToRange:range];
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingLeftFromIndex:[self selectedRange].location],
+        0
+    }];
 }
 
 - (void) moveLeftAndModifySelection:(id)sender
 {
-    NSRange range = [self selectedRange];
-    BOOL upstream = (NSMaxRange(range) <= _selectionOrigin);
-    if (upstream) {
-        if (range.location > 0) {
-            range.location--;
-            range.length++;
-        }
-    } else {
-        range.length--;
-    }
-    [self _setAndScrollToRange:range upstream:upstream];
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingLeftFromIndex:index];
+    }];
 }
  
 - (void) moveRight:(id)sender
 {
-    NSRange range = [self selectedRange];
-    if (range.length > 0) {
-        range.location = NSMaxRange(range);
-        range.length = 0;
-    } else {
-        NSUInteger length = [[self textStorage] length];
-        range.location++;
-        if (range.location > length) {
-            range.location = length;
-        }
-    }
-    [self _setAndScrollToRange:range];
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingRightFromIndex:NSMaxRange([self selectedRange])],
+        0
+    }];
 }
 
 - (void) moveRightAndModifySelection:(id)sender
 {
-    NSRange range = [self selectedRange];
-    BOOL downstream = (range.location >= _selectionOrigin);
-    if (downstream) {
-        if (NSMaxRange(range) < [[self textStorage] length]) {
-            range.length++;
-        }
-    } else {
-        range.location++;
-        range.length--;
-    }
-    [self _setAndScrollToRange:range upstream:(downstream == NO)];
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingRightFromIndex:index];
+    }];
 }
 
 - (void) moveUp:(id)sender
@@ -552,6 +498,13 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:(NSRange){
         [self _indexWhenMovingUpFromIndex:[self selectedRange].location],
         0
+    }];
+}
+
+- (void) moveUpAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingUpFromIndex:index];
     }];
 }
 
@@ -563,45 +516,41 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
-- (void) moveUpAndModifySelection:(id)sender
-{
-    NSRange range = [self selectedRange];
-    BOOL upstream = (NSMaxRange(range) <= _selectionOrigin);
-    NSInteger index = (upstream ? range.location : NSMaxRange(range));
-    NSInteger delta = abs([self _indexWhenMovingUpFromIndex:index] - index);
-    
-    if (upstream) {
-        if (range.location > 0) {
-            range.location -= delta;
-            range.length += delta;
-        }
-    } else {
-        range.length -= MIN(delta, range.length);
-    }
-    
-    [self _setAndScrollToRange:range upstream:upstream];
-}
-
 - (void) moveDownAndModifySelection:(id)sender
 {
-    NSRange range = [self selectedRange];
-    BOOL upstream = (range.location < _selectionOrigin);
-    NSInteger index = (upstream ? range.location : NSMaxRange(range));
-    NSInteger delta = abs([self _indexWhenMovingDownFromIndex:index] - index);
-    
-    if (upstream) {
-        if (delta > range.length) {
-            range.location = _selectionOrigin;
-            range.length = 0;
-        } else {
-            range.length -= delta;
-            range.location += delta;
-        }
-    } else {
-        range.length += delta;
-    }
-    
-    [self _setAndScrollToRange:range upstream:upstream];
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingDownFromIndex:index];
+    }];
+}
+
+- (void) moveToBeginningOfParagraph:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToBeginningOfParagraphAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+    }];
+}
+
+- (void) moveToEndOfParagraph:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToEndOfParagraphAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToEndOfParagraphFromIndex:index];
+    }];
 }
 
 - (void) cut:(id)sender
@@ -779,7 +728,43 @@ static void _commonInitForUITextView(UITextView* self)
 
 #pragma mark Cursor Calculations
 
-- (NSInteger) _indexWhenMovingUpFromIndex:(NSUInteger)index
+- (void) _modifySelectionWith:(NSInteger(^)(NSInteger))calculation
+{
+    NSRange range = [self selectedRange];
+    NSInteger start = range.location;
+    NSInteger end = NSMaxRange(range);
+    BOOL upstream = (end <= _selectionOrigin);
+    NSInteger index = calculation(upstream ? start : end);
+    if (index > _selectionOrigin) {
+        range.location = _selectionOrigin;
+        range.length = index - _selectionOrigin;
+    } else {
+        range.location = index;
+        range.length = _selectionOrigin - index;
+    }
+    [self _setAndScrollToRange:range upstream:upstream];
+}
+
+- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index
+{
+    NSInteger length = [[self textStorage] length];
+    if (index < length) {
+        return index + 1;
+    } else {
+        return index;
+    }
+}
+
+- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index
+{
+    if (index > 0) {
+        return index - 1;
+    } else {
+        return index;
+    }
+}
+
+- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index
 {
     NSTextStorage* textStorage = [self textStorage];
     NSInteger length = [textStorage length];
@@ -801,7 +786,7 @@ static void _commonInitForUITextView(UITextView* self)
     return newIndex;
 }
 
-- (NSInteger) _indexWhenMovingDownFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index
 {
     NSTextStorage* textStorage = [self textStorage];
     NSUInteger length = [textStorage length];
@@ -824,13 +809,13 @@ static void _commonInitForUITextView(UITextView* self)
     return newIndex;
 }
 
-- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index
 {
     NSString* string = [[self textStorage] string];
     return [string lineRangeForRange:(NSRange){ index, 0 }].location;
 }
 
-- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index
 {
     NSString* string = [[self textStorage] string];
     NSInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
