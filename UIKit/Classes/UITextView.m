@@ -555,6 +555,14 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
+- (void) moveDown:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingDownFromIndex:NSMaxRange([self selectedRange])],
+        0
+    }];
+}
+
 - (void) moveUpAndModifySelection:(id)sender
 {
     NSRange range = [self selectedRange];
@@ -568,33 +576,20 @@ static void _commonInitForUITextView(UITextView* self)
             range.length += delta;
         }
     } else {
-        if (delta > range.length) {
-            range.location = _selectionOrigin;
-        }
         range.length -= MIN(delta, range.length);
     }
     
     [self _setAndScrollToRange:range upstream:upstream];
 }
 
-- (void) moveDown:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingDownFromIndex:NSMaxRange([self selectedRange])],
-        0
-    }];
-}
-
 - (void) moveDownAndModifySelection:(id)sender
 {
     NSRange range = [self selectedRange];
-    BOOL downstream = (range.location >= _selectionOrigin);
-    NSInteger index = (downstream ? NSMaxRange(range) : range.location);
+    BOOL upstream = (range.location < _selectionOrigin);
+    NSInteger index = (upstream ? range.location : NSMaxRange(range));
     NSInteger delta = abs([self _indexWhenMovingDownFromIndex:index] - index);
     
-    if (downstream) {
-        range.length += delta;
-    } else {
+    if (upstream) {
         if (delta > range.length) {
             range.location = _selectionOrigin;
             range.length = 0;
@@ -602,9 +597,11 @@ static void _commonInitForUITextView(UITextView* self)
             range.length -= delta;
             range.location += delta;
         }
+    } else {
+        range.length += delta;
     }
     
-    [self _setAndScrollToRange:range upstream:!downstream];
+    [self _setAndScrollToRange:range upstream:upstream];
 }
 
 - (void) cut:(id)sender
@@ -782,19 +779,19 @@ static void _commonInitForUITextView(UITextView* self)
 
 #pragma mark Cursor Calculations
 
-- (NSUInteger) _indexWhenMovingUpFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingUpFromIndex:(NSUInteger)index
 {
     NSTextStorage* textStorage = [self textStorage];
-    NSUInteger length = [textStorage length];
+    NSInteger length = [textStorage length];
     NSString* string = [textStorage string];
-    NSUInteger newIndex = index;
+    NSInteger newIndex = index;
     
     if (index <= length) {
         NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
         if (line.location > 0) {
             NSRange prevLine = [string lineRangeForRange:(NSRange){ line.location - 1, 0 }];
-            NSUInteger offset = index - line.location;
-            NSUInteger prevLineMax = NSMaxRange(prevLine);
+            NSInteger offset = index - line.location;
+            NSInteger prevLineMax = NSMaxRange(prevLine);
             newIndex = MIN(prevLine.location + offset, prevLineMax - 1);
         } else {
             newIndex = 0;
@@ -804,20 +801,20 @@ static void _commonInitForUITextView(UITextView* self)
     return newIndex;
 }
 
-- (NSUInteger) _indexWhenMovingDownFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingDownFromIndex:(NSUInteger)index
 {
     NSTextStorage* textStorage = [self textStorage];
     NSUInteger length = [textStorage length];
     NSString* string = [textStorage string];
-    NSUInteger newIndex = index;
+    NSInteger newIndex = index;
     
     if (index < length) {
         NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
         NSInteger max = NSMaxRange(line);
         if (max < length) {
             NSRange nextLine = [string lineRangeForRange:(NSRange){ max, 0 }];
-            NSUInteger offset = index - line.location;
-            NSUInteger nextLineMax = NSMaxRange(nextLine);
+            NSInteger offset = index - line.location;
+            NSInteger nextLineMax = NSMaxRange(nextLine);
             newIndex = MIN(nextLine.location + offset, nextLineMax - 1);
         } else {
             newIndex = length;
@@ -827,16 +824,16 @@ static void _commonInitForUITextView(UITextView* self)
     return newIndex;
 }
 
-- (NSUInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSUInteger)index
 {
     NSString* string = [[self textStorage] string];
     return [string lineRangeForRange:(NSRange){ index, 0 }].location;
 }
 
-- (NSUInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSUInteger)index
+- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSUInteger)index
 {
     NSString* string = [[self textStorage] string];
-    NSUInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
+    NSInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
     if (newIndex > 0 && [[NSCharacterSet newlineCharacterSet] characterIsMember:[string characterAtIndex:newIndex - 1]]) {
         newIndex--;
     }
