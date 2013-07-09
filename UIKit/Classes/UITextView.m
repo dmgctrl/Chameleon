@@ -796,16 +796,23 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index
 {
-    NSCharacterSet* alphaNumericCharacters = [NSCharacterSet alphanumericCharacterSet];
-    NSCharacterSet* whitespaceAndNewlineCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSString* text = [self text];
-    while (index && ![alphaNumericCharacters characterIsMember:[text characterAtIndex:index - 1]]) {
-        index--;
-    }
-    while (index && ![whitespaceAndNewlineCharacters characterIsMember:[text characterAtIndex:index - 1]]) {
-        index--;
-    }
-    return index;
+    //NSInteger maxIndex = [text length];
+    NSRange range = NSMakeRange(0, index);
+    NSInteger __block newIndex;
+    NSInteger __block counter = 0;
+    [text enumerateSubstringsInRange:range options:(NSStringEnumerationByWords | NSStringEnumerationReverse) usingBlock:^(
+        NSString *substring,
+        NSRange substringRange,
+        NSRange enclosingRange,
+        BOOL *stop){
+        newIndex = substringRange.location;// + substring.length;
+            counter++;
+            *stop = YES;
+        }
+    ];
+    return newIndex < 0 ? 0 : newIndex;
+
 }
 
 - (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index
@@ -819,9 +826,10 @@ static void _commonInitForUITextView(UITextView* self)
         NSRange substringRange,
         NSRange enclosingRange,
         BOOL *stop){
-        newIndex = substringRange.location + substring.length;
-        *stop = YES;
-    }];
+            newIndex = substringRange.location + substring.length;
+            *stop = YES;
+        }
+    ];
     return MIN(newIndex, maxIndex);
 }
 
