@@ -813,11 +813,11 @@ static void _commonInitForUITextView(UITextView* self)
     NSCharacterSet* alphaNumericCharacters = [NSCharacterSet alphanumericCharacterSet];
     NSCharacterSet* whitespaceAndNewlineCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSString* text = [self text];
-    NSInteger maxIndex = [[self text] length] - 1;
-    while (index <= maxIndex && ![alphaNumericCharacters characterIsMember:[text characterAtIndex:index]]) {
+    NSInteger maxIndex = [[self text] length];
+    while (index < maxIndex && ![alphaNumericCharacters characterIsMember:[text characterAtIndex:index]]) {
         index++;
     }
-    while (index <= maxIndex && ![whitespaceAndNewlineCharacters characterIsMember:[text characterAtIndex:index]]) {
+    while (index < maxIndex && ![whitespaceAndNewlineCharacters characterIsMember:[text characterAtIndex:index]]) {
         index++;
     }
     return index;
