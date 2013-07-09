@@ -477,7 +477,22 @@ static void _commonInitForUITextView(UITextView* self)
         return [self _indexWhenMovingLeftFromIndex:index];
     }];
 }
- 
+
+- (void) moveWordLeft:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveWordLeftAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingWordLeftFromIndex:index];
+    }];
+}
+
 - (void) moveRight:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
@@ -490,6 +505,21 @@ static void _commonInitForUITextView(UITextView* self)
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [self _indexWhenMovingRightFromIndex:index];
+    }];
+}
+
+- (void) moveWordRight:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveWordRightAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingWordRightFromIndex:index];
     }];
 }
 
@@ -762,6 +792,35 @@ static void _commonInitForUITextView(UITextView* self)
     } else {
         return index;
     }
+}
+
+- (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index
+{
+    NSCharacterSet* alphaNumericCharacters = [NSCharacterSet alphanumericCharacterSet];
+    NSCharacterSet* whitespaceAndNewlineCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString* text = [self text];
+    while (index && ![alphaNumericCharacters characterIsMember:[text characterAtIndex:index - 1]]) {
+        index--;
+    }
+    while (index && ![whitespaceAndNewlineCharacters characterIsMember:[text characterAtIndex:index - 1]]) {
+        index--;
+    }
+    return index;
+}
+
+- (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index
+{
+    NSCharacterSet* alphaNumericCharacters = [NSCharacterSet alphanumericCharacterSet];
+    NSCharacterSet* whitespaceAndNewlineCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString* text = [self text];
+    NSInteger maxIndex = [[self text] length] - 1;
+    while (index <= maxIndex && ![alphaNumericCharacters characterIsMember:[text characterAtIndex:index]]) {
+        index++;
+    }
+    while (index <= maxIndex && ![whitespaceAndNewlineCharacters characterIsMember:[text characterAtIndex:index]]) {
+        index++;
+    }
+    return index;
 }
 
 - (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index

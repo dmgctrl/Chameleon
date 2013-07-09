@@ -80,11 +80,35 @@
             break;
         }
         case UIKeyTypeLeftArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveLeftAndModifySelection:) : @selector(moveLeft:);
+            if ([key isOptionKeyPressed]) {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveWordLeftAndModifySelection:);
+                } else {
+                    command = @selector(moveWordLeft:);
+                }
+            } else {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveLeftAndModifySelection:);
+                } else {
+                    command = @selector(moveLeft:);
+                }
+            }
             break;
         }
         case UIKeyTypeRightArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveRightAndModifySelection:) : @selector(moveRight:);
+            if ([key isOptionKeyPressed]) {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveWordRightAndModifySelection:);
+                } else {
+                    command = @selector(moveWordRight:);
+                }
+            } else {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveRightAndModifySelection:);
+                } else {
+                    command = @selector(moveRight:);
+                }
+            }
             break;
         }
         case UIKeyTypePageUp: {
@@ -117,7 +141,7 @@
         }
         case UIKeyTypeCharacter: {
             switch ([key keyCode]) {
-                case 0: {
+                case 0: { // 'a' key
                     if ([key isControlKeyPressed]) {
                         if ([key isShiftKeyPressed]) {
                             command = @selector(moveToBeginningOfParagraphAndModifySelection:);
@@ -130,7 +154,7 @@
                     break;
                 }
                     
-                case 14: {
+                case 14: { // e key
                     if ([key isControlKeyPressed]) {
                         if ([key isShiftKeyPressed]) {
                             command = @selector(moveToEndOfParagraphAndModifySelection:);
@@ -143,17 +167,17 @@
                     break;
                 }
                     
-                case 7:{
+                case 7:{ // x key
                     command = [key isCommandKeyPressed]? @selector(cut:) : @selector(insertText:);
                     break;
                 }
                     
-                case 8:{
+                case 8:{ // c key
                     command = [key isCommandKeyPressed]? @selector(copy:) : @selector(insertText:);
                     break;
                 }
                     
-                case 9:{
+                case 9:{ // v key
                     command = [key isCommandKeyPressed]? @selector(paste:) : @selector(insertText:);
                     break;
                 }
