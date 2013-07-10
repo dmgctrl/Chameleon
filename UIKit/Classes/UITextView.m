@@ -463,6 +463,14 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
+- (void) deleteWordBackward:(id)sender
+{
+    if ([self selectedRange].length == 0) {
+        [self moveWordLeftAndModifySelection:self];
+    }
+    [self deleteBackward:self];
+}
+
 - (void) moveLeft:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){

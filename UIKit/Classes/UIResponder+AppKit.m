@@ -132,7 +132,13 @@
             break;
         }
         case UIKeyTypeDelete: {
-            command = @selector(deleteForward:);
+            if ([key isOptionKeyPressed]){
+                command = @selector(deleteWordForward:);
+            } else if ([key isControlKeyPressed]){
+                command = @selector(deleteForwardByDecomposingPreviousCharacter:);
+            } else {
+                command = @selector(deleteForward:);
+            }
             break;
         }
         case UIKeyTypeEscape: {
@@ -188,7 +194,13 @@
                 }
                     
                 case 51: {
-                    command = [key isShiftKeyPressed]? @selector(deleteBackward:) : @selector(deleteBackward:);
+                    if ([key isOptionKeyPressed]){
+                        command = @selector(deleteWordBackward:);
+                    } else if ([key isControlKeyPressed]){
+                        command = @selector(deleteBackwardByDecomposingPreviousCharacter:);
+                    } else {
+                        command = @selector(deleteBackward:);
+                    }
                     break;
                 }
 
