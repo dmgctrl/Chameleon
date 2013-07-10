@@ -587,6 +587,15 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
+- (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
+{
+    if ([self _isLocationAtBeginningOfParagraph]) {
+        [self moveUp:self];
+    } else {
+        [self moveToBeginningOfParagraph:self];
+    }
+}
+
 - (void) moveToBeginningOfParagraphAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
@@ -900,6 +909,13 @@ static void _commonInitForUITextView(UITextView* self)
     }
 
     return newIndex;
+}
+
+- (BOOL) _isLocationAtBeginningOfParagraph
+{
+    NSString* string = [[self textStorage] string];
+    NSUInteger index = [self selectedRange].location;
+    return [string lineRangeForRange:(NSRange){ index, 0 }].location == index;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index

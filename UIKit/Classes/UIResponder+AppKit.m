@@ -72,7 +72,15 @@
             break;
         }
         case UIKeyTypeUpArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveUpAndModifySelection:) : @selector(moveUp:);
+            if ([key isOptionKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveParagraphBackwardOrMoveUpAndModifySelection:) : @selector(moveToBeginningOfParagraphOrMoveUp:);
+            } else if ([key isCommandKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveToBeginningOfDocumentAndModifySelection:) : @selector(moveToBeginningOfDocument:);
+            } else if ([key isControlKeyPressed]) {
+                command = @selector(scrollPageUp:);
+            } else {
+                command = [key isShiftKeyPressed] ? @selector(moveUpAndModifySelection:) : @selector(moveUp:);
+            }
             break;
         }
         case UIKeyTypeDownArrow: {
