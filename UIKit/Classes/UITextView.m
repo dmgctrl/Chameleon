@@ -463,6 +463,24 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
+- (void) deleteForward:(id)sender
+{
+    NSRange range = [self selectedRange];
+    if (range.length > 0) {
+        if (![self _canChangeTextInRange:range replacementText:@""]) {
+            return;
+        }
+        [self _replaceCharactersInRange:range withString:@""];
+        [self _didChangeText];
+    } else if (range.location < [[self text]length]) {
+        if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
+            return;
+        }
+        [self _replaceCharactersInRange:(NSRange){ range.location, 1 } withString:@""];
+        [self _didChangeText];
+    }
+}
+
 - (void) deleteWordBackward:(id)sender
 {
     if ([self selectedRange].length == 0) {
