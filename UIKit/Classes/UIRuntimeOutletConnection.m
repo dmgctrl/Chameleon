@@ -1,4 +1,5 @@
 #import "UIRuntimeOutletConnection.h"
+#import "UICustomObject.h"
 
 
 static NSString* const kUIDestinationKey = @"UIDestination";
@@ -25,7 +26,8 @@ static NSString* const kUISourceKey = @"UISource";
 
 - (void) connect
 {
-    [_target setValue:_value forKey:_key];
+    id target = [_target isKindOfClass:[UICustomObject class]]? [_target target] : _target;
+    [target setValue:_value forKey:_key];
 }
 
 @end

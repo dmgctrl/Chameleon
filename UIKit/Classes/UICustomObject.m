@@ -2,14 +2,14 @@
 
 @implementation UICustomObject
 
-- (id)initWithCoder:(id)arg1
+- (id) initWithCoder:(NSCoder*)coder
 {
-    return nil;
+    return self;
 }
 
-- (void)encodeWithCoder:(id)arg1
+- (void) encodeWithCoder:(NSCoder*)coder
 {
-    
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 @end

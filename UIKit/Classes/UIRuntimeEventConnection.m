@@ -1,4 +1,5 @@
 #import "UIRuntimeEventConnection.h"
+#import "UICustomObject.h"
 
 
 static NSString* const kUIDestinationKey = @"UIDestination";
@@ -27,8 +28,9 @@ static NSString* const kUIEventMaskKey = @"UIEventMask";
 
 - (void) connect
 {
-    if ([_target respondsToSelector:_action]) {
-        [_control addTarget:(_target == [NSNull null]) ? nil : _target action:_action forControlEvents:_eventMask];
+    id target = [_target isKindOfClass:[UICustomObject class]]? [_target target] : _target;
+    if ([target respondsToSelector:_action]) {
+        [_control addTarget:((target == [NSNull null]) ? nil : target) action:_action forControlEvents:_eventMask];
     } else {
         // Warn?
     }
