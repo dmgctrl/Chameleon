@@ -603,6 +603,15 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
+- (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
+{
+    if ([self _isLocationAtBeginningOfParagraph]) {
+        [self moveUpAndModifySelection:self];
+    } else {
+        [self moveToBeginningOfParagraphAndModifySelection:self];
+    }
+}
+
 - (void) moveToEndOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
