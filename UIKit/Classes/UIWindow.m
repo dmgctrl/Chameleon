@@ -86,8 +86,9 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 
 @implementation UIWindow {
-    UIResponder *_firstResponder;
-    NSUndoManager *_undoManager;
+    UIResponder* _firstResponder;
+    UIResponder* _firstResponderWhenKeyLost;
+    NSUndoManager* _undoManager;
 }
 
 - (id)initWithFrame:(CGRect)theFrame
@@ -127,6 +128,11 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 	}
 }
 
+- (BOOL) _acceptsFirstResponder
+{
+    return _firstResponder || _firstResponderWhenKeyLost;
+}
+
 - (UIResponder *)_firstResponder
 {
     return _firstResponder;
@@ -134,6 +140,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 - (void)_setFirstResponder:(UIResponder *)newFirstResponder
 {
+    _firstResponderWhenKeyLost = nil;
     _firstResponder = newFirstResponder;
 }
 
@@ -250,8 +257,9 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 - (void)becomeKeyWindow
 {
-    if ([[self _firstResponder] respondsToSelector:@selector(becomeKeyWindow)]) {
-        [(id)[self _firstResponder] becomeKeyWindow];
+    id firstResponder = [self _firstResponder] ?: _firstResponderWhenKeyLost;
+    if ([firstResponder respondsToSelector:@selector(becomeKeyWindow)]) {
+        [firstResponder becomeKeyWindow];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidBecomeKeyNotification object:self];
 }
@@ -272,9 +280,13 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 - (void)resignKeyWindow
 {
-    if ([[self _firstResponder] respondsToSelector:@selector(resignKeyWindow)]) {
-        [(id)[self _firstResponder] resignKeyWindow];
+    id firstResponder = [self _firstResponder];
+    if ([firstResponder respondsToSelector:@selector(resignKeyWindow)]) {
+        [firstResponder resignKeyWindow];
     }
+    [firstResponder resignFirstResponder];
+    _firstResponderWhenKeyLost = firstResponder;
+    [[UIApplication sharedApplication] _setKeyWindow:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidResignKeyNotification object:self];
 }
 

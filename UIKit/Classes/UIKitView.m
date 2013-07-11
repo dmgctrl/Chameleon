@@ -41,21 +41,18 @@
 @implementation UIKitView {
     id ob1;
     id ob2;
-    UIResponder* _firstResponder;
 }
 
 - (void) viewWillMoveToWindow:(NSWindow*)window
 {
     if (window != nil) {
         ob1 = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidBecomeKeyNotification object:window queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-            if (_firstResponder) {
-                [_firstResponder becomeFirstResponder];
+            if (self == [window firstResponder]) {
+                [[self UIWindow] makeKeyWindow];
             }
         }];
         ob2 = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidResignKeyNotification object:window queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-            UIWindow* window = [self UIWindow];
-            _firstResponder = [window isKeyWindow]? [window _firstResponder]: nil;
-            [_firstResponder resignFirstResponder];
+            [[self UIWindow] resignKeyWindow];
         }];
     } else {
         ob1 = nil;
@@ -145,13 +142,12 @@
 
 - (BOOL) acceptsFirstResponder
 {
-    return [[self UIWindow] _firstResponder] != nil;
+    return [[self UIWindow] _acceptsFirstResponder];
 }
 
 - (BOOL) becomeFirstResponder
 {
-    id responder = [[self UIWindow] _firstResponder];
-    if ([responder becomeFirstResponder]) {
+    if ([super becomeFirstResponder]) {
         [[self UIWindow] makeKeyWindow];
         return YES;
     } else {
@@ -161,8 +157,7 @@
 
 - (BOOL) resignFirstResponder
 {
-    id responder = [[self UIWindow] _firstResponder];
-    if ([responder resignFirstResponder]) {
+    if ([super resignFirstResponder]) {
         [[self UIWindow] resignKeyWindow];
         return YES;
     } else {
