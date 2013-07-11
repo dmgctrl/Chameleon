@@ -32,12 +32,8 @@
 #import "UIKey.h"
 #import "UIApplication.h"
 #import <AppKit/NSGraphics.h>
+#import <AppKit/NSEvent.h>
 
-@interface UIResponder (AppKitIntegration)
-
-- (BOOL) doDefault:(UIKey*)key;
-
-@end
 
 @implementation UIResponder (AppKitIntegration)
 
@@ -76,19 +72,59 @@
             break;
         }
         case UIKeyTypeUpArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveUpAndModifySelection:) : @selector(moveUp:);
+            if ([key isOptionKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveParagraphBackwardOrMoveUpAndModifySelection:) : @selector(moveToBeginningOfParagraphOrMoveUp:);
+            } else if ([key isCommandKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveToBeginningOfDocumentAndModifySelection:) : @selector(moveToBeginningOfDocument:);
+            } else if ([key isControlKeyPressed]) {
+                command = @selector(scrollPageUp:);
+            } else {
+                command = [key isShiftKeyPressed] ? @selector(moveUpAndModifySelection:) : @selector(moveUp:);
+            }
             break;
         }
         case UIKeyTypeDownArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveDownAndModifySelection:) : @selector(moveDown:);
+            if ([key isOptionKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveParagraphForwardOrMoveDownAndModifySelection:) : @selector(moveToEndOfParagraphOrMoveDown:);
+            } else if ([key isCommandKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveToEndOfDocumentAndModifySelection:) : @selector(moveToEndOfDocument:);
+            } else if ([key isControlKeyPressed]) {
+                command = @selector(scrollPageUp:);
+            } else {
+                command = [key isShiftKeyPressed] ? @selector(moveDownAndModifySelection:) : @selector(moveDown:);
+            }
             break;
         }
         case UIKeyTypeLeftArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveLeftAndModifySelection:) : @selector(moveLeft:);
+            if ([key isOptionKeyPressed]) {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveWordLeftAndModifySelection:);
+                } else {
+                    command = @selector(moveWordLeft:);
+                }
+            } else {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveLeftAndModifySelection:);
+                } else {
+                    command = @selector(moveLeft:);
+                }
+            }
             break;
         }
         case UIKeyTypeRightArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveRightAndModifySelection:) : @selector(moveRight:);
+            if ([key isOptionKeyPressed]) {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveWordRightAndModifySelection:);
+                } else {
+                    command = @selector(moveWordRight:);
+                }
+            } else {
+                if ([key isShiftKeyPressed]) {
+                    command = @selector(moveRightAndModifySelection:);
+                } else {
+                    command = @selector(moveRight:);
+                }
+            }
             break;
         }
         case UIKeyTypePageUp: {
@@ -112,7 +148,13 @@
             break;
         }
         case UIKeyTypeDelete: {
-            command = @selector(deleteForward:);
+            if ([key isOptionKeyPressed]){
+                command = @selector(deleteWordForward:);
+            } else if ([key isControlKeyPressed]){
+                command = @selector(deleteForwardByDecomposingPreviousCharacter:);
+            } else {
+                command = @selector(deleteForward:);
+            }
             break;
         }
         case UIKeyTypeEscape: {
@@ -121,31 +163,63 @@
         }
         case UIKeyTypeCharacter: {
             switch ([key keyCode]) {
+                case 0: { // 'a' key
+                    if ([key isControlKeyPressed]) {
+                        if ([key isShiftKeyPressed]) {
+                            command = @selector(moveParagraphBackwardAndModifySelection:);
+                        } else {
+                            command = @selector(moveToBeginningOfParagraph:);
+                        }
+                    } else {
+                        command = @selector(insertText:);
+                    }
+                    break;
+                }
+                    
+                case 14: { // e key
+                    if ([key isControlKeyPressed]) {
+                        if ([key isShiftKeyPressed]) {
+                            command = @selector(moveParagraphForwardAndModifySelection:);
+                        } else {
+                            command = @selector(moveToEndOfParagraph:);
+                        }
+                    } else {
+                        command = @selector(insertText:);
+                    }
+                    break;
+                }
+                    
+                case 7:{ // x key
+                    command = [key isCommandKeyPressed]? @selector(cut:) : @selector(insertText:);
+                    break;
+                }
+                    
+                case 8:{ // c key
+                    command = [key isCommandKeyPressed]? @selector(copy:) : @selector(insertText:);
+                    break;
+                }
+                    
+                case 9:{ // v key
+                    command = [key isCommandKeyPressed]? @selector(paste:) : @selector(insertText:);
+                    break;
+                }
+                    
                 case 48: {
                     command = [key isShiftKeyPressed]? @selector(insertBacktab:) : @selector(insertTab:);
                     break;
                 }
                     
                 case 51: {
-                    command = [key isShiftKeyPressed]? @selector(deleteBackward:) : @selector(deleteBackward:);
+                    if ([key isOptionKeyPressed]){
+                        command = @selector(deleteWordBackward:);
+                    } else if ([key isControlKeyPressed]){
+                        command = @selector(deleteBackwardByDecomposingPreviousCharacter:);
+                    } else {
+                        command = @selector(deleteBackward:);
+                    }
                     break;
                 }
 
-                case 7:{
-                    command = [key isCommandKeyPressed]? @selector(cut:) : @selector(insertText:);
-                    break;
-                }
-               
-                case 8:{
-                    command = [key isCommandKeyPressed]? @selector(copy:) : @selector(insertText:);
-                    break;
-                }
-                    
-                case 9:{
-                    command = [key isCommandKeyPressed]? @selector(paste:) : @selector(insertText:);
-                    break;
-                }
-                
                 default: {
                     command = @selector(insertText:);
                     break;
