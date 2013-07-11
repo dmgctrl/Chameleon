@@ -176,3 +176,7 @@ UIKIT_EXTERN const NSTimeInterval UIMinimumKeepAliveTimeout;
 @interface UIApplication(UIApplicationDeprecated)
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated __attribute__((deprecated)); // use -setStatusBarHidden:withAnimation:
 @end
+
+
+UIKIT_EXTERN int UIApplicationMain(int argc, char *argv[], NSString* principalClassName, NSString* delegateClassName);
+

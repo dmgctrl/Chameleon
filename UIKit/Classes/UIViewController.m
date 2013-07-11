@@ -92,7 +92,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+- (id) initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
     if (nil != (self = [super init])) {
         _nibName = [nibName copy];

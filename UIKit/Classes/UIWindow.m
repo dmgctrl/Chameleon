@@ -28,6 +28,7 @@
  */
 
 #import "UIViewController.h"
+#import "UIViewController+UIPrivate.h"
 #import "UIWindow+UIPrivate.h"
 #import "UIView+UIPrivate.h"
 #import "UIScreen+UIPrivate.h"
@@ -122,8 +123,8 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 	if (rootViewController != _rootViewController) {
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         _rootViewController = rootViewController;
-        _rootViewController.view.frame = self.bounds;    // unsure about this
-        [self addSubview:_rootViewController.view];
+        [[rootViewController view] setFrame:[self bounds]];
+        [self addSubview:[rootViewController view]];
 	}
 }
 

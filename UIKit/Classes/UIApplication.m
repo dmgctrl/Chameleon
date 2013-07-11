@@ -31,6 +31,7 @@
 #import "UIScreen+UIPrivate.h"
 #import "UIScreen+AppKit.h"
 #import "UIKitView.h"
+#import "UIColor.h"
 #import "UIEvent+UIPrivate.h"
 #import "UITouch+UIPrivate.h"
 #import "UIWindow+UIPrivate.h"
@@ -39,6 +40,9 @@
 #import "UIApplication+AppKit.h"
 #import "UIKey+UIPrivate.h"
 #import "UIBackgroundTask.h"
+#import "UIStoryboard.h"
+#import "UINib.h"
+
 #import <Cocoa/Cocoa.h>
 
 NSString *const UIApplicationWillChangeStatusBarOrientationNotification = @"UIApplicationWillChangeStatusBarOrientationNotification";
@@ -67,6 +71,63 @@ const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax; // cor
 const NSTimeInterval UIMinimumKeepAliveTimeout = 0;
 
 static UIApplication *_theApplication = nil;
+
+@interface _UIApplicationDelegate : NSObject <NSApplicationDelegate>
+@end
+
+@implementation _UIApplicationDelegate
+
+- (void) applicationWillFinishLaunching:(NSNotification *)notification
+{
+    UIApplication* app = [UIApplication sharedApplication];
+
+    NSBundle* bundle = [NSBundle mainBundle];
+    NSString* storyboardName = [[bundle infoDictionary] objectForKey:@"UIMainStoryboardFile"];
+    if (storyboardName) {
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:bundle];
+        [[app keyWindow] setRootViewController:[storyboard instantiateInitialViewController]];
+    } else {
+        NSString* nibName = [[bundle infoDictionary] objectForKey:@"NSMainNibFile"];
+        if (nibName) {
+            UINib* nib = [UINib nibWithNibName:nibName bundle:bundle];
+            [nib instantiateWithOwner:_theApplication options:nil];
+        }
+    }
+    
+    [[app delegate] application:app didFinishLaunchingWithOptions:nil];
+}
+
+@end
+
+UIKIT_EXTERN int UIApplicationMain(int argc, char *argv[], NSString* principalClassName, NSString* delegateClassName)
+{
+    NSApplication* application = [NSApplication sharedApplication];
+    static id<NSApplicationDelegate> nsappdelegate;
+    nsappdelegate = [[_UIApplicationDelegate alloc] init];
+    [application setDelegate:nsappdelegate];
+
+    Class principalClass = principalClassName ? NSClassFromString(principalClassName) : [UIApplication class];
+    _theApplication = [[principalClass alloc] init];
+    if (delegateClassName) {
+        Class delegateClass = NSClassFromString(delegateClassName);
+        if (delegateClass) {
+            static id<UIApplicationDelegate> uiappdelegate;
+            uiappdelegate = [[delegateClass alloc] init];
+            [_theApplication setDelegate:uiappdelegate];
+        }
+    }
+
+    UIKitView* contentView = [[UIKitView alloc] initWithFrame:(NSRect){ 0, 0, 320, 480 }];
+    NSWindow* window = [[NSWindow alloc] initWithContentRect:[contentView bounds] styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask backing:NSBackingStoreBuffered defer:YES];
+    [window setContentView:contentView];
+    [window center];
+    [window makeKeyAndOrderFront:nil];
+    
+    [[contentView UIWindow] makeKeyAndVisible];
+
+    [NSApp run];
+    return 0;
+}
 
 CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent)
 {
@@ -123,15 +184,14 @@ static BOOL TouchIsActive(UITouch *touch)
     return TouchIsActiveGesture(touch) || TouchIsActiveNonGesture(touch);
 }
 
-+ (void)initialize
-{
-    if (self == [UIApplication class]) {
-        _theApplication = [[UIApplication alloc] init];
-    }
-}
-
 + (UIApplication *)sharedApplication
 {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!_theApplication) {
+            _theApplication = [[UIApplication alloc] init];
+        }
+    });
     return _theApplication;
 }
 
