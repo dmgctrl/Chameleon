@@ -587,29 +587,27 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
-- (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
-{
-    if ([self _isLocationAtBeginningOfParagraph]) {
-        [self moveUp:self];
-    } else {
-        [self moveToBeginningOfParagraph:self];
-    }
-}
-
-- (void) moveToBeginningOfParagraphAndModifySelection:(id)sender
+- (void) moveParagraphBackwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
     }];
 }
 
+- (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
+{
+    if ([self _isLocationAtBeginningOfParagraph]) {
+        [self moveUp:self];
+    }
+    [self moveToBeginningOfParagraph:self];
+}
+
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
     if ([self _isLocationAtBeginningOfParagraph]) {
         [self moveUpAndModifySelection:self];
-    } else {
-        [self moveToBeginningOfParagraphAndModifySelection:self];
     }
+    [self moveParagraphBackwardAndModifySelection:self];
 }
 
 - (void) moveToEndOfParagraph:(id)sender
@@ -620,11 +618,28 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
-- (void) moveToEndOfParagraphAndModifySelection:(id)sender
+- (void) moveToEndOfParagraphOrMoveDown:(id)sender
+{
+    if ([self _isLocationAtEndOfParagraph]) {
+        [self moveDown:self];
+    }
+    [self moveToEndOfParagraph:self];
+
+}
+
+- (void) moveParagraphForwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [self _indexWhenMovingToEndOfParagraphFromIndex:index];
     }];
+}
+
+- (void) moveParagraphForwardOrMoveDownAndModifySelection:(id)sender
+{
+    if ([self _isLocationAtEndOfParagraph]) {
+        [self moveDownAndModifySelection:self];
+    }
+    [self moveParagraphForwardAndModifySelection:self];
 }
 
 - (void) cut:(id)sender
@@ -921,10 +936,21 @@ static void _commonInitForUITextView(UITextView* self)
 }
 
 - (BOOL) _isLocationAtBeginningOfParagraph
-{
+{ // needs to know what to do if downstream.
+    NSRange range = [self selectedRange];
+    NSInteger start = range.location;
+    NSInteger end = NSMaxRange(range);
+    BOOL upstream = (end <= _selectionOrigin);
+    NSInteger index = upstream ? start : end;
     NSString* string = [[self textStorage] string];
-    NSUInteger index = [self selectedRange].location;
     return [string lineRangeForRange:(NSRange){ index, 0 }].location == index;
+}
+
+- (BOOL) _isLocationAtEndOfParagraph
+{ //Needs upstream distinction
+    NSString* string = [[self textStorage] string];
+    NSUInteger index = NSMaxRange([self selectedRange]);
+    return NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]) == index + 1;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index

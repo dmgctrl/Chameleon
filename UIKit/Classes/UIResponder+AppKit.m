@@ -84,7 +84,15 @@
             break;
         }
         case UIKeyTypeDownArrow: {
-            command = [key isShiftKeyPressed] ? @selector(moveDownAndModifySelection:) : @selector(moveDown:);
+            if ([key isOptionKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveParagraphForwardOrMoveDownAndModifySelection:) : @selector(moveToEndOfParagraphOrMoveDown:);
+            } else if ([key isCommandKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveToEndOfDocumentAndModifySelection:) : @selector(moveToEndOfDocument:);
+            } else if ([key isControlKeyPressed]) {
+                command = @selector(scrollPageUp:);
+            } else {
+                command = [key isShiftKeyPressed] ? @selector(moveDownAndModifySelection:) : @selector(moveDown:);
+            }
             break;
         }
         case UIKeyTypeLeftArrow: {
@@ -158,7 +166,7 @@
                 case 0: { // 'a' key
                     if ([key isControlKeyPressed]) {
                         if ([key isShiftKeyPressed]) {
-                            command = @selector(moveToBeginningOfParagraphAndModifySelection:);
+                            command = @selector(moveParagraphBackwardAndModifySelection:);
                         } else {
                             command = @selector(moveToBeginningOfParagraph:);
                         }
@@ -171,7 +179,7 @@
                 case 14: { // e key
                     if ([key isControlKeyPressed]) {
                         if ([key isShiftKeyPressed]) {
-                            command = @selector(moveToEndOfParagraphAndModifySelection:);
+                            command = @selector(moveParagraphForwardAndModifySelection:);
                         } else {
                             command = @selector(moveToEndOfParagraph:);
                         }
