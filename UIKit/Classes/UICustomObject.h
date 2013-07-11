@@ -2,4 +2,5 @@
 
 
 @interface UICustomObject : NSObject
+@property (nonatomic, strong) id target;
 @end

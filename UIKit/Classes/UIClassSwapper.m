@@ -12,7 +12,7 @@ static NSString* const kUIOriginalClassNameKey = @"UIOriginalClassName";
     NSString* className = [coder decodeObjectForKey:kUIClassNameKey];
     Class class = NSClassFromString(className);
     if (!class) {
-        NSString* originalClassName = [coder decodeObjectForKey:kUIClassNameKey];
+        NSString* originalClassName = [coder decodeObjectForKey:kUIOriginalClassNameKey];
         class = NSClassFromString(originalClassName);
     }
     return [[class alloc] initWithCoder:coder];
