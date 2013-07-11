@@ -642,6 +642,37 @@ static void _commonInitForUITextView(UITextView* self)
     [self moveParagraphForwardAndModifySelection:self];
 }
 
+- (void) moveToBeginningOfDocument:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToBeginningOfDocumentFromIndex:index];
+    }];
+}
+
+- (void) moveToEndOfDocument:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToEndOfDocumentAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToEndOfDocumentFromIndex:index];
+    }];
+}
+
+
 - (void) cut:(id)sender
 {
     NSRange range = [self selectedRange];
@@ -968,6 +999,18 @@ static void _commonInitForUITextView(UITextView* self)
     }
     return newIndex;
 }
+
+- (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index
+{
+    //NSString* string = [[self textStorage] string];
+    return 0;
+}
+
+- (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index
+{
+    return [[[self textStorage] string] length];
+}
+
 
 @end
 

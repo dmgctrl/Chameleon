@@ -136,11 +136,11 @@
             break;
         }
         case UIKeyTypeHome: {
-            command = @selector(scrollToBeginningOfDocument:);
+            command = [key isShiftKeyPressed] ? @selector(moveToBeginningOfDocumentAndModifySelection:) : @selector(scrollToBeginningOfDocument:);
             break;
         }
         case UIKeyTypeEnd: {
-            command = @selector(scrollToEndOfDocument:);
+            command = [key isShiftKeyPressed] ? @selector(moveToEndOfDocumentAndModifySelection:) : @selector(scrollToEndOfDocument:);
             break;
         }
         case UIKeyTypeInsert: {
