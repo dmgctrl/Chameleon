@@ -58,8 +58,6 @@ NSString *const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeN
 NSString *const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
 
 static NSString* const kUIEditableKey = @"UIEditable";
-static CGFloat const kMarginX = 4.0f;
-static CGFloat const kMarginY = 9.0f;
 
 
 @interface _UITextContainerView : UIView
@@ -67,6 +65,7 @@ static CGFloat const kMarginY = 9.0f;
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic) BOOL shouldShowInsertionPoint;
 - (NSUInteger) characterIndexAtPoint:(CGPoint)point;
+- (NSRect) _viewRectForCharacterRange:(NSRange)range;
 @end
 
 
@@ -323,17 +322,19 @@ static void _commonInitForUITextView(UITextView* self)
 {
     [super layoutSubviews];
 
-    CGRect bounds = [self bounds];
+    CGSize size = [self bounds].size;
     NSTextContainer* textContainer = [self textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
+    UIEdgeInsets contentInset = [self contentInset];
+    CGFloat containerWidth = size.width - (contentInset.left + contentInset.right);
     [textContainer setContainerSize:(CGSize){
-        bounds.size.width - (kMarginX * 2.0),
+        containerWidth,
         CGFLOAT_MAX
     }];
     [layoutManager ensureLayoutForTextContainer:textContainer];
     CGSize contentSize = {
-        bounds.size.width,
-        [layoutManager usedRectForTextContainer:textContainer].size.height + (kMarginY * 2.0)
+        containerWidth,
+        [layoutManager usedRectForTextContainer:textContainer].size.height
     };
     [self setContentSize:contentSize];
     [_textContainerView setFrame:(CGRect){
@@ -346,9 +347,10 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) scrollRangeToVisible:(NSRange)range
 {
-    NSLayoutManager* layoutManager = [self layoutManager];
-    NSRange glyphRange = [layoutManager glyphRangeForCharacterRange:range actualCharacterRange:NULL];
-    CGRect boundingRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:[self textContainer]];
+    UIEdgeInsets contentInset = [self contentInset];
+    CGRect boundingRect = [_textContainerView _viewRectForCharacterRange:range];
+    boundingRect.origin.y -= contentInset.top;
+    boundingRect.size.height += contentInset.top + contentInset.bottom;
     [super scrollRectToVisible:boundingRect animated:NO];
 }
 
@@ -821,6 +823,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) _setAndScrollToRange:(NSRange)range upstream:(BOOL)upstream
 {
     [self setSelectedRange:range];
+    
     if (upstream) {
         [self scrollRangeToVisible:(NSRange){ range.location, 0 }];
     } else {
@@ -1117,24 +1120,15 @@ static void _commonInitForUITextView(UITextView* self)
     return self;
 }
 
-- (CGPoint) origin
-{
-    return (CGPoint){ kMarginX, kMarginY };
-}
-
 - (NSUInteger) characterIndexAtPoint:(CGPoint)point
 {
-    CGPoint offsetPoint = {
-        .x = point.x - kMarginX,
-        .y = point.y - kMarginY,
-    };
     NSTextContainer* textContainer = [self textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
     NSTextStorage* textStorage = [layoutManager textStorage];
     NSUInteger length = [textStorage length];
 
     CGFloat fraction = 0;
-    NSUInteger index = [layoutManager characterIndexForPoint:offsetPoint inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
+    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
     if (index >= length) {
         return length;
     } else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[[textStorage string] characterAtIndex:index]]) {
@@ -1150,9 +1144,8 @@ static void _commonInitForUITextView(UITextView* self)
     NSLayoutManager* layoutManager = [textContainer layoutManager];
     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
     if (glyphRange.length) {
-        CGPoint origin = [self origin];
-        [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:origin];
-        [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:origin];
+        [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:CGPointZero];
+        [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:CGPointZero];
     }
 }
 
@@ -1205,9 +1198,7 @@ static void _commonInitForUITextView(UITextView* self)
             result = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
         }
     }
-    
-    NSPoint origin = [self origin];
-    return CGRectOffset(result, origin.x, origin.y);
+    return result;
 }
 
 @end
