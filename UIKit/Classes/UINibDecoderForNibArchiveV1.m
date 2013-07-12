@@ -306,7 +306,11 @@ static inline double decodeFloat64(void const** pp);
         for (NSUInteger i = 0, iMax = numberOfClasses; i < iMax; i++) {
             NSUInteger length = decodeVariableLengthInteger(&cp);
             NSUInteger unknownValue = decodeVariableLengthInteger(&cp);
-            #pragma unused (unknownValue)
+            if (unknownValue == 1) {
+                // TODO: When unknownValue is 1, there's a four byte bitfield
+                // that prefixes the class name.  I'm unsure of what this is.
+                cp += 4;
+            }
             NSString* className = [[NSString alloc] initWithBytes:cp length:length - 1 encoding:NSUTF8StringEncoding];
             if (!className) {
                 return nil;
