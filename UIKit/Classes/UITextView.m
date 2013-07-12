@@ -647,16 +647,18 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _isLocationAtBeginningOfParagraph]) {
         [self moveUp:self];
+    } else {
+        [self moveToBeginningOfParagraph:self];
     }
-    [self moveToBeginningOfParagraph:self];
 }
 
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
     if ([self _isLocationAtBeginningOfParagraph]) {
         [self moveUpAndModifySelection:self];
+    } else {
+        [self moveParagraphBackwardAndModifySelection:self];
     }
-    [self moveParagraphBackwardAndModifySelection:self];
 }
 
 - (void) moveToEndOfParagraph:(id)sender
@@ -671,9 +673,9 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _isLocationAtEndOfParagraph]) {
         [self moveDown:self];
+    } else {
+        [self moveToEndOfParagraph:self];
     }
-    [self moveToEndOfParagraph:self];
-
 }
 
 - (void) moveParagraphForwardAndModifySelection:(id)sender
@@ -687,8 +689,9 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _isLocationAtEndOfParagraph]) {
         [self moveDownAndModifySelection:self];
+    } else {
+        [self moveParagraphForwardAndModifySelection:self];
     }
-    [self moveParagraphForwardAndModifySelection:self];
 }
 
 - (void) moveToBeginningOfDocument:(id)sender
