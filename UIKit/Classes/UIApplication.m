@@ -466,24 +466,6 @@ static BOOL TouchIsActive(UITouch *touch)
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event
 {
     if (!target) {
-        // The docs say this method will start with the first responder if target==nil. Initially I thought this meant that there was always a given
-        // or set first responder (attached to the window, probably). However it doesn't appear that is the case. Instead it seems UIKit is perfectly
-        // happy to function without ever having any UIResponder having had a becomeFirstResponder sent to it. This method seems to work by starting
-        // with sender and traveling down the responder chain from there if target==nil. The first object that responds to the given action is sent
-        // the message. (or no one is)
-        
-        // My confusion comes from the fact that motion events and keyboard events are supposed to start with the first responder - but what is that
-        // if none was ever set? Apparently the answer is, if none were set, the message doesn't get delivered. If you expicitly set a UIResponder
-        // using becomeFirstResponder, then it will receive keyboard/motion events but it does not receive any other messages from other views that
-        // happen to end up calling this method with a nil target. So that's a seperate mechanism and I think it's confused a bit in the docs.
-        
-        // It seems that the reality of message delivery to "first responder" is that it depends a bit on the source. If the source is an external
-        // event like motion or keyboard, then there has to have been an explicitly set first responder (by way of becomeFirstResponder) in order for
-        // those events to even get delivered at all. If there is no responder defined, the action is simply never sent and thus never received.
-        // This is entirely independent of what "first responder" means in the context of a UIControl. Instead, for a UIControl, the first responder
-        // is the first UIResponder (including the UIControl itself) that responds to the action. It starts with the UIControl (sender) and not with
-        // whatever UIResponder may have been set with becomeFirstResponder.
-        
         id responder = [_keyWindow _firstResponder] ?: sender;
         while (responder) {
             if ([responder respondsToSelector:action]) {
@@ -510,7 +492,7 @@ static BOOL TouchIsActive(UITouch *touch)
     if (_keyWindow.screen == screen) {
         return [_keyWindow _firstResponder];
     } else {
-        return nil;
+        return self;
     }
 }
 
@@ -540,6 +522,11 @@ static BOOL TouchIsActive(UITouch *touch)
     for (UITouch *touch in [event allTouches]) {
         [touch.window sendEvent:event];
     }
+}
+
+- (UIResponder*) nextResponder
+{
+    return _delegate;
 }
 
 - (BOOL)openURL:(NSURL *)url
