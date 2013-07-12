@@ -37,29 +37,46 @@
 
 @implementation UIResponder (AppKitIntegration)
 
-- (void)scrollWheelMoved:(CGPoint)delta withEvent:(UIEvent *)event
+- (void) scrollWheelMoved:(CGPoint)delta withEvent:(UIEvent *)event
 {
-    [[self nextResponder] scrollWheelMoved:delta withEvent:event];
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(scrollWheelMoved:withEvent:)]) {
+        [responder scrollWheelMoved:delta withEvent:event];
+    }
 }
 
-- (void)rightClick:(UITouch *)touch withEvent:(UIEvent *)event
+- (void) rightClick:(UITouch *)touch withEvent:(UIEvent *)event
 {
-    [[self nextResponder] rightClick:touch withEvent:event];
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(rightClick:withEvent:)]) {
+        [responder rightClick:touch withEvent:event];
+    }
 }
 
-- (void)mouseExitedView:(UIView *)exited enteredView:(UIView *)entered withEvent:(UIEvent *)event
+- (void) mouseExitedView:(UIView *)exited enteredView:(UIView *)entered withEvent:(UIEvent *)event
 {
-    [[self nextResponder] mouseExitedView:exited enteredView:entered withEvent:event];
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(mouseExitedView:enteredView:withEvent:)]) {
+        [responder mouseExitedView:exited enteredView:entered withEvent:event];
+    }
 }
 
-- (void)mouseMoved:(CGPoint)delta withEvent:(UIEvent *)event
+- (void) mouseMoved:(CGPoint)delta withEvent:(UIEvent *)event
 {
-    [[self nextResponder] mouseMoved:delta withEvent:event];
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(mouseMoved:withEvent:)]) {
+        [responder mouseMoved:delta withEvent:event];
+    }
 }
 
-- (id)mouseCursorForEvent:(UIEvent *)event
+- (id) mouseCursorForEvent:(UIEvent *)event
 {
-    return [[self nextResponder] mouseCursorForEvent:event];
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(mouseCursorForEvent:)]) {
+        return [responder mouseCursorForEvent:event];
+    } else {
+        return nil;
+    }
 }
 
 - (BOOL)keyPressed:(UIKey *)key withEvent:(UIEvent *)event
