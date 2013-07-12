@@ -116,15 +116,16 @@ UIKIT_EXTERN int UIApplicationMain(int argc, char *argv[], NSString* principalCl
             [_theApplication setDelegate:uiappdelegate];
         }
     }
-
-    UIKitView* contentView = [[UIKitView alloc] initWithFrame:(NSRect){ 0, 0, 320, 480 }];
+    
+    [[[NSNib alloc] initWithNibNamed:@"MainMenu" bundle:[NSBundle bundleForClass:[UIApplication class]]] instantiateWithOwner:application topLevelObjects:NULL];
+    UIKitView* contentView = [[UIKitView alloc] initWithFrame:(NSRect){ 0, 0, 320, 568 }];
     NSWindow* window = [[NSWindow alloc] initWithContentRect:[contentView bounds] styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask backing:NSBackingStoreBuffered defer:YES];
     [window setContentView:contentView];
     [window center];
     [window makeKeyAndOrderFront:nil];
-    
-    [[contentView UIWindow] makeKeyAndVisible];
 
+    [[contentView UIWindow] makeKeyAndVisible];
+    
     [NSApp run];
     return 0;
 }

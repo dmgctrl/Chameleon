@@ -124,7 +124,6 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 	if (rootViewController != _rootViewController) {
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         _rootViewController = rootViewController;
-        [[rootViewController view] setFrame:[self bounds]];
         [self addSubview:[rootViewController view]];
 	}
 }
@@ -353,25 +352,6 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
         }
 
         for (UITouch *touch in touches) {
-            // normally there'd be no need to retain the view here, but this works around a strange problem I ran into.
-            // what can happen is, now that UIView's -removeFromSuperview will remove the view from the active touch
-            // instead of just cancel the touch (which is how I had implemented it previously - which was wrong), the
-            // situation can arise where, in response to a touch event of some kind, the view may remove itself from its
-            // superview in some fashion, which means that the handling of the touchesEnded:withEvent: (or whatever)
-            // methods could somehow result in the view itself being destroyed before the method is even finished running!
-            // I ran into this in particular with a load more button in Twitterrific which would crash in UIControl's
-            // touchesEnded: implemention after sending actions to the registered targets (because one of those targets
-            // ended up removing the button from view and thus reducing its retain count to 0). For some reason, even
-            // though I attempted to rearrange stuff in UIControl so that actions were always the last thing done, it'd
-            // still end up crashing when one of the internal methods returned to touchesEnded:, which didn't make sense
-            // to me because there was no code after that (at the time) and therefore it should just have been unwinding
-            // the stack to eventually get back here and all should have been okay. I never figured out exactly why that
-            // crashed in that way, but by putting a retain here it works around this problem and perhaps others that have
-            // gone so-far unnoticed. Converting to ARC should also work with this solution because there will be a local
-            // strong reference to the view retainined throughout the rest of this logic and thus the same protection
-            // against mid-method view destrustion should be provided under ARC. If someone can figure out some other,
-            // better way to fix this without it having to have this hacky-feeling retain here, that'd be cool, but be
-            // aware that this is here for a reason and that the problem it prevents is very rare and somewhat contrived.
             UIView *view = touch.view;
 
             const UITouchPhase phase = touch.phase;
