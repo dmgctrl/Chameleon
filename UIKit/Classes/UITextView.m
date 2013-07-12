@@ -352,6 +352,25 @@ static void _commonInitForUITextView(UITextView* self)
     [super scrollRectToVisible:boundingRect animated:NO];
 }
 
+- (void) scrollToBeginningOfDocument:(id)sender
+{
+    NSRange range = [self selectedRange];
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+    [self setSelectedRange:range];
+}
+
+- (void) scrollToEndOfDocument:(id)sender
+{
+    NSRange range = [self selectedRange];
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+    [self setSelectedRange:range];
+}
 
 #pragma mark Public Methods
 
@@ -579,6 +598,36 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
+- (void) moveToBeginningOfLine:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToBeginningOfLineAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToBeginningOfLineFromIndex:index];
+    }];
+}
+
+- (void) moveToEndOfLine:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
+        0
+    }];
+}
+
+- (void) moveToEndOfLineAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToEndOfLineFromIndex:index];
+    }];    
+}
+
 - (void) moveToBeginningOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
@@ -598,16 +647,18 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _isLocationAtBeginningOfParagraph]) {
         [self moveUp:self];
+    } else {
+        [self moveToBeginningOfParagraph:self];
     }
-    [self moveToBeginningOfParagraph:self];
 }
 
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
     if ([self _isLocationAtBeginningOfParagraph]) {
         [self moveUpAndModifySelection:self];
+    } else {
+        [self moveParagraphBackwardAndModifySelection:self];
     }
-    [self moveParagraphBackwardAndModifySelection:self];
 }
 
 - (void) moveToEndOfParagraph:(id)sender
@@ -622,9 +673,9 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _isLocationAtEndOfParagraph]) {
         [self moveDown:self];
+    } else {
+        [self moveToEndOfParagraph:self];
     }
-    [self moveToEndOfParagraph:self];
-
 }
 
 - (void) moveParagraphForwardAndModifySelection:(id)sender
@@ -638,9 +689,41 @@ static void _commonInitForUITextView(UITextView* self)
 {
     if ([self _isLocationAtEndOfParagraph]) {
         [self moveDownAndModifySelection:self];
+    } else {
+        [self moveParagraphForwardAndModifySelection:self];
     }
-    [self moveParagraphForwardAndModifySelection:self];
 }
+
+- (void) moveToBeginningOfDocument:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToBeginningOfDocumentFromIndex:index];
+    }];
+}
+
+- (void) moveToEndOfDocument:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToEndOfDocumentAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToEndOfDocumentFromIndex:index];
+    }];
+}
+
 
 - (void) cut:(id)sender
 {
@@ -935,6 +1018,34 @@ static void _commonInitForUITextView(UITextView* self)
     return newIndex;
 }
 
+- (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
+{
+    NSInteger textLength = [[self text]length];
+    NSRange lineFragmentRange;
+    [[self layoutManager] lineFragmentRectForGlyphAtIndex:(index >= textLength ? textLength - 1 : index) effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
+    NSInteger newIndex = lineFragmentRange.location;
+    if (newIndex >= textLength) {
+        return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+    }
+    return MAX(newIndex, [self _indexWhenMovingToBeginningOfParagraphFromIndex:index]);
+}
+
+- (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index
+{
+    NSInteger textLength = [[self text]length];
+    if (index >= textLength) {
+        return textLength;
+    }
+    NSRange lineFragmentRange;
+    [[self layoutManager] lineFragmentRectForGlyphAtIndex:index effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
+    NSInteger newIndex = NSMaxRange(lineFragmentRange);
+    if (newIndex == textLength) {
+        return newIndex;
+    }
+    return MIN(newIndex - 1, [self _indexWhenMovingToEndOfParagraphFromIndex:index]);
+}
+
+
 - (BOOL) _isLocationAtBeginningOfParagraph
 { // needs to know what to do if downstream.
     NSRange range = [self selectedRange];
@@ -950,13 +1061,13 @@ static void _commonInitForUITextView(UITextView* self)
 { //Needs upstream distinction
     NSString* string = [[self textStorage] string];
     NSUInteger index = NSMaxRange([self selectedRange]);
-    return NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]) == index + 1;
+    return NSMaxRange([string paragraphRangeForRange:(NSRange){ index, 0 }]) == index + 1;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index
 {
     NSString* string = [[self textStorage] string];
-    return [string lineRangeForRange:(NSRange){ index, 0 }].location;
+    return [string paragraphRangeForRange:(NSRange){ index, 0 }].location;
 }
 
 - (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index
@@ -968,6 +1079,17 @@ static void _commonInitForUITextView(UITextView* self)
     }
     return newIndex;
 }
+
+- (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index
+{
+    return 0;
+}
+
+- (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index
+{
+    return [[self text] length];
+}
+
 
 @end
 

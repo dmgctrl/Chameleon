@@ -114,33 +114,21 @@
         }
         case UIKeyTypeLeftArrow: {
             if ([key isOptionKeyPressed]) {
-                if ([key isShiftKeyPressed]) {
-                    command = @selector(moveWordLeftAndModifySelection:);
-                } else {
-                    command = @selector(moveWordLeft:);
-                }
+                command = [key isShiftKeyPressed] ? @selector(moveWordLeftAndModifySelection:) : @selector(moveWordLeft:);
+            } else if ([key isCommandKeyPressed] || [key isControlKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveToBeginningOfLineAndModifySelection:) : @selector(moveToBeginningOfLine:);
             } else {
-                if ([key isShiftKeyPressed]) {
-                    command = @selector(moveLeftAndModifySelection:);
-                } else {
-                    command = @selector(moveLeft:);
-                }
+                command = [key isShiftKeyPressed] ? @selector(moveLeftAndModifySelection:) : @selector(moveLeft:);
             }
             break;
         }
         case UIKeyTypeRightArrow: {
             if ([key isOptionKeyPressed]) {
-                if ([key isShiftKeyPressed]) {
-                    command = @selector(moveWordRightAndModifySelection:);
-                } else {
-                    command = @selector(moveWordRight:);
-                }
+                command = [key isShiftKeyPressed] ? @selector(moveWordRightAndModifySelection:) : @selector(moveWordRight:);
+            } else if ([key isControlKeyPressed] || [key isCommandKeyPressed]) {
+                command = [key isShiftKeyPressed] ? @selector(moveToEndOfLineAndModifySelection:) : @selector(moveToEndOfLine:);
             } else {
-                if ([key isShiftKeyPressed]) {
-                    command = @selector(moveRightAndModifySelection:);
-                } else {
-                    command = @selector(moveRight:);
-                }
+                command = [key isShiftKeyPressed] ? @selector(moveRightAndModifySelection:) : @selector(moveRight:);
             }
             break;
         }
@@ -153,11 +141,11 @@
             break;
         }
         case UIKeyTypeHome: {
-            command = @selector(scrollToBeginningOfDocument:);
+            command = [key isShiftKeyPressed] ? @selector(moveToBeginningOfDocumentAndModifySelection:) : @selector(scrollToBeginningOfDocument:);
             break;
         }
         case UIKeyTypeEnd: {
-            command = @selector(scrollToEndOfDocument:);
+            command = [key isShiftKeyPressed] ? @selector(moveToEndOfDocumentAndModifySelection:) : @selector(scrollToEndOfDocument:);
             break;
         }
         case UIKeyTypeInsert: {
