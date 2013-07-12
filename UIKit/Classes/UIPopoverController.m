@@ -151,9 +151,6 @@
         [[hostingView UIScreen] _setPopoverController:self];
         [[hostingView UIWindow] addSubview:_popoverView];
         [[hostingView UIWindow] setHidden:NO];
-        if (shouldMakeKey) {
-            [[hostingView UIWindow] makeKeyAndVisible];
-        }
 
         // this prevents a visible flash from sometimes occuring due to the fact that the window is created and added as a child before it has the
         // proper origin set. this means it it ends up flashing at the bottom left corner of the screen sometimes before it
@@ -168,8 +165,11 @@
         [_popoverWindow setBackgroundColor:[NSColor clearColor]];
         [_popoverWindow setContentView:hostingView];
         [viewNSWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
-        [_popoverWindow makeFirstResponder:hostingView];
 
+        if (shouldMakeKey) {
+            [[hostingView UIWindow] makeKeyAndVisible];
+            [_popoverWindow makeFirstResponder:hostingView];
+        }
     }
     
     // cancel current touches (if any) to prevent the main window from losing track of events (such as if the user was holding down the mouse

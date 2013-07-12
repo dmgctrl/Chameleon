@@ -30,6 +30,7 @@
 #import "UIWindow.h"
 
 @interface UIWindow (UIPrivate)
+- (BOOL) _acceptsFirstResponder;
 - (UIResponder *)_firstResponder;
 - (void)_setFirstResponder:(UIResponder *)newFirstResponder;
 - (void)_makeHidden;
