@@ -579,6 +579,36 @@ static void _commonInitForUITextView(UITextView* self)
     }];
 }
 
+- (void) moveToBeginningOfLine:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
+        0
+    }];
+}
+
+- (void) moveToBeginningOfLineAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToBeginningOfLineFromIndex:index];
+    }];
+}
+
+- (void) moveToEndOfLine:(id)sender
+{
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
+        0
+    }];
+}
+
+- (void) moveToEndOfLineAndModifySelection:(id)sender
+{
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        return [self _indexWhenMovingToEndOfLineFromIndex:index];
+    }];    
+}
+
 - (void) moveToBeginningOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
@@ -966,6 +996,34 @@ static void _commonInitForUITextView(UITextView* self)
     return newIndex;
 }
 
+- (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
+{
+    NSInteger textLength = [[self text]length];
+    NSRange lineFragmentRange;
+    [[self layoutManager] lineFragmentRectForGlyphAtIndex:(index >= textLength ? textLength - 1 : index) effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
+    NSInteger newIndex = lineFragmentRange.location;
+    if (newIndex >= textLength) {
+        return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+    }
+    return MAX(newIndex, [self _indexWhenMovingToBeginningOfParagraphFromIndex:index]);
+}
+
+- (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index
+{
+    NSInteger textLength = [[self text]length];
+    if (index >= textLength) {
+        return textLength;
+    }
+    NSRange lineFragmentRange;
+    [[self layoutManager] lineFragmentRectForGlyphAtIndex:index effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
+    NSInteger newIndex = NSMaxRange(lineFragmentRange);
+    if (newIndex == textLength) {
+        return newIndex;
+    }
+    return MIN(newIndex - 1, [self _indexWhenMovingToEndOfParagraphFromIndex:index]);
+}
+
+
 - (BOOL) _isLocationAtBeginningOfParagraph
 { // needs to know what to do if downstream.
     NSRange range = [self selectedRange];
@@ -981,13 +1039,13 @@ static void _commonInitForUITextView(UITextView* self)
 { //Needs upstream distinction
     NSString* string = [[self textStorage] string];
     NSUInteger index = NSMaxRange([self selectedRange]);
-    return NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]) == index + 1;
+    return NSMaxRange([string paragraphRangeForRange:(NSRange){ index, 0 }]) == index + 1;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index
 {
     NSString* string = [[self textStorage] string];
-    return [string lineRangeForRange:(NSRange){ index, 0 }].location;
+    return [string paragraphRangeForRange:(NSRange){ index, 0 }].location;
 }
 
 - (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index
@@ -1002,13 +1060,12 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index
 {
-    //NSString* string = [[self textStorage] string];
     return 0;
 }
 
 - (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index
 {
-    return [[[self textStorage] string] length];
+    return [[self text] length];
 }
 
 

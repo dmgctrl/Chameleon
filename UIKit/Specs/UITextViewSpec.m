@@ -45,7 +45,7 @@ describe(@"UITextView", ^{
                 });
             });
             context(@"typingAttributes", ^{
-                // The getter of this property causes and error. According to stack overflow
+                // The getter of this property causes an error. According to stack overflow
                 // one needs to delay it similar to the following
                 // [textView  performSelector:@selector(typingAttributes) withObject:nil afterDelay:0.1];
                 // Because performSelector:withObject:afterDelay returns a void, the above line is not useful.
