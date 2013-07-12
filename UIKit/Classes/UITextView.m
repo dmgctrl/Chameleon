@@ -352,6 +352,25 @@ static void _commonInitForUITextView(UITextView* self)
     [super scrollRectToVisible:boundingRect animated:NO];
 }
 
+- (void) scrollToBeginningOfDocument:(id)sender
+{
+    NSRange range = [self selectedRange];
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+    [self setSelectedRange:range];
+}
+
+- (void) scrollToEndOfDocument:(id)sender
+{
+    NSRange range = [self selectedRange];
+    [self _setAndScrollToRange:(NSRange){
+        [self _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        0
+    }];
+    [self setSelectedRange:range];
+}
 
 #pragma mark Public Methods
 
