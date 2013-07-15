@@ -298,9 +298,16 @@ static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFString
     return (__bridge NSFont*)_font;
 }
 
+#pragma mark CoreText Compatibility
+
 - (CTFontRef) ctFontRef
 {
-    return _font;
+    return [(__bridge id)_font ctFontRef];
+}
+
+- (id) forwardingTargetForSelector:(SEL)aSelector
+{
+    return (__bridge id)_font;
 }
 
 @end

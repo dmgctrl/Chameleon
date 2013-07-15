@@ -362,7 +362,7 @@ static DrawTextInRectMethod* kDefaultImplementationOfDrawTextInRect;
             [shadow setShadowOffset:[self shadowOffset]];
             
             _attributedTextForDrawing = [[NSAttributedString alloc] initWithString:[self _preprocessText:_text] attributes:@{
-                NSFontAttributeName: (id)[_font ctFontRef],
+                NSFontAttributeName: _font,
                 NSKernAttributeName: @(0.0f),
                 NSLigatureAttributeName: @(0.0f),
                 NSParagraphStyleAttributeName: paragraphStyle,

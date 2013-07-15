@@ -197,9 +197,10 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setFont:(UIFont*)font
 {
+    NSAssert(nil != font, @"???");
     _font = font;
     NSTextStorage* textStorage = [self textStorage];
-    [textStorage addAttribute:(id)kCTFontAttributeName value:(id)[font ctFontRef] range:(NSRange){ 0, [textStorage length] }];
+    [textStorage addAttribute:(id)kCTFontAttributeName value:font range:(NSRange){ 0, [textStorage length] }];
     [_textContainerView setNeedsDisplay];
 }
 
@@ -865,12 +866,13 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSDictionary*) _stringAttributes
 {
+    NSAssert(nil != _font, @"???");
     NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setTighteningFactorForTruncation:0.0f];
     [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
     
     return @{
-        NSFontAttributeName: (id)[_font ctFontRef],
+        NSFontAttributeName: _font,
         NSKernAttributeName: @(0.0f),
         NSLigatureAttributeName: @(0.0f),
         NSParagraphStyleAttributeName: paragraphStyle,

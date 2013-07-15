@@ -65,6 +65,8 @@ static NSString* const kUIKeyboardTypeKey = @"UIKeyboardType";
 static NSString* const kUIReturnKeyTypeKey = @"UIReturnKeyType";
 static NSString* const kUIEnablesReturnKeyAutomaticallyKey = @"UIEnablesReturnKeyAutomatically";
 static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
+static NSString* const kUIAttributedPlaceholderKey = @"UIAttributedPlaceholder";
+static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 
 @interface UIControl () <UITextLayerContainerViewProtocol>
@@ -142,14 +144,20 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if (nil != (self = [super initWithCoder:coder])) {
         _commonInitForUITextField(self);
-        if ([coder containsValueForKey:kUIPlaceholderKey]) {
+        if ([coder containsValueForKey:kUIAttributedPlaceholderKey]) {
+            self.attributedPlaceholder = [coder decodeObjectForKey:kUIAttributedPlaceholderKey];
+        } else if ([coder containsValueForKey:kUIPlaceholderKey]) {
             self.placeholder = [coder decodeObjectForKey:kUIPlaceholderKey];
         }
+        
+        if ([coder containsValueForKey:kUIAttributedTextKey]) {
+            self.attributedText = [coder decodeObjectForKey:kUIAttributedTextKey];
+        } else if ([coder containsValueForKey:kUITextKey]) {
+            self.text = [coder decodeObjectForKey:kUITextKey];
+        }
+
         if ([coder containsValueForKey:kUITextAlignmentKey]) {
             self.textAlignment = [coder decodeIntegerForKey:kUITextAlignmentKey];
-        }
-        if ([coder containsValueForKey:kUITextKey]) {
-            self.text = [coder decodeObjectForKey:kUITextKey];
         }
         if ([coder containsValueForKey:kUITextFieldBackgroundKey]) {
             self.background = [coder decodeObjectForKey:kUITextFieldBackgroundKey];
@@ -655,7 +663,7 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) canBecomeFirstResponder
 {
-    return ([self window] != nil);
+    return ([self window] != nil) && [self isEnabled];
 }
 
 - (BOOL) becomeFirstResponder

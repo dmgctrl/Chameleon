@@ -186,7 +186,7 @@ static NSArray* CTLinesForString(NSString* string, CGSize constrainedToSize, UIF
     [paragraphStyle setLineBreakMode:CTLineBreakModeFromUILineBreakMode(lineBreakMode)];
     [paragraphStyle setAlignment:NSTextAlignmentFromUITextAlignment(textAlignment)];
     return [[NSAttributedString alloc] initWithString:string attributes:@{
-        NSFontAttributeName: (id)[font ctFontRef],
+        NSFontAttributeName: font,
         NSKernAttributeName: @(0.0f),
         NSLigatureAttributeName: @(0.0f),
         NSParagraphStyleAttributeName: paragraphStyle,
