@@ -38,9 +38,10 @@
 #import "UIImage.h"
 #import <AppKit/NSCursor.h>
 
-NSString *const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
-NSString *const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
-NSString *const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
+
+NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
+NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
+NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
 
 
 static NSString* const kUIPlaceholderKey = @"UIPlaceholder";
@@ -66,19 +67,26 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 @interface UIControl () <UITextLayerContainerViewProtocol>
 @end
 
+
 @interface UITextField () <UITextLayerTextDelegate>
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextContainer* textContainer;
 @property (nonatomic, readonly) NSTextStorage* textStorage;
 @end
 
+
 @interface NSObject (UITextFieldDelegate)
-- (BOOL)textField:(UITextField *)textField doCommandBySelector:(SEL)selector;
+- (BOOL) textField:(UITextField*)textField doCommandBySelector:(SEL)selector;
 @end
 
+
 @implementation UITextField {
-    UITextLayer *_textLayer;
-	UITextLayer *_placeholderTextLayer;
+    NSTextStorage* _textStorage;
+    NSTextContainer* _textContainer;
+    NSLayoutManager* _layoutManager;
+
+    UITextLayer* _textLayer;
+	UITextLayer* _placeholderTextLayer;
     
     struct {
         BOOL shouldBeginEditing : 1;
@@ -92,7 +100,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     } _delegateHas;	
 }
 
-- (void)dealloc
+- (void) dealloc
 {
 	[_placeholderTextLayer removeFromSuperlayer];
     [_textLayer removeFromSuperlayer];
@@ -117,7 +125,7 @@ static void _commonInitForUITextField(UITextField* self)
     self.opaque = NO;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (id) initWithFrame:(CGRect)frame
 {
     if (nil != (self = [super initWithFrame:frame])) {
         _commonInitForUITextField(self);
@@ -192,21 +200,24 @@ static void _commonInitForUITextField(UITextField* self)
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (BOOL)_isLeftViewVisible
+
+#pragma mark Layout
+
+- (BOOL) _isLeftViewVisible
 {
     return _leftView && (_leftViewMode == UITextFieldViewModeAlways
                          || (_editing && _leftViewMode == UITextFieldViewModeWhileEditing)
                          || (!_editing && _leftViewMode == UITextFieldViewModeUnlessEditing));
 }
 
-- (BOOL)_isRightViewVisible
+- (BOOL) _isRightViewVisible
 {
     return _rightView && (_rightViewMode == UITextFieldViewModeAlways
                          || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
                          || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing));
 }
 
-- (void)layoutSubviews
+- (void) layoutSubviews
 {
     [super layoutSubviews];
     const CGRect bounds = self.bounds;
@@ -228,73 +239,90 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
-- (void)setDelegate:(id<UITextFieldDelegate>)theDelegate
+
+#pragma mark Properties
+
+- (void) setAttributedText:(NSAttributedString*)attributedText
 {
-    if (theDelegate != _delegate) {
-        _delegate = theDelegate;
-        _delegateHas.shouldBeginEditing = [_delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)];
-        _delegateHas.didBeginEditing = [_delegate respondsToSelector:@selector(textFieldDidBeginEditing:)];
-        _delegateHas.shouldEndEditing = [_delegate respondsToSelector:@selector(textFieldShouldEndEditing:)];
-        _delegateHas.didEndEditing = [_delegate respondsToSelector:@selector(textFieldDidEndEditing:)];
-        _delegateHas.shouldChangeCharacters = [_delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)];
-        _delegateHas.shouldClear = [_delegate respondsToSelector:@selector(textFieldShouldClear:)];
-        _delegateHas.shouldReturn = [_delegate respondsToSelector:@selector(textFieldShouldReturn:)];
-		_delegateHas.doCommandBySelector = [_delegate respondsToSelector:@selector(textField:doCommandBySelector:)];
-    }
+    _attributedText = attributedText;
+    _textLayer.text = [attributedText string];
+	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
 }
 
-- (void)setPlaceholder:(NSString *)thePlaceholder
+- (UITextAutocapitalizationType) autocapitalizationType
 {
-    _placeholderTextLayer.text = thePlaceholder;
+    return UITextAutocapitalizationTypeNone;
 }
 
-- (NSString *)placeholder {
-	return _placeholderTextLayer.text;
+- (void) setAutocapitalizationType:(UITextAutocapitalizationType)type
+{
 }
 
-- (void)setBorderStyle:(UITextBorderStyle)style
+- (UITextAutocorrectionType) autocorrectionType
 {
-    if (style != _borderStyle) {
-        _borderStyle = style;
+    return UITextAutocorrectionTypeDefault;
+}
+
+- (void) setAutocorrectionType:(UITextAutocorrectionType)type
+{
+}
+
+- (void) setBackground:(UIImage*)background
+{
+    if (background != _background) {
+        _background = background;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setBackground:(UIImage *)aBackground
+- (void) setBorderStyle:(UITextBorderStyle)borderStyle
 {
-    if (aBackground != _background) {
-        _background = aBackground;
+    if (borderStyle != _borderStyle) {
+        _borderStyle = borderStyle;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setDisabledBackground:(UIImage *)aBackground
+- (void) setDelegate:(id<UITextFieldDelegate>)delegate
 {
-    if (aBackground != _disabledBackground) {
-        _disabledBackground = aBackground;
+    if (delegate != _delegate) {
+        _delegate = delegate;
+        _delegateHas.shouldBeginEditing = [delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)];
+        _delegateHas.didBeginEditing = [delegate respondsToSelector:@selector(textFieldDidBeginEditing:)];
+        _delegateHas.shouldEndEditing = [delegate respondsToSelector:@selector(textFieldShouldEndEditing:)];
+        _delegateHas.didEndEditing = [delegate respondsToSelector:@selector(textFieldDidEndEditing:)];
+        _delegateHas.shouldChangeCharacters = [delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)];
+        _delegateHas.shouldClear = [delegate respondsToSelector:@selector(textFieldShouldClear:)];
+        _delegateHas.shouldReturn = [delegate respondsToSelector:@selector(textFieldShouldReturn:)];
+		_delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textField:doCommandBySelector:)];
+    }
+}
+
+- (void) setDisabledBackground:(UIImage*)disabledBackground
+{
+    if (disabledBackground != _disabledBackground) {
+        _disabledBackground = disabledBackground;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setLeftView:(UIView *)leftView
+- (BOOL) enablesReturnKeyAutomatically
 {
-    if (leftView != _leftView) {
-        [_leftView removeFromSuperview];
-        _leftView = leftView;
-        [self addSubview:_leftView];
-    }
+    return YES;
 }
 
-- (void)setRightView:(UIView *)rightView
+- (void) setEnablesReturnKeyAutomatically:(BOOL)enabled
 {
-    if (rightView != _rightView) {
-        [_rightView removeFromSuperview];
-        _rightView = rightView;
-        [self addSubview:_rightView];
-    }
 }
 
-- (void)setFrame:(CGRect)frame
+- (void) setFont:(UIFont*)font
+{
+    _font = font;
+    _textLayer.font = font;
+	_placeholderTextLayer.font = font;
+}
+
+- (void) setFrame:(CGRect)frame
 {
     if (!CGRectEqualToRect(frame,self.frame)) {
         [super setFrame:frame];
@@ -302,8 +330,98 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
+- (UIKeyboardAppearance) keyboardAppearance
+{
+    return UIKeyboardAppearanceDefault;
+}
 
-- (CGRect)borderRectForBounds:(CGRect)bounds
+- (void) setKeyboardAppearance:(UIKeyboardAppearance)type
+{
+}
+
+- (UIKeyboardType) keyboardType
+{
+    return UIKeyboardTypeDefault;
+}
+
+- (void) setKeyboardType:(UIKeyboardType)type
+{
+}
+
+- (void) setLeftView:(UIView*)leftView
+{
+    if (leftView != _leftView) {
+        if (_leftView) {
+            [_leftView removeFromSuperview];
+        }
+        _leftView = leftView;
+        if (leftView) {
+            [self addSubview:leftView];
+        }
+    }
+}
+
+- (void) setPlaceholder:(NSString*)placeholder
+{
+    _placeholder = placeholder;
+    _placeholderTextLayer.text = placeholder;
+}
+
+- (void) setRightView:(UIView*)rightView
+{
+    if (rightView != _rightView) {
+        if (_rightView) {
+            [_rightView removeFromSuperview];
+        }
+        _rightView = rightView;
+        if (rightView) {
+            [self addSubview:rightView];
+        }
+    }
+}
+
+- (UIReturnKeyType) returnKeyType
+{
+    return UIReturnKeyDefault;
+}
+
+- (void) setReturnKeyType:(UIReturnKeyType)type
+{
+}
+
+- (BOOL) isSecureTextEntry
+{
+    return [_textLayer isSecureTextEntry];
+}
+
+- (void) setSecureTextEntry:(BOOL)secure
+{
+    [_textLayer setSecureTextEntry:secure];
+}
+
+- (void) setText:(NSString*)text
+{
+    _text = text;
+    [self setAttributedText:[[NSAttributedString alloc] initWithString:text]];
+}
+
+- (void) setTextAlignment:(UITextAlignment)textAlignment
+{
+    _textAlignment = textAlignment;
+    _textLayer.textAlignment = textAlignment;
+	_placeholderTextLayer.textAlignment = textAlignment;
+}
+
+- (void) setTextColor:(UIColor*)textColor
+{
+    _textColor = textColor;
+    _textLayer.textColor = textColor;
+}
+
+
+#pragma mark Geometry
+
+- (CGRect) borderRectForBounds:(CGRect)bounds
 {
 	CGRect borderRect = bounds;
 	
@@ -315,17 +433,17 @@ static void _commonInitForUITextField(UITextField* self)
     return CGRectIntegral(borderRect);
 }
 
-- (CGRect)clearButtonRectForBounds:(CGRect)bounds
+- (CGRect) clearButtonRectForBounds:(CGRect)bounds
 {
     return CGRectZero;
 }
 
-- (CGRect)editingRectForBounds:(CGRect)bounds
+- (CGRect) editingRectForBounds:(CGRect)bounds
 {
     return [self textRectForBounds:bounds];
 }
 
-- (CGRect)leftViewRectForBounds:(CGRect)bounds
+- (CGRect) leftViewRectForBounds:(CGRect)bounds
 {
     if (_leftView) {
         const CGRect frame = _leftView.frame;
@@ -338,12 +456,12 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
-- (CGRect)placeholderRectForBounds:(CGRect)bounds
+- (CGRect) placeholderRectForBounds:(CGRect)bounds
 {
     return [self textRectForBounds:bounds];
 }
 
-- (CGRect)rightViewRectForBounds:(CGRect)bounds
+- (CGRect) rightViewRectForBounds:(CGRect)bounds
 {
     if (_rightView) {
         const CGRect frame = _rightView.frame;
@@ -356,7 +474,7 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
-- (CGRect)textRectForBounds:(CGRect)bounds
+- (CGRect) textRectForBounds:(CGRect)bounds
 {
     // Docs say:
     // The default implementation of this method returns a rectangle that is derived from the control’s original bounds,
@@ -405,26 +523,27 @@ static void _commonInitForUITextField(UITextField* self)
 }
 
 
+#pragma mark Drawing
 
-- (void)drawPlaceholderInRect:(CGRect)rect
+- (void) drawPlaceholderInRect:(CGRect)rect
 {
 }
 
-- (void)drawTextInRect:(CGRect)rect
+- (void) drawTextInRect:(CGRect)rect
 {
 }
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)rect
 {
-    UIImage *currentBackgroundImage = nil;
-	if(self.borderStyle == UITextBorderStyleRoundedRect) {
+    UIImage* currentBackgroundImage = nil;
+	if ([self borderStyle] == UITextBorderStyleRoundedRect) {
 		currentBackgroundImage = [UIImage _textFieldRoundedRectBackground];
 	} else {
-		currentBackgroundImage = self.enabled? _background : _disabledBackground;
+		currentBackgroundImage = [self isEnabled]? _background : _disabledBackground;
 	}
 	
-	CGRect borderFrame = [self borderRectForBounds:self.bounds];
-	if(currentBackgroundImage != nil) {
+	CGRect borderFrame = [self borderRectForBounds:[self bounds]];
+	if (currentBackgroundImage) {
 		[currentBackgroundImage drawInRect:borderFrame];
 	} else {
 		CGContextRef context = UIGraphicsGetCurrentContext();
@@ -447,7 +566,7 @@ static void _commonInitForUITextField(UITextField* self)
 			
 			CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 			CGFloat locations[] = { 1.0f, 0.0f };
-			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) @[(id) [UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id) [UIColor colorWithWhite:0.65 alpha:1.0].CGColor], locations);
+			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) @[(id)[UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id)[UIColor colorWithWhite:0.65 alpha:1.0].CGColor], locations);
 			
 			CGContextSaveGState(context);
 			CGContextAddPath(context, [UIBezierPath bezierPathWithRoundedRect:blackOutlineFrame cornerRadius:3.6f].CGPath);
@@ -479,87 +598,24 @@ static void _commonInitForUITextField(UITextField* self)
 }
 
 
-- (UITextAutocapitalizationType)autocapitalizationType
+#pragma mark UIResponder
+
+- (BOOL) canBecomeFirstResponder
 {
-    return UITextAutocapitalizationTypeNone;
+    return ([self window] != nil);
 }
 
-- (void)setAutocapitalizationType:(UITextAutocapitalizationType)type
-{
-}
-
-- (UITextAutocorrectionType)autocorrectionType
-{
-    return UITextAutocorrectionTypeDefault;
-}
-
-- (void)setAutocorrectionType:(UITextAutocorrectionType)type
-{
-}
-
-- (BOOL)enablesReturnKeyAutomatically
-{
-    return YES;
-}
-
-- (void)setEnablesReturnKeyAutomatically:(BOOL)enabled
-{
-}
-
-- (UIKeyboardAppearance)keyboardAppearance
-{
-    return UIKeyboardAppearanceDefault;
-}
-
-- (void)setKeyboardAppearance:(UIKeyboardAppearance)type
-{
-}
-
-- (UIKeyboardType)keyboardType
-{
-    return UIKeyboardTypeDefault;
-}
-
-- (void)setKeyboardType:(UIKeyboardType)type
-{
-}
-
-- (UIReturnKeyType)returnKeyType
-{
-    return UIReturnKeyDefault;
-}
-
-- (void)setReturnKeyType:(UIReturnKeyType)type
-{
-}
-
-- (BOOL)isSecureTextEntry
-{
-    return [_textLayer isSecureTextEntry];
-}
-
-- (void)setSecureTextEntry:(BOOL)secure
-{
-    [_textLayer setSecureTextEntry:secure];
-}
-
-
-- (BOOL)canBecomeFirstResponder
-{
-    return (self.window != nil);
-}
-
-- (BOOL)becomeFirstResponder
+- (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
-		_placeholderTextLayer.hidden = YES;
+		[_placeholderTextLayer setHidden:YES];
         return [_textLayer becomeFirstResponder];
     } else {
         return NO;
     }
 }
 
-- (BOOL)resignFirstResponder
+- (BOOL) resignFirstResponder
 {
     if ([super resignFirstResponder]) {
         return [_textLayer resignFirstResponder];
@@ -568,61 +624,15 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
-- (UIFont *)font
-{
-    return _textLayer.font;
-}
 
-- (void)setFont:(UIFont *)newFont
-{
-    _textLayer.font = newFont;
-	_placeholderTextLayer.font = newFont;
-}
+#pragma mark Events & Notification
 
-- (UIColor *)textColor
-{
-    return _textLayer.textColor;
-}
-
-- (void)setTextColor:(UIColor *)newColor
-{
-    _textLayer.textColor = newColor;
-}
-
-- (UITextAlignment)textAlignment
-{
-    return _textLayer.textAlignment;
-}
-
-- (void)setTextAlignment:(UITextAlignment)textAlignment
-{
-    _textLayer.textAlignment = textAlignment;
-	_placeholderTextLayer.textAlignment = textAlignment;
-}
-
-- (NSString *)text
-{
-    return _textLayer.text;
-}
-
-- (void)setText:(NSString *)newText
-{
-    [self setAttributedText:[[NSAttributedString alloc] initWithString:newText]];
-}
-
-- (void) setAttributedText:(NSAttributedString *)attributedText
-{
-    _attributedText = attributedText;
-    _textLayer.text = [attributedText string];
-	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
-}
-
-- (BOOL)_textShouldBeginEditing
+- (BOOL) _textShouldBeginEditing
 {
     return _delegateHas.shouldBeginEditing? [_delegate textFieldShouldBeginEditing:self] : YES;
 }
 
-- (void)_textDidBeginEditing
+- (void) _textDidBeginEditing
 {
     BOOL shouldClear = _clearsOnBeginEditing;
 
@@ -649,12 +659,12 @@ static void _commonInitForUITextField(UITextField* self)
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
 }
 
-- (BOOL)_textShouldEndEditing
+- (BOOL) _textShouldEndEditing
 {
     return _delegateHas.shouldEndEditing? [_delegate textFieldShouldEndEditing:self] : YES;
 }
 
-- (void)_textDidEndEditing
+- (void) _textDidEndEditing
 {
 	_placeholderTextLayer.hidden = _textLayer.text.length > 0;
 	
@@ -668,24 +678,25 @@ static void _commonInitForUITextField(UITextField* self)
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:self];
 }
 
-- (BOOL)_textShouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+- (BOOL) _textShouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     return _delegateHas.shouldChangeCharacters? [_delegate textField:self shouldChangeCharactersInRange:range replacementString:text] : YES;
 }
 
-- (void)_textDidChange
+- (void) _textDidChange
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
 }
 
-- (void)_textDidReceiveReturnKey
+- (void) _textDidReceiveReturnKey
 {
     if (_delegateHas.shouldReturn) {
         [_delegate textFieldShouldReturn:self];
     }
 }
 
-- (BOOL)_textShouldDoCommandBySelector:(SEL)selector {
+- (BOOL) _textShouldDoCommandBySelector:(SEL)selector
+{
 	if(_delegateHas.doCommandBySelector) {
 		return [(id)self.delegate textField:self doCommandBySelector:selector];
 	} else {
@@ -698,7 +709,10 @@ static void _commonInitForUITextField(UITextField* self)
 	return NO;
 }
 
-- (NSString *)description
+
+#pragma mark Misc.
+
+- (NSString*) description
 {
     NSString *textAlignment = @"";
     switch (self.textAlignment) {
@@ -715,7 +729,7 @@ static void _commonInitForUITextField(UITextField* self)
     return [NSString stringWithFormat:@"<%@: %p; textAlignment = %@; editing = %@; textColor = %@; font = %@; delegate = %@>", [self className], self, textAlignment, (self.editing ? @"YES" : @"NO"), self.textColor, self.font, self.delegate];
 }
 
-- (id)mouseCursorForEvent:(UIEvent *)event
+- (id) mouseCursorForEvent:(UIEvent*)event
 {
     return [NSCursor IBeamCursor];
 }
