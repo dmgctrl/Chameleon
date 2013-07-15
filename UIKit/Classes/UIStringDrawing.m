@@ -40,10 +40,10 @@
 @end
 
 
-NSString *const UITextAttributeFont = @"UITextAttributeFont";
-NSString *const UITextAttributeTextColor = @"UITextAttributeTextColor";
-NSString *const UITextAttributeTextShadowColor = @"UITextAttributeTextShadowColor";
-NSString *const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOffset";
+NSString* const UITextAttributeFont = @"NSFont";
+NSString* const UITextAttributeTextColor = @"NSColor";
+NSString* const UITextAttributeTextShadowColor = @"TextShadowColor";
+NSString* const UITextAttributeTextShadowOffset = @"TextShadowOffset";
 
 static CTLineTruncationType CTLineTruncationTypeFromUILineBreakMode(UILineBreakMode lineBreakMode)
 {
