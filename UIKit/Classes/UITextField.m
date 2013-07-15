@@ -117,6 +117,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 static void _commonInitForUITextField(UITextField* self)
 {
     self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
+    [self->_textLayer setBackgroundColor:[[UIColor clearColor] CGColor]];
     [self.layer addSublayer:self->_textLayer];
     
     self.textAlignment = UITextAlignmentLeft;
@@ -254,7 +255,7 @@ static void _commonInitForUITextField(UITextField* self)
 - (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
 {
     NSMutableAttributedString* s = [string mutableCopy];
-    [s addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:0.7f alpha:1.0] range:(NSRange){ 0, [s length] }];
+    [s addAttribute:UITextAttributeTextColor value:[UIColor colorWithWhite:0.7f alpha:1.0f] range:(NSRange){ 0, [s length] }];
     return s;
 }
 
@@ -264,6 +265,7 @@ static void _commonInitForUITextField(UITextField* self)
         _attributedPlaceholder = [self _adjustAttributesForPlaceholder:attributedPlaceholder];
         if (!_placeholderTextLabel) {
             _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+            [_placeholderTextLabel setBackgroundColor:[self backgroundColor]];
         }
         [_placeholderTextLabel setAttributedText:_attributedPlaceholder];
         if (![_placeholderTextLabel superview]) {
@@ -288,6 +290,7 @@ static void _commonInitForUITextField(UITextField* self)
         }
         if (!_textLabel) {
             _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+            [_textLabel setBackgroundColor:[self backgroundColor]];
         }
         [_textLabel setAttributedText:attributedText];
         if (![_textLabel superview]) {
@@ -633,11 +636,8 @@ static void _commonInitForUITextField(UITextField* self)
 			[[UIColor whiteColor] set];
 			[[UIBezierPath bezierPathWithRoundedRect:whiteFrame cornerRadius:2.6] fill];
 		} else if(self.borderStyle == UITextBorderStyleLine) {
-			[[UIColor colorWithWhite:0.1f alpha:0.8f] set];
-			CGContextStrokeRect(context, borderFrame);
-			
-			[[UIColor colorWithWhite:1.0f alpha:1.0f] set];
-			CGContextFillRect(context, CGRectInset(borderFrame, 1.0f, 1.0f));
+			[[UIColor blackColor] set];
+            UIRectFrame(borderFrame);
 		}
 	}
 }
