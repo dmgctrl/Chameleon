@@ -251,35 +251,54 @@ static void _commonInitForUITextField(UITextField* self)
 
 #pragma mark Properties
 
+- (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
+{
+    NSMutableAttributedString* s = [string mutableCopy];
+    [s addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:0.7f alpha:1.0] range:(NSRange){ 0, [s length] }];
+    return s;
+}
+
 - (void) setAttributedPlaceholder:(NSAttributedString*)attributedPlaceholder
 {
-    _attributedPlaceholder = attributedPlaceholder;
-    if (!_placeholderTextLabel) {
-        _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+    if (attributedPlaceholder) {
+        _attributedPlaceholder = [self _adjustAttributesForPlaceholder:attributedPlaceholder];
+        if (!_placeholderTextLabel) {
+            _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        }
+        [_placeholderTextLabel setAttributedText:_attributedPlaceholder];
+        if (![_placeholderTextLabel superview]) {
+            if (![self _isFirstResponder] && ![[self text] length]) {
+                [self addSubview:_placeholderTextLabel];
+            }
+        }
+    } else {
+        _attributedPlaceholder = nil;
+        [_placeholderTextLabel removeFromSuperview], _placeholderTextLabel = nil;
     }
-    if (![self _isFirstResponder] && ![[self text] length]) {
-        [self addSubview:_placeholderTextLabel];
-    }
-    [_placeholderTextLabel setAttributedText:attributedPlaceholder];
 }
 
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
-    _attributedText = attributedText;
-    _textLayer.text = [attributedText string];
-    BOOL hasText = [attributedText length] > 0;
-    if (hasText) {
-        [_placeholderTextLabel removeFromSuperview];
-    }
-    if (!_textLabel) {
-        _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-    }
-    if (![_textLabel superview]) {
-        if (![self _isFirstResponder] && hasText) {
-            [self addSubview:_textLabel];
+    if (attributedText) {
+        _attributedText = attributedText;
+        _textLayer.text = [attributedText string];
+        BOOL hasText = [attributedText length] > 0;
+        if (hasText) {
+            [_placeholderTextLabel removeFromSuperview];
         }
+        if (!_textLabel) {
+            _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        }
+        [_textLabel setAttributedText:attributedText];
+        if (![_textLabel superview]) {
+            if (![self _isFirstResponder] && hasText) {
+                [self addSubview:_textLabel];
+            }
+        }
+    } else {
+        _attributedText = nil;
+        [_textLabel removeFromSuperview], _textLabel = nil;
     }
-    [_textLabel setAttributedText:attributedText];
 }
 
 - (UITextAutocapitalizationType) autocapitalizationType
