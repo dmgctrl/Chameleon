@@ -101,7 +101,6 @@ static NSString* const kUIEditableKey = @"UIEditable";
     NSSelectionGranularity _selectionGranularity;
 }
 @dynamic delegate;
-@synthesize secureTextEntry;
 
 static void _commonInitForUITextView(UITextView* self)
 {

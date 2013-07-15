@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, UIReturnKeyType) {
 };
 
 @protocol UITextInputTraits <NSObject>
+@optional
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 @property (nonatomic) UITextAutocorrectionType autocorrectionType;
 @property (nonatomic) BOOL enablesReturnKeyAutomatically;
