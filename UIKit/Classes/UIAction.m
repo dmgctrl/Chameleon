@@ -35,7 +35,7 @@
 {
     if (object == self) {
         return YES;
-    } else if ([object isKindOfClass:[isa class]]) {
+    } else if ([object isKindOfClass:[self class]]) {
         return ([object target] == self.target && [object action] == self.action);
     } else {
         return NO;
