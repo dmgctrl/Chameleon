@@ -70,10 +70,6 @@
 @end
 
 
-@implementation NSAttributedString (NSStringDrawing)
-@end
-
-
 @implementation NSAttributedString (NSExtendedStringDrawing)
 
 - (void) drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context
