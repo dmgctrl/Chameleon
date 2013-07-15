@@ -540,7 +540,10 @@ static BOOL TouchIsActive(UITouch *touch)
     }
     
     if (target) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [target performSelector:action withObject:sender withObject:event];
+#pragma clang diagnostic pop
         return YES;
     } else {
         return NO;
@@ -562,7 +565,10 @@ static BOOL TouchIsActive(UITouch *touch)
     
     while (responder) {
         if ([responder respondsToSelector:action]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             [responder performSelector:action withObject:sender];
+#pragma clang diagnostic pop
             return YES;
         } else {
             responder = [responder nextResponder];
