@@ -89,7 +89,6 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     NSLayoutManager* _layoutManager;
 
     UITextLayer* _textLayer;
-	UITextLayer* _placeholderTextLayer;
     
     UILabel* _placeholderTextLabel;
     UILabel* _textLabel;
@@ -112,16 +111,11 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 
 - (void) dealloc
 {
-	[_placeholderTextLayer removeFromSuperlayer];
     [_textLayer removeFromSuperlayer];
 }
 
 static void _commonInitForUITextField(UITextField* self)
 {
-    self->_placeholderTextLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
-    self->_placeholderTextLayer.textColor = [UIColor colorWithWhite:0.6f alpha:1.0f];
-    [self.layer addSublayer:self->_placeholderTextLayer];
-    
     self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
     [self.layer addSublayer:self->_textLayer];
     
@@ -232,7 +226,6 @@ static void _commonInitForUITextField(UITextField* self)
     [super layoutSubviews];
     const CGRect bounds = self.bounds;
     _textLayer.frame = [self textRectForBounds:bounds];
-	_placeholderTextLayer.frame = [self textRectForBounds:bounds];
 
     if ([self _isLeftViewVisible]) {
         _leftView.hidden = NO;
@@ -248,7 +241,11 @@ static void _commonInitForUITextField(UITextField* self)
         _rightView.hidden = YES;
     }
     
-    [_textLabel setFrame:[self textRectForBounds:bounds]];
+    if (_textLabel || _placeholderTextLabel) {
+        CGRect textRect = [self textRectForBounds:bounds];
+        [_textLabel setFrame:textRect];
+        [_placeholderTextLabel setFrame:textRect];
+    }
 }
 
 
@@ -257,7 +254,6 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setAttributedPlaceholder:(NSAttributedString*)attributedPlaceholder
 {
     _attributedPlaceholder = attributedPlaceholder;
-    [_placeholderTextLayer setText:[attributedPlaceholder string]];
     if (!_placeholderTextLabel) {
         _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
     }
@@ -271,12 +267,17 @@ static void _commonInitForUITextField(UITextField* self)
 {
     _attributedText = attributedText;
     _textLayer.text = [attributedText string];
-	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
+    BOOL hasText = [attributedText length] > 0;
+    if (hasText) {
+        [_placeholderTextLabel removeFromSuperview];
+    }
     if (!_textLabel) {
         _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
     }
-    if (![self _isFirstResponder] && [[self text] length]) {
-        [self addSubview:_textLabel];
+    if (![_textLabel superview]) {
+        if (![self _isFirstResponder] && hasText) {
+            [self addSubview:_textLabel];
+        }
     }
     [_textLabel setAttributedText:attributedText];
 }
@@ -351,7 +352,8 @@ static void _commonInitForUITextField(UITextField* self)
 {
     _font = font;
     _textLayer.font = font;
-	_placeholderTextLayer.font = font;
+    [_placeholderTextLabel setFont:font];
+    [_textLabel setFont:font];
 }
 
 - (void) setFrame:(CGRect)frame
@@ -446,7 +448,8 @@ static void _commonInitForUITextField(UITextField* self)
 {
     _textAlignment = textAlignment;
     _textLayer.textAlignment = textAlignment;
-	_placeholderTextLayer.textAlignment = textAlignment;
+    [_placeholderTextLabel setTextAlignment:textAlignment];
+    [_textLabel setTextAlignment:textAlignment];
 }
 
 - (void) setTextColor:(UIColor*)textColor
@@ -631,7 +634,6 @@ static void _commonInitForUITextField(UITextField* self)
 - (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
-		[_placeholderTextLayer setHidden:YES];
         [_textLabel removeFromSuperview];
         [_placeholderTextLabel removeFromSuperview];
         return [_textLayer becomeFirstResponder];
@@ -685,8 +687,6 @@ static void _commonInitForUITextField(UITextField* self)
         //self.text = @"";
         [self performSelector:@selector(setText:) withObject:@"" afterDelay:0];
     }
-	
-	_placeholderTextLayer.hidden = YES;
     
     _editing = YES;
     [self setNeedsDisplay];
@@ -705,8 +705,6 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (void) _textDidEndEditing
 {
-	_placeholderTextLayer.hidden = _textLayer.text.length > 0;
-	
     _editing = NO;
     [self setNeedsDisplay];
     [self setNeedsLayout];
