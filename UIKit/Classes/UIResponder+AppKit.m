@@ -256,7 +256,10 @@
     UIResponder* responder = self;
     do {
         if ([responder respondsToSelector:selector]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             [responder performSelector:selector withObject:nil];
+#pragma clang diagnostic pop
             return;
         }
         responder = responder.nextResponder;
@@ -267,7 +270,10 @@
 - (BOOL) tryToPerform:(SEL)selector with:(id)object
 {
     if ([self respondsToSelector:selector]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self performSelector:selector withObject:nil];
+#pragma clang diagnostic pop
         return YES;
     } else {
         return NO;
