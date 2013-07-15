@@ -282,7 +282,7 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
     if (attributedText) {
-        _attributedText = attributedText;
+        _attributedText = [attributedText copy];
         _textLayer.text = [attributedText string];
         BOOL hasText = [attributedText length] > 0;
         if (hasText) {
@@ -327,6 +327,15 @@ static void _commonInitForUITextField(UITextField* self)
     if (background != _background) {
         _background = background;
         [self setNeedsDisplay];
+    }
+}
+
+- (void) setBackgroundColor:(UIColor*)backgroundColor
+{
+    if (backgroundColor != [self backgroundColor]) {
+        [super setBackgroundColor:backgroundColor];
+        [_textLabel setBackgroundColor:backgroundColor];
+        [_placeholderTextLabel setBackgroundColor:backgroundColor];
     }
 }
 
@@ -741,6 +750,7 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (void) _textDidChange
 {
+    [self setText:[_textLayer text]];
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
 }
 
