@@ -269,7 +269,7 @@ static void _commonInitForUITextField(UITextField* self)
         }
         [_placeholderTextLabel setAttributedText:_attributedPlaceholder];
         if (![_placeholderTextLabel superview]) {
-            if (![self _isFirstResponder] && ![[self text] length]) {
+            if (![self isEditing] && ![[self text] length]) {
                 [self addSubview:_placeholderTextLabel];
             }
         }
@@ -294,7 +294,7 @@ static void _commonInitForUITextField(UITextField* self)
         }
         [_textLabel setAttributedText:attributedText];
         if (![_textLabel superview]) {
-            if (![self _isFirstResponder] && hasText) {
+            if (![self isEditing] && hasText) {
                 [self addSubview:_textLabel];
             }
         }
@@ -466,12 +466,11 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (NSString*) text
 {
-    return [_textLayer text];
+    return [[self attributedText] string];
 }
 
 - (void) setText:(NSString*)text
 {
-//    _text = text;
     [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:nil]];
 }
 
@@ -662,6 +661,7 @@ static void _commonInitForUITextField(UITextField* self)
 - (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
+        _editing = YES;
         [_textLabel removeFromSuperview];
         [_placeholderTextLabel removeFromSuperview];
         return [_textLayer becomeFirstResponder];
@@ -673,6 +673,7 @@ static void _commonInitForUITextField(UITextField* self)
 - (BOOL) resignFirstResponder
 {
     if ([super resignFirstResponder]) {
+        _editing = NO;
         if ([[self text] length]) {
             if (_textLabel) {
                 [self addSubview:_textLabel];
@@ -686,11 +687,6 @@ static void _commonInitForUITextField(UITextField* self)
     } else {
         return NO;
     }
-}
-
-- (BOOL) _isFirstResponder
-{
-    return self == [[self window] _firstResponder];
 }
 
 
@@ -716,7 +712,6 @@ static void _commonInitForUITextField(UITextField* self)
         [self performSelector:@selector(setText:) withObject:@"" afterDelay:0];
     }
     
-    _editing = YES;
     [self setNeedsDisplay];
     [self setNeedsLayout];
 
@@ -733,7 +728,6 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (void) _textDidEndEditing
 {
-    _editing = NO;
     [self setNeedsDisplay];
     [self setNeedsLayout];
     
