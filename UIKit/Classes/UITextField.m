@@ -476,32 +476,26 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (CGRect) textRectForBounds:(CGRect)bounds
 {
-    // Docs say:
-    // The default implementation of this method returns a rectangle that is derived from the control’s original bounds,
-    // but which does not include the area occupied by the receiver’s border or overlay views.
-    
-    // It appears what happens is something like this:
-    // check border type:
-    //   if no border, skip to next major step
-    //   if has border, set textRect = borderBounds, then inset textRect according to border style
-    // check if textRect overlaps with leftViewRect, if it does, make it smaller
-    // check if textRect overlaps with rightViewRect, if it does, make it smaller
-    // check if textRect overlaps with clearButtonRect (if currently needed?), if it does, make it smaller
-    
-    CGRect textRect = bounds;
-    if (_borderStyle != UITextBorderStyleNone) {
-        textRect = [self borderRectForBounds:bounds];
-		if(self.borderStyle == UITextBorderStyleRoundedRect) {
-			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 4.0f, 1.0f);
-		} else if(self.borderStyle == UITextBorderStyleBezel) {
-			textRect = CGRectOffset(CGRectInset(textRect, 7.0f, 2.5f), 0.0f, 1.5f);
-		} else if(self.borderStyle == UITextBorderStyleLine) {
-			textRect = CGRectInset(textRect, 2.0f, 2.0f);
-		}
+    CGRect textRect;
+    switch ([self borderStyle]) {
+        case UITextBorderStyleRoundedRect: {
+            textRect = CGRectOffset(CGRectInset(bounds, 7.0f, 2.0f), -1.0f, 0.0f);
+            break;
+        }
+        case UITextBorderStyleBezel: {
+            textRect = CGRectOffset(CGRectInset(bounds, 7.0f, 2.5f), 0.0f, 1.5f);
+            break;
+        }
+        case UITextBorderStyleLine: {
+            textRect = CGRectInset(bounds, 2.0f, 2.0f);
+            break;
+        }
+        case UITextBorderStyleNone: {
+            textRect = bounds;
+            break;
+        }
 	}
     
-    // Going to go ahead and assume that the left view is on the left, the right view is on the right, and there's space between..
-    // I imagine this is a dangerous assumption...
     if ([self _isLeftViewVisible]) {
         CGRect overlap = CGRectIntersection(textRect,[self leftViewRectForBounds:bounds]);
         if (!CGRectIsNull(overlap)) {
