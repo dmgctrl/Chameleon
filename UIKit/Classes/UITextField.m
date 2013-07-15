@@ -423,14 +423,7 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (CGRect) borderRectForBounds:(CGRect)bounds
 {
-	CGRect borderRect = bounds;
-	
-	if(self.borderStyle == UITextBorderStyleRoundedRect) {
-		UIImage *image = [UIImage _textFieldRoundedRectBackground];
-		borderRect = CGRectMake(4.0f, self.bounds.size.height/2 - image.size.height/2, self.bounds.size.width - 8.0f, image.size.height);
-	}
-	
-    return CGRectIntegral(borderRect);
+    return bounds;
 }
 
 - (CGRect) clearButtonRectForBounds:(CGRect)bounds
@@ -497,7 +490,7 @@ static void _commonInitForUITextField(UITextField* self)
 	}
     
     if ([self _isLeftViewVisible]) {
-        CGRect overlap = CGRectIntersection(textRect,[self leftViewRectForBounds:bounds]);
+        CGRect overlap = CGRectIntersection(textRect, [self leftViewRectForBounds:bounds]);
         if (!CGRectIsNull(overlap)) {
             textRect = CGRectOffset(textRect, overlap.size.width, 0);
             textRect.size.width -= overlap.size.width;
@@ -505,14 +498,14 @@ static void _commonInitForUITextField(UITextField* self)
     }
     
     if ([self _isRightViewVisible]) {
-        CGRect overlap = CGRectIntersection(textRect,[self rightViewRectForBounds:bounds]);
+        CGRect overlap = CGRectIntersection(textRect, [self rightViewRectForBounds:bounds]);
         if (!CGRectIsNull(overlap)) {
             textRect = CGRectOffset(textRect, -overlap.size.width, 0);
             textRect.size.width -= overlap.size.width;
         }
     }
-    
-    return CGRectIntegral(textRect);
+
+    return textRect;
 }
 
 
