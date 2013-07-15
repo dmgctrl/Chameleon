@@ -34,6 +34,9 @@
 #import "UIImage+UIPrivate.h"
 #import "UIBezierPath.h"
 #import "UIGraphics.h"
+#import "UILabel.h"
+#import "UIWindow+UIPrivate.h"
+
 
 #import "UIImage.h"
 #import <AppKit/NSCursor.h>
@@ -88,16 +91,22 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     UITextLayer* _textLayer;
 	UITextLayer* _placeholderTextLayer;
     
+    UILabel* _textLabel;
+    
     struct {
-        BOOL shouldBeginEditing : 1;
-        BOOL didBeginEditing : 1;
-        BOOL shouldEndEditing : 1;
-        BOOL didEndEditing : 1;
-        BOOL shouldChangeCharacters : 1;
-        BOOL shouldClear : 1;
-        BOOL shouldReturn : 1;
-		BOOL doCommandBySelector : 1;
-    } _delegateHas;	
+        bool shouldBeginEditing : 1;
+        bool didBeginEditing : 1;
+        bool shouldEndEditing : 1;
+        bool didEndEditing : 1;
+        bool shouldChangeCharacters : 1;
+        bool shouldClear : 1;
+        bool shouldReturn : 1;
+        bool doCommandBySelector : 1;
+    } _delegateHas;
+    
+    struct {
+        bool didBeginEditing : 1;
+    } _flags;
 }
 
 - (void) dealloc
@@ -237,6 +246,8 @@ static void _commonInitForUITextField(UITextField* self)
     } else {
         _rightView.hidden = YES;
     }
+    
+    [_textLabel setFrame:[self textRectForBounds:bounds]];
 }
 
 
@@ -247,6 +258,13 @@ static void _commonInitForUITextField(UITextField* self)
     _attributedText = attributedText;
     _textLayer.text = [attributedText string];
 	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
+    if (!_textLabel) {
+        _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        if ([[self window] _firstResponder] != self) {
+            [self addSubview:_textLabel];
+        }
+    }
+    [_textLabel setAttributedText:attributedText];
 }
 
 - (UITextAutocapitalizationType) autocapitalizationType
@@ -595,6 +613,7 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if ([super becomeFirstResponder]) {
 		[_placeholderTextLayer setHidden:YES];
+        [_textLabel removeFromSuperview];
         return [_textLayer becomeFirstResponder];
     } else {
         return NO;
@@ -604,6 +623,9 @@ static void _commonInitForUITextField(UITextField* self)
 - (BOOL) resignFirstResponder
 {
     if ([super resignFirstResponder]) {
+        if (_textLabel) {
+            [self addSubview:_textLabel];
+        }
         return [_textLayer resignFirstResponder];
     } else {
         return NO;
