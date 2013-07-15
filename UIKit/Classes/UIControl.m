@@ -33,6 +33,12 @@
 #import "UIApplication.h"
 #import "UIControlAction.h"
 
+
+static NSString* const kUIDisabledKey = @"UIDisabled";
+static NSString* const kUIContentHorizontalAlignmentKey = @"UIContentHorizontalAlignment";
+static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlignment";
+
+
 @implementation UIControl {
     NSMutableArray* _registeredActions;
 }
@@ -47,7 +53,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    if ((self=[super initWithFrame:frame])) {
+    if (nil != (self = [super initWithFrame:frame])) {
         [self _commonInitForUIControl];
     }
     return self;
@@ -55,8 +61,11 @@
 
 - (id)initWithCoder:(NSCoder*)coder
 {
-    if ((self=[super initWithCoder:coder])) {
+    if (nil != (self = [super initWithCoder:coder])) {
         [self _commonInitForUIControl];
+        if ([coder containsValueForKey:kUIDisabledKey]) {
+            [self setEnabled:![coder decodeBoolForKey:kUIDisabledKey]];
+        }
     }
     return self;
 }
