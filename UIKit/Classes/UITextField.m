@@ -67,6 +67,9 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 @end
 
 @interface UITextField () <UITextLayerTextDelegate>
+@property (nonatomic, readonly) NSLayoutManager* layoutManager;
+@property (nonatomic, readonly) NSTextContainer* textContainer;
+@property (nonatomic, readonly) NSTextStorage* textStorage;
 @end
 
 @interface NSObject (UITextFieldDelegate)

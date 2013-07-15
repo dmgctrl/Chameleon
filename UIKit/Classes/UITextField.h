@@ -121,9 +121,4 @@ typedef enum {
 @property (nonatomic, retain) UIView* inputAccessoryView;
 @property (nonatomic, retain) UIView* inputView;
 
-#pragma mark Accessing Text Kit Objects
-@property (nonatomic, readonly) NSLayoutManager* layoutManager;
-@property (nonatomic, readonly) NSTextContainer* textContainer;
-@property (nonatomic, readonly) NSTextStorage* textStorage;
-
 @end
