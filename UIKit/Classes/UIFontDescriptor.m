@@ -61,6 +61,16 @@ static NSString* const kUIFontDescriptorAttributesKey = @"UIFontDescriptorAttrib
     return self;
 }
 
+- (void) encodeWithCoder:(NSCoder*)aCoder
+{
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (id) copyWithZone:(NSZone*)zone
+{
+    return self;
+}
+
 - (id) objectForKey:(NSString*)key
 {
     return [_fontAttributes objectForKey:key];
