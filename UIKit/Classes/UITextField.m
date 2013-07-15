@@ -489,15 +489,14 @@ static void _commonInitForUITextField(UITextField* self)
     // check if textRect overlaps with clearButtonRect (if currently needed?), if it does, make it smaller
     
     CGRect textRect = bounds;
-    
     if (_borderStyle != UITextBorderStyleNone) {
         textRect = [self borderRectForBounds:bounds];
 		if(self.borderStyle == UITextBorderStyleRoundedRect) {
 			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 4.0f, 1.0f);
 		} else if(self.borderStyle == UITextBorderStyleBezel) {
-			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 2.0f, 3.0f);
+			textRect = CGRectOffset(CGRectInset(textRect, 7.0f, 2.5f), 0.0f, 1.5f);
 		} else if(self.borderStyle == UITextBorderStyleLine) {
-//			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 2.0f, 3.0f);
+			textRect = CGRectInset(textRect, 2.0f, 2.0f);
 		}
 	}
     
