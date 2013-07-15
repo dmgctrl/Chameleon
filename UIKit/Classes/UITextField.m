@@ -91,6 +91,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     UITextLayer* _textLayer;
 	UITextLayer* _placeholderTextLayer;
     
+    UILabel* _placeholderTextLabel;
     UILabel* _textLabel;
     
     struct {
@@ -253,6 +254,19 @@ static void _commonInitForUITextField(UITextField* self)
 
 #pragma mark Properties
 
+- (void) setAttributedPlaceholder:(NSAttributedString*)attributedPlaceholder
+{
+    _attributedPlaceholder = attributedPlaceholder;
+    [_placeholderTextLayer setText:[attributedPlaceholder string]];
+    if (!_placeholderTextLabel) {
+        _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+    }
+    if (![self _isFirstResponder] && ![[self text] length]) {
+        [self addSubview:_placeholderTextLabel];
+    }
+    [_placeholderTextLabel setAttributedText:attributedPlaceholder];
+}
+
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
     _attributedText = attributedText;
@@ -260,9 +274,9 @@ static void _commonInitForUITextField(UITextField* self)
 	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
     if (!_textLabel) {
         _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-        if ([[self window] _firstResponder] != self) {
-            [self addSubview:_textLabel];
-        }
+    }
+    if (![self _isFirstResponder] && [[self text] length]) {
+        [self addSubview:_textLabel];
     }
     [_textLabel setAttributedText:attributedText];
 }
@@ -382,7 +396,7 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setPlaceholder:(NSString*)placeholder
 {
     _placeholder = placeholder;
-    _placeholderTextLayer.text = placeholder;
+    [self setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:placeholder attributes:nil]];
 }
 
 - (void) setRightView:(UIView*)rightView
@@ -417,10 +431,15 @@ static void _commonInitForUITextField(UITextField* self)
     [_textLayer setSecureTextEntry:secure];
 }
 
+- (NSString*) text
+{
+    return [_textLayer text];
+}
+
 - (void) setText:(NSString*)text
 {
-    _text = text;
-    [self setAttributedText:[[NSAttributedString alloc] initWithString:text]];
+//    _text = text;
+    [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:nil]];
 }
 
 - (void) setTextAlignment:(UITextAlignment)textAlignment
@@ -614,6 +633,7 @@ static void _commonInitForUITextField(UITextField* self)
     if ([super becomeFirstResponder]) {
 		[_placeholderTextLayer setHidden:YES];
         [_textLabel removeFromSuperview];
+        [_placeholderTextLabel removeFromSuperview];
         return [_textLayer becomeFirstResponder];
     } else {
         return NO;
@@ -623,13 +643,24 @@ static void _commonInitForUITextField(UITextField* self)
 - (BOOL) resignFirstResponder
 {
     if ([super resignFirstResponder]) {
-        if (_textLabel) {
-            [self addSubview:_textLabel];
+        if ([[self text] length]) {
+            if (_textLabel) {
+                [self addSubview:_textLabel];
+            }
+        } else {
+            if (_placeholderTextLabel) {
+                [self addSubview:_placeholderTextLabel];
+            }
         }
         return [_textLayer resignFirstResponder];
     } else {
         return NO;
     }
+}
+
+- (BOOL) _isFirstResponder
+{
+    return self == [[self window] _firstResponder];
 }
 
 
@@ -679,7 +710,7 @@ static void _commonInitForUITextField(UITextField* self)
     _editing = NO;
     [self setNeedsDisplay];
     [self setNeedsLayout];
-	
+    
     if (_delegateHas.didEndEditing) {
         [_delegate textFieldDidEndEditing:self];
     }
