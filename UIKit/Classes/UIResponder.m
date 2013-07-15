@@ -84,18 +84,20 @@
     }
 }
 
-- (BOOL)canResignFirstResponder
+- (BOOL) canResignFirstResponder
 {
     return YES;
 }
 
-- (BOOL)resignFirstResponder
+- (BOOL) resignFirstResponder
 {
     if ([self isFirstResponder]) {
-        [[self _responderWindow] _setFirstResponder:nil];
+        if ([self canResignFirstResponder]) {
+            [[self _responderWindow] _setFirstResponder:nil];
+            return YES;
+        }
     }
-    
-    return YES;
+    return NO;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender

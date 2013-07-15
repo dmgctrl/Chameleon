@@ -365,6 +365,8 @@
 		F937919D176F3F96006439EC /* UIStoryboardSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F937919B176F3F96006439EC /* UIStoryboardSegue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F937919E176F3F96006439EC /* UIStoryboardSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = F937919C176F3F96006439EC /* UIStoryboardSegue.m */; };
 		F93791A2176F4396006439EC /* UIStoryboardSegue+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */; };
+		F93D77001794A3410073B778 /* _UITextFieldEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D76FE1794A3410073B778 /* _UITextFieldEditor.h */; };
+		F93D77011794A3410073B778 /* _UITextFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */; };
 		F947AF14176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */; };
 		F947AF15176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */; };
 		F947AF18176F5E060057FC9A /* UIStoryboardPushSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */; };
@@ -855,6 +857,8 @@
 		F937919B176F3F96006439EC /* UIStoryboardSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardSegue.h; sourceTree = "<group>"; };
 		F937919C176F3F96006439EC /* UIStoryboardSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardSegue.m; sourceTree = "<group>"; };
 		F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboardSegue+UIPrivate.h"; sourceTree = "<group>"; };
+		F93D76FE1794A3410073B778 /* _UITextFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextFieldEditor.h; sourceTree = "<group>"; };
+		F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextFieldEditor.m; sourceTree = "<group>"; };
 		F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegueTemplate.h; sourceTree = "<group>"; };
 		F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardPushSegueTemplate.m; sourceTree = "<group>"; };
 		F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegue.h; sourceTree = "<group>"; };
@@ -1289,6 +1293,8 @@
 				1489855612EE2CFE003D4751 /* UITapGestureRecognizer.m */,
 				1489855712EE2CFE003D4751 /* UITextField.h */,
 				1489855812EE2CFE003D4751 /* UITextField.m */,
+				F93D76FE1794A3410073B778 /* _UITextFieldEditor.h */,
+				F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */,
 				F9D9772F13B794700086F226 /* UITextInput.h */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
@@ -1897,6 +1903,7 @@
 				148985C512EE2CFF003D4751 /* UIScreen.h in Headers */,
 				148985C712EE2CFF003D4751 /* UIScreen+AppKit.h in Headers */,
 				148985C912EE2CFF003D4751 /* UIScreenMode.h in Headers */,
+				F93D77001794A3410073B778 /* _UITextFieldEditor.h in Headers */,
 				148985CB12EE2CFF003D4751 /* UIScrollView.h in Headers */,
 				148985CD12EE2CFF003D4751 /* UISplitViewController.h in Headers */,
 				148985CF12EE2CFF003D4751 /* UIStringDrawing.h in Headers */,
@@ -2337,6 +2344,7 @@
 				F953D4FF13CD3BAC006B941C /* UITableViewCellUnhighlightedState.m in Sources */,
 				F99E83AE13CF7E7F00107358 /* UICustomObject.m in Sources */,
 				F99E83B313CF7EEE00107358 /* UIProxyObject.m in Sources */,
+				F93D77011794A3410073B778 /* _UITextFieldEditor.m in Sources */,
 				F99E83B713CF836900107358 /* UINib.m in Sources */,
 				F99E83F113CFCE9600107358 /* UIButtonContent.m in Sources */,
 				F99E83F613CFD52E00107358 /* UIImageNibPlaceholder.m in Sources */,

@@ -35,8 +35,7 @@
 #import "UIBezierPath.h"
 #import "UIGraphics.h"
 #import "UILabel.h"
-#import "UIWindow+UIPrivate.h"
-
+#import "_UITextFieldEditor.h"
 
 #import "UIImage.h"
 #import <AppKit/NSCursor.h>
@@ -74,9 +73,6 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 
 @interface UITextField () <UITextLayerTextDelegate>
-@property (nonatomic, readonly) NSLayoutManager* layoutManager;
-@property (nonatomic, readonly) NSTextContainer* textContainer;
-@property (nonatomic, readonly) NSTextStorage* textStorage;
 @end
 
 
@@ -86,14 +82,11 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 
 @implementation UITextField {
-    NSTextStorage* _textStorage;
-    NSTextContainer* _textContainer;
-    NSLayoutManager* _layoutManager;
-
     UITextLayer* _textLayer;
     
     UILabel* _placeholderTextLabel;
     UILabel* _textLabel;
+    _UITextFieldEditor* _textFieldEditor;
     
     struct {
         bool shouldBeginEditing : 1;
@@ -663,7 +656,17 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) canBecomeFirstResponder
 {
-    return ([self window] != nil) && [self isEnabled];
+    return ([self window] != nil) && [self isEnabled] && (!_delegateHas.shouldBeginEditing || [_delegate textFieldShouldBeginEditing:self]);
+}
+
+- (BOOL) canResignFirstResponder
+{
+    return [self _shouldEndEditing];
+}
+
+- (BOOL) _shouldEndEditing
+{
+    return (!_delegateHas.shouldEndEditing || [_delegate textFieldShouldEndEditing:self]);
 }
 
 - (BOOL) becomeFirstResponder
