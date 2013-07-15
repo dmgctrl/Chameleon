@@ -29,25 +29,25 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UITextAutocapitalizationType) {
     UITextAutocapitalizationTypeNone,
     UITextAutocapitalizationTypeWords,
     UITextAutocapitalizationTypeSentences,
     UITextAutocapitalizationTypeAllCharacters,
-} UITextAutocapitalizationType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UITextAutocorrectionType) {
     UITextAutocorrectionTypeDefault,
     UITextAutocorrectionTypeNo,
     UITextAutocorrectionTypeYes,
-} UITextAutocorrectionType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UIKeyboardAppearance) {
     UIKeyboardAppearanceDefault,
     UIKeyboardAppearanceAlert,
-} UIKeyboardAppearance;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UIKeyboardType) {
     UIKeyboardTypeDefault,
     UIKeyboardTypeASCIICapable,
     UIKeyboardTypeNumbersAndPunctuation,
@@ -57,9 +57,9 @@ typedef enum {
     UIKeyboardTypeNamePhonePad,
     UIKeyboardTypeEmailAddress,
     UIKeyboardTypeAlphabet = UIKeyboardTypeASCIICapable
-} UIKeyboardType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UIReturnKeyType) {
     UIReturnKeyDefault,
     UIReturnKeyGo,
     UIReturnKeyGoogle,
@@ -71,7 +71,7 @@ typedef enum {
     UIReturnKeyYahoo,
     UIReturnKeyDone,
     UIReturnKeyEmergencyCall,
-} UIReturnKeyType;
+};
 
 @protocol UITextInputTraits <NSObject>
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
