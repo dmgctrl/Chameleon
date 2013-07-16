@@ -408,8 +408,8 @@ static void _commonInitForUITextField(UITextField* self)
     [_textStorage addAttribute:UITextAttributeFont value:font range:(NSRange){ 0, [_textStorage length] }];
     if (!_defaultTextAttributes) {
         _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
-        [_defaultTextAttributes setObject:font forKey:UITextAttributeFont];
     }
+    [_defaultTextAttributes setObject:font forKey:UITextAttributeFont];
 }
 
 - (void) setFrame:(CGRect)frame
@@ -515,8 +515,8 @@ static void _commonInitForUITextField(UITextField* self)
     [_textStorage addAttribute:UITextAttributeTextColor value:textColor range:(NSRange){ 0, [_textStorage length] }];
     if (!_defaultTextAttributes) {
         _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
-        [_defaultTextAttributes setObject:textColor forKey:UITextAttributeTextColor];
     }
+    [_defaultTextAttributes setObject:textColor forKey:UITextAttributeTextColor];
 }
 
 
