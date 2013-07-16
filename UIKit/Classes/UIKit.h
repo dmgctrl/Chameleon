@@ -41,7 +41,7 @@
 #import <UIKit/UIBezierPath.h>
 #import <UIKit/UIButton.h>
 //#import <UIKit/UICollectionView.h>
-//#import <UIKit/UICollectionViewCell.h>
+#import <UIKit/UICollectionViewCell.h>
 //#import <UIKit/UICollectionViewController.h>
 //#import <UIKit/UICollectionViewFlowLayout.h>
 //#import <UIKit/UICollectionViewLayout.h>
