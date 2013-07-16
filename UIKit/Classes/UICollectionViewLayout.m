@@ -1,15 +1,14 @@
-//
-//  UICollectionViewLayout.m
-//  UIKit
-//
-//  Created by Andrew Heim on 7/16/13.
-//
-//
-
 #import "UICollectionViewLayout.h"
 #import "UINib.h"
 
 @implementation UICollectionViewLayout
+
+#pragma mark Getting the Collection View Information
+
+- (CGSize)collectionViewContentSize
+{
+    return CGSizeZero;
+}
 
 #pragma mark Providing Layout Attributes
 
@@ -19,22 +18,27 @@
 
 - (NSArray*) layoutAttributesForElementsInRect:(CGRect)rect
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) layoutAttributesForSupplementaryViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath *)indexPath
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) layoutAttributesForDecorationViewOfKind:(NSString*)decorationViewKind atIndexPath:(NSIndexPath*)indexPath
 {
+    return nil;
 }
 
 - (CGPoint) targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
 {
+    return CGPointZero;
 }
 
 #pragma mark Responding to Collection View Updates
@@ -48,14 +52,17 @@
 
 - (UICollectionViewLayoutAttributes*) initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString*)elementKind atIndexPath:(NSIndexPath*)elementIndexPath
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) initialLayoutAttributesForAppearingDecorationElementOfKind:(NSString*)elementKind atIndexPath:(NSIndexPath*)elementIndexPath
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath*)itemIndexPath
@@ -64,10 +71,12 @@
 
 - (UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingSupplementaryElementOfKind:(NSString*)elementKind atIndexPath:(NSIndexPath*)elementIndexPath
 {
+    return nil;
 }
 
 - (UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingDecorationElementOfKind:(NSString*)elementKind atIndexPath:(NSIndexPath*)elementIndexPath
 {
+    return nil;
 }
 
 #pragma mark Invalidating the Layout
@@ -78,6 +87,7 @@
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
 {
+    return NO;
 }
 
 #pragma mark Coordinating Animated Changes
