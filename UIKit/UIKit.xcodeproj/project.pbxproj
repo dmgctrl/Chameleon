@@ -253,12 +253,14 @@
 		3A1D44E5177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A4A915417958BEC00A196E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A4A915317958BEC00A196E1 /* MainMenu.xib */; };
-		3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915917959D3200A196E1 /* UICollectionView.h */; };
+		3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915917959D3200A196E1 /* UICollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A915C17959D3200A196E1 /* UICollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A915A17959D3200A196E1 /* UICollectionView.m */; };
 		3A4A915F1795B20F00A196E1 /* UICollectionViewLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915D1795B20E00A196E1 /* UICollectionViewLayout.h */; };
 		3A4A91601795B20F00A196E1 /* UICollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A915E1795B20E00A196E1 /* UICollectionViewLayout.m */; };
 		3A4A91621795BE8E00A196E1 /* UICollectionViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91611795BE8D00A196E1 /* UICollectionViewDelegate.h */; };
 		3A4A91641795BF4C00A196E1 /* UICollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */; };
+		3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */; };
 		3A518087177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
 		3A6B0B7617957E06006F61FD /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
@@ -770,6 +772,8 @@
 		3A4A915E1795B20E00A196E1 /* UICollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewLayout.m; sourceTree = "<group>"; };
 		3A4A91611795BE8D00A196E1 /* UICollectionViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewDelegate.h; sourceTree = "<group>"; };
 		3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewDataSource.h; sourceTree = "<group>"; };
+		3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewCell.h; sourceTree = "<group>"; };
+		3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCell.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
 		3A6B0B7517957E06006F61FD /* UIControlSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIControlSpec.m; sourceTree = "<group>"; };
 		3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCellSpec.m; sourceTree = "<group>"; };
@@ -1344,6 +1348,8 @@
 				3A4A915E1795B20E00A196E1 /* UICollectionViewLayout.m */,
 				3A4A91611795BE8D00A196E1 /* UICollectionViewDelegate.h */,
 				3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */,
+				3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */,
+				3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2040,6 +2046,7 @@
 				3A4A915F1795B20F00A196E1 /* UICollectionViewLayout.h in Headers */,
 				3A4A91621795BE8E00A196E1 /* UICollectionViewDelegate.h in Headers */,
 				3A4A91641795BF4C00A196E1 /* UICollectionViewDataSource.h in Headers */,
+				3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2432,6 +2439,7 @@
 				F92B72B81784CC0400D55A2E /* UITextStorage.m in Sources */,
 				3A4A915C17959D3200A196E1 /* UICollectionView.m in Sources */,
 				3A4A91601795B20F00A196E1 /* UICollectionViewLayout.m in Sources */,
+				3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
