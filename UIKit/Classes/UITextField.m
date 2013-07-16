@@ -402,10 +402,10 @@ static void _commonInitForUITextField(UITextField* self)
 {
     NSAssert(nil != font, @"???");
     _font = font;
-    [_textStorage addAttribute:UITextAttributeFont value:font range:(NSRange){ 0, [_textStorage length] }];
     [_placeholderTextLabel setFont:font];
     [_textLabel setFont:font];
     
+    [_textStorage addAttribute:UITextAttributeFont value:font range:(NSRange){ 0, [_textStorage length] }];
     if (!_defaultTextAttributes) {
         _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
         [_defaultTextAttributes setObject:font forKey:UITextAttributeFont];
