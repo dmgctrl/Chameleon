@@ -28,7 +28,6 @@
  */
 
 #import "UITextField.h"
-#import "UITextLayer.h"
 #import "UIColor.h"
 #import "UIFont.h"
 #import "UIBezierPath.h"
@@ -70,22 +69,12 @@ static NSString* const kUIAttributedPlaceholderKey = @"UIAttributedPlaceholder";
 static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 
-@interface UIControl () <UITextLayerContainerViewProtocol>
-@end
-
-
-@interface UITextField () <UITextLayerTextDelegate>
-@end
-
-
 @interface NSObject (UITextFieldDelegate)
 - (BOOL) textField:(UITextField*)textField doCommandBySelector:(SEL)selector;
 @end
 
 
 @implementation UITextField {
-    UITextLayer* _textLayer;
-    
     UILabel* _placeholderTextLabel;
     UILabel* _textLabel;
     _UITextFieldEditor* _textFieldEditor;
@@ -108,17 +97,8 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     } _flags;
 }
 
-- (void) dealloc
-{
-    [_textLayer removeFromSuperlayer];
-}
-
 static void _commonInitForUITextField(UITextField* self)
 {
-//    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
-//    [self->_textLayer setBackgroundColor:[[UIColor clearColor] CGColor]];
-//    [self.layer addSublayer:self->_textLayer];
-    
     self.textAlignment = UITextAlignmentLeft;
     self.font = [UIFont systemFontOfSize:17];
     self.borderStyle = UITextBorderStyleNone;
@@ -231,7 +211,6 @@ static void _commonInitForUITextField(UITextField* self)
 {
     [super layoutSubviews];
     const CGRect bounds = self.bounds;
-    _textLayer.frame = [self textRectForBounds:bounds];
 
     if ([self _isLeftViewVisible]) {
         _leftView.hidden = NO;
@@ -288,7 +267,6 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if (attributedText) {
         _attributedText = [attributedText copy];
-        _textLayer.text = [attributedText string];
         BOOL hasText = [attributedText length] > 0;
         if (hasText) {
             [_placeholderTextLabel removeFromSuperview];
@@ -387,7 +365,6 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setFont:(UIFont*)font
 {
     _font = font;
-    _textLayer.font = font;
     [_placeholderTextLabel setFont:font];
     [_textLabel setFont:font];
 }
@@ -459,16 +436,6 @@ static void _commonInitForUITextField(UITextField* self)
 {
 }
 
-- (BOOL) isSecureTextEntry
-{
-    return [_textLayer isSecureTextEntry];
-}
-
-- (void) setSecureTextEntry:(BOOL)secure
-{
-    [_textLayer setSecureTextEntry:secure];
-}
-
 - (NSString*) text
 {
     return [[self attributedText] string];
@@ -482,7 +449,6 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setTextAlignment:(UITextAlignment)textAlignment
 {
     _textAlignment = textAlignment;
-    _textLayer.textAlignment = textAlignment;
     [_placeholderTextLabel setTextAlignment:textAlignment];
     [_textLabel setTextAlignment:textAlignment];
 }
@@ -490,7 +456,6 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setTextColor:(UIColor*)textColor
 {
     _textColor = textColor;
-    _textLayer.textColor = textColor;
 }
 
 
@@ -766,7 +731,6 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (void) _textDidChange
 {
-    [self setText:[_textLayer text]];
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
 }
 
