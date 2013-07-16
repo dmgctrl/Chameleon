@@ -1,5 +1,6 @@
 #import <UIKit/UITextInputTraits.h>
 #import <UIKit/UIResponder.h>
+#import <UIKit/UIKitDefines.h>
 
 
 @protocol UIKeyInput <UITextInputTraits>
