@@ -1,13 +1,14 @@
-//
-//  UIControllerSpec.m
-//  UIKit
-//
-//  Created by Andrew Heim on 7/16/13.
-//
-//
-
-#import "UIControllerSpec.h"
-
-@implementation UIControllerSpec
-
-@end
+SPEC_BEGIN(UIControlSpec)
+describe(@"UIControl", ^{
+    context(@"default", ^{
+        UIControl* control = [[UIControl alloc] init];
+        context(@"property", ^{
+            context(@"state", ^{
+                it(@"should be normal", ^{
+                    [[@([control state]) should] equal:@(UIControlStateNormal)];
+                });
+            });
+        });
+    });
+});
+SPEC_END
