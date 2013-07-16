@@ -369,6 +369,7 @@
 		F93D77011794A3410073B778 /* _UITextFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */; };
 		F93D770517953F930073B778 /* _UITextInteractionAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770317953F930073B778 /* _UITextInteractionAssistant.h */; };
 		F93D770617953F930073B778 /* _UITextInteractionAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D770417953F930073B778 /* _UITextInteractionAssistant.m */; };
+		F93D770817954E3A0073B778 /* NSParagraphStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770717954E3A0073B778 /* NSParagraphStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F947AF14176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */; };
 		F947AF15176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */; };
 		F947AF18176F5E060057FC9A /* UIStoryboardPushSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */; };
@@ -863,6 +864,7 @@
 		F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextFieldEditor.m; sourceTree = "<group>"; };
 		F93D770317953F930073B778 /* _UITextInteractionAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInteractionAssistant.h; sourceTree = "<group>"; };
 		F93D770417953F930073B778 /* _UITextInteractionAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextInteractionAssistant.m; sourceTree = "<group>"; };
+		F93D770717954E3A0073B778 /* NSParagraphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSParagraphStyle.h; sourceTree = "<group>"; };
 		F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegueTemplate.h; sourceTree = "<group>"; };
 		F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardPushSegueTemplate.m; sourceTree = "<group>"; };
 		F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegue.h; sourceTree = "<group>"; };
@@ -1150,6 +1152,7 @@
 				148984E512EE2CFE003D4751 /* NSIndexPath+UITableView.h */,
 				148984E612EE2CFE003D4751 /* NSIndexPath+UITableView.m */,
 				F9911549177223D600B4389A /* NSAttributedString.h */,
+				F93D770717954E3A0073B778 /* NSParagraphStyle.h */,
 				F926DEC71781CF88009C3D88 /* NSStringDrawing.h */,
 				F926DECC1781E53C009C3D88 /* NSStringDrawing.m */,
 				F926DED017820608009C3D88 /* NSText.h */,
@@ -1928,6 +1931,7 @@
 				148985E612EE2CFF003D4751 /* UIView.h in Headers */,
 				148985E812EE2CFF003D4751 /* UIViewAdapter.h in Headers */,
 				148985EA12EE2CFF003D4751 /* UIViewController.h in Headers */,
+				F93D770817954E3A0073B778 /* NSParagraphStyle.h in Headers */,
 				148985EC12EE2CFF003D4751 /* UIWebView.h in Headers */,
 				148985EE12EE2CFF003D4751 /* UIWindow.h in Headers */,
 				1489860212EE2D9F003D4751 /* UIRotationGestureRecognizer.h in Headers */,

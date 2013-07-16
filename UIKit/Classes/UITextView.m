@@ -872,11 +872,11 @@ static void _commonInitForUITextView(UITextView* self)
     [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
     
     return @{
-        NSFontAttributeName: _font,
+        UITextAttributeFont: _font,
+        UITextAttributeTextColor: _textColor,
         NSKernAttributeName: @(0.0f),
         NSLigatureAttributeName: @(0.0f),
         NSParagraphStyleAttributeName: paragraphStyle,
-        (id)kCTForegroundColorAttributeName: _textColor,
     };
 }
 

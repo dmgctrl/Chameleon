@@ -34,8 +34,10 @@
 #import "UIGraphics.h"
 #import "UILabel.h"
 #import "UITapGestureRecognizer.h"
+#import "UITextStorage.h"
 #import "_UITextInteractionAssistant.h"
 #import "_UITextFieldEditor.h"
+#import "NSParagraphStyle.h"
 /**/
 #import "UIImage.h"
 #import "UIImage+UIPrivate.h"
@@ -75,6 +77,8 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 
 @implementation UITextField {
+    NSTextStorage* _textStorage;
+    
     UILabel* _placeholderTextLabel;
     UILabel* _textLabel;
     _UITextFieldEditor* _textFieldEditor;
@@ -107,6 +111,8 @@ static void _commonInitForUITextField(UITextField* self)
     self.leftViewMode = UITextFieldViewModeNever;
     self.rightViewMode = UITextFieldViewModeNever;
     self.opaque = NO;
+    
+    self->_textStorage = [[UITextStorage alloc] init];
 }
 
 - (id) initWithFrame:(CGRect)frame
@@ -263,10 +269,15 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
+- (NSAttributedString*) attributedText
+{
+    return [[NSAttributedString alloc] initWithAttributedString:_textStorage];
+}
+
 - (void) setAttributedText:(NSAttributedString*)attributedText
 {
     if (attributedText) {
-        _attributedText = [attributedText copy];
+        [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length] } withAttributedString:attributedText];
         BOOL hasText = [attributedText length] > 0;
         if (hasText) {
             [_placeholderTextLabel removeFromSuperview];
@@ -282,7 +293,7 @@ static void _commonInitForUITextField(UITextField* self)
             }
         }
     } else {
-        _attributedText = nil;
+        [_textStorage deleteCharactersInRange:(NSRange){ 0, [_textStorage length]}];
         [_textLabel removeFromSuperview], _textLabel = nil;
     }
 }
@@ -364,7 +375,9 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (void) setFont:(UIFont*)font
 {
+    NSAssert(nil != font, @"???");
     _font = font;
+    [_textStorage addAttribute:UITextAttributeFont value:font range:(NSRange){ 0, [_textStorage length] }];
     [_placeholderTextLabel setFont:font];
     [_textLabel setFont:font];
 }
@@ -438,12 +451,16 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (NSString*) text
 {
-    return [[self attributedText] string];
+    return [_textStorage string];
 }
 
 - (void) setText:(NSString*)text
 {
-    [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:nil]];
+    if (text) {
+        [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:[self _stringAttributes]]];
+    } else {
+        [self setAttributedText:nil];
+    }
 }
 
 - (void) setTextAlignment:(UITextAlignment)textAlignment
@@ -455,7 +472,9 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (void) setTextColor:(UIColor*)textColor
 {
+    NSAssert(nil != textColor, @"???");
     _textColor = textColor;
+    [_textStorage addAttribute:UITextAttributeTextColor value:textColor range:(NSRange){ 0, [_textStorage length] }];
 }
 
 
@@ -757,6 +776,23 @@ static void _commonInitForUITextField(UITextField* self)
 
 
 #pragma mark Misc.
+
+- (NSDictionary*) _stringAttributes
+{
+    NSAssert(nil != _font, @"???");
+    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setTighteningFactorForTruncation:0.0f];
+    [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
+    
+    return @{
+        UITextAttributeFont: _font,
+        UITextAttributeTextColor: _textColor,
+        NSKernAttributeName: @(0.0f),
+        NSLigatureAttributeName: @(0.0f),
+        NSParagraphStyleAttributeName: paragraphStyle,
+    };
+}
+
 
 - (NSString*) description
 {
