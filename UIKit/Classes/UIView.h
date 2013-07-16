@@ -30,6 +30,7 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIAppearance.h>
+//#import <UIKit/NSLayoutConstraint.h>
 
 
 enum {
@@ -193,13 +194,31 @@ typedef NSUInteger UIViewAnimationOptions;
 @property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch; // state is maintained, but it has no effect
 @property (nonatomic,copy) NSArray *gestureRecognizers;
 
+
 //Added to make tests compile
-- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize;
-- (CGRect)frameForAlignmentRect:(CGRect)alignmentRect;
-- (CGRect)alignmentRectForFrame:(CGRect)frame;
-- (UIEdgeInsets)alignmentRectInsets;
-- (BOOL)needsUpdateConstraints;
-- (BOOL)hasAmbiguousLayout;
+- (CGSize) systemLayoutSizeFittingSize:(CGSize)targetSize;
+- (CGRect) frameForAlignmentRect:(CGRect)alignmentRect;
+- (CGRect) alignmentRectForFrame:(CGRect)frame;
+- (UIEdgeInsets) alignmentRectInsets;
+- (BOOL) needsUpdateConstraints;
+- (BOOL) hasAmbiguousLayout;
+
+enum {
+    UILayoutConstraintAxisHorizontal = 0,
+    UILayoutConstraintAxisVertical = 1
+};
 typedef NSInteger UILayoutConstraintAxis;
+
+// following belongs in NSLayoutConstraint
+enum {
+    UILayoutPriorityRequired = 1000,
+    UILayoutPriorityDefaultHigh = 750,
+    UILayoutPriorityDefaultLow = 250,
+    UILayoutPriorityFittingSizeLevel = 50,
+};
+typedef float UILayoutPriority;
+
+- (UILayoutPriority) contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
+- (UILayoutPriority) contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis;
 
 @end
