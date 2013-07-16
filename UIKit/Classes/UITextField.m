@@ -78,6 +78,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 @implementation UITextField {
     NSTextStorage* _textStorage;
+    NSMutableDictionary* _defaultTextAttributes;
     
     UILabel* _placeholderTextLabel;
     UILabel* _textLabel;
@@ -335,6 +336,36 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
+- (NSDictionary*) defaultTextAttributes
+{
+    static NSDictionary* sharedDefaultTextAttributes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setTighteningFactorForTruncation:0.0f];
+        [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
+
+        sharedDefaultTextAttributes = @{
+            UITextAttributeFont: [UIFont systemFontOfSize:17.0f],
+            UITextAttributeTextColor: [UIColor colorWithWhite:0.0f alpha:1.0f],
+            NSKernAttributeName: @(0.0f),
+            NSLigatureAttributeName: @(0.0f),
+            NSParagraphStyleAttributeName: paragraphStyle,
+        };
+    });
+    if (_defaultTextAttributes) {
+        return [_defaultTextAttributes copy];
+    } else {
+        return sharedDefaultTextAttributes;
+    }
+}
+
+- (void) setDefaultTextAttributes:(NSDictionary*)defaultTextAttributes
+{
+    _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:defaultTextAttributes];
+    [_textStorage setAttributes:defaultTextAttributes range:(NSRange){ 0, [_textStorage length] }];
+}
+
 - (void) setDelegate:(id<UITextFieldDelegate>)delegate
 {
     if (delegate != _delegate) {
@@ -374,6 +405,11 @@ static void _commonInitForUITextField(UITextField* self)
     [_textStorage addAttribute:UITextAttributeFont value:font range:(NSRange){ 0, [_textStorage length] }];
     [_placeholderTextLabel setFont:font];
     [_textLabel setFont:font];
+    
+    if (!_defaultTextAttributes) {
+        _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
+        [_defaultTextAttributes setObject:font forKey:UITextAttributeFont];
+    }
 }
 
 - (void) setFrame:(CGRect)frame
@@ -415,10 +451,18 @@ static void _commonInitForUITextField(UITextField* self)
     }
 }
 
+- (NSString*) placeholder
+{
+    return [_attributedPlaceholder string];
+}
+
 - (void) setPlaceholder:(NSString*)placeholder
 {
-    _placeholder = placeholder;
-    [self setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:placeholder attributes:nil]];
+    if (placeholder) {
+        [self setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:placeholder attributes:[self defaultTextAttributes]]];
+    } else {
+        [self setAttributedPlaceholder:nil];
+    }
 }
 
 - (void) setRightView:(UIView*)rightView
@@ -451,7 +495,7 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) setText:(NSString*)text
 {
     if (text) {
-        [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:[self _stringAttributes]]];
+        [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:[self defaultTextAttributes]]];
     } else {
         [self setAttributedText:nil];
     }
@@ -469,6 +513,10 @@ static void _commonInitForUITextField(UITextField* self)
     NSAssert(nil != textColor, @"???");
     _textColor = textColor;
     [_textStorage addAttribute:UITextAttributeTextColor value:textColor range:(NSRange){ 0, [_textStorage length] }];
+    if (!_defaultTextAttributes) {
+        _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
+        [_defaultTextAttributes setObject:textColor forKey:UITextAttributeTextColor];
+    }
 }
 
 
@@ -793,22 +841,6 @@ static void _commonInitForUITextField(UITextField* self)
 
 
 #pragma mark Misc.
-
-- (NSDictionary*) _stringAttributes
-{
-    NSAssert(nil != _font, @"???");
-    NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setTighteningFactorForTruncation:0.0f];
-    [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
-    
-    return @{
-        UITextAttributeFont: _font,
-        UITextAttributeTextColor: _textColor,
-        NSKernAttributeName: @(0.0f),
-        NSLigatureAttributeName: @(0.0f),
-        NSParagraphStyleAttributeName: paragraphStyle,
-    };
-}
 
 - (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
 {
