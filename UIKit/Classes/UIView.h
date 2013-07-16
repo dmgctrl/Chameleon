@@ -200,5 +200,6 @@ typedef NSUInteger UIViewAnimationOptions;
 - (UIEdgeInsets)alignmentRectInsets;
 - (BOOL)needsUpdateConstraints;
 - (BOOL)hasAmbiguousLayout;
+typedef NSInteger UILayoutConstraintAxis;
 
 @end
