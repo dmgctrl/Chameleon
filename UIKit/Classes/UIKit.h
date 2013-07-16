@@ -43,6 +43,7 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UICollectionViewCell.h>
 //#import <UIKit/UICollectionViewController.h>
+#import <UIKit/UICollectionViewDelegate.h>
 //#import <UIKit/UICollectionViewFlowLayout.h>
 //#import <UIKit/UICollectionViewLayout.h>
 #import <UIKit/UIColor.h>
