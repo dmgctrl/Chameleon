@@ -67,5 +67,10 @@ typedef NSUInteger UIWebViewNavigationType;
 @property (nonatomic, assign) BOOL scalesPageToFit; // not implemented
 @property (nonatomic, readonly, strong) NSURLRequest *request;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
+// Added to make tests compile
+@property(nonatomic) BOOL suppressesIncrementalRendering;
+@property (nonatomic) BOOL keyboardDisplayRequiresUserAction;
+@property(nonatomic) BOOL allowsInlineMediaPlayback;
+@property(nonatomic) BOOL mediaPlaybackAllowsAirPlay;
 
 @end

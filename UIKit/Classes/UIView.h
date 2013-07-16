@@ -193,4 +193,12 @@ typedef NSUInteger UIViewAnimationOptions;
 @property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch; // state is maintained, but it has no effect
 @property (nonatomic,copy) NSArray *gestureRecognizers;
 
+//Added to make tests compile
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize;
+- (CGRect)frameForAlignmentRect:(CGRect)alignmentRect;
+- (CGRect)alignmentRectForFrame:(CGRect)frame;
+- (UIEdgeInsets)alignmentRectInsets;
+- (BOOL)needsUpdateConstraints;
+- (BOOL)hasAmbiguousLayout;
+
 @end

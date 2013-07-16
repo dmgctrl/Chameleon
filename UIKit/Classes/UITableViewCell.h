@@ -104,5 +104,6 @@ typedef NSUInteger UITableViewCellStateMask;
 @property (nonatomic, readonly) BOOL showingDeleteConfirmation;  // not yet implemented
 @property (nonatomic, readonly, copy) NSString *reuseIdentifier;
 @property (nonatomic, assign) CGFloat indentationWidth; // 10 per default
-
+@property (nonatomic) BOOL shouldIndentWhileEditing;
+@property(nonatomic, readonly) UITableViewCellEditingStyle editingStyle;
 @end

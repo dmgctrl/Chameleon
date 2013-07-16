@@ -122,6 +122,19 @@ typedef enum {
 @property (nonatomic, strong) UITabBarItem *tabBarItem;
 @property (nonatomic, readonly, strong) UITabBarController *tabBarController;
 
+// Added to make tests compile
+@property(nonatomic, assign) BOOL definesPresentationContext;
+@property(nonatomic, assign) BOOL providesPresentationContextTransitionStyle;
+- (BOOL) isMovingFromParentViewController;
+- (BOOL)isMovingToParentViewController;
+- (BOOL)isBeingPresented;
+- (BOOL)isBeingDismissed;
+- (BOOL)shouldAutorotate;
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation;
+- (BOOL)shouldAutomaticallyForwardRotationMethods;
+- (BOOL)shouldAutomaticallyForwardAppearanceMethods;
+- (NSUInteger)supportedInterfaceOrientations;
+
 #pragma mark Storyboard
 @property(nonatomic, readonly, retain) UIStoryboard* storyboard;
 - (void) performSegueWithIdentifier:(NSString*)identifier sender:(id)sender;

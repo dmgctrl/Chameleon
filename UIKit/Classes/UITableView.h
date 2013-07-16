@@ -141,9 +141,12 @@ typedef enum {
 @property (nonatomic, strong) UIView *tableHeaderView;
 @property (nonatomic, strong) UIView *tableFooterView;
 @property (nonatomic) BOOL allowsSelection;
+//@property (nonatomic) BOOL allowsMultipleSelection;
 @property (nonatomic) BOOL allowsSelectionDuringEditing;	// not implemented
+@property (nonatomic) BOOL allowsMultipleSelectionDuringEditing;
 @property (nonatomic, getter=isEditing) BOOL editing;
 @property (nonatomic) CGFloat sectionHeaderHeight;
 @property (nonatomic) CGFloat sectionFooterHeight;
+@property(nonatomic) NSInteger sectionIndexMinimumDisplayRowCount;
 
 @end

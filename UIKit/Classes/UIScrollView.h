@@ -85,7 +85,7 @@ UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 @property (nonatomic, readonly, getter=isDragging) BOOL dragging;
 @property (nonatomic, readonly, getter=isTracking) BOOL tracking;           // always returns NO
 @property (nonatomic, readonly, getter=isDecelerating) BOOL decelerating;	// always returns NO
-@property (nonatomic, assign) BOOL pagingEnabled;
+@property(nonatomic, getter=isPagingEnabled) BOOL pagingEnabled;
 @property (nonatomic) float decelerationRate;
 
 @property (nonatomic) float maximumZoomScale;
@@ -97,6 +97,5 @@ UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 
 @property (nonatomic, readonly) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, readonly) UIScrollWheelGestureRecognizer *scrollWheelGestureRecognizer;   // non-standard
-
 
 @end

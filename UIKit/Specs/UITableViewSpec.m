@@ -1,3 +1,4 @@
+#include <UIkit/UITableView+AppKit.h>
 SPEC_BEGIN(UITableViewSpec)
 describe(@"UITableView", ^{
     context(@"defaults", ^{
