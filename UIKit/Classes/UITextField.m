@@ -140,7 +140,7 @@ static void _commonInitForUITextField(UITextField* self)
         } else if ([coder containsValueForKey:kUITextKey]) {
             self.text = [coder decodeObjectForKey:kUITextKey];
         }
-
+        
         if ([coder containsValueForKey:kUITextAlignmentKey]) {
             self.textAlignment = [coder decodeIntegerForKey:kUITextAlignmentKey];
         }
@@ -211,22 +211,22 @@ static void _commonInitForUITextField(UITextField* self)
 - (BOOL) _isRightViewVisible
 {
     return _rightView && (_rightViewMode == UITextFieldViewModeAlways
-                         || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
-                         || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing));
+                          || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
+                          || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing));
 }
 
 - (void) layoutSubviews
 {
     [super layoutSubviews];
     const CGRect bounds = self.bounds;
-
+    
     if ([self _isLeftViewVisible]) {
         _leftView.hidden = NO;
         _leftView.frame = [self leftViewRectForBounds:bounds];
     } else {
         _leftView.hidden = YES;
     }
-
+    
     if ([self _isRightViewVisible]) {
         _rightView.hidden = NO;
         _rightView.frame = [self rightViewRectForBounds:bounds];
@@ -344,14 +344,14 @@ static void _commonInitForUITextField(UITextField* self)
         NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         [paragraphStyle setTighteningFactorForTruncation:0.0f];
         [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
-
+        
         sharedDefaultTextAttributes = @{
-            UITextAttributeFont: [UIFont systemFontOfSize:17.0f],
-            UITextAttributeTextColor: [UIColor colorWithWhite:0.0f alpha:1.0f],
-            NSKernAttributeName: @(0.0f),
-            NSLigatureAttributeName: @(0.0f),
-            NSParagraphStyleAttributeName: paragraphStyle,
-        };
+                                        UITextAttributeFont: [UIFont systemFontOfSize:17.0f],
+                                        UITextAttributeTextColor: [UIColor colorWithWhite:0.0f alpha:1.0f],
+                                        NSKernAttributeName: @(0.0f),
+                                        NSLigatureAttributeName: @(0.0f),
+                                        NSParagraphStyleAttributeName: paragraphStyle,
+                                        };
     });
     if (_defaultTextAttributes) {
         return [_defaultTextAttributes copy];
@@ -377,7 +377,7 @@ static void _commonInitForUITextField(UITextField* self)
         _delegateHas.shouldChangeCharacters = [delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)];
         _delegateHas.shouldClear = [delegate respondsToSelector:@selector(textFieldShouldClear:)];
         _delegateHas.shouldReturn = [delegate respondsToSelector:@selector(textFieldShouldReturn:)];
-		_delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textField:doCommandBySelector:)];
+        _delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textField:doCommandBySelector:)];
     }
 }
 
@@ -605,7 +605,7 @@ static void _commonInitForUITextField(UITextField* self)
             textRect.size.width -= overlap.size.width;
         }
     }
-
+    
     return textRect;
 }
 
@@ -664,11 +664,11 @@ static void _commonInitForUITextField(UITextField* self)
 			CFRelease(gradient);
 			
 			CGContextRestoreGState(context);
-						
+            
 			// top inner shadow
 			CGRect shadowFrame = CGRectMake(1, 2, borderFrame.size.width-2.0, 10.0);
 			[[UIColor colorWithWhite:0.88 alpha:1.0] set];
-			[[UIBezierPath bezierPathWithRoundedRect:shadowFrame cornerRadius:2.9] fill];	
+			[[UIBezierPath bezierPathWithRoundedRect:shadowFrame cornerRadius:2.9] fill];
 			
 			// main white area
 			CGRect whiteFrame = CGRectMake(1, 3, borderFrame.size.width-2.0, borderFrame.size.height-5.0);
@@ -776,19 +776,19 @@ static void _commonInitForUITextField(UITextField* self)
 - (void) _textDidBeginEditing
 {
     BOOL shouldClear = _clearsOnBeginEditing;
-
+    
     if (shouldClear && _delegateHas.shouldClear) {
         shouldClear = [_delegate textFieldShouldClear:self];
     }
-
+    
     if (shouldClear) {
         [self setText:@""];
     }
-
+    
     if (_delegateHas.didBeginEditing) {
         [_delegate textFieldDidBeginEditing:self];
     }
-
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
 }
 
