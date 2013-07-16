@@ -272,7 +272,7 @@ static UIColor *ClearColor = nil;
     
     for (NSInteger index = 0; index < numberOfComponents; index++) {
         if (index) [componentsString appendString:@", "];
-        [componentsString appendFormat:@"%.0f", components[index]];
+        [componentsString appendFormat:@"%g", components[index]];
     }
     [componentsString appendString:@"}"];
 
