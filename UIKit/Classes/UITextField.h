@@ -30,6 +30,7 @@
 #import <UIKit/UIControl.h>
 #import <UIKit/UIStringDrawing.h>
 #import <UIKit/UITextInputTraits.h>
+#import <UIKit/UITextInput.h>
 
 
 UIKIT_EXTERN NSString *const UITextFieldTextDidBeginEditingNotification;
@@ -69,7 +70,7 @@ typedef enum {
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
 @end
 
-@interface UITextField : UIControl <UITextInputTraits>
+@interface UITextField : UIControl <UITextInputTraits, UITextInput>
 
 #pragma mark Accessing the Text Attributes
 @property (nonatomic, copy) NSString* text;

@@ -31,13 +31,15 @@
 #import "UITextLayer.h"
 #import "UIColor.h"
 #import "UIFont.h"
-#import "UIImage+UIPrivate.h"
 #import "UIBezierPath.h"
 #import "UIGraphics.h"
 #import "UILabel.h"
+#import "UITapGestureRecognizer.h"
+#import "_UITextInteractionAssistant.h"
 #import "_UITextFieldEditor.h"
-
+/**/
 #import "UIImage.h"
+#import "UIImage+UIPrivate.h"
 #import <AppKit/NSCursor.h>
 
 
@@ -88,6 +90,8 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     UILabel* _textLabel;
     _UITextFieldEditor* _textFieldEditor;
     
+    _UITextInteractionAssistant* _interactionAssistant;
+    
     struct {
         bool shouldBeginEditing : 1;
         bool didBeginEditing : 1;
@@ -111,9 +115,9 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 static void _commonInitForUITextField(UITextField* self)
 {
-    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
-    [self->_textLayer setBackgroundColor:[[UIColor clearColor] CGColor]];
-    [self.layer addSublayer:self->_textLayer];
+//    self->_textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
+//    [self->_textLayer setBackgroundColor:[[UIColor clearColor] CGColor]];
+//    [self.layer addSublayer:self->_textLayer];
     
     self.textAlignment = UITextAlignmentLeft;
     self.font = [UIFont systemFontOfSize:17];
@@ -652,30 +656,41 @@ static void _commonInitForUITextField(UITextField* self)
 }
 
 
+#pragma mark UIView
+
+- (void) willMoveToWindow:(UIWindow*)window
+{
+    [super willMoveToWindow:window];
+    if (window) {
+        _interactionAssistant = [[_UITextInteractionAssistant alloc] initWithView:self];
+        [self addGestureRecognizer:[_interactionAssistant singleTapGesture]];
+    } else {
+        [self removeGestureRecognizer:[_interactionAssistant singleTapGesture]];
+        _interactionAssistant = nil;
+    }
+}
+
+
 #pragma mark UIResponder
 
 - (BOOL) canBecomeFirstResponder
 {
-    return ([self window] != nil) && [self isEnabled] && (!_delegateHas.shouldBeginEditing || [_delegate textFieldShouldBeginEditing:self]);
+    return ([self window] != nil) && [self isEnabled] && [self _textShouldBeginEditing];
 }
 
 - (BOOL) canResignFirstResponder
 {
-    return [self _shouldEndEditing];
-}
-
-- (BOOL) _shouldEndEditing
-{
-    return (!_delegateHas.shouldEndEditing || [_delegate textFieldShouldEndEditing:self]);
+    return [self _textShouldEndEditing];
 }
 
 - (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
         _editing = YES;
+        [self _textDidBeginEditing];
         [_textLabel removeFromSuperview];
         [_placeholderTextLabel removeFromSuperview];
-        return [_textLayer becomeFirstResponder];
+        return YES;
     } else {
         return NO;
     }
@@ -685,6 +700,7 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if ([super resignFirstResponder]) {
         _editing = NO;
+        [self _textDidEndEditing];
         if ([[self text] length]) {
             if (_textLabel) {
                 [self addSubview:_textLabel];
@@ -694,7 +710,7 @@ static void _commonInitForUITextField(UITextField* self)
                 [self addSubview:_placeholderTextLabel];
             }
         }
-        return [_textLayer resignFirstResponder];
+        return YES;
     } else {
         return NO;
     }
@@ -717,18 +733,13 @@ static void _commonInitForUITextField(UITextField* self)
     }
 
     if (shouldClear) {
-        // this doesn't work - it can cause an exception to trigger. hrm...
-        // so... rather than worry too much about it right now, just gonna delay it :P
-        //self.text = @"";
-        [self performSelector:@selector(setText:) withObject:@"" afterDelay:0];
+        [self setText:@""];
     }
-    
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
 
     if (_delegateHas.didBeginEditing) {
         [_delegate textFieldDidBeginEditing:self];
     }
+
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
 }
 
