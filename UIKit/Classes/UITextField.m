@@ -98,6 +98,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     
     struct {
         bool didBeginEditing : 1;
+        bool hasText : 1;
     } _flags;
 }
 
@@ -242,13 +243,6 @@ static void _commonInitForUITextField(UITextField* self)
 
 #pragma mark Properties
 
-- (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
-{
-    NSMutableAttributedString* s = [string mutableCopy];
-    [s addAttribute:UITextAttributeTextColor value:[UIColor colorWithWhite:0.7f alpha:1.0f] range:(NSRange){ 0, [s length] }];
-    return s;
-}
-
 - (void) setAttributedPlaceholder:(NSAttributedString*)attributedPlaceholder
 {
     if (attributedPlaceholder) {
@@ -278,8 +272,8 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if (attributedText) {
         [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length] } withAttributedString:attributedText];
-        BOOL hasText = [attributedText length] > 0;
-        if (hasText) {
+        _flags.hasText = [_textStorage length] > 0;
+        if ([self hasText]) {
             [_placeholderTextLabel removeFromSuperview];
         }
         if (!_textLabel) {
@@ -288,7 +282,7 @@ static void _commonInitForUITextField(UITextField* self)
         }
         [_textLabel setAttributedText:attributedText];
         if (![_textLabel superview]) {
-            if (![self isEditing] && hasText) {
+            if (![self isEditing] && [self hasText]) {
                 [self addSubview:_textLabel];
             }
         }
@@ -640,6 +634,29 @@ static void _commonInitForUITextField(UITextField* self)
 }
 
 
+#pragma mark UITextInput
+
+- (id<UITextInput>) inputDelegate
+{
+    return nil;
+}
+
+- (void) setInputDelegate:(id<UITextInput>)inputDelegate
+{
+    // TODO
+}
+
+- (BOOL) hasText
+{
+    return _flags.hasText;
+}
+
+- (void) insertText:(NSString*)text
+{
+    // TODO
+}
+
+
 #pragma mark UIView
 
 - (void) willMoveToWindow:(UIWindow*)window
@@ -685,7 +702,7 @@ static void _commonInitForUITextField(UITextField* self)
     if ([super resignFirstResponder]) {
         _editing = NO;
         [self _textDidEndEditing];
-        if ([[self text] length]) {
+        if ([self hasText]) {
             if (_textLabel) {
                 [self addSubview:_textLabel];
             }
@@ -793,6 +810,12 @@ static void _commonInitForUITextField(UITextField* self)
     };
 }
 
+- (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
+{
+    NSMutableAttributedString* s = [string mutableCopy];
+    [s addAttribute:UITextAttributeTextColor value:[UIColor colorWithRed:0.0f green:0.0f blue:0.1f alpha:0.22f] range:(NSRange){ 0, [s length] }];
+    return s;
+}
 
 - (NSString*) description
 {
