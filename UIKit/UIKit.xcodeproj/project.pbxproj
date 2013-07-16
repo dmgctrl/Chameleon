@@ -255,10 +255,10 @@
 		3A4A915417958BEC00A196E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A4A915317958BEC00A196E1 /* MainMenu.xib */; };
 		3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915917959D3200A196E1 /* UICollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A915C17959D3200A196E1 /* UICollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A915A17959D3200A196E1 /* UICollectionView.m */; };
-		3A4A915F1795B20F00A196E1 /* UICollectionViewLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915D1795B20E00A196E1 /* UICollectionViewLayout.h */; };
+		3A4A915F1795B20F00A196E1 /* UICollectionViewLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915D1795B20E00A196E1 /* UICollectionViewLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91601795B20F00A196E1 /* UICollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A915E1795B20E00A196E1 /* UICollectionViewLayout.m */; };
 		3A4A91621795BE8E00A196E1 /* UICollectionViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91611795BE8D00A196E1 /* UICollectionViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3A4A91641795BF4C00A196E1 /* UICollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */; };
+		3A4A91641795BF4C00A196E1 /* UICollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */; };
 		3A518087177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
