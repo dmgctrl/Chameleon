@@ -90,7 +90,7 @@ describe(@"UITableViewCell", ^{
             });
             context(@"showsReorderControl", ^{
                 it(@"should be no", ^{
-                    [[@([tableViewCell showsReorderControl]) should] beNo];
+                    [[[tableViewCell showsReorderControl] should] beNo];
                 });
             });
             context(@"indentationLevel", ^{
