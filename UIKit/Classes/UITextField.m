@@ -739,6 +739,10 @@ static void _commonInitForUITextField(UITextField* self)
         [self _textDidBeginEditing];
         [_textLabel removeFromSuperview];
         [_placeholderTextLabel removeFromSuperview];
+
+        _textFieldEditor = [[_UITextFieldEditor alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        [self addSubview:_textFieldEditor];
+        
         return YES;
     } else {
         return NO;
@@ -759,6 +763,7 @@ static void _commonInitForUITextField(UITextField* self)
                 [self addSubview:_placeholderTextLabel];
             }
         }
+        [_textFieldEditor removeFromSuperview], _textFieldEditor = nil;
         return YES;
     } else {
         return NO;
