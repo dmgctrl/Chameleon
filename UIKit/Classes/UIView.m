@@ -28,23 +28,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView+UIPrivate.h"
-#import "UIViewController+UIPrivate.h"
-#import "UIView+AppKit.h"
-#import "UIWindow.h"
-#import "UIGraphics.h"
-#import "UIColor.h"
-#import "UIViewLayoutManager.h"
-#import "UIViewAnimationGroup.h"
-#import "UIViewBlockAnimationDelegate.h"
-#import "UIViewController.h"
-#import "UIAppearanceInstance.h"
-#import "UIApplication+UIPrivate.h"
-#import "UIGestureRecognizer+UIPrivate.h"
-#import "UIScreen.h"
-#import "UIGeometry.h"
-#import "UIColor+UIPrivate.h"
-#import "UIColorRep.h"
+#import <UIKit/UIView+UIPrivate.h>
+#import <UIKit/UIViewController+UIPrivate.h>
+#import <UIKit/UIView+AppKit.h>
+#import <UIKit/UIWindow.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIViewLayoutManager.h>
+#import <UIKit/UIViewAnimationGroup.h>
+#import <UIKit/UIViewBlockAnimationDelegate.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIAppearanceInstance.h>
+#import <UIKit/UIApplication+UIPrivate.h>
+#import <UIKit/UIGestureRecognizer+UIPrivate.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIGeometry.h>
+#import <UIKit/UIColor+UIPrivate.h>
+#import <UIKit/UIColorRep.h>
 #import <QuartzCore/CALayer.h>
 
 @class NSWindow;
