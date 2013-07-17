@@ -3,7 +3,7 @@
 @class UICollectionViewCell;
 @class UICollectionReusableView;
 
-@protocol UICollectionViewDelegate <NSObject>
+@protocol UICollectionViewDelegate <UIScrollViewDelegate>
 #pragma mark Managing the Selected Cells
 
 - (BOOL) collectionView:(UICollectionView*)collectionView shouldSelectItemAtIndexPath:(NSIndexPath*)indexPath;
