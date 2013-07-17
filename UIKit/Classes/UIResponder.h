@@ -28,6 +28,8 @@
  */
 
 #import <UIKit/UIEvent.h>
+//#import <UIKit/UIView.h>
+@class UIView;
 
 @interface UIResponder : NSObject
 

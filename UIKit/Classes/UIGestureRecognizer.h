@@ -28,6 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIView.h>
 
 typedef enum {
     UIGestureRecognizerStatePossible,
@@ -39,7 +40,6 @@ typedef enum {
     UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded
 } UIGestureRecognizerState;
 
-@class UIView;
 @class UIGestureRecognizer;
 @class UITouch;
 @class UIEvent;

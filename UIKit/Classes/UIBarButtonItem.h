@@ -28,6 +28,7 @@
  */
 
 #import <UIKit/UIBarItem.h>
+#import <UIKit/UIView.h>
 
 typedef enum {
     UIBarButtonSystemItemDone,
@@ -61,7 +62,7 @@ typedef enum {
     UIBarButtonItemStyleDone,
 } UIBarButtonItemStyle;
 
-@class UIView, UIImage;
+@class  UIImage;
 
 @interface UIBarButtonItem : UIBarItem 
 

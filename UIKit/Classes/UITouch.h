@@ -28,6 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIView.h>
 
 typedef enum {
     UITouchPhaseBegan,
@@ -52,7 +53,6 @@ typedef enum {
     _UITouchDiscreteGestureMouseMove    // the mouse moved but wasn't in a gesture or the button was not being held down
 } _UITouchGesture;
 
-@class UIView;
 @class UIWindow;
 
 @interface UITouch : NSObject 

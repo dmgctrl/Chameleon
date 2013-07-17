@@ -28,8 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
-
-@class UIView;
+#import <UIKit/UIView.h>
 
 @interface UITableViewSection : NSObject
 

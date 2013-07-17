@@ -30,6 +30,7 @@
 #import <QuartzCore/CALayer.h>
 #import <Foundation/Foundation.h>
 #import "UIStringDrawing.h"
+#import <UIKit/UIView.h>
 
 @class UICustomNSClipView;
 @class UICustomNSTextView;
@@ -37,7 +38,6 @@
 @class UIFont;
 @class UIScrollView;
 @class UIWindow;
-@class UIView;
 
 @protocol UITextLayerContainerViewProtocol <NSObject>
 @required

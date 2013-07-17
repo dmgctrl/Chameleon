@@ -29,8 +29,6 @@
 
 #import "UITouch.h"
 
-@class UIView;
-
 @interface UITouch (UIPrivate)
 - (void)_setPhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount timestamp:(NSTimeInterval)timestamp;
 - (void)_updatePhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation timestamp:(NSTimeInterval)timestamp;

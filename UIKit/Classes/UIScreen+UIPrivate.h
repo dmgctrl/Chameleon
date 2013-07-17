@@ -30,7 +30,6 @@
 #import "UIScreen.h"
 
 @class CALayer;
-@class UIView;
 @class UIEvent;
 @class UIPopoverController;
 @class UIKitView;

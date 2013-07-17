@@ -3,6 +3,7 @@
 #import "UICollectionViewDelegate.h"
 #import "UICollectionViewDataSource.h"
 #import "UINib.h"
+#import <UIKit/UIView.h>
 
 
 @class UICollectionViewLayout;

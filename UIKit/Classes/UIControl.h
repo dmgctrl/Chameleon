@@ -28,6 +28,7 @@
  */
 
 #import <UIKit/UIView.h>
+#import <UIKit/UIEvent.h>
 
 enum {
     UIControlEventTouchDown           = 1 <<  0,
