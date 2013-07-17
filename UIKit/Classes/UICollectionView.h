@@ -1,13 +1,11 @@
-#import <UIKit/UIKit.h>
-#import <UIKit/UIScrollView.h> //why does this need to be here?
-#import "UICollectionViewDelegate.h"
-#import "UICollectionViewDataSource.h"
-#import "UINib.h"
-#import <UIKit/UIView.h>
+#import <UIKit/UIScrollView.h>
+#import <UIKit/UICollectionViewDelegate.h>
+#import <UIKit/UICollectionViewDataSource.h>
 
-
+@class UINib;
 @class UICollectionViewLayout;
 @class UICollectionViewLayoutAttributes;
+
 
 @interface UICollectionView : UIScrollView
 
