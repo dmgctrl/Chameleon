@@ -225,7 +225,7 @@ typedef enum {
 @property (nonatomic) CGFloat contentScaleFactor;
 
 #pragma mark Formatting Printed View Content
-– (UIViewPrintFormatter*) viewPrintFormatter;
+- (UIViewPrintFormatter*) viewPrintFormatter;
 - (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter;
 
 #pragma mark Managing Gesture Recognizers
