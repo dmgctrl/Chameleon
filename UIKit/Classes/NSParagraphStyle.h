@@ -1,11 +1,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKitDefines.h>
+#ifndef _APPKITDEFINES_H
 #import <UIKit/NSText.h>
+#endif
 #import <CoreText/CTParagraphStyle.h>
 
-
-typedef NS_ENUM(NSInteger, NSLineBreakMode) {
+typedef NS_ENUM(NSUInteger, NSLineBreakMode) {
     NSLineBreakByWordWrapping = 0,
     NSLineBreakByCharWrapping,
     NSLineBreakByClipping,

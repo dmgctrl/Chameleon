@@ -126,9 +126,13 @@
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIWebView.h>
 #import <UIKit/UIWindow.h>
+
+#ifndef _APPKITDEFINES_H
 #import <UIKit/NSAttributedString.h>
 #import <UIKit/NSText.h>
 #import <UIKit/NSParagraphStyle.h>
+#endif
+
 //#import <UIKit/NSShadow.h>
 #import <UIKit/NSStringDrawing.h>
 //#import <UIKit/NSLayoutConstraint.h>
