@@ -1216,4 +1216,164 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return [NSString stringWithFormat:@"<%@: %p; frame = %@; hidden = %@; layer = %@>", [self className], self, NSStringFromCGRect(self.frame), (self.hidden ? @"YES" : @"NO"), self.layer];
 }
 
+#pragma mark Managing the View Hierarchy
+- (void) exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2
+{
+}
+
+#pragma mark Opting in to Constraint-Based Layout
++ (BOOL) requiresConstraintBasedLayout
+{
+    return NO;
+}
+
+- (BOOL) translatesAutoresizingMaskIntoConstraints
+{
+    return NO;
+}
+
+- (void) setTranslatesAutoresizingMaskIntoConstraints:(BOOL)flag;
+{
+}
+
+#pragma mark Managing Constraints
+- (NSArray*) constraints
+{
+    return [NSArray array];
+}
+
+- (void) addConstraint:(NSLayoutConstraint*)constraint
+{
+}
+
+- (void) addConstraints:(NSArray*)constraints
+{
+}
+
+- (void) removeConstraint:(NSLayoutConstraint*)constraint
+{
+}
+
+- (void) removeConstraints:(NSArray*)constraints
+{
+}
+
+#pragma mark Measuring in Constraint-Based Layout
+- (CGSize) systemLayoutSizeFittingSize:(CGSize)targetSize
+{
+    return CGSizeZero;
+}
+
+- (CGSize) intrinsicContentSize
+{
+    return CGSizeZero;
+}
+
+- (void) invalidateIntrinsicContentSize
+{
+}
+
+- (UILayoutPriority) contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis
+{
+    return 0;
+}
+
+- (void) setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis
+{
+}
+
+- (UILayoutPriority) contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis
+{
+    return 0;
+}
+
+- (void) setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis
+{
+}
+
+#pragma mark Aligning Views with Constraint-Based Layout
+- (CGRect) alignmentRectForFrame:(CGRect)frame
+{
+    return CGRectNull;
+}
+
+- (CGRect) frameForAlignmentRect:(CGRect)alignmentRect
+{
+    return CGRectNull;
+}
+
+- (UIEdgeInsets) alignmentRectInsets
+{
+    return UIEdgeInsetsZero;
+}
+
+- (UIView*) viewForBaselineLayout
+{
+    return nil;
+}
+
+#pragma mark Triggering Constraint-Based Layout
+- (BOOL) needsUpdateConstraints
+{
+    return NO;
+}
+
+- (void) setNeedsUpdateConstraints
+{
+}
+
+- (void) updateConstraints
+{
+}
+
+- (void) updateConstraintsIfNeeded
+{
+}
+
+#pragma mark Debugging Constraint-Based Layout
+- (NSArray*) constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis
+{
+    return [NSArray array];
+}
+
+- (BOOL) hasAmbiguousLayout
+{
+    return NO;
+}
+
+- (void) exerciseAmbiguityInLayout
+{
+}
+
+#pragma mark Formatting Printed View Content
+- (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter
+{
+}
+
+#pragma mark Managing Gesture Recognizers
+- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer*) gestureRecognizer
+{
+    return NO;
+}
+
+#pragma mark Animating Views
++ (void) setAnimationStartDate:(NSDate*)startTime
+{
+}
+
+#pragma mark Preserving and Restoring State
+- (void) encodeRestorableStateWithCoder:(NSCoder*)coder
+{
+}
+
+- (void) decodeRestorableStateWithCoder:(NSCoder*)coder
+{
+}
+
+#pragma mark Ending a View Editing Session
+- (BOOL) endEditing:(BOOL)force
+{
+    return NO;
+}
+
 @end
