@@ -397,6 +397,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2
 {
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (BOOL) isDescendantOfView:(UIView*)view
@@ -499,6 +501,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (CGSize) sizeThatFits:(CGSize)size
 {
+    #warning stub, methinks
+    [self doesNotRecognizeSelector:_cmd];
     return size;
 }
 
@@ -524,6 +528,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 #pragma mark Laying out Subviews
 - (void) layoutSubviews
 {
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) setNeedsLayout
@@ -537,132 +543,188 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 }
 
 #pragma mark Opting in to Constraint-Based Layout
+
 + (BOOL) requiresConstraintBasedLayout
 {
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return NO;
 }
 
+
 - (BOOL) translatesAutoresizingMaskIntoConstraints
 {
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return NO;
 }
 
 - (void) setTranslatesAutoresizingMaskIntoConstraints:(BOOL)flag;
 {
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Managing Constraints
 - (NSArray*) constraints
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return [NSArray array];
 }
 
 - (void) addConstraint:(NSLayoutConstraint*)constraint
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) addConstraints:(NSArray*)constraints
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) removeConstraint:(NSLayoutConstraint*)constraint
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) removeConstraints:(NSArray*)constraints
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Measuring in Constraint-Based Layout
 - (CGSize) systemLayoutSizeFittingSize:(CGSize)targetSize
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return CGSizeZero;
 }
 
 - (CGSize) intrinsicContentSize
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return CGSizeZero;
 }
 
 - (void) invalidateIntrinsicContentSize
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (UILayoutPriority) contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return 0;
 }
 
 - (void) setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (UILayoutPriority) contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return 0;
 }
 
 - (void) setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Aligning Views with Constraint-Based Layout
 - (CGRect) alignmentRectForFrame:(CGRect)frame
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return CGRectNull;
 }
 
 - (CGRect) frameForAlignmentRect:(CGRect)alignmentRect
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return CGRectNull;
 }
 
 - (UIEdgeInsets) alignmentRectInsets
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return UIEdgeInsetsZero;
 }
 
 - (UIView*) viewForBaselineLayout
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 #pragma mark Triggering Constraint-Based Layout
 - (BOOL) needsUpdateConstraints
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return NO;
 }
 
 - (void) setNeedsUpdateConstraints
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) updateConstraints
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) updateConstraintsIfNeeded
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Debugging Constraint-Based Layout
 - (NSArray*) constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return [NSArray array];
 }
 
 - (BOOL) hasAmbiguousLayout
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return NO;
 }
 
 - (void) exerciseAmbiguityInLayout
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Drawing and Updating the View
 - (void)drawRect:(CGRect)rect
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void)setNeedsDisplay
@@ -697,11 +759,15 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 #pragma mark Formatting Printed View Content
 - (UIViewPrintFormatter*) viewPrintFormatter
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 - (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Managing Gesture Recognizers
@@ -740,6 +806,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
     return NO;
 }
 
@@ -805,10 +873,14 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 + (void) transitionWithView:(UIView*)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completio
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 + (void) transitionFromView:(UIView*)fromView toView:(UIView*)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Animating Views
@@ -827,6 +899,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 + (void) setAnimationStartDate:(NSDate*)startTime
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 + (void) setAnimationsEnabled:(BOOL)enabled
@@ -892,10 +966,14 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 #pragma mark Preserving and Restoring State
 - (void) encodeRestorableStateWithCoder:(NSCoder*)coder
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) decodeRestorableStateWithCoder:(NSCoder*)coder
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark Identifying the View at Runtime
@@ -979,33 +1057,47 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 #pragma mark Ending a View Editing Session
 - (BOOL) endEditing:(BOOL)force
 {
-    return NO;
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+   return NO;
 }
 
 #pragma mark Observing View-Related Changes
 
 - (void) didAddSubview:(UIView*)subview
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) willRemoveSubview:(UIView*)subview
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) willMoveToSuperview:(UIView*)newSuperview
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) didMoveToSuperview
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) willMoveToWindow:(UIWindow*)newWindow
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) didMoveToWindow
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma Overridden UIResponder Methods
@@ -1098,6 +1190,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) layoutSublayersOfLayer:(CALayer*)layer
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (id) actionForLayer:(CALayer*)theLayer forKey:(NSString*)event
@@ -1211,6 +1305,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) encodeWithCoder:(NSCoder*)coder
 {
+#warning Stub
     [self doesNotRecognizeSelector:_cmd];
 }
 
