@@ -15,8 +15,7 @@
 
 #pragma mark Drawing the Content
 - (void)drawInRect:(CGRect)rect forPageAtIndex:(NSInteger)pageIndex;
-- (CGRect)rectForPageAtIndex:(NSUInteger)pageIndex; // documentation says (NSIndex)pageIndex;
-
+- (CGRect)rectForPageAtIndex:(NSUInteger)pageIndex;
 #pragma mark Communicating with the Page Renderer
 - (void)removeFromPrintPageRenderer;
 @property(readonly) UIPrintPageRenderer* printPageRenderer;
