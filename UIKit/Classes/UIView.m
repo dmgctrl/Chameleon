@@ -1346,6 +1346,11 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 }
 
 #pragma mark Formatting Printed View Content
+- (UIViewPrintFormatter*) viewPrintFormatter
+{
+    return nil;
+}
+
 - (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter
 {
 }
