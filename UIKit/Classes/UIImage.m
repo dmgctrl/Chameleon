@@ -172,17 +172,17 @@
     return UIImageOrientationUp;
 }
 
-- (CGFloat)scale
+- (CGFloat) scale
 {
     return [self _bestRepresentationForProposedScale:2].scale;
 }
 
-- (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha
+- (void) drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha
 {
     [self drawInRect:(CGRect){point, self.size} blendMode:blendMode alpha:alpha];
 }
 
-- (void)drawInRect:(CGRect)rect blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha
+- (void) drawInRect:(CGRect)rect blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
@@ -194,16 +194,20 @@
     CGContextRestoreGState(ctx);
 }
 
-- (void)drawAtPoint:(CGPoint)point
+- (void) drawAtPoint:(CGPoint)point
 {
     [self drawInRect:(CGRect){point, self.size}];
 }
 
-- (void)drawInRect:(CGRect)rect
+- (void) drawInRect:(CGRect)rect
 {
-    if (rect.size.height > 0 && rect.size.width > 0) {
-        [self _drawRepresentation:[self _bestRepresentationForProposedScale:_UIGraphicsGetContextScaleFactor(UIGraphicsGetCurrentContext())] inRect:rect];
+    if (rect.size.height <= 0 || rect.size.width <= 0) {
+        return;
     }
+
+    CGFloat scale = _UIGraphicsGetContextScaleFactor(UIGraphicsGetCurrentContext());
+    UIImageRep* imageRep = [self _bestRepresentationForProposedScale:scale];
+    [self _drawRepresentation:imageRep inRect:rect];
 }
 
 @end
