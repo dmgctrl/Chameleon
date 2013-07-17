@@ -30,7 +30,6 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIAppearance.h>
-#import <UIKit/UIViewPrintFormatter.h>
 
 @class UIColor;
 @class CALayer;
@@ -38,6 +37,7 @@
 @class UIGestureRecognizer;
 @class NSLayoutConstraint;
 @class UIWindow;
+@class UIViewPrintFormatter;
 
 // really belongs to NSLayoutConstraint
 enum {
