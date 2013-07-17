@@ -27,24 +27,24 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIScreen.h"
-#import <UIKit/UIView.h>
+#import <UIKit/UIScreen.h>
 
 @class CALayer;
 @class UIEvent;
 @class UIPopoverController;
 @class UIKitView;
+@class UIView;
 
 @interface UIScreen () {
-    UIKitView *_UIKitView;
+    UIKitView* _UIKitView;
 }
 @end
 
 @interface UIScreen (UIPrivate)
-- (void)_setUIKitView:(UIKitView *)theView;
-- (CALayer *)_layer;
-- (BOOL)_hasResizeIndicator;
-- (void)_setPopoverController:(UIPopoverController *)controller;
-- (UIPopoverController *)_popoverController;
+- (void) _setUIKitView:(UIKitView*)theView;
+- (CALayer*) _layer;
+- (BOOL) _hasResizeIndicator;
+- (void) _setPopoverController:(UIPopoverController*)controller;
+- (UIPopoverController*) _popoverController;
 - (UIView*) _hitTest:(CGPoint)clickPoint event:(UIEvent*)theEvent;
 @end

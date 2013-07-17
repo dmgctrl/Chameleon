@@ -29,7 +29,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKitDefines.h>
-#import <UIKit/UIView.h>
 
 UIKIT_EXTERN NSString *const UIMenuControllerWillShowMenuNotification;
 UIKIT_EXTERN NSString *const UIMenuControllerDidShowMenuNotification;
@@ -38,13 +37,14 @@ UIKIT_EXTERN NSString *const UIMenuControllerDidHideMenuNotification;
 UIKIT_EXTERN NSString *const UIMenuControllerMenuFrameDidChangeNotification;
 
 @class UIWindow;
+@class UIView;
 
 @interface UIMenuController : NSObject 
 
 + (UIMenuController *)sharedMenuController;
 
 - (void)setMenuVisible:(BOOL)menuVisible animated:(BOOL)animated;
-- (void)setTargetRect:(CGRect)targetRect inView:(UIView *)targetView;		// if targetRect is CGRectNull, the menu will appear wherever the mouse cursor was at the time this method was called
+- (void)setTargetRect:(CGRect)targetRect inView:(UIView*)targetView;		// if targetRect is CGRectNull, the menu will appear wherever the mouse cursor was at the time this method was called
 - (void)update;
 
 @property (nonatomic, getter=isMenuVisible) BOOL menuVisible;

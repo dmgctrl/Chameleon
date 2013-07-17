@@ -29,7 +29,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIGeometry.h>
-#import <UIKit/UIView.h>
 
 enum {
     UIPopoverArrowDirectionUp = 1UL << 0,
@@ -42,6 +41,7 @@ enum {
 };
 typedef NSUInteger UIPopoverArrowDirection;
 
+@class UIView;
 @class UIViewController;
 @class UIPopoverController;
 @class UIBarButtonItem;

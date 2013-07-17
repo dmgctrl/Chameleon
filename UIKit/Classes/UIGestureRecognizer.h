@@ -28,7 +28,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIView.h>
+
+@class UIView;
 
 typedef enum {
     UIGestureRecognizerStatePossible,

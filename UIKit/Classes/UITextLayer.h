@@ -29,9 +29,9 @@
 
 #import <QuartzCore/CALayer.h>
 #import <Foundation/Foundation.h>
-#import "UIStringDrawing.h"
-#import <UIKit/UIView.h>
+#import <UIKit/UIStringDrawing.h>
 
+@class UIView;
 @class UICustomNSClipView;
 @class UICustomNSTextView;
 @class UIColor;
@@ -41,35 +41,35 @@
 
 @protocol UITextLayerContainerViewProtocol <NSObject>
 @required
-- (UIWindow *)window;
-- (CALayer *)layer;
-- (BOOL)isHidden;
-- (BOOL)isDescendantOfView:(UIView *)view;
-- (BOOL)becomeFirstResponder;
-- (BOOL)resignFirstResponder;
+- (UIWindow*) window;
+- (CALayer*) layer;
+- (BOOL) isHidden;
+- (BOOL) isDescendantOfView:(UIView*) view;
+- (BOOL) becomeFirstResponder;
+- (BOOL) resignFirstResponder;
 
 // if any one of these doesn't exist, then scrolling of the NSClipView is disabled
 @optional
-- (BOOL)isScrollEnabled;
-- (void)setContentOffset:(CGPoint)offset;
-- (CGPoint)contentOffset;
-- (void)setContentSize:(CGSize)size;
-- (CGSize)contentSize;
+- (BOOL) isScrollEnabled;
+- (void) setContentOffset:(CGPoint)offset;
+- (CGPoint) contentOffset;
+- (void) setContentSize:(CGSize)size;
+- (CGSize) contentSize;
 @end
 
 @protocol UITextLayerTextDelegate <NSObject>
 @required
-- (BOOL)_textShouldBeginEditing;
-- (void)_textDidBeginEditing;
-- (BOOL)_textShouldEndEditing;
-- (void)_textDidEndEditing;
-- (BOOL)_textShouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
+- (BOOL) _textShouldBeginEditing;
+- (void) _textDidBeginEditing;
+- (BOOL) _textShouldEndEditing;
+- (void) _textDidEndEditing;
+- (BOOL) _textShouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
 
 @optional
-- (void)_textDidChange;
-- (void)_textDidChangeSelection;
-- (void)_textDidReceiveReturnKey;
-- (BOOL)_textShouldDoCommandBySelector:(SEL)selector;
+- (void) _textDidChange;
+- (void) _textDidChangeSelection;
+- (void) _textDidReceiveReturnKey;
+- (BOOL) _textShouldDoCommandBySelector:(SEL)selector;
 @end
 
 @interface UITextLayer : CALayer

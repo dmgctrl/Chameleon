@@ -28,7 +28,6 @@
  */
 
 #import <Foundation/Foundation.h>
-//#import <UIKit/UIView.h>
 
 typedef enum {
     UIEventTypeTouches,

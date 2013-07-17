@@ -28,7 +28,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIView.h>
 
 typedef enum {
     UITouchPhaseBegan,
@@ -54,17 +53,18 @@ typedef enum {
 } _UITouchGesture;
 
 @class UIWindow;
+@class UIView;
 
 @interface UITouch : NSObject 
 
-- (CGPoint)locationInView:(UIView *)inView;
-- (CGPoint)previousLocationInView:(UIView *)inView;
+- (CGPoint) locationInView:(UIView*)inView;
+- (CGPoint) previousLocationInView:(UIView*)inView;
 
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic, readonly) NSUInteger tapCount;
 @property (nonatomic, readonly) UITouchPhase phase;
-@property (nonatomic, readonly, strong) UIView *view;
-@property (nonatomic, readonly, strong) UIWindow *window;
-@property (nonatomic,readonly,copy) NSArray *gestureRecognizers;
+@property (nonatomic, readonly, strong) UIView* view;
+@property (nonatomic, readonly, strong) UIWindow* window;
+@property (nonatomic,readonly,copy) NSArray* gestureRecognizers;
 
 @end
