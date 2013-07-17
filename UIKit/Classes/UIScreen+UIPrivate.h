@@ -28,6 +28,7 @@
  */
 
 #import "UIScreen.h"
+#import <UIKit/UIView.h>
 
 @class CALayer;
 @class UIEvent;
@@ -45,5 +46,5 @@
 - (BOOL)_hasResizeIndicator;
 - (void)_setPopoverController:(UIPopoverController *)controller;
 - (UIPopoverController *)_popoverController;
-- (UIView *)_hitTest:(CGPoint)clickPoint event:(UIEvent *)theEvent;
+- (UIView*) _hitTest:(CGPoint)clickPoint event:(UIEvent*)theEvent;
 @end
