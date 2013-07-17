@@ -278,7 +278,7 @@
 		3A7E65DB17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		3AC20B871795E5610070E759 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
-		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; };
+		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
 		3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B93179605A30070E759 /* UIViewPrintFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */; };

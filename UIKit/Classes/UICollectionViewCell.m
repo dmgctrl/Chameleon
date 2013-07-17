@@ -1,4 +1,4 @@
-#import "UICollectionViewCell.h"
+#import <UIKit/UICollectionViewCell.h>
 
 @implementation UICollectionViewCell
 @end

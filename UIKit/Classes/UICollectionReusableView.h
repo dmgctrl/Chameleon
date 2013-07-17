@@ -1,4 +1,7 @@
-#import <UIKit/UIKit.h>
+#import <UIKit/UIView.h>
+
+@class UICollectionViewLayoutAttributes;
+@class UICollectionViewLayout;
 
 @interface UICollectionReusableView : UIView
 
