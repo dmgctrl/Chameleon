@@ -81,7 +81,7 @@
 #import <UIKit/UIPopoverController.h>
 //#import <UIKit/UIPopoverBackgroundView.h>
 //#import <UIKit/UIPrintError.h>
-//#import <UIKit/UIPrintFormatter.h>
+#import <UIKit/UIPrintFormatter.h>
 //#import <UIKit/UIPrintInfo.h>
 //#import <UIKit/UIPrintInteractionController.h>
 //#import <UIKit/UIPrintPageRenderer.h>
@@ -124,6 +124,7 @@
 //#import <UIKit/UIVideoEditorController.h>
 #import <UIKit/UIView.h>
 #import <UIKit/UIViewController.h>
+#import <UIKit/UIViewPrintFormatter.h>
 #import <UIKit/UIWebView.h>
 #import <UIKit/UIWindow.h>
 #import <UIKit/NSAttributedString.h>

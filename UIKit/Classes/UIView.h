@@ -30,13 +30,14 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIAppearance.h>
+#import <UIKit/UIViewPrintFormatter.h>
 
 @class UIColor;
 @class CALayer;
 @class UIViewController;
 @class UIGestureRecognizer;
 @class NSLayoutConstraint;
-@class UIViewPrintFormatter;
+@class UIWindow;
 
 // really belongs to NSLayoutConstraint
 enum {
@@ -224,8 +225,8 @@ typedef enum {
 @property (nonatomic) CGFloat contentScaleFactor;
 
 #pragma mark Formatting Printed View Content
-//– (UIViewPrintFormatter*) viewPrintFormatter;
-- (void)drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter;
+– (UIViewPrintFormatter*) viewPrintFormatter;
+- (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter;
 
 #pragma mark Managing Gesture Recognizers
 - (void) addGestureRecognizer:(UIGestureRecognizer*) gestureRecognizer;

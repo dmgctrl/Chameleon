@@ -1,13 +1,6 @@
-//
-//  UIViewPrintFormatter.h
-//  UIKit
-//
-//  Created by Andrew Heim on 7/16/13.
-//
-//
-
-#import <UIKit/UIKit.h>
+#import "UIPrintFormatter.h"
+#import "UIView.h"
 
 @interface UIViewPrintFormatter : UIPrintFormatter
-
+@property(nonatomic, readonly) UIView *view;
 @end

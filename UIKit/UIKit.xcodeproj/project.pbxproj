@@ -280,6 +280,10 @@
 		3AC20B871795E5610070E759 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
+		3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3AC20B93179605A30070E759 /* UIViewPrintFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */; };
+		3AC20B96179606AD0070E759 /* UIPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B94179606A50070E759 /* UIPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3AC20B97179606AD0070E759 /* UIPrintFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B95179606A80070E759 /* UIPrintFormatter.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
 		66371E3913674EF1007B9873 /* <UIBarButtonSystemItem> add.png in Resources */ = {isa = PBXBuildFile; fileRef = 66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */; };
@@ -787,6 +791,10 @@
 		3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewControllerSpec.m; sourceTree = "<group>"; };
 		3AC20B881795E6640070E759 /* UICollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionReusableView.h; sourceTree = "<group>"; };
 		3AC20B891795E6670070E759 /* UICollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableView.m; sourceTree = "<group>"; };
+		3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewPrintFormatter.h; sourceTree = "<group>"; };
+		3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewPrintFormatter.m; sourceTree = "<group>"; };
+		3AC20B94179606A50070E759 /* UIPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPrintFormatter.h; sourceTree = "<group>"; };
+		3AC20B95179606A80070E759 /* UIPrintFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPrintFormatter.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
 		66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIBarButtonSystemItem> add.png"; path = "Resources/<UIBarButtonSystemItem> add.png"; sourceTree = "<group>"; };
@@ -1358,6 +1366,10 @@
 				3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */,
 				3AC20B881795E6640070E759 /* UICollectionReusableView.h */,
 				3AC20B891795E6670070E759 /* UICollectionReusableView.m */,
+				3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */,
+				3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */,
+				3AC20B94179606A50070E759 /* UIPrintFormatter.h */,
+				3AC20B95179606A80070E759 /* UIPrintFormatter.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2056,6 +2068,8 @@
 				3A4A91641795BF4C00A196E1 /* UICollectionViewDataSource.h in Headers */,
 				3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */,
 				3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */,
+				3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */,
+				3AC20B96179606AD0070E759 /* UIPrintFormatter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2450,6 +2464,8 @@
 				3A4A91601795B20F00A196E1 /* UICollectionViewLayout.m in Sources */,
 				3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */,
 				3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */,
+				3AC20B93179605A30070E759 /* UIViewPrintFormatter.m in Sources */,
+				3AC20B97179606AD0070E759 /* UIPrintFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
