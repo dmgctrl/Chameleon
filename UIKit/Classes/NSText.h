@@ -2,7 +2,6 @@
 #import <CoreText/CTParagraphStyle.h>
 #import <UIKit/UIKitDefines.h>
 
-#ifndef _APPKITDEFINES_H
 typedef NS_ENUM(NSInteger, NSTextAlignment) {
     NSTextAlignmentLeft      = 0,
 #if TARGET_OS_IPHONE
@@ -24,4 +23,3 @@ typedef NS_ENUM(NSInteger, NSWritingDirection) {
 
 UIKIT_EXTERN CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment nsTextAlignment);
 UIKIT_EXTERN NSTextAlignment NSTextAlignmentFromCTTextAlignment(CTTextAlignment ctTextAlignment);
-#endif

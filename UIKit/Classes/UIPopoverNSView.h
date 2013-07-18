@@ -27,32 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIView.h>
+#import <AppKit/NSView.h>
 
-@class UIImage;
+@interface UIPopoverNSView : NSView {
+}
 
-@interface UIImageView : UIView <NSCoding>
-
-#pragma mark Initializing a UIImageView Object
-- (instancetype) initWithImage:(UIImage*)image;
-- (instancetype) initWithImage:(UIImage*)image highlightedImage:(UIImage*)highlightedImage;
-
-#pragma mark Image Data
-@property (nonatomic, retain) UIImage* image;
-@property (nonatomic, retain) UIImage* highlightedImage;
-
-#pragma mark Animating Images
-@property (nonatomic, copy) NSArray* animationImages;
-@property (nonatomic, copy) NSArray* highlightedAnimationImages;
-@property (nonatomic) NSTimeInterval animationDuration;
-@property (nonatomic) NSInteger animationRepeatCount;
-
-- (void) startAnimating;
-- (void) stopAnimating;
-- (BOOL) isAnimating;
-
-#pragma mark Setting and Getting Attributes
-@property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
-@property (nonatomic, getter=isHighlighted) BOOL highlighted;
+@property (nonatomic, assign) int arrowDirection;
 
 @end
