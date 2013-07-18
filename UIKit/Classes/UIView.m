@@ -486,16 +486,18 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return newRect;
 }
 
-- (void)sizeToFit
+- (void) sizeToFit
 {
-    CGRect frame = self.frame;
-    frame.size = [self sizeThatFits:frame.size];
-    self.frame = frame;
+    CGRect frame = [self frame];
+    [self setFrame:(CGRect){
+        .origin = frame.origin,
+        .size = [self sizeThatFits:(CGSize){ CGFLOAT_MAX, CGFLOAT_MAX }]
+    }];
 }
 
-- (CGSize)sizeThatFits:(CGSize)size
+- (CGSize) sizeThatFits:(CGSize)size
 {
-    return size;
+    return [self bounds].size;
 }
 
 - (UIView *)viewWithTag:(NSInteger)tagToFind
@@ -572,6 +574,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     
     // note that the last time I checked this, the layer's background color was being set immediately on call to -setBackgroundColor:
     // when there was no -drawRect: implementation, but I needed to change this to work around issues with pattern image colors in HiDPI.
+    if (![self window]) {
+        return;
+    }
     _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
 }
 
@@ -717,16 +722,14 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 - (void)_boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
 {
     if (!CGRectEqualToRect(oldBounds, newBounds)) {
-        // setNeedsLayout doesn't seem like it should be necessary, however there was a rendering bug in a table in Flamingo that
-        // went away when this was placed here. There must be some strange ordering issue with how that layout manager stuff works.
-        // I never quite narrowed it down. This was an easy fix, if perhaps not ideal.
-        [self setNeedsLayout];
-
         if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
             if (_flags.autoresizesSubviews) {
                 for (UIView *subview in _subviews) {
                     [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
                 }
+            }
+            if ([self contentMode] == UIViewContentModeRedraw) {
+                [self setNeedsDisplay];
             }
         }
     }
