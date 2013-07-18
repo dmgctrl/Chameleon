@@ -235,9 +235,13 @@
     }
 
     if (command == @selector(insertText:)) {
-        if ([self respondsToSelector:@selector(insertText:)]) {
-            [self insertText:[key characters]];
-            return YES;
+        UIResponder* responder = self;
+        while (responder) {
+            if ([responder respondsToSelector:@selector(insertText:)]) {
+                [responder insertText:[key characters]];
+                return YES;
+            }
+            responder = [responder nextResponder];
         }
     } else if (command) {
         UIResponder* responder = self;
