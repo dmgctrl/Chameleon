@@ -27,30 +27,35 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITextView.h"
-#import "UIColor.h"
+#import <UIKit/UITextView.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIPasteboard.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/NSTextStorage.h>
+#import <UIKit/NSTextContainer.h>
+#import <UIKit/NSLayoutManager.h>
+//
 #import "UIColor+AppKit.h"
-#import "UIFont.h"
 #import "UIFont+UIPrivate.h"
-#import "UITextStorage.h"
-#import "UIScrollView.h"
-#import "UILabel.h"
-#import "UIPasteboard.h"
-#import "UIScreen.h"
-#import "UIScreen+AppKit.h"
-#import "UITouch.h"
-#import "UIWindow.h"
-#import "UIWindow+UIPrivate.h"
-#import "UIKitView.h"
-#import <QuartzCore/QuartzCore.h>
-#import <AppKit/NSCursor.h>
+#import "_UITextStorage.h"
+//
 #import <AppKit/NSColor.h>
-#import <AppKit/NSTextContainer.h>
-#import <AppKit/NSLayoutManager.h>
-#import <AppKit/NSTextStorage.h>
+#import <AppKit/NSCursor.h>
+//
+#import <QuartzCore/QuartzCore.h>
 
-#import "UIGraphics.h"
-#import <AppKit/NSGraphicsContext.h>
+
+typedef NS_ENUM(NSUInteger, NSSelectionGranularity) {
+    NSSelectByCharacter = 0,
+    NSSelectByWord = 1,
+    NSSelectByParagraph = 2
+};
+
+typedef NS_ENUM(NSUInteger, NSSelectionAffinity) {
+    NSSelectionAffinityUpstream = 0,
+    NSSelectionAffinityDownstream = 1
+};
 
 
 NSString *const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidBeginEditingNotification";
@@ -274,7 +279,7 @@ static void _commonInitForUITextView(UITextView* self)
     if (!_textContainer) {
         _textContainer = [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
         [_textContainer setWidthTracksTextView:YES];
-        _textStorage = [[UITextStorage alloc] init];
+        _textStorage = [[_UITextStorage alloc] init];
         _layoutManager = [[NSLayoutManager alloc] init];
         [_layoutManager addTextContainer:_textContainer];
         [_textStorage addLayoutManager:_layoutManager];

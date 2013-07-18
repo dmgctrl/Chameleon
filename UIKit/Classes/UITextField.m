@@ -34,7 +34,7 @@
 #import "UIGraphics.h"
 #import "UILabel.h"
 #import "UITapGestureRecognizer.h"
-#import "UITextStorage.h"
+#import "_UITextStorage.h"
 #import "_UITextInteractionAssistant.h"
 #import "_UITextFieldEditor.h"
 #import "NSParagraphStyle.h"
@@ -114,7 +114,7 @@ static void _commonInitForUITextField(UITextField* self)
     self.rightViewMode = UITextFieldViewModeNever;
     self.opaque = NO;
     
-    self->_textStorage = [[UITextStorage alloc] init];
+    self->_textStorage = [[_UITextStorage alloc] init];
 }
 
 - (id) initWithFrame:(CGRect)frame

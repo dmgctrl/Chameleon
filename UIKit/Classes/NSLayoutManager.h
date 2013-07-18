@@ -1,3 +1,3 @@
 #ifndef _APPKITDEFINES_H
-#import <AppKit/NSTextContainer.h>
+#import <AppKit/NSLayoutManager.h>
 #endif
