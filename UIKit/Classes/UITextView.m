@@ -444,7 +444,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) selectAll:(id)sender
 {
-    [self setSelectedRange:NSMakeRange(0, [[self text] length])];
+    [self setSelectedRange:NSMakeRange(0, [[self textStorage] length])];
 }
 
 - (void) insertText:(NSString*)text
@@ -489,7 +489,7 @@ static void _commonInitForUITextView(UITextView* self)
         }
         [self _replaceCharactersInRange:range withString:@""];
         [self _didChangeText];
-    } else if (range.location < [[self text]length]) {
+    } else if (range.location < [[self textStorage] length]) {
         if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
             return;
         }
@@ -1020,7 +1020,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
 {
-    NSInteger textLength = [[self text]length];
+    NSInteger textLength = [[self textStorage] length];
     NSRange lineFragmentRange;
     [[self layoutManager] lineFragmentRectForGlyphAtIndex:(index >= textLength ? textLength - 1 : index) effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
     NSInteger newIndex = lineFragmentRange.location;
@@ -1032,7 +1032,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index
 {
-    NSInteger textLength = [[self text]length];
+    NSInteger textLength = [[self textStorage] length];
     if (index >= textLength) {
         return textLength;
     }
@@ -1053,26 +1053,26 @@ static void _commonInitForUITextView(UITextView* self)
     NSInteger end = NSMaxRange(range);
     BOOL upstream = (end <= _selectionOrigin);
     NSInteger index = upstream ? start : end;
-    NSString* string = [[self textStorage] string];
+    NSString* string = [self text];
     return [string lineRangeForRange:(NSRange){ index, 0 }].location == index;
 }
 
 - (BOOL) _isLocationAtEndOfParagraph
 { //Needs upstream distinction
-    NSString* string = [[self textStorage] string];
+    NSString* string = [self text];
     NSUInteger index = NSMaxRange([self selectedRange]);
     return NSMaxRange([string paragraphRangeForRange:(NSRange){ index, 0 }]) == index + 1;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index
 {
-    NSString* string = [[self textStorage] string];
+    NSString* string = [self text];
     return [string paragraphRangeForRange:(NSRange){ index, 0 }].location;
 }
 
 - (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index
 {
-    NSString* string = [[self textStorage] string];
+    NSString* string = [self text];
     NSInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
     if (newIndex > 0 && [[NSCharacterSet newlineCharacterSet] characterIsMember:[string characterAtIndex:newIndex - 1]]) {
         newIndex--;
@@ -1087,7 +1087,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index
 {
-    return [[self text] length];
+    return [[self textStorage] length];
 }
 
 
