@@ -1081,13 +1081,16 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return CGRectContainsPoint(self.bounds, point);
 }
 
+
 #pragma mark Ending a View Editing Session
+
 - (BOOL) endEditing:(BOOL)force
 {
 #warning Stub
     [self doesNotRecognizeSelector:_cmd];
-   return NO;
+    return NO;
 }
+
 
 #pragma mark Observing View-Related Changes
 
@@ -1121,13 +1124,17 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     // Intentionally Empty
 }
 
+
 #pragma Overridden UIResponder Methods
+
 - (UIResponder*) nextResponder
 {
     return (UIResponder*)[self _viewController] ?: (UIResponder*)_superview;
 }
 
+
 #pragma mark CALayer Delegate
+
 - (void) displayLayer:(CALayer*)theLayer
 {
     // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
