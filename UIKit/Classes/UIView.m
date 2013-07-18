@@ -528,8 +528,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 #pragma mark Laying out Subviews
 - (void) layoutSubviews
 {
-    #warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 - (void) setNeedsLayout
@@ -1094,38 +1093,32 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) didAddSubview:(UIView*)subview
 {
-#warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 - (void) willRemoveSubview:(UIView*)subview
 {
-#warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 - (void) willMoveToSuperview:(UIView*)newSuperview
 {
-#warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 - (void) didMoveToSuperview
 {
-#warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 - (void) willMoveToWindow:(UIWindow*)newWindow
 {
-#warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 - (void) didMoveToWindow
 {
-#warning Stub
-    [self doesNotRecognizeSelector:_cmd];
+    // Intentionally Empty
 }
 
 #pragma Overridden UIResponder Methods
