@@ -69,7 +69,6 @@ static NSString* const kUIEditableKey = @"UIEditable";
 @property (nonatomic) NSTextContainer* textContainer;
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic) BOOL shouldShowInsertionPoint;
-- (NSUInteger) characterIndexAtPoint:(CGPoint)point;
 - (NSRect) _viewRectForCharacterRange:(NSRange)range;
 @end
 
@@ -390,7 +389,7 @@ static void _commonInitForUITextView(UITextView* self)
     [self becomeFirstResponder];
     UITouch* touch = [[event allTouches] anyObject];
     [self _setAndScrollToRange:(NSRange){
-        [_textContainerView characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]],
+        [self characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]],
         0
     }];
     [super touchesBegan:touches withEvent:event];
@@ -399,7 +398,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
 {
     UITouch* touch = [[event allTouches] anyObject];
-    NSUInteger index = [_textContainerView characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]];
+    NSUInteger index = [self characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]];
     NSRange range;
     if (_selectionOrigin > index) {
         range = (NSRange){ index, _selectionOrigin - index };
@@ -408,7 +407,7 @@ static void _commonInitForUITextView(UITextView* self)
         range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
         [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
     }
-    [self _setSelectedRange:range affinity:NSSelectByCharacter stillSelecting:YES];
+    [self _setSelectedRange:range affinity:_selectionAffinity stillSelecting:YES];
     [super touchesMoved:touches withEvent:event];
 }
 
@@ -756,6 +755,27 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) insertNewline:(id)sender
 {
     [self insertText:@"\n"];
+}
+
+
+#pragma mark UITextInput
+
+- (NSUInteger) characterIndexAtPoint:(CGPoint)point
+{
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSTextStorage* textStorage = [layoutManager textStorage];
+    NSUInteger length = [textStorage length];
+    
+    CGFloat fraction = 0;
+    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
+    if (index >= length) {
+        return length;
+    } else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[[textStorage string] characterAtIndex:index]]) {
+        return index;
+    } else {
+        return index + (fraction > 0.75);
+    }
 }
 
 
@@ -1120,24 +1140,6 @@ static void _commonInitForUITextView(UITextView* self)
         [self.layer addSublayer:_insertionPoint];
     }
     return self;
-}
-
-- (NSUInteger) characterIndexAtPoint:(CGPoint)point
-{
-    NSTextContainer* textContainer = [self textContainer];
-    NSLayoutManager* layoutManager = [textContainer layoutManager];
-    NSTextStorage* textStorage = [layoutManager textStorage];
-    NSUInteger length = [textStorage length];
-
-    CGFloat fraction = 0;
-    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
-    if (index >= length) {
-        return length;
-    } else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[[textStorage string] characterAtIndex:index]]) {
-        return index;
-    } else {
-        return index + (fraction > 0.75);
-    }
 }
 
 - (void) drawRect:(CGRect)rect
