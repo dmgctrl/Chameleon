@@ -54,7 +54,7 @@ static UIColor *ClearColor = nil;
     id _representations;
 }
 
-- (id)initWithNSColor:(NSColor *)aColor
+- (instancetype) initWithNSColor:(NSColor *)aColor
 {
     if (!aColor) {
         self = nil;
@@ -69,7 +69,7 @@ static UIColor *ClearColor = nil;
     return self;
 }
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     CGFloat r = [coder decodeFloatForKey:@"UIRed"];
     CGFloat g = [coder decodeFloatForKey:@"UIGreen"];
@@ -87,53 +87,53 @@ static UIColor *ClearColor = nil;
 }
 
 
-+ (id)colorWithNSColor:(NSColor *)c
++ (instancetype) colorWithNSColor:(NSColor *)c
 {
     return [[self alloc] initWithNSColor:c];
 }
 
-+ (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha
++ (UIColor*) colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha
 {
     return [[self alloc] initWithWhite:white alpha:alpha];
 }
 
-+ (UIColor *)colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha
++ (UIColor*) colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha
 {
     return [[self alloc] initWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
 }
 
-+ (UIColor *)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
++ (UIColor*) colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
 {
     return [[self alloc] initWithRed:red green:green blue:blue alpha:alpha];
 }
 
-+ (UIColor *)colorWithCGColor:(CGColorRef)ref
++ (UIColor*) colorWithCGColor:(CGColorRef)ref
 {
     return [[self alloc] initWithCGColor:ref];
 }
 
-+ (UIColor *)colorWithPatternImage:(UIImage *)patternImage
++ (UIColor*) colorWithPatternImage:(UIImage *)patternImage
 {
     return [[self alloc] initWithPatternImage:patternImage];
 }
 
-+ (UIColor *)blackColor			{ return BlackColor ?: (BlackColor = [[self alloc] initWithWhite:0.f alpha:1.f]); }
-+ (UIColor *)darkGrayColor		{ return DarkGrayColor ?: (DarkGrayColor = [[self alloc] initWithWhite:0.333f alpha:1.f]); }
-+ (UIColor *)lightGrayColor		{ return LightGrayColor ?: (LightGrayColor = [[self alloc] initWithWhite:0.667f alpha:1.f]); }
-+ (UIColor *)whiteColor			{ return WhiteColor ?: (WhiteColor = [[self alloc] initWithWhite:1.f alpha:1.f]); }
-+ (UIColor *)grayColor			{ return GrayColor ?: (GrayColor = [[self alloc] initWithWhite:0.5f alpha:1.f]); }
-+ (UIColor *)redColor			{ return RedColor ?: (RedColor = [[self alloc] initWithRed:1.f green:0.f blue:0.f alpha:1.f]); }
-+ (UIColor *)greenColor			{ return GreenColor ?: (GreenColor = [[self alloc] initWithRed:0.f green:1.f blue:0.f alpha:1.f]); }
-+ (UIColor *)blueColor			{ return BlueColor ?: (BlueColor = [[self alloc] initWithRed:0.f green:0.f blue:1.f alpha:1.f]); }
-+ (UIColor *)cyanColor			{ return CyanColor ?: (CyanColor = [[self alloc] initWithRed:0.f green:1.f blue:1.f alpha:1.f]); }
-+ (UIColor *)yellowColor		{ return YellowColor ?: (YellowColor = [[self alloc] initWithRed:1.f green:1.f blue:0.f alpha:1.f]); }
-+ (UIColor *)magentaColor		{ return MagentaColor ?: (MagentaColor = [[self alloc] initWithRed:1.f green:0.f blue:1.f alpha:1.f]); }
-+ (UIColor *)orangeColor		{ return OrangeColor ?: (OrangeColor = [[self alloc] initWithRed:1.f green:0.5f blue:0.f alpha:1.f]); }
-+ (UIColor *)purpleColor		{ return PurpleColor ?: (PurpleColor = [[self alloc] initWithRed:0.5f green:0.f blue:0.5f alpha:1.f]); }
-+ (UIColor *)brownColor			{ return BrownColor ?: (BrownColor = [[self alloc] initWithRed:0.6f green:0.4f blue:0.2f alpha:1.f]); }
-+ (UIColor *)clearColor			{ return ClearColor ?: (ClearColor = [[self alloc] initWithWhite:0.f alpha:0.f]); }
++ (UIColor*) blackColor			{ return BlackColor ?: (BlackColor = [[self alloc] initWithWhite:0.f alpha:1.f]); }
++ (UIColor*) darkGrayColor		{ return DarkGrayColor ?: (DarkGrayColor = [[self alloc] initWithWhite:0.333f alpha:1.f]); }
++ (UIColor*) lightGrayColor		{ return LightGrayColor ?: (LightGrayColor = [[self alloc] initWithWhite:0.667f alpha:1.f]); }
++ (UIColor*) whiteColor			{ return WhiteColor ?: (WhiteColor = [[self alloc] initWithWhite:1.f alpha:1.f]); }
++ (UIColor*) grayColor			{ return GrayColor ?: (GrayColor = [[self alloc] initWithWhite:0.5f alpha:1.f]); }
++ (UIColor*) redColor			{ return RedColor ?: (RedColor = [[self alloc] initWithRed:1.f green:0.f blue:0.f alpha:1.f]); }
++ (UIColor*) greenColor			{ return GreenColor ?: (GreenColor = [[self alloc] initWithRed:0.f green:1.f blue:0.f alpha:1.f]); }
++ (UIColor*) blueColor			{ return BlueColor ?: (BlueColor = [[self alloc] initWithRed:0.f green:0.f blue:1.f alpha:1.f]); }
++ (UIColor*) cyanColor			{ return CyanColor ?: (CyanColor = [[self alloc] initWithRed:0.f green:1.f blue:1.f alpha:1.f]); }
++ (UIColor*) yellowColor		{ return YellowColor ?: (YellowColor = [[self alloc] initWithRed:1.f green:1.f blue:0.f alpha:1.f]); }
++ (UIColor*) magentaColor		{ return MagentaColor ?: (MagentaColor = [[self alloc] initWithRed:1.f green:0.f blue:1.f alpha:1.f]); }
++ (UIColor*) orangeColor		{ return OrangeColor ?: (OrangeColor = [[self alloc] initWithRed:1.f green:0.5f blue:0.f alpha:1.f]); }
++ (UIColor*) purpleColor		{ return PurpleColor ?: (PurpleColor = [[self alloc] initWithRed:0.5f green:0.f blue:0.5f alpha:1.f]); }
++ (UIColor*) brownColor			{ return BrownColor ?: (BrownColor = [[self alloc] initWithRed:0.6f green:0.4f blue:0.2f alpha:1.f]); }
++ (UIColor*) clearColor			{ return ClearColor ?: (ClearColor = [[self alloc] initWithWhite:0.f alpha:0.f]); }
 
-- (id)initWithWhite:(CGFloat)white alpha:(CGFloat)alpha
+- (instancetype) initWithWhite:(CGFloat)white alpha:(CGFloat)alpha
 {
     CGColorRef color = CGColorCreateGenericGray(white, alpha);
     if (nil == color) {
@@ -144,12 +144,12 @@ static UIColor *ClearColor = nil;
     return self;
 }
 
-- (id)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha
+- (instancetype) initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha
 {
     return [self initWithNSColor:[NSColor colorWithDeviceHue:hue saturation:saturation brightness:brightness alpha:alpha]];
 }
 
-- (id)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
+- (instancetype) initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
 {
     CGColorRef color = CGColorCreateGenericRGB(red, green, blue, alpha);
     if (nil == color) {
@@ -160,7 +160,7 @@ static UIColor *ClearColor = nil;
     return self;
 }
 
-- (id)_initWithRepresentations:(NSArray *)reps
+- (instancetype) _initWithRepresentations:(NSArray *)reps
 {
     if ([reps count] == 0) {
         self = nil;
@@ -170,12 +170,12 @@ static UIColor *ClearColor = nil;
     return self;
 }
 
-- (id)initWithCGColor:(CGColorRef)ref
+- (instancetype) initWithCGColor:(CGColorRef)ref
 {
     return [self _initWithRepresentations:@[[[UIColorRep alloc] initWithCGColor:ref]]];
 }
 
-- (id)initWithPatternImage:(UIImage *)patternImage
+- (instancetype) initWithPatternImage:(UIImage *)patternImage
 {
     NSArray *imageReps = [patternImage _representations];
     NSMutableArray *colorReps = [NSMutableArray arrayWithCapacity:[imageReps count]];
@@ -187,7 +187,7 @@ static UIColor *ClearColor = nil;
     return [self _initWithRepresentations:colorReps];
 }
 
-- (UIColorRep *)_bestRepresentationForProposedScale:(CGFloat)scale
+- (UIColorRep*) _bestRepresentationForProposedScale:(CGFloat)scale
 {
     UIColorRep *bestRep = nil;
     
@@ -277,6 +277,11 @@ static UIColor *ClearColor = nil;
     [componentsString appendString:@"}"];
 
     return [NSString stringWithFormat:@"<%@: %p; colorSpace = %@; components = %@>", [self className], self, colorSpace, componentsString];
+}
+
+- (NSString*) colorSpaceName
+{
+    return (__bridge_transfer NSString*)CGColorSpaceCopyName(CGColorGetColorSpace([self CGColor]));
 }
 
 - (BOOL) isEqual:(id)object {
