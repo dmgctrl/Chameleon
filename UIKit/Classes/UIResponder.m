@@ -105,7 +105,12 @@
     if ([[self class] instancesRespondToSelector:action]) {
         return YES;
     } else {
-        return [[self nextResponder] canPerformAction:action withSender:sender];
+        UIResponder* responder = [self nextResponder];
+        if ([responder respondsToSelector:@selector(canPerformAction:withSender:)]) {
+            return [responder canPerformAction:action withSender:sender];
+        } else {
+            return NO;
+        }
     }
 }
 
