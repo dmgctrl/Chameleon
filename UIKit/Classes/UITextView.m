@@ -204,11 +204,6 @@ static void _commonInitForUITextView(UITextView* self)
     [_textContainerView setNeedsDisplay];
 }
 
-- (void) setFrame:(CGRect)frame
-{
-    [super setFrame:frame];
-}
-
 - (UIKeyboardAppearance) keyboardAppearance
 {
     return UIKeyboardAppearanceDefault;
