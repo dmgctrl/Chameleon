@@ -111,7 +111,7 @@
 #import <UIKit/UITabBarController.h>
 #import <UIKit/UITabBarItem.h>
 #import <UIKit/UITableView.h>
-//#import <UIKit/UITableViewHeaderFooterView.h>
+#import <UIKit/UITableViewHeaderFooterView.h>
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/UITableViewController.h>
 #import <UIKit/UITapGestureRecognizer.h>

@@ -34,6 +34,7 @@
 UIKIT_EXTERN NSString *const UITableViewIndexSearch;
 
 @class UITableView;
+@class UITableViewHeaderFooterView;
 
 @protocol UITableViewDelegate <UIScrollViewDelegate>
 @optional
@@ -132,6 +133,11 @@ typedef enum {
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animate;
 
+- (UITableViewHeaderFooterView*) headerViewForSection:(NSInteger)section;
+- (UITableViewHeaderFooterView*) footerViewForSection:(NSInteger)section;
+
+- (NSArray*) indexPathsForSelectedRows;
+
 @property (nonatomic, readonly) UITableViewStyle style;
 @property (nonatomic, assign) id<UITableViewDelegate> delegate;
 @property (nonatomic, assign) id<UITableViewDataSource> dataSource;
@@ -141,12 +147,16 @@ typedef enum {
 @property (nonatomic, strong) UIView *tableHeaderView;
 @property (nonatomic, strong) UIView *tableFooterView;
 @property (nonatomic) BOOL allowsSelection;
-//@property (nonatomic) BOOL allowsMultipleSelection;
+@property (nonatomic) BOOL allowsMultipleSelection;
 @property (nonatomic) BOOL allowsSelectionDuringEditing;	// not implemented
 @property (nonatomic) BOOL allowsMultipleSelectionDuringEditing;
 @property (nonatomic, getter=isEditing) BOOL editing;
 @property (nonatomic) CGFloat sectionHeaderHeight;
 @property (nonatomic) CGFloat sectionFooterHeight;
-@property(nonatomic) NSInteger sectionIndexMinimumDisplayRowCount;
+@property (nonatomic) NSInteger sectionIndexMinimumDisplayRowCount;
+
+@property (nonatomic, readwrite, retain) UIView* backgroundView;
+@property (nonatomic, retain) UIColor* sectionIndexColor;
+@property (nonatomic, retain) UIColor* sectionIndexTrackingBackgroundColor;
 
 @end
