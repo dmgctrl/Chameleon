@@ -65,6 +65,8 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 
     UIViewControllerAppearState _appearState;
     
+    NSMutableArray* _childViewControllers;
+    
     struct {
         BOOL wantsFullScreenLayout : 1;
         BOOL modalInPopover : 1;
@@ -360,16 +362,33 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 {
 }
 
-- (void) addChildViewController:(UIViewController *)childController
+- (NSArray*) childViewControllers
 {
+    return _childViewControllers ?: @[];
+}
+
+- (void) addChildViewController:(UIViewController*)childController
+{
+    NSAssert(nil != childController, @"???");
     [childController willMoveToParentViewController:self];
     [childController _setParentViewController:self];
+    if (!_childViewControllers) {
+        _childViewControllers = [NSMutableArray arrayWithObject:childController];
+    } else {
+        [_childViewControllers addObject:childController];
+    }
 }
 
 - (void) removeFromParentViewController
 {
     [self willMoveToParentViewController:nil];
-    [self _setParentViewController:nil];
+    [_parentViewController _removeChildViewController:self];
+}
+
+- (void) _removeChildViewController:(UIViewController*)childController
+{
+    [childController _setParentViewController:nil];
+    [_childViewControllers removeObject:childController];
 }
 
 - (void) willMoveToParentViewController:(UIViewController *)parent
@@ -500,6 +519,8 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
             appearState = UIViewControllerStateDidAppear;
         } else if (_appearState == UIViewControllerStateWillDisappear) {
             appearState = UIViewControllerStateDidDisappear;
+        } else {
+            return;
         }
         [self _setViewAppearState:appearState isAnimating:NO];
         _flags.isInAnimatedVCTransition = NO;

@@ -136,8 +136,8 @@ typedef enum {
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 @property (nonatomic, assign) BOOL definesPresentationContext;
 @property (nonatomic, assign) BOOL providesPresentationContextTransitionStyle;
-- (void) presentModalViewController:(UIViewController*)modalViewController animated:(BOOL)animated;
-- (void) dismissModalViewControllerAnimated:(BOOL)animated;
+- (void) presentModalViewController:(UIViewController*)modalViewController animated:(BOOL)animated UIKIT_DEPRECATED;
+- (void) dismissModalViewControllerAnimated:(BOOL)animated UIKIT_DEPRECATED;
 
 #pragma mark Getting Other Related View Controllers
 @property (nonatomic, readonly) UIViewController* presentingViewController;
