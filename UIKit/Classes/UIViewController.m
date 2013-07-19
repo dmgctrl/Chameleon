@@ -75,7 +75,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 @synthesize navigationItem = _navigationItem;
 @synthesize view = _view;
 
-- (id)init
+- (instancetype) init
 {
     NSBundle* bundle = [NSBundle bundleForClass:[self class]];
     NSString* nibPath = [bundle pathForResource:NSStringFromClass([self class]) ofType:@"nib"];
@@ -92,7 +92,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (id) initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+- (instancetype) initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
     if (nil != (self = [super init])) {
         _nibName = [nibName copy];
@@ -102,7 +102,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     return self;
 }
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
         if ([coder containsValueForKey:kUINibNameKey]) {
@@ -123,7 +123,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [_view _setViewController:nil];
 }

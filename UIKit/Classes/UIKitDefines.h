@@ -16,3 +16,5 @@
 #endif
 
 #define UIKIT_STATIC_INLINE	static inline
+
+#define UIKIT_DEPRECATED DEPRECATED_ATTRIBUTE
