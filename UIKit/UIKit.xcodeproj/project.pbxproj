@@ -240,11 +240,7 @@
 		38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38615C77133A81B900841EEA /* UIFont+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B11339680400E041B3 /* UINavigationItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523AF1339680400E041B3 /* UINavigationItem+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B513396B5B00E041B3 /* UINavigationBar+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523B413396B5B00E041B3 /* UINavigationBar+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		3A1A396A1781CB7800644CCB /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
-		3A1A397017822DB000644CCB /* UITableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A396E17822DB000644CCB /* UITableViewSpec.m */; };
 		3A1A397A17837CB600644CCB /* UIScrollViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397817837CB600644CCB /* UIScrollViewSpec.m */; };
-		3A1A397F178471D200644CCB /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
-		3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
 		3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A4A915417958BEC00A196E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A4A915317958BEC00A196E1 /* MainMenu.xib */; };
 		3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915917959D3200A196E1 /* UICollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -260,8 +256,6 @@
 		3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
-		3A7E65CD1785CB0600218CD7 /* UIWebViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */; };
-		3A7E65D71786031400218CD7 /* UIViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
@@ -2509,15 +2503,9 @@
 				F98A10AD17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */,
 				3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */,
 				3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */,
-				3A1A396A1781CB7800644CCB /* UITextViewSpec.m in Sources */,
-				3A1A397017822DB000644CCB /* UITableViewSpec.m in Sources */,
 				3A1A397A17837CB600644CCB /* UIScrollViewSpec.m in Sources */,
-				3A1A397F178471D200644CCB /* UIViewSpec.m in Sources */,
 				3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */,
-				3A7E65D71786031400218CD7 /* UIViewControllerSpec.m in Sources */,
-				3A7E65CD1785CB0600218CD7 /* UIWebViewSpec.m in Sources */,
 				3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */,
-				3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */,
 				3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */,
 				3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */,
 				3A6B0B7717957E06006F61FD /* UIControlSpec.m in Sources */,
