@@ -1394,7 +1394,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
             [self resignFirstResponder];
         }
         
-        [_viewController viewWillMoveToWindow:toWindow];
+        [_viewController _viewWillMoveToWindow:toWindow];
         [self _setAppearanceNeedsUpdate];
         [self willMoveToWindow:toWindow];
         
@@ -1407,7 +1407,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 - (void) _didMoveFromWindow:(UIWindow*)fromWindow toWindow:(UIWindow*)toWindow
 {
     if (fromWindow != toWindow) {
-        [_viewController viewDidMoveToWindow:toWindow];
+        [_viewController _viewDidMoveToWindow:toWindow];
         [self didMoveToWindow];
 		
         for (UIView *subview in self.subviews) {

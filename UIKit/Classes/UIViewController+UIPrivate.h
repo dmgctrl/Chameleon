@@ -37,10 +37,9 @@ typedef enum {
 } UIViewControllerAppearState;
 
 @interface UIViewController (UIPrivate)
-- (void)_setParentViewController:(UIViewController *)controller;
-- (void)_setViewAppearState:(UIViewControllerAppearState)state isAnimating:(BOOL)animating;
-- (void)viewWillMoveToWindow:(UIWindow *)window;
-- (void)viewDidMoveToWindow:(UIWindow *)window;
-- (BOOL)beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated;
-- (BOOL)_endAppearanceTransition;
+- (void) _setParentViewController:(UIViewController*)parentController;
+- (void) _setViewAppearState:(UIViewControllerAppearState)state isAnimating:(BOOL)animating;
+- (void) _viewWillMoveToWindow:(UIWindow*)window;
+- (void) _viewDidMoveToWindow:(UIWindow*)window;
+- (void) _removeChildViewController:(UIViewController*)childController;
 @end

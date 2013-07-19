@@ -252,6 +252,8 @@
 		3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */; };
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
+		3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
+		3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
 		3A6B0B7717957E06006F61FD /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
 		3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
@@ -325,6 +327,10 @@
 		A2E9947813C79DBE00B7D49F /* UIWindow+AppKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E9947613C79DBE00B7D49F /* UIWindow+AppKit.m */; };
 		F900793013E7405600DFAF19 /* UISegment.h in Headers */ = {isa = PBXBuildFile; fileRef = F900792E13E7405600DFAF19 /* UISegment.h */; };
 		F900793113E7405600DFAF19 /* UISegment.m in Sources */ = {isa = PBXBuildFile; fileRef = F900792F13E7405600DFAF19 /* UISegment.m */; };
+		F90FB16D1799C11D003BF54B /* image_with_underscores.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646415C37EF400F3523B /* image_with_underscores.png */; };
+		F90FB16E1799C11D003BF54B /* image-with-hyphens.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646515C37EF500F3523B /* image-with-hyphens.png */; };
+		F90FB16F1799C11D003BF54B /* white-noalpha-100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646115C36A7500F3523B /* white-noalpha-100x100.png */; };
+		F90FB1701799C11D003BF54B /* white-noalpha-100x100@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */; };
 		F9177F9613BA317200619E3D /* UITableViewCellLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */; };
 		F9177F9713BA317200619E3D /* UITableViewCellLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */; };
 		F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */; };
@@ -784,6 +790,7 @@
 		3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewCell.h; sourceTree = "<group>"; };
 		3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCell.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
+		3A5A60521799A34600E633C9 /* UIResponderSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponderSpec.m; sourceTree = "<group>"; };
 		3A6B0B7517957E06006F61FD /* UIControlSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIControlSpec.m; sourceTree = "<group>"; };
 		3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCellSpec.m; sourceTree = "<group>"; };
 		3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableViewSpec.m; sourceTree = "<group>"; };
@@ -1597,6 +1604,14 @@
 			name = UITextField;
 			sourceTree = "<group>";
 		};
+		3A5A60501799A30100E633C9 /* UIResponder */ = {
+			isa = PBXGroup;
+			children = (
+				3A5A60521799A34600E633C9 /* UIResponderSpec.m */,
+			);
+			name = UIResponder;
+			sourceTree = "<group>";
+		};
 		3A6B0B7317957D92006F61FD /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1768,6 +1783,7 @@
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				3A7E65B81784EF7500218CD7 /* UIImageView */,
 				F9B3C1F1177111AA00C92009 /* UILabel */,
+				3A5A60501799A30100E633C9 /* UIResponder */,
 				3A1A397617837C6D00644CCB /* UIScrollView */,
 				F97674921769431C0073489E /* UIStoryboard */,
 				F98A10AA1773754000BF8586 /* UIStringDrawing */,
@@ -2113,9 +2129,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "UIKit" */;
 			buildPhases = (
-				8DC2EF500486A6940098B216 /* Headers */,
 				8DC2EF520486A6940098B216 /* Resources */,
 				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF500486A6940098B216 /* Headers */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
 			);
 			buildRules = (
@@ -2283,6 +2299,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F90FB16D1799C11D003BF54B /* image_with_underscores.png in Resources */,
+				F90FB16E1799C11D003BF54B /* image-with-hyphens.png in Resources */,
+				F90FB16F1799C11D003BF54B /* white-noalpha-100x100.png in Resources */,
+				F90FB1701799C11D003BF54B /* white-noalpha-100x100@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2524,6 +2544,7 @@
 				F94CAD78179997A100A560E8 /* UIButtonSpec.m in Sources */,
 				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
+				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2561,6 +2582,7 @@
 				F94CAD71179994A800A560E8 /* UIWebViewSpec.m in Sources */,
 				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */,
+				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
