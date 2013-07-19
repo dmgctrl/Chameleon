@@ -242,7 +242,6 @@
 		38E523B513396B5B00E041B3 /* UINavigationBar+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523B413396B5B00E041B3 /* UINavigationBar+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		3A1A396A1781CB7800644CCB /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
 		3A1A397017822DB000644CCB /* UITableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A396E17822DB000644CCB /* UITableViewSpec.m */; };
-		3A1A397517834F2C00644CCB /* UITableViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397317834F2C00644CCB /* UITableViewCellSpec.m */; };
 		3A1A397A17837CB600644CCB /* UIScrollViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397817837CB600644CCB /* UIScrollViewSpec.m */; };
 		3A1A397F178471D200644CCB /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
 		3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
@@ -376,6 +375,7 @@
 		F947AF15176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */; };
 		F947AF18176F5E060057FC9A /* UIStoryboardPushSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */; };
 		F947AF19176F5E060057FC9A /* UIStoryboardPushSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = F947AF17176F5E060057FC9A /* UIStoryboardPushSegue.m */; };
+		F94CAD621799895900A560E8 /* UIScrollViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397817837CB600644CCB /* UIScrollViewSpec.m */; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
 		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; };
 		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; };
@@ -2484,6 +2484,7 @@
 				F9C4F682179983CE00D8E583 /* NSBundle+TestUtilities.m in Sources */,
 				F9C4F683179983D900D8E583 /* UIStringDrawingSpec.m in Sources */,
 				F9C4F6871799843800D8E583 /* UITextFieldSpec.m in Sources */,
+				F94CAD621799895900A560E8 /* UIScrollViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2508,7 +2509,6 @@
 				F98A10AD17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */,
 				3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */,
 				3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */,
-				3A1A397517834F2C00644CCB /* UITableViewCellSpec.m in Sources */,
 				3A1A396A1781CB7800644CCB /* UITextViewSpec.m in Sources */,
 				3A1A397017822DB000644CCB /* UITableViewSpec.m in Sources */,
 				3A1A397A17837CB600644CCB /* UIScrollViewSpec.m in Sources */,
@@ -2727,6 +2727,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TestHarness.app/TestHarness";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SDKROOT)/Developer/Library/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
@@ -2747,6 +2748,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TestHarness.app/TestHarness";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SDKROOT)/Developer/Library/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
