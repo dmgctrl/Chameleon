@@ -27,24 +27,26 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController+UIPrivate.h"
-#import "UIView+UIPrivate.h"
-#import "UIScreen.h"
-#import "UIWindow.h"
-#import "UIScreen.h"
-#import "UINavigationBar.h"
-#import "UIBarButtonItem.h"
-#import "UINavigationController.h"
-#import "UISplitViewController.h"
-#import "UIToolbar.h"
-#import "UIScreen.h"
-#import "UITabBarController.h"
-#import "UINib.h"
-#import "UINibLoading.h"
-#import "UIStoryboard.h"
+#import <UIKit/UIViewController.h>
+//
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UINavigationBar.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UINib.h>
+#import <UIKit/UINibLoading.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UISplitViewController.h>
+#import <UIKit/UIStoryboard.h>
+#import <UIKit/UIStoryboardSegue.h>
+#import <UIKit/UIStoryboardSegueTemplate.h>
+#import <UIKit/UITabBarController.h>
+#import <UIKit/UIToolbar.h>
+#import <UIKit/UIWindow.h>
+//
 #import "UIStoryboard+UIPrivate.h"
-#import "UIStoryboardSegueTemplate.h"
-#import "UIStoryboardSegue.h"
+#import "UIView+UIPrivate.h"
+#import "UIViewController+UIPrivate.h"
 
 
 static NSString* const kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
