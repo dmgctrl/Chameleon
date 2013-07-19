@@ -252,6 +252,8 @@
 		3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */; };
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
+		3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
+		3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
 		3A6B0B7717957E06006F61FD /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
 		3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
@@ -784,6 +786,7 @@
 		3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewCell.h; sourceTree = "<group>"; };
 		3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCell.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
+		3A5A60521799A34600E633C9 /* UIResponderSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponderSpec.m; sourceTree = "<group>"; };
 		3A6B0B7517957E06006F61FD /* UIControlSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIControlSpec.m; sourceTree = "<group>"; };
 		3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCellSpec.m; sourceTree = "<group>"; };
 		3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableViewSpec.m; sourceTree = "<group>"; };
@@ -1597,6 +1600,14 @@
 			name = UITextField;
 			sourceTree = "<group>";
 		};
+		3A5A60501799A30100E633C9 /* UIResponder */ = {
+			isa = PBXGroup;
+			children = (
+				3A5A60521799A34600E633C9 /* UIResponderSpec.m */,
+			);
+			name = UIResponder;
+			sourceTree = "<group>";
+		};
 		3A6B0B7317957D92006F61FD /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1768,6 +1779,7 @@
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				3A7E65B81784EF7500218CD7 /* UIImageView */,
 				F9B3C1F1177111AA00C92009 /* UILabel */,
+				3A5A60501799A30100E633C9 /* UIResponder */,
 				3A1A397617837C6D00644CCB /* UIScrollView */,
 				F97674921769431C0073489E /* UIStoryboard */,
 				F98A10AA1773754000BF8586 /* UIStringDrawing */,
@@ -2524,6 +2536,7 @@
 				F94CAD78179997A100A560E8 /* UIButtonSpec.m in Sources */,
 				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
+				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2561,6 +2574,7 @@
 				F94CAD71179994A800A560E8 /* UIWebViewSpec.m in Sources */,
 				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */,
+				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
