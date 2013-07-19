@@ -65,7 +65,7 @@ describe(@"UITextView", ^{
             });
             context(@"delegate", ^{
                 it(@"should be nil", ^{
-                    [[[textView delegate] should] beNil];
+                    [[(NSObject*)[textView delegate] should] beNil];
                 });
             });
             context(@"inputView", ^{

@@ -376,6 +376,8 @@
 		F94CAD6817998F3900A560E8 /* UITableViewHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94CAD6617998F3900A560E8 /* UITableViewHeaderFooterView.m */; };
 		F94CAD69179990C400A560E8 /* UITableViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397317834F2C00644CCB /* UITableViewCellSpec.m */; };
 		F94CAD6A179990D800A560E8 /* UITableViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397317834F2C00644CCB /* UITableViewCellSpec.m */; };
+		F94CAD6B179991CD00A560E8 /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
+		F94CAD6C179991EA00A560E8 /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
 		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; };
 		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; };
@@ -2493,6 +2495,7 @@
 				F94CAD621799895900A560E8 /* UIScrollViewSpec.m in Sources */,
 				F94CAD6417998DC500A560E8 /* UITableViewSpec.m in Sources */,
 				F94CAD6A179990D800A560E8 /* UITableViewCellSpec.m in Sources */,
+				F94CAD6C179991EA00A560E8 /* UITextViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2525,6 +2528,7 @@
 				3A6B0B7717957E06006F61FD /* UIControlSpec.m in Sources */,
 				F94CAD6317998C9F00A560E8 /* UITableViewSpec.m in Sources */,
 				F94CAD69179990C400A560E8 /* UITableViewCellSpec.m in Sources */,
+				F94CAD6B179991CD00A560E8 /* UITextViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
