@@ -240,34 +240,37 @@ static const CGFloat ToolbarHeight = 28;
 
 - (void) transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL))completion
 {
-    if (self.view.window) {
-        [fromViewController beginAppearanceTransition:NO animated:duration > 0];
-        [toViewController beginAppearanceTransition:YES animated:duration > 0];
+    UIView* view = [self view];
+    BOOL animated = duration > 0;
+    BOOL sendBeginEndAppearance = [view window] != nil;
+
+    if (sendBeginEndAppearance) {
+        [fromViewController beginAppearanceTransition:NO animated:animated];
+        [toViewController beginAppearanceTransition:YES animated:animated];
     }
-    
-    BOOL delegateHasWillShowViewController = _delegateHas.willShowViewController;
-    BOOL delegateHasDidShowViewController = _delegateHas.didShowViewController;
-    
-    if (delegateHasWillShowViewController) {
-        [_delegate navigationController:self willShowViewController:toViewController animated:duration > 0];
+    if (_delegateHas.willShowViewController) {
+        [_delegate navigationController:self willShowViewController:toViewController animated:animated];
     }
-    
-    [self.view addSubview:_containerView];
     
     [UIView animateWithDuration:duration
-                     animations:animations
-                     completion:^(BOOL finished){
-                         if (completion) {
-                             completion(finished);
-                         }
-                         if (self.view.window) {
-                             [fromViewController _endAppearanceTransition];
-                             [toViewController _endAppearanceTransition];
-                         }
-                         if (delegateHasDidShowViewController) {
-                             [_delegate navigationController:self didShowViewController:toViewController animated:duration > 0];
-                         }
-                     }
+        animations:^{
+            [view addSubview:_containerView];
+            if (animations) {
+                animations();
+            }
+        }
+        completion:^(BOOL finished){
+            if (completion) {
+                completion(finished);
+            }
+            if (sendBeginEndAppearance) {
+                [fromViewController endAppearanceTransition];
+                [toViewController endAppearanceTransition];
+            }
+            if (_delegateHas.didShowViewController) {
+                [_delegate navigationController:self didShowViewController:toViewController animated:animated];
+            }
+        }
      ];
 }
 

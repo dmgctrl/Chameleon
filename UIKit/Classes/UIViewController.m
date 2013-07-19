@@ -360,34 +360,40 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 {
 }
 
-- (void)addChildViewController:(UIViewController *)childController
+- (void) addChildViewController:(UIViewController *)childController
 {
     [childController willMoveToParentViewController:self];
     [childController _setParentViewController:self];
 }
 
-- (void)removeFromParentViewController
+- (void) removeFromParentViewController
 {
     [self willMoveToParentViewController:nil];
     [self _setParentViewController:nil];
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
+- (void) willMoveToParentViewController:(UIViewController *)parent
 {
 }
 
-- (void)didMoveToParentViewController:(UIViewController *)parent
+- (void) didMoveToParentViewController:(UIViewController *)parent
 {
 }
 
-- (void)transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
+- (void) transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
 {
-    [fromViewController beginAppearanceTransition:NO animated:duration > 0];
-    [toViewController beginAppearanceTransition:YES animated:duration > 0];
+    UIView* view = [self view];
+    BOOL sendBeginEndAppearance = [view window] != nil;
+
+    if (sendBeginEndAppearance) {
+        [fromViewController beginAppearanceTransition:NO animated:duration > 0];
+        [toViewController beginAppearanceTransition:YES animated:duration > 0];
+    }
+
     [UIView animateWithDuration:duration
         animations:^{
             [[fromViewController view] removeFromSuperview];
-            [[self view] addSubview:[toViewController view]];
+            [view addSubview:[toViewController view]];
             if (animations) {
                 animations();
             }
@@ -396,8 +402,10 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
             if (completion) {
                 completion(finished);
             }
-            [fromViewController _endAppearanceTransition];
-            [toViewController _endAppearanceTransition];
+            if (sendBeginEndAppearance) {
+                [fromViewController endAppearanceTransition];
+                [toViewController endAppearanceTransition];
+            }
         }
      ];
 }
@@ -448,7 +456,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (void)viewWillMoveToWindow:(UIWindow *)window
+- (void) _viewWillMoveToWindow:(UIWindow*)window
 {
     if (!_flags.isInAnimatedVCTransition) {
         if (window) {
@@ -459,7 +467,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (void)viewDidMoveToWindow:(UIWindow *)window
+- (void) _viewDidMoveToWindow:(UIWindow*)window
 {
     if (!_flags.isInAnimatedVCTransition) {
         if (window) {
@@ -484,7 +492,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (BOOL)_endAppearanceTransition
+- (void) endAppearanceTransition
 {
     if (_flags.isInAnimatedVCTransition) {
         UIViewControllerAppearState appearState;
@@ -492,14 +500,10 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
             appearState = UIViewControllerStateDidAppear;
         } else if (_appearState == UIViewControllerStateWillDisappear) {
             appearState = UIViewControllerStateDidDisappear;
-        } else {
-            return NO;
         }
         [self _setViewAppearState:appearState isAnimating:NO];
         _flags.isInAnimatedVCTransition = NO;
-        return YES;
     }
-    return NO;
 }
 
 - (NSString *)description
