@@ -1,3 +1,4 @@
+#include <UIKit/UITableView.h>
 SPEC_BEGIN(UITableViewSpec)
 describe(@"UITableView", ^{
     context(@"defaults", ^{
@@ -75,12 +76,12 @@ describe(@"UITableView", ^{
             });
             context(@"dataSource", ^{
                 it(@"should be nil", ^{
-                    [[[tableView dataSource] should] beNil];
+                    [[(NSObject*)[tableView dataSource] should] beNil];
                 });
             });
             context(@"delegate", ^{
                 it(@"should be nil", ^{
-                    [[[tableView delegate] should] beNil];
+                    [[(NSObject*)[tableView delegate] should] beNil];
                 });
             });
             context(@"sectionIndexMinimumDisplayRowCount", ^{
@@ -102,15 +103,14 @@ describe(@"UITableView", ^{
         context(@"Method", ^{
             context(@"numberOfRowsInSection", ^{
                 it(@"should be nil", ^{
-                    [[[tableView numberOfRowsInSection:0] should] beNil];
+                    [[@([tableView numberOfRowsInSection:0]) should] equal:@(0)];
                 });
             });
-            // the following test crashes
-//            context(@"numberOfSections", ^{
-//                it(@"should be nil", ^{
-//                    [[[tableView numberOfSections] should] beNil];
-//                });
-//            });
+            context(@"numberOfSections", ^{
+                it(@"should be nil", ^{
+                    [[@([tableView numberOfSections]) should] equal:@(1)];
+                });
+            });
             context(@"headerViewForSection", ^{
                 it(@"should be nil", ^{
                     [[[tableView headerViewForSection:0] should] beNil];

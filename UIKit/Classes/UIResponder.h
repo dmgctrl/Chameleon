@@ -29,6 +29,8 @@
 
 #import <UIKit/UIEvent.h>
 
+@class UIView;
+
 @interface UIResponder : NSObject
 
 - (UIResponder *)nextResponder;

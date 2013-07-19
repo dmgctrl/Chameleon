@@ -74,11 +74,12 @@ typedef enum {
 @property (nonatomic) UIEdgeInsets titleEdgeInsets;
 @property (nonatomic) UIEdgeInsets imageEdgeInsets;
 
-@property (nonatomic, readonly, strong) NSString *currentTitle;
-@property (nonatomic, readonly, strong) UIColor *currentTitleColor;
-@property (nonatomic, readonly, strong) UIColor *currentTitleShadowColor;
-@property (nonatomic, readonly, strong) UIImage *currentImage;
-@property (nonatomic, readonly, strong) UIImage *currentBackgroundImage;
-
+@property (nonatomic, readonly, strong) NSString* currentTitle;
+@property (nonatomic, readonly, strong) NSAttributedString* currentAttributedTitle;
+@property (nonatomic, readonly, strong) UIColor* currentTitleColor;
+@property (nonatomic, readonly, strong) UIColor* currentTitleShadowColor;
+@property (nonatomic, readonly, strong) UIImage* currentImage;
+@property (nonatomic, readonly, strong) UIImage* currentBackgroundImage;
+@property (nonatomic, retain) UIColor* tintColor;
 
 @end

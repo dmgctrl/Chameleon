@@ -50,7 +50,7 @@ typedef enum {
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 
 - (NSSet *)allTouches;
-- (NSSet *)touchesForView:(UIView *)view;
+- (NSSet *)touchesForView:(UIView*)view;
 - (NSSet *)touchesForWindow:(UIWindow *)window;
 - (NSSet *)touchesForGestureRecognizer:(UIGestureRecognizer *)gesture;
 

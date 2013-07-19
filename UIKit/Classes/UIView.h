@@ -31,17 +31,57 @@
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIAppearance.h>
 
+@class UIColor;
+@class CALayer;
+@class UIViewController;
+@class UIGestureRecognizer;
+@class NSLayoutConstraint;
+@class UIWindow;
+@class UIViewPrintFormatter;
 
+// really belongs to NSLayoutConstraint
 enum {
-    UIViewAutoresizingNone                 = 0,
-    UIViewAutoresizingFlexibleLeftMargin   = 1 << 0,
-    UIViewAutoresizingFlexibleWidth        = 1 << 1,
-    UIViewAutoresizingFlexibleRightMargin  = 1 << 2,
-    UIViewAutoresizingFlexibleTopMargin    = 1 << 3,
-    UIViewAutoresizingFlexibleHeight       = 1 << 4,
-    UIViewAutoresizingFlexibleBottomMargin = 1 << 5
+    UILayoutPriorityRequired = 1000,
+    UILayoutPriorityDefaultHigh = 750,
+    UILayoutPriorityDefaultLow = 250,
+    UILayoutPriorityFittingSizeLevel = 50,
 };
-typedef NSUInteger UIViewAutoresizing;
+typedef float UILayoutPriority;
+
+#pragma mark Constants
+enum {
+    UIViewAnimationOptionLayoutSubviews            = 1 <<  0,
+    UIViewAnimationOptionAllowUserInteraction      = 1 <<  1,
+    UIViewAnimationOptionBeginFromCurrentState     = 1 <<  2,
+    UIViewAnimationOptionRepeat                    = 1 <<  3,
+    UIViewAnimationOptionAutoreverse               = 1 <<  4,
+    UIViewAnimationOptionOverrideInheritedDuration = 1 <<  5,
+    UIViewAnimationOptionOverrideInheritedCurve    = 1 <<  6,
+    UIViewAnimationOptionAllowAnimatedContent      = 1 <<  7,
+    UIViewAnimationOptionShowHideTransitionViews   = 1 <<  8,
+    
+    UIViewAnimationOptionCurveEaseInOut            = 0 << 16,
+    UIViewAnimationOptionCurveEaseIn               = 1 << 16,
+    UIViewAnimationOptionCurveEaseOut              = 2 << 16,
+    UIViewAnimationOptionCurveLinear               = 3 << 16,
+    
+    UIViewAnimationOptionTransitionNone            = 0 << 20,
+    UIViewAnimationOptionTransitionFlipFromLeft    = 1 << 20,
+    UIViewAnimationOptionTransitionFlipFromRight   = 2 << 20,
+    UIViewAnimationOptionTransitionCurlUp          = 3 << 20,
+    UIViewAnimationOptionTransitionCurlDown        = 4 << 20,
+    UIViewAnimationOptionTransitionCrossDissolve   = 5 << 20,
+    UIViewAnimationOptionTransitionFlipFromTop     = 6 << 20,
+    UIViewAnimationOptionTransitionFlipFromBottom  = 7 << 20,
+};
+typedef NSUInteger UIViewAnimationOptions;
+
+typedef enum {
+    UIViewAnimationCurveEaseInOut,
+    UIViewAnimationCurveEaseIn,
+    UIViewAnimationCurveEaseOut,
+    UIViewAnimationCurveLinear
+} UIViewAnimationCurve;
 
 typedef enum {
     UIViewContentModeScaleToFill,
@@ -59,12 +99,26 @@ typedef enum {
     UIViewContentModeBottomRight,
 } UIViewContentMode;
 
-typedef enum {
-    UIViewAnimationCurveEaseInOut,
-    UIViewAnimationCurveEaseIn,
-    UIViewAnimationCurveEaseOut,
-    UIViewAnimationCurveLinear
-} UIViewAnimationCurve;
+enum {
+    UILayoutConstraintAxisHorizontal = 0,
+    UILayoutConstraintAxisVertical = 1
+};
+typedef NSInteger UILayoutConstraintAxis;
+
+const CGSize UILayoutFittingCompressedSize;
+const CGSize UILayoutFittingExpandedSize;
+const CGFloat UIViewNoIntrinsicMetric;
+
+enum {
+    UIViewAutoresizingNone                 = 0,
+    UIViewAutoresizingFlexibleLeftMargin   = 1 << 0,
+    UIViewAutoresizingFlexibleWidth        = 1 << 1,
+    UIViewAutoresizingFlexibleRightMargin  = 1 << 2,
+    UIViewAutoresizingFlexibleTopMargin    = 1 << 3,
+    UIViewAutoresizingFlexibleHeight       = 1 << 4,
+    UIViewAutoresizingFlexibleBottomMargin = 1 << 5
+};
+typedef NSUInteger UIViewAutoresizing;
 
 typedef enum {
     UIViewAnimationTransitionNone,
@@ -74,123 +128,164 @@ typedef enum {
     UIViewAnimationTransitionCurlDown,
 } UIViewAnimationTransition;
 
-enum {
-    UIViewAnimationOptionLayoutSubviews            = 1 <<  0,		// not currently supported
-    UIViewAnimationOptionAllowUserInteraction      = 1 <<  1,
-    UIViewAnimationOptionBeginFromCurrentState     = 1 <<  2,
-    UIViewAnimationOptionRepeat                    = 1 <<  3,
-    UIViewAnimationOptionAutoreverse               = 1 <<  4,
-    UIViewAnimationOptionOverrideInheritedDuration = 1 <<  5,		// not currently supported
-    UIViewAnimationOptionOverrideInheritedCurve    = 1 <<  6,		// not currently supported
-    UIViewAnimationOptionAllowAnimatedContent      = 1 <<  7,		// not currently supported
-    UIViewAnimationOptionShowHideTransitionViews   = 1 <<  8,		// not currently supported
-    
-    UIViewAnimationOptionCurveEaseInOut            = 0 << 16,
-    UIViewAnimationOptionCurveEaseIn               = 1 << 16,
-    UIViewAnimationOptionCurveEaseOut              = 2 << 16,
-    UIViewAnimationOptionCurveLinear               = 3 << 16,
-    
-    UIViewAnimationOptionTransitionNone            = 0 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionFlipFromLeft    = 1 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionFlipFromRight   = 2 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionCurlUp          = 3 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionCurlDown        = 4 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionCrossDissolve   = 5 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionFlipFromTop     = 6 << 20,		// not currently supported
-    UIViewAnimationOptionTransitionFlipFromBottom  = 7 << 20,		// not currently supported
-};
-typedef NSUInteger UIViewAnimationOptions;
-
-@class UIColor;
-@class CALayer;
-@class UIViewController;
-@class UIGestureRecognizer;
-
 @interface UIView : UIResponder <NSCoding>
 
-+ (Class)layerClass;
+#pragma mark Initializing a View Object
+- (id) initWithFrame:(CGRect)aRect;
 
-- (id)initWithFrame:(CGRect)frame;
-- (void)addSubview:(UIView *)subview;
-- (void)insertSubview:(UIView *)subview atIndex:(NSInteger)index;
-- (void)insertSubview:(UIView *)subview belowSubview:(UIView *)below;
-- (void)insertSubview:(UIView *)subview aboveSubview:(UIView *)above;
-- (void)removeFromSuperview;
-- (void)bringSubviewToFront:(UIView *)subview;
-- (void)sendSubviewToBack:(UIView *)subview;
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView *)fromView;
-- (CGRect)convertRect:(CGRect)toConvert toView:(UIView *)toView;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView *)fromView;
-- (CGPoint)convertPoint:(CGPoint)toConvert toView:(UIView *)toView;
-- (void)setNeedsDisplay;
-- (void)setNeedsDisplayInRect:(CGRect)invalidRect;
-- (void)drawRect:(CGRect)rect;
-- (void)sizeToFit;
-- (CGSize)sizeThatFits:(CGSize)size;
-- (void)setNeedsLayout;
-- (void)layoutIfNeeded;
-- (void)layoutSubviews;
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event;
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event;
-- (UIView *)viewWithTag:(NSInteger)tag;
-- (BOOL)isDescendantOfView:(UIView *)view;
+#pragma mark Configuring a View’s Visual Appearance
+@property (nonatomic, copy) UIColor* backgroundColor;
+@property (nonatomic, getter=isHidden) BOOL hidden;
+@property (nonatomic) CGFloat alpha;
+@property (nonatomic, getter=isOpaque) BOOL opaque;
+@property (nonatomic) BOOL clipsToBounds;
+@property (nonatomic) BOOL clearsContextBeforeDrawing;
++ (Class) layerClass;
+@property (nonatomic, readonly, retain) CALayer *layer;
 
-- (void)addGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;		// not implemented
-- (void)removeGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;	// not implemented
+#pragma mark Configuring the Event-Related Behavior
+@property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled;
+@property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch;
 
-- (void)didAddSubview:(UIView *)subview;
-- (void)didMoveToSuperview;
-- (void)didMoveToWindow;
-- (void)willMoveToSuperview:(UIView *)newSuperview;
-- (void)willMoveToWindow:(UIWindow *)newWindow;
-- (void)willRemoveSubview:(UIView *)subview;
-
-+ (void)animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
-
-// the block-based transition methods are not currently implemented
-+ (void)transitionWithView:(UIView *)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
-+ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion;
-
-+ (void)beginAnimations:(NSString *)animationID context:(void *)context;
-+ (void)commitAnimations;
-+ (void)setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState;
-+ (void)setAnimationCurve:(UIViewAnimationCurve)curve;
-+ (void)setAnimationDelay:(NSTimeInterval)delay;
-+ (void)setAnimationDelegate:(id)delegate;
-+ (void)setAnimationDidStopSelector:(SEL)selector;
-+ (void)setAnimationDuration:(NSTimeInterval)duration;
-+ (void)setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses;
-+ (void)setAnimationRepeatCount:(float)repeatCount;
-+ (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView *)view cache:(BOOL)cache;
-+ (void)setAnimationWillStartSelector:(SEL)selector;
-+ (BOOL)areAnimationsEnabled;
-+ (void)setAnimationsEnabled:(BOOL)enabled;
-
+#pragma mark Configuring the Bounds and Frame Rectangles
 @property (nonatomic) CGRect frame;
 @property (nonatomic) CGRect bounds;
 @property (nonatomic) CGPoint center;
 @property (nonatomic) CGAffineTransform transform;
-@property (nonatomic, readonly) UIView *superview;
-@property (nonatomic, readonly) UIWindow *window;
-@property (nonatomic, readonly, copy) NSArray *subviews;
-@property (nonatomic) CGFloat alpha;
-@property (nonatomic, getter=isOpaque) BOOL opaque;
-@property (nonatomic) BOOL clearsContextBeforeDrawing;
-@property (nonatomic, copy) UIColor *backgroundColor;
-@property (nonatomic, readonly) CALayer *layer;
-@property (nonatomic) BOOL clipsToBounds;
-@property (nonatomic) BOOL autoresizesSubviews;
+
+#pragma mark Managing the View Hierarchy
+@property (nonatomic, readonly) UIView* superview;
+@property (nonatomic, readonly, copy) NSArray* subviews;
+@property (nonatomic, readonly) UIWindow* window;
+- (void) addSubview:(UIView*)view;
+- (void) bringSubviewToFront:(UIView*)view;
+- (void) sendSubviewToBack:(UIView*)view;
+- (void) removeFromSuperview;
+- (void) insertSubview:(UIView*)view atIndex:(NSInteger)index;
+- (void) insertSubview:(UIView*)view aboveSubview:(UIView*)siblingSubview;
+- (void) insertSubview:(UIView*)view belowSubview:(UIView*)siblingSubview;
+- (void) exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2;
+- (BOOL) isDescendantOfView:(UIView*)view;
+
+#pragma mark Configuring the Resizing Behavior
 @property (nonatomic) UIViewAutoresizing autoresizingMask;
-@property (nonatomic) CGRect contentStretch;
-@property (nonatomic) NSInteger tag;
-@property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (nonatomic) BOOL autoresizesSubviews;
 @property (nonatomic) UIViewContentMode contentMode;
+- (CGSize) sizeThatFits:(CGSize)size;
+- (void) sizeToFit;
+
+#pragma mark Laying out Subviews
+- (void) layoutSubviews;
+- (void) setNeedsLayout;
+- (void) layoutIfNeeded;
+
+#pragma mark Opting in to Constraint-Based Layout
++ (BOOL) requiresConstraintBasedLayout;
+- (BOOL) translatesAutoresizingMaskIntoConstraints;
+- (void) setTranslatesAutoresizingMaskIntoConstraints:(BOOL)flag;
+
+#pragma mark Managing Constraints
+- (NSArray*) constraints;
+- (void) addConstraint:(NSLayoutConstraint*)constraint;
+- (void) addConstraints:(NSArray*)constraints;
+- (void) removeConstraint:(NSLayoutConstraint*)constraint;
+- (void) removeConstraints:(NSArray*)constraints;
+
+#pragma mark Measuring in Constraint-Based Layout
+- (CGSize) systemLayoutSizeFittingSize:(CGSize)targetSize;
+- (CGSize) intrinsicContentSize;
+- (void) invalidateIntrinsicContentSize;
+- (UILayoutPriority) contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis;
+- (void) setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
+- (UILayoutPriority) contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
+- (void) setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
+
+#pragma mark Aligning Views with Constraint-Based Layout
+- (CGRect) alignmentRectForFrame:(CGRect)frame;
+- (CGRect) frameForAlignmentRect:(CGRect)alignmentRect;
+- (UIEdgeInsets) alignmentRectInsets;
+- (UIView*) viewForBaselineLayout;
+
+#pragma mark Triggering Constraint-Based Layout
+- (BOOL) needsUpdateConstraints;
+- (void) setNeedsUpdateConstraints;
+- (void) updateConstraints;
+- (void) updateConstraintsIfNeeded;
+
+#pragma mark Debugging Constraint-Based Layout
+- (NSArray*) constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis;
+- (BOOL) hasAmbiguousLayout;
+- (void) exerciseAmbiguityInLayout;
+
+#pragma mark Drawing and Updating the View
+- (void) drawRect:(CGRect)rect;
+- (void) setNeedsDisplay;
+- (void) setNeedsDisplayInRect:(CGRect)invalidRect;
 @property (nonatomic) CGFloat contentScaleFactor;
-@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled;	// state is maintained, but it has no effect
-@property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch; // state is maintained, but it has no effect
-@property (nonatomic,copy) NSArray *gestureRecognizers;
+
+#pragma mark Formatting Printed View Content
+- (UIViewPrintFormatter*) viewPrintFormatter;
+- (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter;
+
+#pragma mark Managing Gesture Recognizers
+- (void) addGestureRecognizer:(UIGestureRecognizer*) gestureRecognizer;
+- (void) removeGestureRecognizer:(UIGestureRecognizer*) gestureRecognizer;
+@property (nonatomic, copy) NSArray* gestureRecognizers;
+- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer*) gestureRecognizer;
+
+#pragma mark Animating Views with Blocks
++ (void) animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
++ (void) animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
++ (void) animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
++ (void) transitionWithView:(UIView*)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
++ (void) transitionFromView:(UIView*)fromView toView:(UIView*)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion;
+
+#pragma mark Animating Views
++ (void) beginAnimations:(NSString*)animationID context:(void *)context;
++ (void) commitAnimations;
++ (void) setAnimationStartDate:(NSDate*)startTime;
++ (void) setAnimationsEnabled:(BOOL)enabled;
++ (void) setAnimationDelegate:(id)delegate;
++ (void) setAnimationWillStartSelector:(SEL)selector;
++ (void) setAnimationDidStopSelector:(SEL)selector;
++ (void) setAnimationDuration:(NSTimeInterval)duration;
++ (void) setAnimationDelay:(NSTimeInterval)delay;
++ (void) setAnimationCurve:(UIViewAnimationCurve)curve;
++ (void) setAnimationRepeatCount:(float)repeatCount;
++ (void) setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses;
++ (void) setAnimationBeginsFromCurrentState:(BOOL)fromCurrentState;
++ (void) setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView*)view cache:(BOOL)cache;
++ (BOOL) areAnimationsEnabled;
+
+#pragma mark Preserving and Restoring State
+@property (nonatomic, copy) NSString* restorationIdentifier;
+- (void) encodeRestorableStateWithCoder:(NSCoder*)coder;
+- (void) decodeRestorableStateWithCoder:(NSCoder*)coder;
+
+#pragma mark Identifying the View at Runtime
+@property (nonatomic) NSInteger tag;
+- (UIView*) viewWithTag:(NSInteger)tag;
+
+#pragma mark Converting Between View Coordinate Systems
+- (CGPoint) convertPoint:(CGPoint)point toView:(UIView*)view;
+- (CGPoint) convertPoint:(CGPoint)point fromView:(UIView*)view;
+- (CGRect) convertRect:(CGRect)rect toView:(UIView*)view;
+- (CGRect) convertRect:(CGRect)rect fromView:(UIView*)view;
+
+#pragma mark Hit Testing in a View
+- (UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event;
+- (BOOL) pointInside:(CGPoint)point withEvent:(UIEvent*)event;
+
+#pragma mark Ending a View Editing Session
+- (BOOL) endEditing:(BOOL)force;
+
+#pragma mark Observing View-Related Changes
+- (void) didAddSubview:(UIView*)subview;
+- (void) willRemoveSubview:(UIView*)subview;
+- (void) willMoveToSuperview:(UIView*)newSuperview;
+- (void) didMoveToSuperview;
+- (void) willMoveToWindow:(UIWindow*)newWindow;
+- (void) didMoveToWindow;
 
 @end

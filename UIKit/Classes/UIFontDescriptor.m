@@ -18,7 +18,6 @@ NSString* const UIFontDescriptorTextStyleAttribute = @"";
 
 static NSString* const kUIFontDescriptorAttributesKey = @"UIFontDescriptorAttributes";
 
-
 @implementation UIFontDescriptor {
     NSDictionary* _fontAttributes;
 }

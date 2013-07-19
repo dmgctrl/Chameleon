@@ -61,7 +61,8 @@ typedef enum {
     UIBarButtonItemStyleDone,
 } UIBarButtonItemStyle;
 
-@class UIView, UIImage;
+@class  UIImage;
+@class UIView;
 
 @interface UIBarButtonItem : UIBarItem 
 

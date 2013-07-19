@@ -29,6 +29,7 @@
 
 #import <UIKit/UIView.h>
 #import <UIKit/UIDataDetectors.h>
+#import <UIKit/UIScrollView.h>
 
 enum {
     UIWebViewNavigationTypeLinkClicked,
@@ -41,6 +42,7 @@ enum {
 typedef NSUInteger UIWebViewNavigationType;
 
 @class UIWebView;
+@class UIScrollView;
 
 @protocol UIWebViewDelegate <NSObject>
 @optional
@@ -49,7 +51,7 @@ typedef NSUInteger UIWebViewNavigationType;
 - (void)webViewDidFinishLoad:(UIWebView *)webView;
 @end
 
-@interface UIWebView : UIView 
+@interface UIWebView : UIView <NSCoding, UIScrollViewDelegate, UIAppearance, UIAppearanceContainer>
 
 - (void)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
 - (void)loadRequest:(NSURLRequest *)request;
@@ -67,5 +69,11 @@ typedef NSUInteger UIWebViewNavigationType;
 @property (nonatomic, assign) BOOL scalesPageToFit; // not implemented
 @property (nonatomic, readonly, strong) NSURLRequest *request;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
+// Added to make tests compile
+@property (nonatomic) BOOL suppressesIncrementalRendering;
+@property (nonatomic) BOOL keyboardDisplayRequiresUserAction;
+@property (nonatomic) BOOL allowsInlineMediaPlayback;
+@property (nonatomic) BOOL mediaPlaybackAllowsAirPlay;
+@property (nonatomic, readonly, retain) UIScrollView* scrollView;
 
 @end

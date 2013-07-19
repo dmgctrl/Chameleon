@@ -1,7 +1,6 @@
 #import "UITableView.h"
 
 @interface UITableView ()
-@property (nonatomic) BOOL allowsMultipleSelection;
 @property (nonatomic, readonly) NSArray *selectedRows;
 @end
 

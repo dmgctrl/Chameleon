@@ -135,7 +135,7 @@ describe(@"UIScrollView", ^{
             });
             context(@"delegate", ^{
                 it(@"should not be", ^{
-                    [[[scrollView delegate] should] beNil];
+                    [[(NSObject*)[scrollView delegate] should] beNil];
                 });
             });
         });

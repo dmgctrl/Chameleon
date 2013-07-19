@@ -40,11 +40,12 @@
 #import <UIKit/UIBarItem.h>
 #import <UIKit/UIBezierPath.h>
 #import <UIKit/UIButton.h>
-//#import <UIKit/UICollectionView.h>
-//#import <UIKit/UICollectionViewCell.h>
+#import <UIKit/UICollectionView.h>
+#import <UIKit/UICollectionViewCell.h>
+#import <UIKit/UICollectionReusableView.h>
 //#import <UIKit/UICollectionViewController.h>
 //#import <UIKit/UICollectionViewFlowLayout.h>
-//#import <UIKit/UICollectionViewLayout.h>
+#import <UIKit/UICollectionViewLayout.h>
 #import <UIKit/UIColor.h>
 #import <UIKit/UIControl.h>
 #import <UIKit/UIDataDetectors.h>
@@ -81,14 +82,14 @@
 #import <UIKit/UIPopoverController.h>
 //#import <UIKit/UIPopoverBackgroundView.h>
 //#import <UIKit/UIPrintError.h>
-//#import <UIKit/UIPrintFormatter.h>
+#import <UIKit/UIPrintFormatter.h>
 //#import <UIKit/UIPrintInfo.h>
 //#import <UIKit/UIPrintInteractionController.h>
 //#import <UIKit/UIPrintPageRenderer.h>
 //#import <UIKit/UIPrintPaper.h>
 #import <UIKit/UIProgressView.h>
 //#import <UIKit/UIReferenceLibraryViewController.h>
-//#import <UIKit/UIRefreshControl.h>
+#import <UIKit/UIRefreshControl.h>
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIRotationGestureRecognizer.h>
 #import <UIKit/UIScreen.h>
@@ -99,6 +100,7 @@
 #import <UIKit/UISegmentedControl.h>
 #import <UIKit/UISlider.h>
 #import <UIKit/UISplitViewController.h>
+#import <UIKit/UIStateRestoration.h>
 //#import <UIKit/UIStepper.h>
 #import <UIKit/UIStoryboard.h>
 //#import <UIKit/UIStoryboardPopoverSegue.h>
@@ -110,7 +112,7 @@
 #import <UIKit/UITabBarController.h>
 #import <UIKit/UITabBarItem.h>
 #import <UIKit/UITableView.h>
-//#import <UIKit/UITableViewHeaderFooterView.h>
+#import <UIKit/UITableViewHeaderFooterView.h>
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/UITableViewController.h>
 #import <UIKit/UITapGestureRecognizer.h>
@@ -124,6 +126,7 @@
 //#import <UIKit/UIVideoEditorController.h>
 #import <UIKit/UIView.h>
 #import <UIKit/UIViewController.h>
+#import <UIKit/UIViewPrintFormatter.h>
 #import <UIKit/UIWebView.h>
 #import <UIKit/UIWindow.h>
 

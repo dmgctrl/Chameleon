@@ -50,7 +50,7 @@ describe(@"UIViewController", ^{
             });
             context(@"restorationClass", ^{
                 it(@"should not be", ^{
-                    [[[viewController restorationClass] should] beNil];
+                    [[(NSObject*)[viewController restorationClass] should] beNil];
                 });
             });
             context(@"modalTransitionStyle", ^{

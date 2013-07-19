@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITableViewSection.h"
-#import "UIView.h"
+#import <UIKit/UITableViewSection.h>
 
 @implementation UITableViewSection
 

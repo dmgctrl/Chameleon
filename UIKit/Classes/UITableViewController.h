@@ -30,11 +30,14 @@
 #import <UIKit/UIViewController.h>
 #import <UIKit/UITableView.h>
 
+@class UIRefreshControl;
+
 @interface UITableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> 
 
 - (id)initWithStyle:(UITableViewStyle)style;
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
+@property (nonatomic, retain) UIRefreshControl* refreshControl;
 
 @end
