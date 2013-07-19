@@ -31,6 +31,7 @@
 #import <UIKit/UIApplication.h>
 #import <UIKit/UISearchDisplayController.h>
 #import <UIKit/UITabBarItem.h>
+#import <UIKit/UIStateRestoration.h>
 
 @class UITabBarController;
 
@@ -54,6 +55,7 @@ typedef enum {
 @class UISplitViewController;
 @class UIStoryboard;
 @class UIStoryboardSegue;
+
 
 @interface UIViewController : UIResponder <NSCoding>
 
@@ -121,6 +123,9 @@ typedef enum {
 // stubs
 @property (nonatomic, strong) UITabBarItem *tabBarItem;
 @property (nonatomic, readonly, strong) UITabBarController *tabBarController;
+@property (nonatomic, readonly) UIViewController* presentingViewController;
+@property (nonatomic, readonly) UIViewController* presentedViewController;
+@property (nonatomic, readonly) NSArray* childViewControllers;
 
 // Added to make tests compile
 @property(nonatomic, assign) BOOL definesPresentationContext;
@@ -134,6 +139,8 @@ typedef enum {
 - (BOOL)shouldAutomaticallyForwardRotationMethods;
 - (BOOL)shouldAutomaticallyForwardAppearanceMethods;
 - (NSUInteger)supportedInterfaceOrientations;
+@property (nonatomic, copy) NSString* restorationIdentifier;
+@property (nonatomic, readwrite, assign) Class<UIViewControllerRestoration> restorationClass;
 
 #pragma mark Storyboard
 @property(nonatomic, readonly, retain) UIStoryboard* storyboard;

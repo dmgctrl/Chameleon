@@ -378,6 +378,9 @@
 		F94CAD6A179990D800A560E8 /* UITableViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397317834F2C00644CCB /* UITableViewCellSpec.m */; };
 		F94CAD6B179991CD00A560E8 /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
 		F94CAD6C179991EA00A560E8 /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
+		F94CAD6D1799920E00A560E8 /* UIViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */; };
+		F94CAD6E1799927200A560E8 /* UIViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */; };
+		F94CAD701799931D00A560E8 /* UIStateRestoration.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CAD6F1799931D00A560E8 /* UIStateRestoration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
 		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; };
 		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; };
@@ -894,6 +897,7 @@
 		F947AF17176F5E060057FC9A /* UIStoryboardPushSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardPushSegue.m; sourceTree = "<group>"; };
 		F94CAD6517998F3900A560E8 /* UITableViewHeaderFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITableViewHeaderFooterView.h; sourceTree = "<group>"; };
 		F94CAD6617998F3900A560E8 /* UITableViewHeaderFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewHeaderFooterView.m; sourceTree = "<group>"; };
+		F94CAD6F1799931D00A560E8 /* UIStateRestoration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStateRestoration.h; sourceTree = "<group>"; };
 		F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UITableViewCell> accessoryDisclosureIndicatorHighlighted.png"; path = "Resources/<UITableViewCell> accessoryDisclosureIndicatorHighlighted.png"; sourceTree = "<group>"; };
 		F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+UIPrivate.h"; sourceTree = "<group>"; };
 		F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+UIPrivate.h"; sourceTree = "<group>"; };
@@ -1304,6 +1308,7 @@
 				78CB48D8133AB920008636DA /* UISlider.m */,
 				1489854712EE2CFE003D4751 /* UISplitViewController.h */,
 				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
+				F94CAD6F1799931D00A560E8 /* UIStateRestoration.h */,
 				F976748E176940CB0073489E /* UIStoryboard.h */,
 				F976748F176940CB0073489E /* UIStoryboard.m */,
 				F937919B176F3F96006439EC /* UIStoryboardSegue.h */,
@@ -2082,6 +2087,7 @@
 				3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */,
 				3AC20B96179606AD0070E759 /* UIPrintFormatter.h in Headers */,
 				F94CAD6717998F3900A560E8 /* UITableViewHeaderFooterView.h in Headers */,
+				F94CAD701799931D00A560E8 /* UIStateRestoration.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2496,6 +2502,7 @@
 				F94CAD6417998DC500A560E8 /* UITableViewSpec.m in Sources */,
 				F94CAD6A179990D800A560E8 /* UITableViewCellSpec.m in Sources */,
 				F94CAD6C179991EA00A560E8 /* UITextViewSpec.m in Sources */,
+				F94CAD6E1799927200A560E8 /* UIViewControllerSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2529,6 +2536,7 @@
 				F94CAD6317998C9F00A560E8 /* UITableViewSpec.m in Sources */,
 				F94CAD69179990C400A560E8 /* UITableViewCellSpec.m in Sources */,
 				F94CAD6B179991CD00A560E8 /* UITextViewSpec.m in Sources */,
+				F94CAD6D1799920E00A560E8 /* UIViewControllerSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
