@@ -470,7 +470,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (BOOL)beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated
+- (void) beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated
 {
     if (animated) {
         _flags.isInAnimatedVCTransition = YES;
@@ -481,9 +481,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
             appearState = UIViewControllerStateWillDisappear;
         }
         [self _setViewAppearState:appearState isAnimating:animated];
-        return YES;
     }
-    return NO;
 }
 
 - (BOOL)_endAppearanceTransition
