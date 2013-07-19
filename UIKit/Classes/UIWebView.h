@@ -41,6 +41,7 @@ enum {
 typedef NSUInteger UIWebViewNavigationType;
 
 @class UIWebView;
+@class UIScrollView;
 
 @protocol UIWebViewDelegate <NSObject>
 @optional
@@ -68,9 +69,10 @@ typedef NSUInteger UIWebViewNavigationType;
 @property (nonatomic, readonly, strong) NSURLRequest *request;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
 // Added to make tests compile
-@property(nonatomic) BOOL suppressesIncrementalRendering;
+@property (nonatomic) BOOL suppressesIncrementalRendering;
 @property (nonatomic) BOOL keyboardDisplayRequiresUserAction;
-@property(nonatomic) BOOL allowsInlineMediaPlayback;
-@property(nonatomic) BOOL mediaPlaybackAllowsAirPlay;
+@property (nonatomic) BOOL allowsInlineMediaPlayback;
+@property (nonatomic) BOOL mediaPlaybackAllowsAirPlay;
+@property (nonatomic, readonly, retain) UIScrollView* scrollView;
 
 @end

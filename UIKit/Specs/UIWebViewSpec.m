@@ -5,7 +5,7 @@ describe(@"UIWebView", ^{
         context(@"property", ^{
             context(@"delegate", ^{
                 it(@"should not be", ^{
-                    [[[webView delegate] should] beNil];
+                    [[(NSObject*)[webView delegate] should] beNil];
                 });
             });
             context(@"request", ^{
