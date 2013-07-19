@@ -965,7 +965,7 @@
 		F9C4F6631799815300D8E583 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		F9C4F6641799815300D8E583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F9C4F6651799815300D8E583 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		F9C4F673179982B000D8E583 /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
+		F9C4F673179982B000D8E583 /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
 		F9D9772F13B794700086F226 /* UITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UITextInput.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UINavigationBarBackground> blackOpaque.png"; path = "Resources/<UINavigationBarBackground> blackOpaque.png"; sourceTree = "<group>"; };
 		F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UINavigationBarBackground> blackTranslucent.png"; path = "Resources/<UINavigationBarBackground> blackTranslucent.png"; sourceTree = "<group>"; };
@@ -1733,12 +1733,12 @@
 		F95F640C15C34C6100F3523B /* Specs */ = {
 			isa = PBXGroup;
 			children = (
-				3A6B0B7317957D92006F61FD /* UIControl */,
 				F95F640D15C34C6100F3523B /* Supporting Files */,
 				3A1D44E2177A3384004DE61D /* UIButton */,
 				3A7E65AE1784CEFA00218CD7 /* UICollectionReusableView */,
 				3A1A39811784AD6200644CCB /* UICollectionView */,
 				3A7E65A91784C78100218CD7 /* UICollectionViewCell */,
+				3A6B0B7317957D92006F61FD /* UIControl */,
 				F9B3C1F6177119B800C92009 /* UIFont */,
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				3A7E65B81784EF7500218CD7 /* UIImageView */,
@@ -2789,6 +2789,7 @@
 				F9C4F6721799815300D8E583 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F9FFDE4215C6E88A000EDAA0 /* Build configuration list for PBXNativeTarget "Test Harness" */ = {
 			isa = XCConfigurationList;
