@@ -240,19 +240,12 @@
 		38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38615C77133A81B900841EEA /* UIFont+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B11339680400E041B3 /* UINavigationItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523AF1339680400E041B3 /* UINavigationItem+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B513396B5B00E041B3 /* UINavigationBar+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523B413396B5B00E041B3 /* UINavigationBar+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		3A1A39691781CB7800644CCB /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
 		3A1A396A1781CB7800644CCB /* UITextViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39681781CB7800644CCB /* UITextViewSpec.m */; };
-		3A1A396F17822DB000644CCB /* UITableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A396E17822DB000644CCB /* UITableViewSpec.m */; };
 		3A1A397017822DB000644CCB /* UITableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A396E17822DB000644CCB /* UITableViewSpec.m */; };
-		3A1A397417834F2C00644CCB /* UITableViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397317834F2C00644CCB /* UITableViewCellSpec.m */; };
 		3A1A397517834F2C00644CCB /* UITableViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397317834F2C00644CCB /* UITableViewCellSpec.m */; };
-		3A1A397917837CB600644CCB /* UIScrollViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397817837CB600644CCB /* UIScrollViewSpec.m */; };
 		3A1A397A17837CB600644CCB /* UIScrollViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397817837CB600644CCB /* UIScrollViewSpec.m */; };
-		3A1A397E178471D200644CCB /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
 		3A1A397F178471D200644CCB /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
-		3A1A39841784AE6B00644CCB /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
 		3A1A39851784AE6B00644CCB /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
-		3A1D44E5177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A1D44E6177A3460004DE61D /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
 		3A4A915417958BEC00A196E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A4A915317958BEC00A196E1 /* MainMenu.xib */; };
 		3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915917959D3200A196E1 /* UICollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -263,23 +256,14 @@
 		3A4A91641795BF4C00A196E1 /* UICollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */; };
-		3A518087177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
-		3A6B0B7617957E06006F61FD /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
 		3A6B0B7717957E06006F61FD /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
-		3A7E65AC1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
 		3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
-		3A7E65B11784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
-		3A7E65BB1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
-		3A7E65CC1785CB0600218CD7 /* UIWebViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */; };
 		3A7E65CD1785CB0600218CD7 /* UIWebViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */; };
-		3A7E65D61786031400218CD7 /* UIViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */; };
 		3A7E65D71786031400218CD7 /* UIViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */; };
-		3A7E65DB17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
-		3AC20B871795E5610070E759 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
 		3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -355,7 +339,6 @@
 		F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */; };
 		F91AA50A176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA508176E5AC4001B6D5F /* UIStoryboardSegueTemplate.h */; };
 		F91AA50B176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA509176E5AC4001B6D5F /* UIStoryboardSegueTemplate.m */; };
-		F91AA510176E6A82001B6D5F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
 		F91D4D84177246F7004119BF /* UIStringDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854A12EE2CFE003D4751 /* UIStringDrawing.m */; };
 		F922DB5B13D32D6C00469869 /* UIClassSwapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F922DB5913D32D6B00469869 /* UIClassSwapper.h */; };
 		F922DB5C13D32D6C00469869 /* UIClassSwapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F922DB5A13D32D6B00469869 /* UIClassSwapper.m */; };
@@ -376,7 +359,6 @@
 		F92CB51113E067F900A50B9F /* UINibDecoderForNibArchiveV1.m in Sources */ = {isa = PBXBuildFile; fileRef = F92CB50E13E0672E00A50B9F /* UINibDecoderForNibArchiveV1.m */; };
 		F92CB51413E06D9500A50B9F /* UINibDecoderForKeyedArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = F92CB51213E06D9500A50B9F /* UINibDecoderForKeyedArchive.h */; };
 		F92CB51513E06D9500A50B9F /* UINibDecoderForKeyedArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = F92CB51313E06D9500A50B9F /* UINibDecoderForKeyedArchive.m */; };
-		F92EA5A4176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */; };
 		F92EA5A5176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F92EA5A3176BCDE1009295A0 /* iphone-example-02.storyboard */; };
 		F935331D13DF0733003C7D3A /* UINibDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = F935331B13DF0733003C7D3A /* UINibDecoder.h */; };
 		F935331E13DF0733003C7D3A /* UINibDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F935331C13DF0733003C7D3A /* UINibDecoder.m */; };
@@ -405,15 +387,6 @@
 		F95416E213C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F95416E113C91592000A9282 /* <UIButton> detailDisclosureButtonPressed.png */; };
 		F95416E413C91D22000A9282 /* <UIButton> detailDisclosureButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F95416E313C91D22000A9282 /* <UIButton> detailDisclosureButton.png */; };
 		F95416F013C9FC9D000A9282 /* UITableView+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F95416EF13C9FC9D000A9282 /* UITableView+UIPrivate.h */; };
-		F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F642C15C34E3700F3523B /* UIImageSpec.m */; };
-		F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
-		F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643215C34E9100F3523B /* Foundation.framework */; };
-		F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643415C34E9700F3523B /* libKiwi-OSX.a */; };
-		F95F645F15C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */; };
-		F95F646215C36A7500F3523B /* white-noalpha-100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646115C36A7500F3523B /* white-noalpha-100x100.png */; };
-		F95F646615C37EF500F3523B /* image_with_underscores.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646415C37EF400F3523B /* image_with_underscores.png */; };
-		F95F646815C37EF500F3523B /* image-with-hyphens.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646515C37EF500F3523B /* image-with-hyphens.png */; };
-		F95F64B115C4377E00F3523B /* white-noalpha-100x100@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */; };
 		F9647ED013B90D560040B2D6 /* <UITableView> selection.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECD13B90D560040B2D6 /* <UITableView> selection.png */; };
 		F9647ED113B90D560040B2D6 /* <UITableView> selectionGray.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECE13B90D560040B2D6 /* <UITableView> selectionGray.png */; };
 		F9647ED213B90D560040B2D6 /* <UITableView> selectionGrayBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = F9647ECF13B90D560040B2D6 /* <UITableView> selectionGrayBlue.png */; };
@@ -423,9 +396,7 @@
 		F9647EEA13B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9647EE813B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m */; };
 		F9767490176940CB0073489E /* UIStoryboard.h in Headers */ = {isa = PBXBuildFile; fileRef = F976748E176940CB0073489E /* UIStoryboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9767491176940CB0073489E /* UIStoryboard.m in Sources */ = {isa = PBXBuildFile; fileRef = F976748F176940CB0073489E /* UIStoryboard.m */; };
-		F97674951769433E0073489E /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
 		F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
-		F9767498176943950073489E /* iphone-example-01.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9767497176943950073489E /* iphone-example-01.storyboard */; };
 		F9767499176943950073489E /* iphone-example-01.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9767497176943950073489E /* iphone-example-01.storyboard */; };
 		F976749D176945330073489E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749C176945330073489E /* Foundation.framework */; };
 		F976749E1769458C0073489E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749A176945290073489E /* UIKit.framework */; };
@@ -441,7 +412,6 @@
 		F97BE02115AFD6E00081F45A /* UIAppearanceProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */; };
 		F97BE02215AFD6E00081F45A /* UIAppearanceProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */; };
 		F97BE02315AFD6E00081F45A /* UIAppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */; };
-		F98A10AC17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */; };
 		F98A10AD17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */; };
 		F99115461772230200B4389A /* UIKitDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115451772230200B4389A /* UIKitDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F99115481772236700B4389A /* UINibDeclarations.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115471772236700B4389A /* UINibDeclarations.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -463,13 +433,26 @@
 		F99E83FA13D05A1F00107358 /* UIRuntimeEventConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E83F813D05A1E00107358 /* UIRuntimeEventConnection.m */; };
 		F99E83FD13D05A3D00107358 /* UIRuntimeOutletConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F99E83FB13D05A3C00107358 /* UIRuntimeOutletConnection.h */; };
 		F99E83FE13D05A3D00107358 /* UIRuntimeOutletConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E83FC13D05A3D00107358 /* UIRuntimeOutletConnection.m */; };
-		F9B3C1F4177111C900C92009 /* UILabelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F3177111C900C92009 /* UILabelSpec.m */; };
 		F9B3C1F5177111C900C92009 /* UILabelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F3177111C900C92009 /* UILabelSpec.m */; };
-		F9B3C1F9177119CB00C92009 /* UIFontSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F8177119CB00C92009 /* UIFontSpec.m */; };
 		F9B3C1FA177119CB00C92009 /* UIFontSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F8177119CB00C92009 /* UIFontSpec.m */; };
 		F9B3C21A17721BD400C92009 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976749A176945290073489E /* UIKit.framework */; };
 		F9B3C21B17721C2F00C92009 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643215C34E9100F3523B /* Foundation.framework */; };
 		F9B3C21C17721C4300C92009 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F643E15C34FD200F3523B /* CoreGraphics.framework */; };
+		F9C4F65F1799815300D8E583 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
+		F9C4F6611799815300D8E583 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9C4F6601799815300D8E583 /* Cocoa.framework */; };
+		F9C4F674179982B000D8E583 /* libKiwi-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9C4F673179982B000D8E583 /* libKiwi-OSX.a */; };
+		F9C4F675179982D500D8E583 /* UIImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F642C15C34E3700F3523B /* UIImageSpec.m */; };
+		F9C4F676179982E100D8E583 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* UIKit.framework */; };
+		F9C4F677179982F600D8E583 /* UIFontSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F8177119CB00C92009 /* UIFontSpec.m */; };
+		F9C4F6781799830200D8E583 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
+		F9C4F67B1799837400D8E583 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
+		F9C4F67D1799838B00D8E583 /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
+		F9C4F67E1799839700D8E583 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
+		F9C4F67F179983A200D8E583 /* UILabelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B3C1F3177111C900C92009 /* UILabelSpec.m */; };
+		F9C4F681179983B900D8E583 /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
+		F9C4F682179983CE00D8E583 /* NSBundle+TestUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */; };
+		F9C4F683179983D900D8E583 /* UIStringDrawingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */; };
+		F9C4F6871799843800D8E583 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
 		F9D9773013B794710086F226 /* UITextInput.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D9772F13B794700086F226 /* UITextInput.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9D9774113B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */; };
 		F9D9774213B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */; };
@@ -920,11 +903,9 @@
 		F95416EF13C9FC9D000A9282 /* UITableView+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+UIPrivate.h"; sourceTree = "<group>"; };
 		F95F640E15C34C6100F3523B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F95F641515C34C6100F3523B /* UIKitSpecs.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIKitSpecs.pch; sourceTree = "<group>"; };
-		F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIKit Specs (OSX).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F95F642C15C34E3700F3523B /* UIImageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageSpec.m; sourceTree = "<group>"; };
 		F95F642F15C34E8800F3523B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		F95F643215C34E9100F3523B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		F95F643415C34E9700F3523B /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
 		F95F643E15C34FD200F3523B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F95F645D15C366BB00F3523B /* NSBundle+TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestUtilities.h"; sourceTree = "<group>"; };
 		F95F645E15C366BB00F3523B /* NSBundle+TestUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestUtilities.m"; sourceTree = "<group>"; };
@@ -979,6 +960,12 @@
 		F99E83FC13D05A3D00107358 /* UIRuntimeOutletConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIRuntimeOutletConnection.m; sourceTree = "<group>"; };
 		F9B3C1F3177111C900C92009 /* UILabelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILabelSpec.m; sourceTree = "<group>"; };
 		F9B3C1F8177119CB00C92009 /* UIFontSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIFontSpec.m; sourceTree = "<group>"; };
+		F9C4F65E1799815300D8E583 /* UIKit Specs (OSX).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIKit Specs (OSX).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9C4F6601799815300D8E583 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		F9C4F6631799815300D8E583 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		F9C4F6641799815300D8E583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F9C4F6651799815300D8E583 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F9C4F673179982B000D8E583 /* libKiwi-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libKiwi-OSX.a"; path = "../../Kiwi/build/Release/libKiwi-OSX.a"; sourceTree = "<group>"; };
 		F9D9772F13B794700086F226 /* UITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UITextInput.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F9D9773E13B7958E0086F226 /* <UINavigationBarBackground> blackOpaque.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UINavigationBarBackground> blackOpaque.png"; path = "Resources/<UINavigationBarBackground> blackOpaque.png"; sourceTree = "<group>"; };
 		F9D9773F13B7958E0086F226 /* <UINavigationBarBackground> blackTranslucent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UINavigationBarBackground> blackTranslucent.png"; path = "Resources/<UINavigationBarBackground> blackTranslucent.png"; sourceTree = "<group>"; };
@@ -1014,15 +1001,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F95F641E15C34D6900F3523B /* Frameworks */ = {
+		F9C4F65A1799815300D8E583 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AC20B871795E5610070E759 /* CoreGraphics.framework in Frameworks */,
-				F91AA510176E6A82001B6D5F /* UIKit.framework in Frameworks */,
-				F95F643515C34E9700F3523B /* libKiwi-OSX.a in Frameworks */,
-				F95F643315C34E9100F3523B /* Foundation.framework in Frameworks */,
-				F95F643015C34E8800F3523B /* SenTestingKit.framework in Frameworks */,
+				F9C4F676179982E100D8E583 /* UIKit.framework in Frameworks */,
+				F9C4F674179982B000D8E583 /* libKiwi-OSX.a in Frameworks */,
+				F9C4F65F1799815300D8E583 /* SenTestingKit.framework in Frameworks */,
+				F9C4F6611799815300D8E583 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1054,9 +1040,9 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* UIKit.framework */,
-				F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */,
 				F9FFDE1D15C6E88A000EDAA0 /* TestHarness.app */,
 				F9FFDE3315C6E88A000EDAA0 /* UIKit Specs (iOS).octest */,
+				F9C4F65E1799815300D8E583 /* UIKit Specs (OSX).octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1738,6 +1724,8 @@
 				F95F642F15C34E8800F3523B /* SenTestingKit.framework */,
 				F9B3C21917721BAE00C92009 /* OSX */,
 				F9B3C21817721BA700C92009 /* iOS */,
+				F9C4F6601799815300D8E583 /* Cocoa.framework */,
+				F9C4F6621799815300D8E583 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1830,10 +1818,20 @@
 		F9B3C21917721BAE00C92009 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
-				F95F643415C34E9700F3523B /* libKiwi-OSX.a */,
+				F9C4F673179982B000D8E583 /* libKiwi-OSX.a */,
 				F95F643215C34E9100F3523B /* Foundation.framework */,
 			);
 			name = OSX;
+			sourceTree = "<group>";
+		};
+		F9C4F6621799815300D8E583 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F9C4F6631799815300D8E583 /* AppKit.framework */,
+				F9C4F6641799815300D8E583 /* CoreData.framework */,
+				F9C4F6651799815300D8E583 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		F9FFDDE315C5A8C5000EDAA0 /* UIImage */ = {
@@ -2102,22 +2100,22 @@
 			productReference = 8DC2EF5B0486A6940098B216 /* UIKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		F95F641C15C34D6900F3523B /* UIKit Specs (OSX) */ = {
+		F9C4F65D1799815300D8E583 /* UIKit Specs (OSX) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F95F642615C34D6900F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */;
+			buildConfigurationList = F9C4F6701799815300D8E583 /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */;
 			buildPhases = (
-				F95F641D15C34D6900F3523B /* Sources */,
-				F95F641E15C34D6900F3523B /* Frameworks */,
-				F95F642315C34D6900F3523B /* Resources */,
-				F95F642515C34D6900F3523B /* ShellScript */,
+				F9C4F6591799815300D8E583 /* Sources */,
+				F9C4F65A1799815300D8E583 /* Frameworks */,
+				F9C4F65B1799815300D8E583 /* Resources */,
+				F9C4F65C1799815300D8E583 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "UIKit Specs (OSX)";
-			productName = UIKitSpecs;
-			productReference = F95F642915C34D6900F3523B /* UIKit Specs (OSX).octest */;
+			productName = "UIKit Specs (OSX)";
+			productReference = F9C4F65E1799815300D8E583 /* UIKit Specs (OSX).octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 		F9FFDE1C15C6E88A000EDAA0 /* Test Harness */ = {
@@ -2181,9 +2179,9 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* UIKit */,
-				F95F641C15C34D6900F3523B /* UIKit Specs (OSX) */,
 				F9FFDE1C15C6E88A000EDAA0 /* Test Harness */,
 				F9FFDE3215C6E88A000EDAA0 /* UIKit Specs (iOS) */,
+				F9C4F65D1799815300D8E583 /* UIKit Specs (OSX) */,
 			);
 		};
 /* End PBXProject section */
@@ -2253,16 +2251,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F95F642315C34D6900F3523B /* Resources */ = {
+		F9C4F65B1799815300D8E583 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F95F646215C36A7500F3523B /* white-noalpha-100x100.png in Resources */,
-				F95F646615C37EF500F3523B /* image_with_underscores.png in Resources */,
-				F95F646815C37EF500F3523B /* image-with-hyphens.png in Resources */,
-				F95F64B115C4377E00F3523B /* white-noalpha-100x100@2x.png in Resources */,
-				F9767498176943950073489E /* iphone-example-01.storyboard in Resources */,
-				F92EA5A4176BCDE1009295A0 /* iphone-example-02.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2289,7 +2281,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		F95F642515C34D6900F3523B /* ShellScript */ = {
+		F9C4F65C1799815300D8E583 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2477,31 +2469,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F95F641D15C34D6900F3523B /* Sources */ = {
+		F9C4F6591799815300D8E583 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F95F642E15C34E3800F3523B /* UIImageSpec.m in Sources */,
-				F95F645F15C366BB00F3523B /* NSBundle+TestUtilities.m in Sources */,
-				F97674951769433E0073489E /* UIStoryboardSpec.m in Sources */,
-				F9B3C1F4177111C900C92009 /* UILabelSpec.m in Sources */,
-				F9B3C1F9177119CB00C92009 /* UIFontSpec.m in Sources */,
-				F98A10AC17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */,
-				3A1D44E5177A3460004DE61D /* UIButtonSpec.m in Sources */,
-				3A518087177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */,
-				3A1A397417834F2C00644CCB /* UITableViewCellSpec.m in Sources */,
-				3A1A39691781CB7800644CCB /* UITextViewSpec.m in Sources */,
-				3A1A396F17822DB000644CCB /* UITableViewSpec.m in Sources */,
-				3A1A397917837CB600644CCB /* UIScrollViewSpec.m in Sources */,
-				3A1A397E178471D200644CCB /* UIViewSpec.m in Sources */,
-				3A7E65BB1784EF9600218CD7 /* UIImageViewSpec.m in Sources */,
-				3A7E65D61786031400218CD7 /* UIViewControllerSpec.m in Sources */,
-				3A7E65CC1785CB0600218CD7 /* UIWebViewSpec.m in Sources */,
-				3A7E65DB17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */,
-				3A1A39841784AE6B00644CCB /* UICollectionViewSpec.m in Sources */,
-				3A7E65AC1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */,
-				3A7E65B11784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */,
-				3A6B0B7617957E06006F61FD /* UIControlSpec.m in Sources */,
+				F9C4F675179982D500D8E583 /* UIImageSpec.m in Sources */,
+				F9C4F677179982F600D8E583 /* UIFontSpec.m in Sources */,
+				F9C4F6781799830200D8E583 /* UICollectionViewCellSpec.m in Sources */,
+				F9C4F67B1799837400D8E583 /* UICollectionReusableViewSpec.m in Sources */,
+				F9C4F67D1799838B00D8E583 /* UIControlSpec.m in Sources */,
+				F9C4F67E1799839700D8E583 /* UIImageViewSpec.m in Sources */,
+				F9C4F67F179983A200D8E583 /* UILabelSpec.m in Sources */,
+				F9C4F681179983B900D8E583 /* UIStoryboardSpec.m in Sources */,
+				F9C4F682179983CE00D8E583 /* NSBundle+TestUtilities.m in Sources */,
+				F9C4F683179983D900D8E583 /* UIStringDrawingSpec.m in Sources */,
+				F9C4F6871799843800D8E583 /* UITextFieldSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2641,36 +2623,48 @@
 			};
 			name = Release;
 		};
-		F95F642715C34D6900F3523B /* Debug */ = {
+		F9C4F6711799815300D8E583 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Specs/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_LDFLAGS = "-all_load";
-				PRODUCT_NAME = "UIKit Specs (OSX)";
-				SDKROOT = macosx;
-				USE_HEADERMAP = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
-		F95F642815C34D6900F3523B /* Release */ = {
+		F9C4F6721799815300D8E583 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Specs/UIKitSpecs.pch;
 				INFOPLIST_FILE = Specs/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_LDFLAGS = "-all_load";
-				PRODUCT_NAME = "UIKit Specs (OSX)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				USE_HEADERMAP = NO;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
@@ -2788,14 +2782,13 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F95F642615C34D6900F3523B /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */ = {
+		F9C4F6701799815300D8E583 /* Build configuration list for PBXNativeTarget "UIKit Specs (OSX)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F95F642715C34D6900F3523B /* Debug */,
-				F95F642815C34D6900F3523B /* Release */,
+				F9C4F6711799815300D8E583 /* Debug */,
+				F9C4F6721799815300D8E583 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 		F9FFDE4215C6E88A000EDAA0 /* Build configuration list for PBXNativeTarget "Test Harness" */ = {
 			isa = XCConfigurationList;
