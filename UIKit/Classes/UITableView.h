@@ -31,47 +31,49 @@
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/NSIndexPath+UITableView.h>
 
-UIKIT_EXTERN NSString *const UITableViewIndexSearch;
+UIKIT_EXTERN NSString* const UITableViewIndexSearch;
 
 @class UITableView;
+@class UINib;
 @class UITableViewHeaderFooterView;
 
 @protocol UITableViewDelegate <UIScrollViewDelegate>
 @optional
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat) tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath;
+- (NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath;
+- (void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath;
+- (NSIndexPath*) tableView:(UITableView*)tableView willDeselectRowAtIndexPath:(NSIndexPath*)indexPath;
+- (void) tableView:(UITableView*)tableView didDeselectRowAtIndexPath:(NSIndexPath*)indexPath;
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section;
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section;
+- (CGFloat) tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section;
+- (CGFloat) tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section;
+- (UIView*) tableView:(UITableView*)tableView viewForHeaderInSection:(NSInteger)section;
+- (UIView*) tableView:(UITableView*)tableView viewForFooterInSection:(NSInteger)section;
 
-- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void) tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath*)indexPath;
+- (void) tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath*)indexPath;
+- (NSString*) tableView:(UITableView*)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath*)indexPath;
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
+- (void) tableView:(UITableView*)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath;
 
 @optional // AppKitIntegration
-- (void)tableView:(UITableView *)tableView didDoubleClickRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void) tableView:(UITableView*)tableView didDoubleClickRowAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @protocol UITableViewDataSource <NSObject>
 @required
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section;
+- (UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 @optional
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section;
+- (NSInteger) numberOfSectionsInTableView:(UITableView*)tableView;
+- (NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section;
+- (NSString*) tableView:(UITableView*)tableView titleForFooterInSection:(NSInteger)section;
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL) tableView:(UITableView*)tableView canEditRowAtIndexPath:(NSIndexPath*)indexPath;
+- (void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
+#pragma mark Constants
 typedef enum {
     UITableViewStylePlain,
     UITableViewStyleGrouped
@@ -96,66 +98,89 @@ typedef enum {
 
 @interface UITableView : UIScrollView <NSCoding>
 
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
-- (void)reloadData;
-- (NSInteger)numberOfSections;
-- (NSInteger)numberOfRowsInSection:(NSInteger)section;
-- (NSArray *)indexPathsForRowsInRect:(CGRect)rect;
-- (NSIndexPath *)indexPathForRowAtPoint:(CGPoint)point;
-- (NSIndexPath *)indexPathForCell:(UITableViewCell *)cell;
-- (NSArray *)indexPathsForVisibleRows;
-- (NSArray *)visibleCells;
-- (UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier;
-- (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+#pragma mark Initializing a UITableView Object
+- (id) initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
 
-- (CGRect)rectForSection:(NSInteger)section;
-- (CGRect)rectForHeaderInSection:(NSInteger)section;
-- (CGRect)rectForFooterInSection:(NSInteger)section;
-- (CGRect)rectForRowAtIndexPath:(NSIndexPath *)indexPath;
+#pragma mark Configuring a Table View
+@property (nonatomic, readonly) UITableViewStyle style;
+- (NSInteger) numberOfRowsInSection:(NSInteger)section;
+- (NSInteger) numberOfSections;
+@property (nonatomic) CGFloat rowHeight;
+@property (nonatomic) UITableViewCellSeparatorStyle separatorStyle;
+@property (nonatomic, retain) UIColor *separatorColor;
+@property (nonatomic, readwrite, retain) UIView *backgroundView;
 
-- (void)beginUpdates;
-- (void)endUpdates;
+#pragma mark Creating Table View Cells
+- (void) registerNib:(UINib*)nib forCellReuseIdentifier:(NSString*)identifier;
+- (void) registerClass:(Class)cellClass forCellReuseIdentifier:(NSString*)identifier;
+- (id) dequeueReusableCellWithIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath;
+- (id) dequeueReusableCellWithIdentifier:(NSString*)identifier;
 
-- (void)insertSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation;  // not implemented, just reload all.
-- (void)deleteSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation;  // not implemented, just reload all.    
-- (void)reloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation;  // not implemented, just reload all.
-
-- (void)insertRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;	// not implemented, just reload all.
-- (void)deleteRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;	// not implemented, just reload all.
-- (void)reloadRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;   // not implemented, just reload all.
-
-- (NSIndexPath *)indexPathForSelectedRow;
-- (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
-- (void)selectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition;
-
-- (void)scrollToNearestSelectedRowAtScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
-- (void)scrollToRowAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
-
-- (void)setEditing:(BOOL)editing animated:(BOOL)animate;
-
+#pragma mark Accessing Header and Footer Views
+- (void) registerNib:(UINib*)nib forHeaderFooterViewReuseIdentifier:(NSString*)identifier;
+- (void) registerClass:(Class)aClass forHeaderFooterViewReuseIdentifier:(NSString*)identifier;
+- (id) dequeueReusableHeaderFooterViewWithIdentifier:(NSString*)identifier;
+@property (nonatomic, retain) UIView *tableHeaderView;
+@property (nonatomic, retain) UIView *tableFooterView;
+@property (nonatomic) CGFloat sectionHeaderHeight;
+@property (nonatomic) CGFloat sectionFooterHeight;
 - (UITableViewHeaderFooterView*) headerViewForSection:(NSInteger)section;
 - (UITableViewHeaderFooterView*) footerViewForSection:(NSInteger)section;
 
-- (NSArray*) indexPathsForSelectedRows;
+#pragma mark Accessing Cells and Sections
+- (UITableViewCell*) cellForRowAtIndexPath:(NSIndexPath*)indexPath;
+- (NSIndexPath*) indexPathForCell:(UITableViewCell*)cell;
+- (NSIndexPath*) indexPathForRowAtPoint:(CGPoint)point;
+- (NSArray*) indexPathsForRowsInRect:(CGRect)rect;
+- (NSArray*) visibleCells;
+- (NSArray*) indexPathsForVisibleRows;
 
-@property (nonatomic, readonly) UITableViewStyle style;
-@property (nonatomic, assign) id<UITableViewDelegate> delegate;
-@property (nonatomic, assign) id<UITableViewDataSource> dataSource;
-@property (nonatomic) CGFloat rowHeight;
-@property (nonatomic) UITableViewCellSeparatorStyle separatorStyle;
-@property (nonatomic, strong) UIColor *separatorColor;
-@property (nonatomic, strong) UIView *tableHeaderView;
-@property (nonatomic, strong) UIView *tableFooterView;
+#pragma mark Scrolling the Table View
+- (void) scrollToRowAtIndexPath:(NSIndexPath*)indexPath atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
+- (void) scrollToNearestSelectedRowAtScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
+
+#pragma mark Managing Selections
+- (NSIndexPath*) indexPathForSelectedRow;
+- (NSArray*) indexPathsForSelectedRows;
+- (void) selectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition;
+- (void) deselectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated;
 @property (nonatomic) BOOL allowsSelection;
 @property (nonatomic) BOOL allowsMultipleSelection;
-@property (nonatomic) BOOL allowsSelectionDuringEditing;	// not implemented
+@property (nonatomic) BOOL allowsSelectionDuringEditing;
 @property (nonatomic) BOOL allowsMultipleSelectionDuringEditing;
-@property (nonatomic, getter=isEditing) BOOL editing;
-@property (nonatomic) CGFloat sectionHeaderHeight;
-@property (nonatomic) CGFloat sectionFooterHeight;
-@property (nonatomic) NSInteger sectionIndexMinimumDisplayRowCount;
 
-@property (nonatomic, readwrite, retain) UIView* backgroundView;
+#pragma mark Inserting, Deleting, and Moving Rows and Sections
+- (void) beginUpdates;
+- (void) endUpdates;
+- (void) insertRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;
+- (void) deleteRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;
+- (void) moveRowAtIndexPath:(NSIndexPath*)indexPath toIndexPath:(NSIndexPath*)newIndexPath;
+- (void) insertSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animation;
+- (void) deleteSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animation;
+- (void) moveSection:(NSInteger)section toSection:(NSInteger)newSection;
+
+#pragma mark Managing the Editing of Table Cells
+@property (nonatomic, getter=isEditing) BOOL editing;
+- (void) setEditing:(BOOL)editing animated:(BOOL)animate;
+
+#pragma mark Reloading the Table View
+- (void) reloadData;
+- (void) reloadRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;
+- (void) reloadSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animation;
+- (void) reloadSectionIndexTitles;
+
+#pragma mark Accessing Drawing Areas of the Table View
+- (CGRect) rectForSection:(NSInteger)section;
+- (CGRect) rectForRowAtIndexPath:(NSIndexPath*)indexPath;
+- (CGRect) rectForFooterInSection:(NSInteger)section;
+- (CGRect) rectForHeaderInSection:(NSInteger)section;
+
+#pragma mark Managing the Delegate and the Data Source
+@property (nonatomic, assign) id<UITableViewDataSource> dataSource;
+@property (nonatomic, assign) id<UITableViewDelegate> delegate;
+
+#pragma mark Configuring the Table Index
+@property (nonatomic) NSInteger sectionIndexMinimumDisplayRowCount;
 @property (nonatomic, retain) UIColor* sectionIndexColor;
 @property (nonatomic, retain) UIColor* sectionIndexTrackingBackgroundColor;
 
