@@ -29,6 +29,7 @@
 
 #import <UIKit/UIView.h>
 #import <UIKit/UIDataDetectors.h>
+#import <UIKit/UIScrollView.h>
 
 enum {
     UIWebViewNavigationTypeLinkClicked,
@@ -50,7 +51,7 @@ typedef NSUInteger UIWebViewNavigationType;
 - (void)webViewDidFinishLoad:(UIWebView *)webView;
 @end
 
-@interface UIWebView : UIView 
+@interface UIWebView : UIView <NSCoding, UIScrollViewDelegate, UIAppearance, UIAppearanceContainer>
 
 - (void)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
 - (void)loadRequest:(NSURLRequest *)request;
