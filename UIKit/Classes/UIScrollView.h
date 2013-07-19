@@ -41,6 +41,7 @@ UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 @class UIScroller;
 @class UIScrollView;
 @class UIPanGestureRecognizer;
+@class UIPinchGestureRecognizer;
 @class UIScrollWheelGestureRecognizer;
 
 @protocol UIScrollViewDelegate <NSObject>
@@ -96,6 +97,7 @@ UIKIT_EXTERN const float UIScrollViewDecelerationRateFast;
 @property (nonatomic) BOOL bouncesZoom;                                     // no effect
 
 @property (nonatomic, readonly) UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic, readonly) UIPinchGestureRecognizer* pinchGestureRecognizer;
 @property (nonatomic, readonly) UIScrollWheelGestureRecognizer *scrollWheelGestureRecognizer;   // non-standard
 
 @end
