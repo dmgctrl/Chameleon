@@ -387,6 +387,8 @@
 		F94CAD761799965300A560E8 /* UIRefreshControl.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CAD741799965300A560E8 /* UIRefreshControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F94CAD771799965300A560E8 /* UIRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F94CAD751799965300A560E8 /* UIRefreshControl.m */; };
 		F94CAD78179997A100A560E8 /* UIButtonSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D44E4177A3460004DE61D /* UIButtonSpec.m */; };
+		F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
+		F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A39831784AE6B00644CCB /* UICollectionViewSpec.m */; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
 		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; };
 		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; };
@@ -1234,6 +1236,16 @@
 				148984FF12EE2CFE003D4751 /* UIBezierPath.m */,
 				1489850012EE2CFE003D4751 /* UIButton.h */,
 				1489850112EE2CFE003D4751 /* UIButton.m */,
+				3A4A915917959D3200A196E1 /* UICollectionView.h */,
+				3A4A915A17959D3200A196E1 /* UICollectionView.m */,
+				3A4A915D1795B20E00A196E1 /* UICollectionViewLayout.h */,
+				3A4A915E1795B20E00A196E1 /* UICollectionViewLayout.m */,
+				3A4A91611795BE8D00A196E1 /* UICollectionViewDelegate.h */,
+				3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */,
+				3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */,
+				3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */,
+				3AC20B881795E6640070E759 /* UICollectionReusableView.h */,
+				3AC20B891795E6670070E759 /* UICollectionReusableView.m */,
 				1489850212EE2CFE003D4751 /* UIColor.h */,
 				1489850312EE2CFE003D4751 /* UIColor.m */,
 				1489850512EE2CFE003D4751 /* UIControl.h */,
@@ -1367,16 +1379,6 @@
 				1489856712EE2CFE003D4751 /* UIWebView.m */,
 				1489856812EE2CFE003D4751 /* UIWindow.h */,
 				1489856912EE2CFE003D4751 /* UIWindow.m */,
-				3A4A915917959D3200A196E1 /* UICollectionView.h */,
-				3A4A915A17959D3200A196E1 /* UICollectionView.m */,
-				3A4A915D1795B20E00A196E1 /* UICollectionViewLayout.h */,
-				3A4A915E1795B20E00A196E1 /* UICollectionViewLayout.m */,
-				3A4A91611795BE8D00A196E1 /* UICollectionViewDelegate.h */,
-				3A4A91631795BF4C00A196E1 /* UICollectionViewDataSource.h */,
-				3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */,
-				3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */,
-				3AC20B881795E6640070E759 /* UICollectionReusableView.h */,
-				3AC20B891795E6670070E759 /* UICollectionReusableView.m */,
 				3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */,
 				3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */,
 				3AC20B94179606A50070E759 /* UIPrintFormatter.h */,
@@ -2518,6 +2520,7 @@
 				F94CAD72179994D900A560E8 /* UIWebViewSpec.m in Sources */,
 				F94CAD73179995F100A560E8 /* UITableViewControllerSpec.m in Sources */,
 				F94CAD78179997A100A560E8 /* UIButtonSpec.m in Sources */,
+				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2553,6 +2556,7 @@
 				F94CAD6B179991CD00A560E8 /* UITextViewSpec.m in Sources */,
 				F94CAD6D1799920E00A560E8 /* UIViewControllerSpec.m in Sources */,
 				F94CAD71179994A800A560E8 /* UIWebViewSpec.m in Sources */,
+				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

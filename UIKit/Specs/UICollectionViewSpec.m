@@ -11,12 +11,12 @@ describe(@"UICollectionView", ^{
             });
             context(@"delegate", ^{
                 it(@"should not be", ^{
-                    [[[collectionView delegate] should] beNil];
+                    [[(NSObject*)[collectionView delegate] should] beNil];
                 });
             });
             context(@"dataSource", ^{
                 it(@"should not be", ^{
-                    [[[collectionView dataSource] should] beNil];
+                    [[(NSObject*)[collectionView dataSource] should] beNil];
                 });
             });
             context(@"backgroundView", ^{

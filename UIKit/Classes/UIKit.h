@@ -45,7 +45,7 @@
 #import <UIKit/UICollectionReusableView.h>
 //#import <UIKit/UICollectionViewController.h>
 //#import <UIKit/UICollectionViewFlowLayout.h>
-//#import <UIKit/UICollectionViewLayout.h>
+#import <UIKit/UICollectionViewLayout.h>
 #import <UIKit/UIColor.h>
 #import <UIKit/UIControl.h>
 #import <UIKit/UIDataDetectors.h>
