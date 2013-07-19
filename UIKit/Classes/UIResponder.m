@@ -27,37 +27,28 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIResponder.h"
-#import "UIWindow+UIPrivate.h"
-
+#import <UIKit/UIResponder.h>
+#import <UIKit/UIWindow+UIPrivate.h>
 
 @implementation UIResponder
 
-- (UIResponder *)nextResponder
+#pragma mark Managing the Responder Chain
+- (UIResponder*) nextResponder
 {
     return nil;
 }
 
-- (UIWindow *)_responderWindow
-{
-    if ([self isKindOfClass:[UIView class]]) {
-        return [(UIView *)self window];
-    } else {
-        return [[self nextResponder] _responderWindow];
-    }
-}
-
-- (BOOL)isFirstResponder
+- (BOOL) isFirstResponder
 {
     return ([[self _responderWindow] _firstResponder] == self);
 }
 
-- (BOOL)canBecomeFirstResponder
+- (BOOL) canBecomeFirstResponder
 {
     return NO;
 }
 
-- (BOOL)becomeFirstResponder
+- (BOOL) becomeFirstResponder
 {
     if ([self isFirstResponder]) {
         return YES;
@@ -79,7 +70,6 @@
                 return YES;
             }
         }
-
         return NO;
     }
 }
@@ -100,21 +90,26 @@
     return NO;
 }
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+#pragma mark Managing Input Views
+- (UIView*) inputView
 {
-    if ([[self class] instancesRespondToSelector:action]) {
-        return YES;
-    } else {
-        UIResponder* responder = [self nextResponder];
-        if ([responder respondsToSelector:@selector(canPerformAction:withSender:)]) {
-            return [responder canPerformAction:action withSender:sender];
-        } else {
-            return NO;
-        }
-    }
+    return nil;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (UIView*) inputAccessoryView
+{
+    return nil;
+}
+
+- (void) reloadInputViews
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Responding to Touch Events
+- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     id responder = [self nextResponder];
     if ([responder respondsToSelector:@selector(touchesBegan:withEvent:)]) {
@@ -122,7 +117,7 @@
     }
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent*)event
 {
     id responder = [self nextResponder];
     if ([responder respondsToSelector:@selector(touchesMoved:withEvent:)]) {
@@ -130,7 +125,7 @@
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
     id responder = [self nextResponder];
     if ([responder respondsToSelector:@selector(touchesEnded:withEvent:)]) {
@@ -138,7 +133,7 @@
     }
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
 {
     id responder = [self nextResponder];
     if ([responder respondsToSelector:@selector(touchesCancelled:withEvent:)]) {
@@ -146,23 +141,56 @@
     }
 }
 
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event		{}
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event		{}
-- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event	{}
-
-- (UIView *)inputAccessoryView
+#pragma mark Responding to Motion Events
+- (void) motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event
 {
-    return nil;
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
-- (UIView *)inputView
+- (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event
 {
-    return nil;
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
+- (void) motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark Responding to Remote-Control Events
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark Getting the Undo Manager
 - (NSUndoManager *)undoManager
 {
     return [[self nextResponder] undoManager];
+}
+
+#pragma mark Validating Commands
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    if ([[self class] instancesRespondToSelector:action]) {
+        return YES;
+    } else {
+        return [[self nextResponder] canPerformAction:action withSender:sender];
+    }
+}
+
+#pragma mark private methods
+- (UIWindow *)_responderWindow
+{
+    if ([self isKindOfClass:[UIView class]]) {
+        return [(UIView *)self window];
+    } else {
+        return [[self nextResponder] _responderWindow];
+    }
 }
 
 @end
