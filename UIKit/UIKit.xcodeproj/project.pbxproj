@@ -331,6 +331,7 @@
 		F90FB16E1799C11D003BF54B /* image-with-hyphens.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646515C37EF500F3523B /* image-with-hyphens.png */; };
 		F90FB16F1799C11D003BF54B /* white-noalpha-100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F646115C36A7500F3523B /* white-noalpha-100x100.png */; };
 		F90FB1701799C11D003BF54B /* white-noalpha-100x100@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F95F64B015C4377E00F3523B /* white-noalpha-100x100@2x.png */; };
+		F913BAE8179DAECD0095FE6F /* UITextInput.m in Sources */ = {isa = PBXBuildFile; fileRef = F913BAE7179DAECD0095FE6F /* UITextInput.m */; };
 		F9177F9613BA317200619E3D /* UITableViewCellLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */; };
 		F9177F9713BA317200619E3D /* UITableViewCellLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */; };
 		F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */; };
@@ -867,6 +868,7 @@
 		A2E9947613C79DBE00B7D49F /* UIWindow+AppKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIWindow+AppKit.m"; path = "Classes/UIWindow+AppKit.m"; sourceTree = "<group>"; };
 		F900792E13E7405600DFAF19 /* UISegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UISegment.h; sourceTree = "<group>"; };
 		F900792F13E7405600DFAF19 /* UISegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISegment.m; sourceTree = "<group>"; };
+		F913BAE7179DAECD0095FE6F /* UITextInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextInput.m; sourceTree = "<group>"; };
 		F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITableViewCellLayoutManager.h; sourceTree = "<group>"; };
 		F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellLayoutManager.m; sourceTree = "<group>"; };
 		F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+UIPrivate.h"; sourceTree = "<group>"; };
@@ -1374,6 +1376,7 @@
 				F93D770317953F930073B778 /* _UITextInteractionAssistant.h */,
 				F93D770417953F930073B778 /* _UITextInteractionAssistant.m */,
 				F9D9772F13B794700086F226 /* UITextInput.h */,
+				F913BAE7179DAECD0095FE6F /* UITextInput.m */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
@@ -2516,6 +2519,7 @@
 				3AC20B97179606AD0070E759 /* UIPrintFormatter.m in Sources */,
 				F94CAD6817998F3900A560E8 /* UITableViewHeaderFooterView.m in Sources */,
 				F94CAD771799965300A560E8 /* UIRefreshControl.m in Sources */,
+				F913BAE8179DAECD0095FE6F /* UITextInput.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

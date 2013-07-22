@@ -78,6 +78,20 @@ static NSString* const kUIEditableKey = @"UIEditable";
 @end
 
 
+@interface _UITextViewPosition : UITextPosition
++ (instancetype) positionWithOffset:(NSInteger)offset;
+- (instancetype) initWithOffset:(NSInteger)offset;
+@property (nonatomic, assign) NSInteger offset;
+@end
+
+
+@interface _UITextViewRange : UITextRange
+- (instancetype) initWithStart:(_UITextViewPosition*)start end:(_UITextViewPosition*)end;
+@property (nonatomic, readonly) _UITextViewPosition* start;
+@property (nonatomic, readonly) _UITextViewPosition* end;
+@end
+
+
 @implementation UITextView {
     NSTextStorage* _textStorage;
     NSTextContainer* _textContainer;
@@ -778,6 +792,44 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
+- (NSString*) textInRange:(_UITextViewRange*)range
+{
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+    if (!range) {
+        return nil;
+    }
+    NSInteger start = [[range start] offset];
+    NSInteger end = [[range end] offset];
+    NSString* text = [self text];
+    if (start < 0 || end < start || end > [text length]) {
+        return nil;
+    }
+    return [text substringWithRange:(NSRange){ start, end - start }];
+}
+
+- (UITextRange*) selectedTextRange
+{
+    NSRange range = [self selectedRange];
+    if (range.location == NSNotFound && range.length == 0) {
+        return nil;
+    } else {
+        return [[_UITextViewRange alloc] initWithStart:[_UITextViewPosition positionWithOffset:range.location]
+                                                   end:[_UITextViewPosition positionWithOffset:range.location + range.length]];
+    }
+}
+
+- (void) setSelectedTextRange:(_UITextViewRange*)selectedTextRange
+{
+    NSAssert(!selectedTextRange || [selectedTextRange isKindOfClass:[_UITextViewRange class]], @"???");
+    if (selectedTextRange) {
+        NSInteger start = [[selectedTextRange start] offset];
+        NSInteger count = [[selectedTextRange end] offset] - start;
+        [self setSelectedRange:(NSRange){ start, count }];
+    } else {
+        [self setSelectedRange:(NSRange){ NSNotFound, 0 }];
+    }
+}
+
 
 #pragma mark Private Methods
 
@@ -1206,3 +1258,63 @@ static void _commonInitForUITextView(UITextView* self)
 }
 
 @end
+
+
+@implementation _UITextViewPosition
+
+static NSUInteger hashForTextPosition;
+
++ (void) initialize
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        hashForTextPosition = [[_UITextViewPosition class] hash];
+    });
+}
+
++ (instancetype) positionWithOffset:(NSInteger)offset
+{
+    return [[_UITextViewPosition alloc] initWithOffset:offset];
+}
+
+- (instancetype) initWithOffset:(NSInteger)offset
+{
+    if (nil != (self = [super init])) {
+        _offset = offset;
+    }
+    return self;
+}
+
+- (BOOL) isEqual:(id)object
+{
+    return self == object || ([object isKindOfClass:[_UITextViewPosition class]] && [((_UITextViewPosition*)object) offset] == [self offset]);
+}
+
+- (NSUInteger) hash
+{
+    return (37 * _offset) ^ hashForTextPosition;
+}
+
+@end
+
+
+@implementation _UITextViewRange 
+@synthesize start = _start;
+@synthesize end = _end;
+
+- (instancetype) initWithStart:(_UITextViewPosition*)start end:(_UITextViewPosition*)end
+{
+    if (nil != (self = [super init])) {
+        _start = start;
+        _end = end;
+    }
+    return self;
+}
+
+- (BOOL) isEmpty
+{
+    return _start == _end;
+}
+
+@end
+

@@ -30,6 +30,7 @@
 #import <UIKit/UIStringDrawing.h>
 #import <UIKit/UIScrollView.h>
 #import <UIKit/UIDataDetectors.h>
+#import <UIKit/UITextInput.h>
 #import <UIKit/UITextInputTraits.h>
 
 UIKIT_EXTERN NSString *const UITextViewTextDidBeginEditingNotification;
@@ -54,7 +55,7 @@ UIKIT_EXTERN NSString *const UITextViewTextDidEndEditingNotification;
 - (void) textViewDidChangeSelection:(UITextView*)textView;
 @end
 
-@interface UITextView : UIScrollView <NSCoding, UITextInputTraits>
+@interface UITextView : UIScrollView <NSCoding, UITextInput, UITextInputTraits>
 
 - (instancetype) initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)textContainer;
 
