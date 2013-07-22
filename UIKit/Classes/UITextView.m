@@ -945,6 +945,24 @@ static void _commonInitForUITextView(UITextView* self)
     [self doesNotRecognizeSelector:_cmd];
 }
 
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point
+{
+    NSInteger offset = [self _characterIndexAtPoint:point];
+    return [_UITextViewPosition positionWithOffset:offset];
+}
+
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(_UITextViewRange*)range
+{
+    UITextPosition* position = [self closestPositionToPoint:point];
+    if (NSOrderedDescending == [self comparePosition:[range start] toPosition:position]) {
+        return [range start];
+    }
+    if (NSOrderedAscending == [self comparePosition:[range end] toPosition:position]) {
+        return [range end];
+    }
+    return position;
+}
+
 - (UITextRange*) characterRangeAtPoint:(CGPoint)point
 {
     NSTextContainer* textContainer = [self textContainer];
