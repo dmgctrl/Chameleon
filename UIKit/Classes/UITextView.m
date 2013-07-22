@@ -881,6 +881,13 @@ static void _commonInitForUITextView(UITextView* self)
     return [_UITextViewPosition positionWithOffset:newOffset];
 }
 
+- (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
+{
+    #pragma warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 
 #pragma mark Private Methods
 
