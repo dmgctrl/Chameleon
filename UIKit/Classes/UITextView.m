@@ -927,6 +927,22 @@ static void _commonInitForUITextView(UITextView* self)
     [self doesNotRecognizeSelector:_cmd];
 }
 
+- (UITextRange*) characterRangeAtPoint:(CGPoint)point
+{
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSTextStorage* textStorage = [layoutManager textStorage];
+    
+    NSRange actualGlyphRange;
+    NSUInteger glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer];
+    NSRange range = [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:&actualGlyphRange];
+    if (!range.length) {
+        return nil;
+    }
+
+    return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
+}
+
 
 #pragma mark Private Methods
 
