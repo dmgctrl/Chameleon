@@ -1137,40 +1137,13 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) displayLayer:(CALayer*)theLayer
 {
-    // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
-    // specified in the UIView's subview. This nicely prevents a ton of useless memory usage and likley improves performance a lot on iPhone.
-    // It took great pains to discover this trick and I think I'm doing this right. By having this method empty here, it means that it overrides
-    // the layer's normal display method and instead does nothing which results in the layer not making a backing store and wasting memory.
-    
-    // Here's how CALayer appears to work:
-    // 1- something call's the layer's -display method.
-    // 2- arrive in CALayer's display: method.
-    // 2a-  if delegate implements displayLayer:, call that.
-    // 2b-  if delegate doesn't implement displayLayer:, CALayer creates a buffer and a context and passes that to drawInContext:
-    // 3- arrive in CALayer's drawInContext: method.
-    // 3a-  if delegate implements drawLayer:inContext:, call that and pass it the context.
-    // 3b-  otherwise, does nothing
-    
-    // So, what this all means is that to avoid causing the CALayer to create a context and use up memory, our delegate has to lie to CALayer
-    // about if it implements displayLayer: or not. If we say it does, we short circuit the layer's buffer creation process (since it assumes
-    // we are going to be setting it's contents property ourselves). So, that's what we do in the override of respondsToSelector: below.
-    
-    // backgroundColor is influenced by all this as well. If drawRect: is defined, we draw it directly in the context so that blending is all
-    // pretty and stuff. If it isn't, though, we still want to support it. What the real UIKit does is it sets the layer's backgroundColor
-    // iff drawRect: isn't specified. Otherwise it manages it itself. Again, this is for performance reasons. Rather than having to store a
-    // whole bitmap the size of view just to hold the backgroundColor, this allows a lot of views to simply act as containers and not waste
-    // a bunch of unnecessary memory in those cases - but you can still use background colors because CALayer manages that effeciently.
-    
-    // note that the last time I checked this, the layer's background color was being set immediately on call to -setBackgroundColor:
-    // when there was no -drawRect: implementation, but I needed to change this to work around issues with pattern image colors in HiDPI.
-    _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
 }
 
 - (void) drawLayer:(CALayer*)layer inContext:(CGContextRef)ctx
 {
     // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.
     // See the discussion in drawLayer: above.
-    assert(ourDrawRect_);
+    NSAssert(ourDrawRect_, @"???");
     
     const CGRect bounds = CGContextGetClipBoundingBox(ctx);
     
@@ -1183,26 +1156,6 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     } else if (_flags.clearsContextBeforeDrawing) {
         CGContextClearRect(ctx, bounds);
     }
-    
-    /*
-     NOTE: This kind of logic would seem to be ideal and result in the best font rendering when possible. The downside here is that
-     the rendering is then inconsistent throughout the app depending on how certain views are constructed or configured.
-     I'm not sure what to do about this. It appears to be impossible to subpixel render text drawn into a transparent layer because
-     of course there are no pixels behind the text to use when doing the subpixel blending. If it is turned on in that case, it looks
-     bad depending on what is ultimately composited behind it. Turning it off everywhere makes everything "equally bad," in a sense,
-     but at least stuff doesn't jump out as obviously different. However this doesn't look very nice on OSX. iOS appears to not use
-     any subpixel smoothing anywhere but doesn't seem to look bad when using it. There are many possibilities for why. Some I can
-     think of are they are setting some kind of graphics context mode I just haven't found yet, the rendering engines are
-     fundamentally different, the fonts themselves are actually different, the DPI of the devices, voodoo, or the loch ness monster.
-     */
-    
-    /*
-     UPDATE: I've since flattened some of the main views in Twitterrific/Ostrich and so now I'd like to have subpixel turned on for
-     the Mac, so I'm putting this code back in here. It tries to be smart about when to do it (because if it's on when it shouldn't
-     be the results look very bad). As the note above said, this can and does result in some inconsistency with the rendering in
-     the app depending on how things are done. Typical UIKit code is going to be lots of layers and thus text will mostly look bad
-     with straight ports but at this point I really can't come up with a much better solution so it'll have to do.
-     */
     
     const BOOL shouldSmoothFonts = (_backgroundColor && (CGColorGetAlpha(_backgroundColor.CGColor) == 1)) || self.opaque;
     CGContextSetShouldSmoothFonts(ctx, shouldSmoothFonts);
@@ -1340,6 +1293,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 #pragma mark NSLayerDelegateContentsScaleUpdating Protocol Reference
 - (BOOL) layer:(CALayer*)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
+    _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
     [self setNeedsDisplay];
     return YES;
 }
