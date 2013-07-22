@@ -851,16 +851,6 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
-- (UITextPosition*) beginningOfDocument
-{
-    return [_UITextViewPosition positionWithOffset:0];
-}
-
-- (UITextPosition*) endOfDocument
-{
-    return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
-}
-
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
 {
     NSAssert([fromPosition isKindOfClass:[_UITextViewRange class]], @"???");
@@ -887,6 +877,17 @@ static void _commonInitForUITextView(UITextView* self)
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+- (UITextPosition*) beginningOfDocument
+{
+    return [_UITextViewPosition positionWithOffset:0];
+}
+
+- (UITextPosition*) endOfDocument
+{
+    return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
+}
+
 
 
 #pragma mark Private Methods
