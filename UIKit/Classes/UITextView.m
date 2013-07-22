@@ -967,7 +967,6 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSTextContainer* textContainer = [self textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
-    NSTextStorage* textStorage = [layoutManager textStorage];
     
     NSRange actualGlyphRange;
     NSUInteger glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer];
