@@ -887,6 +887,24 @@ static void _commonInitForUITextView(UITextView* self)
     return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
 }
 
+- (NSComparisonResult) comparePosition:(_UITextViewPosition*)position toPosition:(_UITextViewPosition*)other
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+    NSAssert(!other || [other isKindOfClass:[_UITextViewPosition class]], @"???");
+    if (!position || !other) {
+        return NSOrderedSame;
+    }
+    NSInteger delta = [position offset] - [other offset];
+    if (delta > 0) {
+        return NSOrderedDescending;
+    } else if (delta < 0) {
+        return NSOrderedAscending;
+    } else {
+        return NSOrderedSame;
+    }
+}
+
+
 
 #pragma mark Private Methods
 
