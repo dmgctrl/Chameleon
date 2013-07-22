@@ -55,7 +55,7 @@ describe(@"UITextView", ^{
             context(@"selectedRange", ^{
                 it(@"should have max location and zero size", ^{
                     NSRange selectedRange = [textView selectedRange];
-                    [[@(NSEqualRanges(selectedRange, NSMakeRange(NSIntegerMax, 0))) should]beYes];
+                    [[@(NSEqualRanges(selectedRange, NSMakeRange(NSIntegerMax, 0))) should] beYes];
                 });
             });
             context(@"clearsOnInsertion", ^{
@@ -86,10 +86,25 @@ describe(@"UITextView", ^{
                 });
             });
         });
+
+    });
+
+    context(@"UITextInput Support", ^{
+        UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+        [textView setText:@"The quick brown fox jumped over the lazy dog."];
         
-        context(@"", ^{
-            NSArray* subviews = [textView subviews];
-            NSLog(@"%@", subviews);
+        context(@"-beginningOfDocument", ^{
+            UITextPosition* position = [textView beginningOfDocument];
+            it(@"returns a value", ^{
+                [[position should] beNonNil];
+            });
+        });
+
+        context(@"-endOfDocument", ^{
+            UITextPosition* position = [textView endOfDocument];
+            it(@"returns a value", ^{
+                [[position should] beNonNil];
+            });
         });
     });
 });

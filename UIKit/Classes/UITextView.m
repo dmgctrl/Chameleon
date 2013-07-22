@@ -851,6 +851,16 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
+- (UITextPosition*) beginningOfDocument
+{
+    return [_UITextViewPosition positionWithOffset:0];
+}
+
+- (UITextPosition*) endOfDocument
+{
+    return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
+}
+
 
 #pragma mark Private Methods
 
