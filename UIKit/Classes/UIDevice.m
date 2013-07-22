@@ -55,7 +55,7 @@ static UIDevice *theDevice;
 
 - (NSString *)name
 {
-    return (__bridge NSString *)SCDynamicStoreCopyComputerName(NULL,NULL);
+    return (__bridge_transfer NSString *)SCDynamicStoreCopyComputerName(NULL,NULL);
 }
 
 - (UIDeviceOrientation)orientation
