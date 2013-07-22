@@ -91,8 +91,8 @@ typedef NSUInteger UIControlState;
 - (void) sendActionsForControlEvents:(UIControlEvents)controlEvents;
 - (void) addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 - (void) removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
-- (NSArray *) actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent;
-- (NSSet *) allTargets;
+- (NSArray*) actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent;
+- (NSSet*) allTargets;
 - (UIControlEvents) allControlEvents;
 
 
@@ -108,12 +108,12 @@ typedef NSUInteger UIControlState;
 
 #pragma mark Tracking Touches and Redrawing Controls
 
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event;
-- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event;
-- (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event;
-- (void)cancelTrackingWithEvent:(UIEvent *)event;
-@property(nonatomic, readonly, getter=isTracking) BOOL tracking;
-@property(nonatomic, readonly, getter=isTouchInside) BOOL touchInside;
+- (BOOL) beginTrackingWithTouch:(UITouch*)touch withEvent:(UIEvent*)event;
+- (BOOL) continueTrackingWithTouch:(UITouch*)touch withEvent:(UIEvent*)event;
+- (void) endTrackingWithTouch:(UITouch*)touch withEvent:(UIEvent*)event;
+- (void) cancelTrackingWithEvent:(UIEvent*)event;
+@property (nonatomic, readonly, getter=isTracking) BOOL tracking;
+@property (nonatomic, readonly, getter=isTouchInside) BOOL touchInside;
 
 
 @end
