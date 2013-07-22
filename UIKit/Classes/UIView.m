@@ -1139,33 +1139,33 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 {
 }
 
-- (void) drawLayer:(CALayer*)layer inContext:(CGContextRef)ctx
+- (void) drawLayer:(CALayer*)layer inContext:(CGContextRef)c
 {
     // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.
     // See the discussion in drawLayer: above.
     NSAssert(ourDrawRect_, @"???");
     
-    const CGRect bounds = CGContextGetClipBoundingBox(ctx);
+    const CGRect bounds = CGContextGetClipBoundingBox(c);
     
-    UIGraphicsPushContext(ctx);
-    CGContextSaveGState(ctx);
+    UIGraphicsPushContext(c);
+    CGContextSaveGState(c);
     
     if (_backgroundColor) {
         [_backgroundColor setFill];
-        CGContextFillRect(ctx,bounds);
+        CGContextFillRect(c, bounds);
     } else if (_flags.clearsContextBeforeDrawing) {
-        CGContextClearRect(ctx, bounds);
+        CGContextClearRect(c, bounds);
     }
     
     const BOOL shouldSmoothFonts = (_backgroundColor && (CGColorGetAlpha(_backgroundColor.CGColor) == 1)) || self.opaque;
-    CGContextSetShouldSmoothFonts(ctx, shouldSmoothFonts);
-    CGContextSetShouldSubpixelPositionFonts(ctx, YES);
-    CGContextSetShouldSubpixelQuantizeFonts(ctx, YES);
+    CGContextSetShouldSmoothFonts(c, shouldSmoothFonts);
+    CGContextSetShouldSubpixelPositionFonts(c, YES);
+    CGContextSetShouldSubpixelQuantizeFonts(c, YES);
     
     [[UIColor blackColor] set];
     ourDrawRect_(self, drawRectSelector, bounds);
     
-    CGContextRestoreGState(ctx);
+    CGContextRestoreGState(c);
     UIGraphicsPopContext();
 }
 
