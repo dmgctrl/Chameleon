@@ -108,11 +108,9 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
 - (UIControlState) state
 {
     UIControlState state = UIControlStateNormal;
-    
     if (_highlighted)	state |= UIControlStateHighlighted;
     if (!_enabled)		state |= UIControlStateDisabled;
     if (_selected)		state |= UIControlStateSelected;
-    
     return state;
 }
 
@@ -235,13 +233,11 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
         _tracking = [self continueTrackingWithTouch:touch withEvent:event];
         if (_tracking) {
             UIControlEvents currentEvents = ((_touchInside)? UIControlEventTouchDragInside : UIControlEventTouchDragOutside);
-            
             if (!wasTouchInside && _touchInside) {
                 currentEvents |= UIControlEventTouchDragEnter;
             } else if (wasTouchInside && !_touchInside) {
                 currentEvents |= UIControlEventTouchDragExit;
             }
-            
             [self _sendActionsForControlEvents:currentEvents withEvent:event];
         }
     }
