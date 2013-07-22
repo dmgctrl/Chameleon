@@ -31,6 +31,7 @@
 #import <UIKit/UIColor.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UIPasteboard.h>
+#import <UIKit/UITapGestureRecognizer.h>
 #import <UIKit/UITouch.h>
 #import <UIKit/NSTextStorage.h>
 #import <UIKit/NSTextContainer.h>
@@ -39,6 +40,7 @@
 #import "UIColor+AppKit.h"
 #import "UIFont+UIPrivate.h"
 #import "_UITextStorage.h"
+#import "_UITextInteractionAssistant.h"
 //
 #import <AppKit/NSColor.h>
 #import <AppKit/NSCursor.h>
@@ -98,6 +100,8 @@ static NSString* const kUIEditableKey = @"UIEditable";
     NSLayoutManager* _layoutManager;
 
     _UITextContainerView* _textContainerView;
+
+    _UITextInteractionAssistant* _interactionAssistant;
     
     struct {
         BOOL shouldBeginEditing : 1;
@@ -396,11 +400,25 @@ static void _commonInitForUITextView(UITextView* self)
 }
 
 
+#pragma mark UIView
+
+- (void) willMoveToWindow:(UIWindow*)window
+{
+    [super willMoveToWindow:window];
+    if (window) {
+        _interactionAssistant = [[_UITextInteractionAssistant alloc] initWithView:self];
+        [self addGestureRecognizer:[_interactionAssistant singleTapGesture]];
+    } else {
+        [self removeGestureRecognizer:[_interactionAssistant singleTapGesture]];
+        _interactionAssistant = nil;
+    }
+}
+
+
 #pragma mark UIResponder
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self becomeFirstResponder];
     UITouch* touch = [[event allTouches] anyObject];
     [self _setAndScrollToRange:(NSRange){
         [self _characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]],
