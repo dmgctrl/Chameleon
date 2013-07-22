@@ -99,7 +99,7 @@ typedef NS_ENUM(NSInteger, UITextGranularity) {
 #pragma mark Geometry used to provide, for example, a correction rect
 - (CGRect) firstRectForRange:(UITextRange*)range;
 - (CGRect) caretRectForPosition:(UITextPosition*)position;
-- (NSArray*) selectionRectsForRange:(UITextRange*)range NS_AVAILABLE_IOS(6_0);
+- (NSArray*) selectionRectsForRange:(UITextRange*)range;
 
 #pragma Hit testing.
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point;
@@ -108,7 +108,7 @@ typedef NS_ENUM(NSInteger, UITextGranularity) {
 
 @optional
 
-- (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text NS_AVAILABLE_IOS(6_0);
+- (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text;
 
 - (NSDictionary*) textStylingAtPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction;
 - (UITextPosition*) positionWithinRange:(UITextRange*)range atCharacterOffset:(NSInteger)offset;
@@ -190,10 +190,10 @@ UIKIT_EXTERN NSString* const UITextInputTextFontKey;
 
 @property (nonatomic, readonly, retain) NSString* primaryLanguage;
 
-+ (UITextInputMode*) currentInputMode NS_DEPRECATED_IOS(4_2, 7_0);
++ (UITextInputMode*) currentInputMode;
 + (NSArray*) activeInputModes;
 
 @end
 
 
-UIKIT_EXTERN NSString* const UITextInputCurrentInputModeDidChangeNotification NS_AVAILABLE_IOS(4_2);
+UIKIT_EXTERN NSString* const UITextInputCurrentInputModeDidChangeNotification;
