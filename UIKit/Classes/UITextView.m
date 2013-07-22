@@ -861,6 +861,26 @@ static void _commonInitForUITextView(UITextView* self)
     return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
 }
 
+- (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
+{
+    NSAssert([fromPosition isKindOfClass:[_UITextViewRange class]], @"???");
+    NSAssert([toPosition isKindOfClass:[_UITextViewRange class]], @"???");
+    return [[_UITextViewRange alloc] initWithStart:fromPosition end:toPosition];
+}
+
+- (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position offset:(NSInteger)offset
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewRange class]], @"???");
+    if (!position) {
+        return nil;
+    }
+    NSInteger newOffset = [position offset] + offset;
+    if (newOffset < 0 || newOffset > [[self textStorage] length]) {
+        return nil;
+    }
+    return [_UITextViewPosition positionWithOffset:newOffset];
+}
+
 
 #pragma mark Private Methods
 
