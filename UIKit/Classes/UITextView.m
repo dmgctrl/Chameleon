@@ -834,8 +834,7 @@ static void _commonInitForUITextView(UITextView* self)
     if (range.location == NSNotFound && range.length == 0) {
         return nil;
     } else {
-        return [[_UITextViewRange alloc] initWithStart:[_UITextViewPosition positionWithOffset:range.location]
-                                                   end:[_UITextViewPosition positionWithOffset:range.location + range.length]];
+        return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
     }
 }
 
@@ -853,14 +852,14 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
 {
-    NSAssert([fromPosition isKindOfClass:[_UITextViewRange class]], @"???");
-    NSAssert([toPosition isKindOfClass:[_UITextViewRange class]], @"???");
+    NSAssert([fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
+    NSAssert([toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
     return [[_UITextViewRange alloc] initWithStart:fromPosition end:toPosition];
 }
 
 - (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position offset:(NSInteger)offset
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewRange class]], @"???");
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
     if (!position) {
         return nil;
     }
@@ -887,7 +886,6 @@ static void _commonInitForUITextView(UITextView* self)
 {
     return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
 }
-
 
 
 #pragma mark Private Methods
