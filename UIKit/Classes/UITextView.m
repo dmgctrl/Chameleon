@@ -800,11 +800,22 @@ static void _commonInitForUITextView(UITextView* self)
     }
     NSInteger start = [[range start] offset];
     NSInteger end = [[range end] offset];
-    NSString* text = [self text];
-    if (start < 0 || end < start || end > [text length]) {
+    NSTextStorage* textStorage = [self textStorage];
+    if (start < 0 || end < start || end > [textStorage length]) {
         return nil;
     }
-    return [text substringWithRange:(NSRange){ start, end - start }];
+    return [[textStorage string] substringWithRange:(NSRange){ start, end - start }];
+}
+
+- (void) replaceRange:(_UITextViewRange*)range withText:(NSString*)text
+{
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+    NSInteger start = [[range start] offset];
+    NSInteger end = [[range end] offset];
+    if (start < 0 || end < start || end > [[self textStorage] length]) {
+        return /* Question: Exception? */;
+    }
+    [self _replaceCharactersInRange:(NSRange){ start, end - start } withString:text];
 }
 
 - (UITextRange*) selectedTextRange
