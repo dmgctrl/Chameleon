@@ -818,6 +818,16 @@ static void _commonInitForUITextView(UITextView* self)
     [self _replaceCharactersInRange:(NSRange){ start, end - start } withString:text];
 }
 
+- (BOOL) shouldChangeTextInRange:(_UITextViewRange*)range replacementText:(NSString*)text
+{
+    NSInteger start = [[range start] offset];
+    NSInteger end = [[range end] offset];
+    if (start < 0 || end < start || end > [[self textStorage] length]) {
+        return NO;
+    }
+    return [self _canChangeTextInRange:(NSRange){ start, end - start } replacementText:text];
+}
+
 - (UITextRange*) selectedTextRange
 {
     NSRange range = [self selectedRange];
