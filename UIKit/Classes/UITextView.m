@@ -872,7 +872,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-    #pragma warning Stub
+    #warning Stub
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -902,6 +902,47 @@ static void _commonInitForUITextView(UITextView* self)
     } else {
         return NSOrderedSame;
     }
+}
+
+- (NSInteger) offsetFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
+{
+    NSAssert(!fromPosition || [fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
+    NSAssert(!toPosition || [toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
+    if (!fromPosition || !toPosition) {
+        return 0;
+    }
+    return [toPosition offset] - [fromPosition offset];
+}
+
+- (UITextPosition*) positionWithinRange:(_UITextViewRange*)range farthestInDirection:(UITextLayoutDirection)direction
+{
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (UITextRange*) characterRangeByExtendingPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (UITextWritingDirection) baseWritingDirectionForPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return UITextWritingDirectionNatural;
+}
+
+- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
+{
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 
