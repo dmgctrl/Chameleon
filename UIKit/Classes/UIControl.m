@@ -33,11 +33,9 @@
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIControlAction.h>
 
-
 static NSString* const kUIDisabledKey = @"UIDisabled";
 static NSString* const kUIContentHorizontalAlignmentKey = @"UIContentHorizontalAlignment";
 static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlignment";
-
 
 @implementation UIControl {
     NSMutableArray* _registeredActions;
@@ -67,26 +65,22 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
 - (void) removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
 {
     NSMutableArray* discard = [[NSMutableArray alloc] init];
-    
     for (UIControlAction* controlAction in _registeredActions) {
         if (controlAction.target == target && (action == NULL || controlAction.controlEvents == controlEvents)) {
             [discard addObject:controlAction];
         }
     }
-    
     [_registeredActions removeObjectsInArray:discard];
 }
 
 - (NSArray*) actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent
 {
     NSMutableArray* actions = [[NSMutableArray alloc] init];
-    
     for (UIControlAction* controlAction in _registeredActions) {
         if ((target == nil || controlAction.target == target) && (controlAction.controlEvents & controlEvent) ) {
             [actions addObject:NSStringFromSelector(controlAction.action)];
         }
     }
-    
     if ([actions count] == 0) {
         return nil;
     } else {
@@ -102,11 +96,9 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
 - (UIControlEvents) allControlEvents
 {
     UIControlEvents allEvents = 0;
-    
     for (UIControlAction* controlAction in _registeredActions) {
         allEvents |= controlAction.controlEvents;
     }
-    
     return allEvents;
 }
 
@@ -223,17 +215,12 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
     UITouch* touch = [touches anyObject];
     _touchInside = YES;
     _tracking = [self beginTrackingWithTouch:touch withEvent:event];
-    
     self.highlighted = YES;
-    
-    
     if (_tracking) {
         UIControlEvents currentEvents = UIControlEventTouchDown;
-        
         if (touch.tapCount > 1) {
             currentEvents |= UIControlEventTouchDownRepeat;
         }
-        
         [self _sendActionsForControlEvents:currentEvents withEvent:event];
     }
 }
@@ -243,9 +230,7 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
     UITouch* touch = [touches anyObject];
     const BOOL wasTouchInside = _touchInside;
     _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
-    
     self.highlighted = _touchInside;
-    
     if (_tracking) {
         _tracking = [self continueTrackingWithTouch:touch withEvent:event];
         if (_tracking) {
@@ -266,14 +251,11 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
 {
     UITouch* touch = [touches anyObject];
     _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
-    
     self.highlighted = NO;
-    
     if (_tracking) {
         [self endTrackingWithTouch:touch withEvent:event];
         [self _sendActionsForControlEvents:((_touchInside)? UIControlEventTouchUpInside : UIControlEventTouchUpOutside) withEvent:event];
     }
-    
     _tracking = NO;
     _touchInside = NO;
 }
@@ -281,12 +263,10 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
 - (void) touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
 {
     self.highlighted = NO;
-    
     if (_tracking) {
         [self cancelTrackingWithEvent:event];
         [self _sendActionsForControlEvents:UIControlEventTouchCancel withEvent:event];
     }
-    
     _touchInside = NO;
     _tracking = NO;
 }
@@ -314,7 +294,6 @@ static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlign
 
 - (void) _stateWillChange
 {
-	
 }
 
 - (void) _stateDidChange
