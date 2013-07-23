@@ -392,14 +392,6 @@ static void _commonInitForUITextView(UITextView* self)
     [self setSelectedRange:range];
 }
 
-#pragma mark Public Methods
-
-- (BOOL) hasText
-{
-    return [[self textStorage] length] > 0;
-}
-
-
 #pragma mark UIView
 
 - (void) willMoveToWindow:(UIWindow*)window
@@ -483,37 +475,9 @@ static void _commonInitForUITextView(UITextView* self)
     [self setSelectedRange:NSMakeRange(0, [[self textStorage] length])];
 }
 
-- (void) insertText:(NSString*)text
-{
-    if (![self _beginEditingIfNecessary]) {
-        return;
-    }
-    NSRange range = [self selectedRange];
-    if (![self _canChangeTextInRange:range replacementText:text]) {
-        return;
-    }
-    [self _replaceCharactersInRange:range withString:text];
-    [self _didChangeText];
-    [self scrollRangeToVisible:[self selectedRange]];
-}
-
 - (void) deleteBackward:(id)sender
 {
-    NSRange range = [self selectedRange];
-    if (range.length > 0) {
-        if (![self _canChangeTextInRange:range replacementText:@""]) {
-            return;
-        }
-        [self _replaceCharactersInRange:range withString:@""];
-        [self _didChangeText];
-    } else if (range.location > 0) {
-        range.location--;
-        if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
-            return;
-        }
-        [self _replaceCharactersInRange:(NSRange){ range.location, 1 } withString:@""];
-        [self _didChangeText];
-    }
+    [self deleteBackward];
 }
 
 - (void) deleteForward:(id)sender
@@ -787,6 +751,47 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) insertNewline:(id)sender
 {
     [self insertText:@"\n"];
+}
+
+
+#pragma mark UIKeyInput
+
+- (BOOL) hasText
+{
+    return [[self textStorage] length] > 0;
+}
+
+- (void) insertText:(NSString*)text
+{
+    if (![self _beginEditingIfNecessary]) {
+        return;
+    }
+    NSRange range = [self selectedRange];
+    if (![self _canChangeTextInRange:range replacementText:text]) {
+        return;
+    }
+    [self _replaceCharactersInRange:range withString:text];
+    [self _didChangeText];
+    [self scrollRangeToVisible:[self selectedRange]];
+}
+
+- (void) deleteBackward
+{
+    NSRange range = [self selectedRange];
+    if (range.length > 0) {
+        if (![self _canChangeTextInRange:range replacementText:@""]) {
+            return;
+        }
+        [self _replaceCharactersInRange:range withString:@""];
+        [self _didChangeText];
+    } else if (range.location > 0) {
+        range.location--;
+        if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
+            return;
+        }
+        [self _replaceCharactersInRange:(NSRange){ range.location, 1 } withString:@""];
+        [self _didChangeText];
+    }
 }
 
 
