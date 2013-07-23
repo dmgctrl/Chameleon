@@ -1461,17 +1461,16 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) _boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
 {
-    if (!CGRectEqualToRect(oldBounds, newBounds)) {
-        // setNeedsLayout doesn't seem like it should be necessary, however there was a rendering bug in a table in Flamingo that
-        // went away when this was placed here. There must be some strange ordering issue with how that layout manager stuff works.
-        // I never quite narrowed it down. This was an easy fix, if perhaps not ideal.
-        [self setNeedsLayout];
-        
-        if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
-            if (_flags.autoresizesSubviews) {
-                for (UIView *subview in _subviews) {
-                    [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
-                }
+    if (CGRectEqualToRect(oldBounds, newBounds)) {
+        return;
+    }
+    if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
+        if ([self contentMode] == UIViewContentModeRedraw) {
+            [self setNeedsDisplay];
+        }
+        if (_flags.autoresizesSubviews) {
+            for (UIView* subview in _subviews) {
+                [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
             }
         }
     }
