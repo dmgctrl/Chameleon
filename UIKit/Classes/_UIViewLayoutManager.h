@@ -29,6 +29,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface UIViewLayoutManager : NSObject
-+ (UIViewLayoutManager *)layoutManager;
+@interface _UIViewLayoutManager : NSObject
++ (_UIViewLayoutManager *)layoutManager;
 @end

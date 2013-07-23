@@ -28,24 +28,27 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIView+UIPrivate.h>
-#import <UIKit/UIViewController+UIPrivate.h>
-#import <UIKit/UIView+AppKit.h>
+#import <QuartzCore/CALayer.h>
+//
+#import <UIKit/UIView.h>
 #import <UIKit/UIWindow.h>
 #import <UIKit/UIGraphics.h>
 #import <UIKit/UIColor.h>
-#import <UIKit/UIViewLayoutManager.h>
 #import <UIKit/UIViewAnimationGroup.h>
 #import <UIKit/UIViewBlockAnimationDelegate.h>
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIAppearanceInstance.h>
-#import <UIKit/UIApplication+UIPrivate.h>
-#import <UIKit/UIGestureRecognizer+UIPrivate.h>
 #import <UIKit/UIScreen.h>
 #import <UIKit/UIGeometry.h>
-#import <UIKit/UIColor+UIPrivate.h>
 #import <UIKit/UIColorRep.h>
-#import <QuartzCore/CALayer.h>
+//
+#import "UIView+UIPrivate.h"
+#import "UIViewController+UIPrivate.h"
+#import "UIView+AppKit.h"
+#import "UIApplication+UIPrivate.h"
+#import "UIGestureRecognizer+UIPrivate.h"
+#import "UIColor+UIPrivate.h"
+#import "_UIViewLayoutManager.h"
 
 @class NSWindow;
 
@@ -1292,7 +1295,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     
     _layer = [[[[self class] layerClass] alloc] init];
     _layer.delegate = self;
-    _layer.layoutManager = [UIViewLayoutManager layoutManager];
+    _layer.layoutManager = [_UIViewLayoutManager layoutManager];
     _flags.layerHasContentScale = [_layer respondsToSelector:@selector(setContentsScale:)];
     
     self.alpha = 1;

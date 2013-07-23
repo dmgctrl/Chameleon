@@ -34,7 +34,7 @@
 #import "UIApplication.h"
 #import <QuartzCore/QuartzCore.h>
 #import <AppKit/AppKit.h>
-#import "UIViewLayoutManager.h"
+#import "_UIViewLayoutManager.h"
 #import "UIColor.h"
 #import "UIScreenMode+UIPrivate.h"
 #import "UIWindow.h"
@@ -83,7 +83,7 @@ NSMutableArray *_allScreens = nil;
     if ((self = [super init])) {
         _layer = [CALayer layer];
         _layer.delegate = self;		// required to get the magic of the UIViewLayoutManager...
-        _layer.layoutManager = [UIViewLayoutManager layoutManager];
+        _layer.layoutManager = [_UIViewLayoutManager layoutManager];
         
         _grabber = [[UIImageView alloc] initWithImage:[UIImage _windowResizeGrabberImage]];
         _grabber.layer.zPosition = 10000;

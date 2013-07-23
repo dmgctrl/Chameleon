@@ -27,22 +27,22 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewLayoutManager.h"
+#import "_UIViewLayoutManager.h"
 #import <QuartzCore/CALayer.h>
 #import "UIView+UIPrivate.h"
 
-static UIViewLayoutManager *theLayoutManager = nil;
+static _UIViewLayoutManager *theLayoutManager = nil;
 
-@implementation UIViewLayoutManager
+@implementation _UIViewLayoutManager
 
 + (void)initialize
 {
-    if (self == [UIViewLayoutManager class]) {
+    if (self == [_UIViewLayoutManager class]) {
         theLayoutManager = [[self alloc] init];
     }
 }
 
-+ (UIViewLayoutManager *)layoutManager
++ (_UIViewLayoutManager *)layoutManager
 {
     return theLayoutManager;
 }

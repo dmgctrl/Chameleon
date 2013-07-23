@@ -32,7 +32,7 @@
 		145576231541DC560029EF4D /* UIAppearanceInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 145576221541DC560029EF4D /* UIAppearanceInstance.h */; };
 		1457DD3F128DDE610057A7F9 /* UITransitionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1457DD3D128DDE610057A7F9 /* UITransitionView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1457DD40128DDE610057A7F9 /* UITransitionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1457DD3E128DDE610057A7F9 /* UITransitionView.m */; };
-		145BE3211575523000C41D70 /* UIColor+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 145BE3201575523000C41D70 /* UIColor+UIPrivate.h */; };
+		145BE3211575523000C41D70 /* UIColor+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 145BE3201575523000C41D70 /* UIColor+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1464960B11FF7AE500ECEC7A /* <UINavigationBar> back-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 1464960711FF7AE500ECEC7A /* <UINavigationBar> back-highlighted.png */; };
 		1464960C11FF7AE500ECEC7A /* <UINavigationBar> back.png in Resources */ = {isa = PBXBuildFile; fileRef = 1464960811FF7AE500ECEC7A /* <UINavigationBar> back.png */; };
 		14711394156FC83F00251B2E /* UIImageRep.h in Headers */ = {isa = PBXBuildFile; fileRef = 14711392156FC83F00251B2E /* UIImageRep.h */; };
@@ -234,8 +234,8 @@
 		14FA8C70121DA4A000C4264B /* UIThreePartImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 14FA8C58121DA4A000C4264B /* UIThreePartImage.m */; };
 		14FA8C71121DA4A000C4264B /* UIViewAnimationGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FA8C59121DA4A000C4264B /* UIViewAnimationGroup.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		14FA8C72121DA4A000C4264B /* UIViewAnimationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 14FA8C5A121DA4A000C4264B /* UIViewAnimationGroup.m */; };
-		14FA8C73121DA4A000C4264B /* UIViewLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FA8C5B121DA4A000C4264B /* UIViewLayoutManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		14FA8C74121DA4A000C4264B /* UIViewLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 14FA8C5C121DA4A000C4264B /* UIViewLayoutManager.m */; };
+		14FA8C73121DA4A000C4264B /* _UIViewLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FA8C5B121DA4A000C4264B /* _UIViewLayoutManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		14FA8C74121DA4A000C4264B /* _UIViewLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 14FA8C5C121DA4A000C4264B /* _UIViewLayoutManager.m */; };
 		14FDE9A5153CAECA00A2D499 /* UIAppearanceProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FDE9A3153CAECA00A2D499 /* UIAppearanceProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38615C77133A81B900841EEA /* UIFont+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		38E523B11339680400E041B3 /* UINavigationItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E523AF1339680400E041B3 /* UINavigationItem+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -397,8 +397,8 @@
 		F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
 		F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1A397D178471D200644CCB /* UIViewSpec.m */; };
 		F94CB9A413C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = F94CB9A313C7E5C4001DF656 /* <UITableViewCell> accessoryDisclosureIndicatorHighlighted.png */; };
-		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; };
-		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; };
+		F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D513C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F94CB9D813C8C242001DF656 /* UIButton+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		F953D4FE13CD3BAC006B941C /* UITableViewCellUnhighlightedState.h in Headers */ = {isa = PBXBuildFile; fileRef = F953D4FC13CD3BAB006B941C /* UITableViewCellUnhighlightedState.h */; };
 		F953D4FF13CD3BAC006B941C /* UITableViewCellUnhighlightedState.m in Sources */ = {isa = PBXBuildFile; fileRef = F953D4FD13CD3BAB006B941C /* UITableViewCellUnhighlightedState.m */; };
 		F95416D913C90AD4000A9282 /* <UITableView> groupTableViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = F95416D813C90AD4000A9282 /* <UITableView> groupTableViewBackground.png */; };
@@ -766,8 +766,8 @@
 		14FA8C58121DA4A000C4264B /* UIThreePartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIThreePartImage.m; sourceTree = "<group>"; };
 		14FA8C59121DA4A000C4264B /* UIViewAnimationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewAnimationGroup.h; sourceTree = "<group>"; };
 		14FA8C5A121DA4A000C4264B /* UIViewAnimationGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewAnimationGroup.m; sourceTree = "<group>"; };
-		14FA8C5B121DA4A000C4264B /* UIViewLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewLayoutManager.h; sourceTree = "<group>"; };
-		14FA8C5C121DA4A000C4264B /* UIViewLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewLayoutManager.m; sourceTree = "<group>"; };
+		14FA8C5B121DA4A000C4264B /* _UIViewLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UIViewLayoutManager.h; sourceTree = "<group>"; };
+		14FA8C5C121DA4A000C4264B /* _UIViewLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UIViewLayoutManager.m; sourceTree = "<group>"; };
 		14FDE9A3153CAECA00A2D499 /* UIAppearanceProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearanceProxy.h; sourceTree = "<group>"; };
 		14FDE9A4153CAECA00A2D499 /* UIAppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProxy.m; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* UIKit_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKit_Prefix.pch; sourceTree = "<group>"; };
@@ -1493,8 +1493,8 @@
 				14FA8C5A121DA4A000C4264B /* UIViewAnimationGroup.m */,
 				14BF16D912E621EB007DAA01 /* UIViewBlockAnimationDelegate.h */,
 				14BF16DA12E621EB007DAA01 /* UIViewBlockAnimationDelegate.m */,
-				14FA8C5B121DA4A000C4264B /* UIViewLayoutManager.h */,
-				14FA8C5C121DA4A000C4264B /* UIViewLayoutManager.m */,
+				14FA8C5B121DA4A000C4264B /* _UIViewLayoutManager.h */,
+				14FA8C5C121DA4A000C4264B /* _UIViewLayoutManager.m */,
 			);
 			name = "Private Classes";
 			path = Classes;
@@ -1986,7 +1986,7 @@
 				14FA8C6D121DA4A000C4264B /* UITableViewSectionLabel.h in Headers */,
 				14FA8C6F121DA4A000C4264B /* UIThreePartImage.h in Headers */,
 				14FA8C71121DA4A000C4264B /* UIViewAnimationGroup.h in Headers */,
-				14FA8C73121DA4A000C4264B /* UIViewLayoutManager.h in Headers */,
+				14FA8C73121DA4A000C4264B /* _UIViewLayoutManager.h in Headers */,
 				1443DF24121F0D5A00E07C4A /* UIScreenMode+UIPrivate.h in Headers */,
 				145335651226F03E0005644F /* UITextLayer.h in Headers */,
 				145335691226F1F90005644F /* UIBulletGlyphGenerator.h in Headers */,
@@ -2377,7 +2377,7 @@
 				14FA8C6E121DA4A000C4264B /* UITableViewSectionLabel.m in Sources */,
 				14FA8C70121DA4A000C4264B /* UIThreePartImage.m in Sources */,
 				14FA8C72121DA4A000C4264B /* UIViewAnimationGroup.m in Sources */,
-				14FA8C74121DA4A000C4264B /* UIViewLayoutManager.m in Sources */,
+				14FA8C74121DA4A000C4264B /* _UIViewLayoutManager.m in Sources */,
 				145335661226F03E0005644F /* UITextLayer.m in Sources */,
 				1453356A1226F1F90005644F /* UIBulletGlyphGenerator.m in Sources */,
 				145335721226F2720005644F /* UICustomNSTextView.m in Sources */,
