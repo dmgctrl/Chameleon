@@ -431,71 +431,62 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 {
     if (mode != _contentMode) {
         _contentMode = mode;
+
+        BOOL needsDisplayOnBoundsChange = NO;
         switch(_contentMode) {
             case UIViewContentModeScaleToFill:
                 _layer.contentsGravity = kCAGravityResize;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeScaleAspectFit:
                 _layer.contentsGravity = kCAGravityResizeAspect;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeScaleAspectFill:
                 _layer.contentsGravity = kCAGravityResizeAspectFill;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeRedraw:
-                _layer.needsDisplayOnBoundsChange = YES;
+                needsDisplayOnBoundsChange = YES;
                 break;
                 
             case UIViewContentModeCenter:
                 _layer.contentsGravity = kCAGravityCenter;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeTop:
                 _layer.contentsGravity = kCAGravityTop;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeBottom:
                 _layer.contentsGravity = kCAGravityBottom;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeLeft:
                 _layer.contentsGravity = kCAGravityLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeRight:
                 _layer.contentsGravity = kCAGravityRight;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeTopLeft:
                 _layer.contentsGravity = kCAGravityTopLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeTopRight:
                 _layer.contentsGravity = kCAGravityTopRight;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeBottomLeft:
                 _layer.contentsGravity = kCAGravityBottomLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeBottomRight:
                 _layer.contentsGravity = kCAGravityBottomRight;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
         }
+        [_layer setNeedsDisplayOnBoundsChange:needsDisplayOnBoundsChange];
     }
 }
 
@@ -1437,9 +1428,6 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
         return;
     }
     if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
-        if ([self contentMode] == UIViewContentModeRedraw) {
-            [self setNeedsDisplay];
-        }
         if (_flags.autoresizesSubviews) {
             for (UIView* subview in _subviews) {
                 [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
