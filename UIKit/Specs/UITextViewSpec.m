@@ -53,9 +53,9 @@ describe(@"UITextView", ^{
                 // accept and modify but not return a mutable dictionary and delay a call to that.
             });
             context(@"selectedRange", ^{
-                it(@"should have max location and zero size", ^{
+                it(@"should be NSNotFound and zero length", ^{
                     NSRange selectedRange = [textView selectedRange];
-                    [[@(NSEqualRanges(selectedRange, NSMakeRange(NSIntegerMax, 0))) should] beYes];
+                    [[@(NSEqualRanges(selectedRange, NSMakeRange(NSNotFound, 0))) should] beYes];
                 });
             });
             context(@"clearsOnInsertion", ^{
