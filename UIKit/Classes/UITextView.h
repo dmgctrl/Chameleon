@@ -57,6 +57,7 @@ UIKIT_EXTERN NSString *const UITextViewTextDidEndEditingNotification;
 
 @interface UITextView : UIScrollView <NSCoding, UITextInput, UITextInputTraits>
 
+- (instancetype) initWithFrame:(CGRect)frame;
 - (instancetype) initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)textContainer;
 
 #pragma mark Configuring the Text Attributes
