@@ -91,6 +91,7 @@ describe(@"UITextView", ^{
     context(@"UITextInput Support", ^{
         NSString* text = @"The quick brown fox jumped over the lazy dog.";
         NSInteger textLength = [text length];
+        NSInteger smallOffset = 5;
         context(@"Text Positions", ^{
             UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [textView setText:text];
@@ -166,26 +167,26 @@ describe(@"UITextView", ^{
                     });
                 });
                 context(@"offsets from positions from offsets", ^{
-                    context(@"of 5 after beginning", ^{
-                        UITextPosition* beginningOfDocumentOffsetByFive = [textView positionFromPosition:beginningOfDocument offset:5];
-                        NSInteger offsetByFiveFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocumentOffsetByFive];
-                        NSInteger offsetByFiveAfterBeginningFromEnd = [textView offsetFromPosition:endOfDocument toPosition:beginningOfDocumentOffsetByFive];
-                        it(@"should be 5 after beginning", ^{
-                            [[@(offsetByFiveFromBeginning) should] equal:@(5)];
+                    context(@"of smallOffset after beginning", ^{
+                        UITextPosition* beginningOfDocumentOffsetBySmallOffset = [textView positionFromPosition:beginningOfDocument offset:smallOffset];
+                        NSInteger offsetBySmallOffsetFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset];
+                        it(@"should be smallOffset after beginning", ^{
+                            [[@(offsetBySmallOffsetFromBeginning) should] equal:@(smallOffset)];
                         });
-                        it(@"should be -text length +5 from end", ^{
-                            [[@(offsetByFiveAfterBeginningFromEnd) should] equal:@(5 - textLength)];
+                        NSInteger offsetBySmallOffsetAfterBeginningFromEnd = [textView offsetFromPosition:endOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset];
+                        it(@"should be -text length +smallOffset from end", ^{
+                            [[@(offsetBySmallOffsetAfterBeginningFromEnd) should] equal:@(smallOffset - textLength)];
                         });
                     });
-                    context(@"of 5 before end", ^{
-                        UITextPosition* endOfDocumentOffsetByFive = [textView positionFromPosition:endOfDocument offset:-5];
-                        NSInteger offsetByFiveBeforeEnd = [textView offsetFromPosition:endOfDocument toPosition:endOfDocumentOffsetByFive];
-                        NSInteger offsetByFiveBeforeEndFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:endOfDocumentOffsetByFive];
-                        it(@"should be 5 before end", ^{
-                            [[@(offsetByFiveBeforeEnd) should] equal:@(-5)];
+                    context(@"of smallOffset before end", ^{
+                        UITextPosition* endOfDocumentOffsetBySmallOffset = [textView positionFromPosition:endOfDocument offset:-smallOffset];
+                        NSInteger offsetBySmallOffsetBeforeEnd = [textView offsetFromPosition:endOfDocument toPosition:endOfDocumentOffsetBySmallOffset];
+                        it(@"should be smallOffset before end", ^{
+                            [[@(offsetBySmallOffsetBeforeEnd) should] equal:@(-smallOffset)];
                         });
-                        it(@"should be text length -5 from beginning", ^{
-                            [[@(offsetByFiveBeforeEndFromBeginning) should] equal:@(textLength - 5)];
+                        NSInteger offsetBySmallOffsetBeforeEndFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:endOfDocumentOffsetBySmallOffset];
+                        it(@"should be text length -smallOffset from beginning", ^{
+                            [[@(offsetBySmallOffsetBeforeEndFromBeginning) should] equal:@(textLength - smallOffset)];
                         });
                     });
                 });
@@ -193,8 +194,8 @@ describe(@"UITextView", ^{
             
             context(@"Comparisons", ^{
                 context(@"postitions", ^{
-                    UITextPosition* beginningOfDocumentOffsetByFive = [textView positionFromPosition:beginningOfDocument offset:5];
-                    UITextPosition* endOfDocumentOffsetByFive = [textView positionFromPosition:endOfDocument offset:-5];
+                    UITextPosition* beginningOfDocumentOffsetBySmallOffset = [textView positionFromPosition:beginningOfDocument offset:smallOffset];
+                    UITextPosition* endOfDocumentOffsetBySmallOffset = [textView positionFromPosition:endOfDocument offset:-smallOffset];
                     context(@"beginning of document", ^{
                         context(@"when compared to end", ^{
                             it(@"should be <", ^{
@@ -206,14 +207,14 @@ describe(@"UITextView", ^{
                                 [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
                             });
                         });
-                        context(@"when compared to five after beginning", ^{
+                        context(@"when compared to small offset after beginning", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocumentOffsetByFive]) should] equal:@(NSOrderedAscending)];
+                                [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
                             });
                         });
-                        context(@"when compared to five before end", ^{
+                        context(@"when compared to SmallOffset before end", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocument toPosition:endOfDocumentOffsetByFive]) should] equal:@(NSOrderedAscending)];
+                                [[@([textView comparePosition:beginningOfDocument toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
                             });
                         });
                     });
@@ -228,58 +229,58 @@ describe(@"UITextView", ^{
                                 [[@([textView comparePosition:endOfDocument toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
                             });
                         });
-                        context(@"when compared to five after beginning", ^{
+                        context(@"when compared to Small Offset after beginning", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocument toPosition:beginningOfDocumentOffsetByFive]) should] equal:@(NSOrderedDescending)];
+                                [[@([textView comparePosition:endOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
                             });
                         });
-                        context(@"when compared to five before end", ^{
+                        context(@"when compared to Small Offset before end", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocument toPosition:endOfDocumentOffsetByFive]) should] equal:@(NSOrderedDescending)];
+                                [[@([textView comparePosition:endOfDocument toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
                             });
                         });
                     });
-                    context(@"5 after beginning", ^{
+                    context(@"smallOffset after beginning", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetByFive toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
+                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
                             });
                         });
                         context(@"when compared to end", ^{
                             it(@"should be =", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetByFive toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
+                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
                             });
                         });
-                        context(@"when compared to five after beginning", ^{
+                        context(@"when compared to Small Offset after beginning", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetByFive toPosition:beginningOfDocumentOffsetByFive]) should] equal:@(NSOrderedSame)];
+                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
                             });
                         });
-                        context(@"when compared to 5 before end", ^{
+                        context(@"when compared to smallOffset before end", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetByFive toPosition:endOfDocumentOffsetByFive]) should] equal:@(NSOrderedAscending)];
+                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
                             });
                         });
                     });
-                    context(@"5 before end", ^{
+                    context(@"smallOffset before end", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetByFive toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
+                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
                             });
                         });
                         context(@"when compared to end", ^{
                             it(@"should be =", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetByFive toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
+                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
                             });
                         });
-                        context(@"when compared to five after beginning", ^{
+                        context(@"when compared to Small Offset after beginning", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetByFive toPosition:beginningOfDocumentOffsetByFive]) should] equal:@(NSOrderedDescending)];
+                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
                             });
                         });
-                        context(@"when compared to 5 before end", ^{
+                        context(@"when compared to smallOffset before end", ^{
                             it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetByFive toPosition:endOfDocumentOffsetByFive]) should] equal:@(NSOrderedSame)];
+                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
                             });
                         });
                     });
