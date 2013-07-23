@@ -392,6 +392,7 @@ static void _commonInitForUITextView(UITextView* self)
     [self setSelectedRange:range];
 }
 
+
 #pragma mark UIView
 
 - (void) willMoveToWindow:(UIWindow*)window
@@ -721,7 +722,6 @@ static void _commonInitForUITextView(UITextView* self)
         return [self _indexWhenMovingToEndOfDocumentFromIndex:index];
     }];
 }
-
 
 - (void) cut:(id)sender
 {
@@ -1375,7 +1375,6 @@ static void _commonInitForUITextView(UITextView* self)
 {
     return [[self textStorage] length];
 }
-
 
 @end
 
