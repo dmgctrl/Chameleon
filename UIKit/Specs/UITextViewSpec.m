@@ -91,82 +91,72 @@ describe(@"UITextView", ^{
 
     context(@"UITextInput Support", ^{
         NSString* text = @"The quick brown fox jumped over the lazy dog.";
-        context(@"unselected", ^{
+
+        context(@"Text Positions", ^{
             UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [textView setText:text];
-            beforeEach(^{
-                [textView setSelectedRange:NSMakeRange(0, 0)];
-            });
-            
+
+            UITextPosition* beginningOfDocument = [textView beginningOfDocument];
             context(@"-beginningOfDocument", ^{
-                UITextPosition* position = [textView beginningOfDocument];
-                it(@"returns a value", ^{
-                    [[position should] beNonNil];
+                it(@"returns an object", ^{
+                    [[beginningOfDocument should] beNonNil];
+                });
+                it(@"returns an instance of UITextRange", ^{
+                    [[beginningOfDocument should] beKindOfClass:[UITextPosition class]];
                 });
             });
-
+            
+            UITextPosition* endOfDocument = [textView endOfDocument];
             context(@"-endOfDocument", ^{
-                UITextPosition* position = [textView endOfDocument];
-                it(@"returns a value", ^{
-                    [[position should] beNonNil];
+                it(@"returns an object", ^{
+                    [[endOfDocument should] beNonNil];
+                });
+                it(@"returns an instance of UITextRange", ^{
+                    [[endOfDocument should] beKindOfClass:[UITextPosition class]];
                 });
             });
-
-            context(@"-textInRange", ^{
-                [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView beginningOfDocument]]];
-                it(@"should be empty", ^{
-                    [[@([[textView selectedTextRange] isEmpty]) should] beYes];
+            
+            context(@"Measurements", ^{
+                context(@"-offestFromPositionToPosition", ^{
+                    [[@([textView offsetFromPosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@([text length])];
                 });
+            });
+            
+            context(@"Comparisons", ^{
             });
         });
 
-        context(@"of fully selected", ^{
+        context(@"Text Ranges", ^{
             UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [textView setText:text];
-            
-            UITextRange* fullTextRange = [textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView endOfDocument]];
-            [textView setSelectedTextRange:fullTextRange];
-            UITextPosition* start = [[textView selectedTextRange] start];
-            UITextPosition* end = [[textView selectedTextRange] end];
-            [textView setMarkedText:text selectedRange:NSMakeRange(0, [text length])];
-            NSString* fullText = [textView textInRange:fullTextRange];
-            NSLog(@"asd");
-            context(@"selected range when set to full", ^{
-                it(@"should not be empty", ^{
-                    [[@([fullTextRange isEmpty]) should] beYes];
-                });
-            });
-            
-            context(@"-textInRange", ^{
-                it(@"should be text if range is entire", ^{
-                    [[@([fullText isEqualToString:text]) should] beYes];
+            UITextPosition* beginningOfDocument = [textView beginningOfDocument];
+            UITextPosition* endOfDocument = [textView endOfDocument];
+            UITextRange* entireTextRange = [textView textRangeFromPosition:beginningOfDocument toPosition:endOfDocument];
+
+            context(@"-textRangeFromPosition:toPosition:", ^{
+                context(@"when given beginning and end of document", ^{
+                    it(@"returns an object", ^{
+                        [[entireTextRange should] beNonNil];
+                    });
+                    it(@"returns an instance of UITextRange", ^{
+                        [[entireTextRange should] beKindOfClass:[UITextRange class]];
+                    });
+                    it(@"has a start property equal to beginningOfDocument", ^{
+                        [[[entireTextRange start] should] equal:beginningOfDocument];
+                    });
+                    it(@"has an end property equal to endOfDocument", ^{
+                        [[[entireTextRange end] should] equal:endOfDocument];
+                    });
                 });
             });
 
-            context(@"-replaceRange:withText", ^{
-                [textView replaceRange:fullTextRange withText:text];
-                it(@"should work ", ^{
-                    [[@([fullText isEqualToString:text]) should] beYes];
-                });
-                [textView setSelectedTextRange:fullTextRange];
+            context(@"Measurements", ^{
             });
             
-            context(@"marked vs selected text range", ^{
-                it(@"can be made consistent", ^{
-                    [[@([textView comparePosition:[[textView markedTextRange]end] toPosition:end]) should] equal:@(NSOrderedSame)];
-                });
-            });
-
-            context(@"-comparePositionToPosition", ^{
-                it(@"should have start < end", ^{
-                    [[@([textView comparePosition:start toPosition:end]) should] equal:@(NSOrderedAscending)];
-                });
-            });
-            
-            context(@"-offestFromPositionToPosition", ^{
-                [[@([textView offsetFromPosition:start toPosition:end]) should] equal:@([text length])];
+            context(@"Comparisons", ^{
             });
         });
+        
     });
 });
 SPEC_END
