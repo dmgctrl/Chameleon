@@ -855,6 +855,23 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
+- (UITextRange*) markedTextRange
+{
+#warning Stub
+    return nil;
+}
+
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) unmarkText
+{
+#warning Stub
+}
+
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
 {
     NSAssert([fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
