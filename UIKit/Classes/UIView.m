@@ -228,65 +228,65 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 #pragma mark Configuring a View’s Visual Appearance
 
-- (void)setBackgroundColor:(UIColor*)newColor
+- (void) setBackgroundColor:(UIColor*)backgroundColor
 {
-    if (_backgroundColor != newColor) {
-        _backgroundColor = newColor;
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
         
         self.opaque = [_backgroundColor _isOpaque];
         
         if (!ourDrawRect_) {
-            _layer.backgroundColor = [newColor CGColor];
+            _layer.backgroundColor = [backgroundColor CGColor];
         }
     }
 }
 
-- (BOOL)isHidden
+- (BOOL) isHidden
 {
     return _layer.hidden;
 }
 
-- (void)setHidden:(BOOL)h
+- (void) setHidden:(BOOL)hidden
 {
-    if (h != _layer.hidden) {
-        _layer.hidden = h;
+    if (hidden != _layer.hidden) {
+        _layer.hidden = hidden;
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewHiddenDidChangeNotification object:self];
     }
 }
 
-- (CGFloat)alpha
+- (CGFloat) alpha
 {
     return _layer.opacity;
 }
 
-- (void)setAlpha:(CGFloat)newAlpha
+- (void) setAlpha:(CGFloat)alpha
 {
-    if (newAlpha != _layer.opacity) {
-        _layer.opacity = newAlpha;
+    if (alpha != _layer.opacity) {
+        _layer.opacity = alpha;
     }
 }
 
-- (BOOL)isOpaque
+- (BOOL) isOpaque
 {
     return _layer.opaque;
 }
 
-- (void)setOpaque:(BOOL)newO
+- (void) setOpaque:(BOOL)opaque
 {
-    if (newO != _layer.opaque) {
-        _layer.opaque = newO;
+    if (opaque != _layer.opaque) {
+        _layer.opaque = opaque;
     }
 }
 
-- (BOOL)clipsToBounds
+- (BOOL) clipsToBounds
 {
     return _layer.masksToBounds;
 }
 
-- (void)setClipsToBounds:(BOOL)clips
+- (void) setClipsToBounds:(BOOL)clipsToBounds
 {
-    if (clips != _layer.masksToBounds) {
-        _layer.masksToBounds = clips;
+    if (clipsToBounds != _layer.masksToBounds) {
+        _layer.masksToBounds = clipsToBounds;
     }
 }
 
@@ -300,7 +300,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     _flags.clearsContextBeforeDrawing = clearsContextBeforeDrawing;
 }
 
-+ (Class)layerClass
++ (Class) layerClass
 {
     return [CALayer class];
 }
@@ -336,11 +336,11 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return _layer.frame;
 }
 
-- (void) setFrame:(CGRect)newFrame
+- (void) setFrame:(CGRect)frame
 {
-    if (!CGRectEqualToRect(newFrame,_layer.frame)) {
+    if (!CGRectEqualToRect(frame, _layer.frame)) {
         CGRect oldBounds = _layer.bounds;
-        _layer.frame = newFrame;
+        _layer.frame = frame;
         [self _boundsDidChangeFrom:oldBounds to:_layer.bounds];
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewFrameDidChangeNotification object:self];
     }
@@ -351,12 +351,12 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return _layer.bounds;
 }
 
-- (void) setBounds:(CGRect)newBounds
+- (void) setBounds:(CGRect)bounds
 {
-    if (!CGRectEqualToRect(newBounds, _layer.bounds)) {
+    if (!CGRectEqualToRect(bounds, _layer.bounds)) {
         CGRect oldBounds = _layer.bounds;
-        _layer.bounds = newBounds;
-        [self _boundsDidChangeFrom:oldBounds to:newBounds];
+        _layer.bounds = bounds;
+        [self _boundsDidChangeFrom:oldBounds to:bounds];
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewBoundsDidChangeNotification object:self];
     }
 }
@@ -366,10 +366,10 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return _layer.position;
 }
 
-- (void) setCenter:(CGPoint)newCenter
+- (void) setCenter:(CGPoint)center
 {
-    if (!CGPointEqualToPoint(newCenter,_layer.position)) {
-        _layer.position = newCenter;
+    if (!CGPointEqualToPoint(center, _layer.position)) {
+        _layer.position = center;
     }
 }
 
@@ -380,7 +380,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) setTransform:(CGAffineTransform)transform
 {
-    if (!CGAffineTransformEqualToTransform(transform,_layer.affineTransform)) {
+    if (!CGAffineTransformEqualToTransform(transform, _layer.affineTransform)) {
         _layer.affineTransform = transform;
     }
 }
@@ -411,7 +411,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return _superview.window;
 }
 
-- (void)addSubview:(UIView*) subview
+- (void) addSubview:(UIView*)subview
 {
     NSAssert((!subview || [subview isKindOfClass:[UIView class]]), @"the subview must be a UIView");
     
@@ -845,18 +845,18 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 #pragma mark Drawing and Updating the View
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)rect
 {
 #warning Stub
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)setNeedsDisplay
+- (void) setNeedsDisplay
 {
     [_layer setNeedsDisplay];
 }
 
-- (void)setNeedsDisplayInRect:(CGRect)invalidRect
+- (void) setNeedsDisplayInRect:(CGRect)invalidRect
 {
     [_layer setNeedsDisplayInRect:invalidRect];
 }
@@ -866,7 +866,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return _flags.layerHasContentScale ? [_layer contentsScale] : 1;
 }
 
-- (void)setContentScaleFactor:(CGFloat)scale
+- (void) setContentScaleFactor:(CGFloat)scale
 {
     if (scale <= 0 && ourDrawRect_) {
         scale = [UIScreen mainScreen].scale;
@@ -1122,8 +1122,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     } else {
         for (UIView* view in [self.subviews reverseObjectEnumerator]) {
             foundView = [view viewWithTag:tagToFind];
-            if (foundView)
+            if (foundView) {
                 break;
+            }
         }
     }
     
