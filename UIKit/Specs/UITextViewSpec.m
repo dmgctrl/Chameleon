@@ -169,15 +169,23 @@ describe(@"UITextView", ^{
                     context(@"of 5 after beginning", ^{
                         UITextPosition* beginningOfDocumentOffsetByFive = [textView positionFromPosition:beginningOfDocument offset:5];
                         NSInteger offsetByFiveFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocumentOffsetByFive];
+                        NSInteger offsetByFiveAfterBeginningFromEnd = [textView offsetFromPosition:endOfDocument toPosition:beginningOfDocumentOffsetByFive];
                         it(@"should be 5 after beginning", ^{
                             [[@(offsetByFiveFromBeginning) should] equal:@(5)];
+                        });
+                        it(@"should be -text length +5 from end", ^{
+                            [[@(offsetByFiveAfterBeginningFromEnd) should] equal:@(5 - textLength)];
                         });
                     });
                     context(@"of 5 before end", ^{
                         UITextPosition* endOfDocumentOffsetByFive = [textView positionFromPosition:endOfDocument offset:-5];
-                        NSInteger offsetByFiveFromEnd = [textView offsetFromPosition:endOfDocument toPosition:endOfDocumentOffsetByFive];
+                        NSInteger offsetByFiveBeforeEnd = [textView offsetFromPosition:endOfDocument toPosition:endOfDocumentOffsetByFive];
+                        NSInteger offsetByFiveBeforeEndFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:endOfDocumentOffsetByFive];
                         it(@"should be 5 before end", ^{
-                            [[@(offsetByFiveFromEnd) should] equal:@(-5)];
+                            [[@(offsetByFiveBeforeEnd) should] equal:@(-5)];
+                        });
+                        it(@"should be text length -5 from beginning", ^{
+                            [[@(offsetByFiveBeforeEndFromBeginning) should] equal:@(textLength - 5)];
                         });
                     });
                 });
