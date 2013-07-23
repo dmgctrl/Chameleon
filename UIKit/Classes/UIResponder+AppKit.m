@@ -244,13 +244,8 @@
             responder = [responder nextResponder];
         }
     } else if (command) {
-        UIResponder* responder = self;
-        while (responder) {
-            if ([responder tryToPerform:command with:self]) {
-                return YES;
-            }
-            responder = [responder nextResponder];
-        }
+        [self doCommandBySelector:command];
+        return YES;
     }
     return NO;
 }
@@ -259,14 +254,10 @@
 {
     UIResponder* responder = self;
     do {
-        if ([responder respondsToSelector:selector]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [responder performSelector:selector withObject:nil];
-#pragma clang diagnostic pop
+        if ([responder tryToPerform:selector with:self]) {
             return;
         }
-        responder = responder.nextResponder;
+        responder = [responder nextResponder];
     } while (responder);
     NSBeep();
 }

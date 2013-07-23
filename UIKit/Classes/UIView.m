@@ -431,71 +431,62 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 {
     if (mode != _contentMode) {
         _contentMode = mode;
+
+        BOOL needsDisplayOnBoundsChange = NO;
         switch(_contentMode) {
             case UIViewContentModeScaleToFill:
                 _layer.contentsGravity = kCAGravityResize;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeScaleAspectFit:
                 _layer.contentsGravity = kCAGravityResizeAspect;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeScaleAspectFill:
                 _layer.contentsGravity = kCAGravityResizeAspectFill;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeRedraw:
-                _layer.needsDisplayOnBoundsChange = YES;
+                needsDisplayOnBoundsChange = YES;
                 break;
                 
             case UIViewContentModeCenter:
                 _layer.contentsGravity = kCAGravityCenter;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeTop:
                 _layer.contentsGravity = kCAGravityTop;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeBottom:
                 _layer.contentsGravity = kCAGravityBottom;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeLeft:
                 _layer.contentsGravity = kCAGravityLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeRight:
                 _layer.contentsGravity = kCAGravityRight;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeTopLeft:
                 _layer.contentsGravity = kCAGravityTopLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeTopRight:
                 _layer.contentsGravity = kCAGravityTopRight;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeBottomLeft:
                 _layer.contentsGravity = kCAGravityBottomLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
                 
             case UIViewContentModeBottomRight:
                 _layer.contentsGravity = kCAGravityBottomRight;
-                _layer.needsDisplayOnBoundsChange = NO;
                 break;
         }
+        [_layer setNeedsDisplayOnBoundsChange:needsDisplayOnBoundsChange];
     }
 }
 
@@ -580,36 +571,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) addConstraints:(NSArray*)constraints
 {
-    // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
-    // specified in the UIView's subview. This nicely prevents a ton of useless memory usage and likley improves performance a lot on iPhone.
-    // It took great pains to discover this trick and I think I'm doing this right. By having this method empty here, it means that it overrides
-    // the layer's normal display method and instead does nothing which results in the layer not making a backing store and wasting memory.
-    
-    // Here's how CALayer appears to work:
-    // 1- something call's the layer's -display method.
-    // 2- arrive in CALayer's display: method.
-    // 2a-  if delegate implements displayLayer:, call that.
-    // 2b-  if delegate doesn't implement displayLayer:, CALayer creates a buffer and a context and passes that to drawInContext:
-    // 3- arrive in CALayer's drawInContext: method.
-    // 3a-  if delegate implements drawLayer:inContext:, call that and pass it the context.
-    // 3b-  otherwise, does nothing
-    
-    // So, what this all means is that to avoid causing the CALayer to create a context and use up memory, our delegate has to lie to CALayer
-    // about if it implements displayLayer: or not. If we say it does, we short circuit the layer's buffer creation process (since it assumes
-    // we are going to be setting it's contents property ourselves). So, that's what we do in the override of respondsToSelector: below.
-    
-    // backgroundColor is influenced by all this as well. If drawRect: is defined, we draw it directly in the context so that blending is all
-    // pretty and stuff. If it isn't, though, we still want to support it. What the real UIKit does is it sets the layer's backgroundColor
-    // iff drawRect: isn't specified. Otherwise it manages it itself. Again, this is for performance reasons. Rather than having to store a
-    // whole bitmap the size of view just to hold the backgroundColor, this allows a lot of views to simply act as containers and not waste
-    // a bunch of unnecessary memory in those cases - but you can still use background colors because CALayer manages that effeciently.
-    
-    // note that the last time I checked this, the layer's background color was being set immediately on call to -setBackgroundColor:
-    // when there was no -drawRect: implementation, but I needed to change this to work around issues with pattern image colors in HiDPI.
-    if (![self window]) {
-        return;
-    }
-    _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) removeConstraint:(NSLayoutConstraint*)constraint
@@ -1461,17 +1424,13 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
 - (void) _boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
 {
-    if (!CGRectEqualToRect(oldBounds, newBounds)) {
-        // setNeedsLayout doesn't seem like it should be necessary, however there was a rendering bug in a table in Flamingo that
-        // went away when this was placed here. There must be some strange ordering issue with how that layout manager stuff works.
-        // I never quite narrowed it down. This was an easy fix, if perhaps not ideal.
-        [self setNeedsLayout];
-        
-        if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
-            if (_flags.autoresizesSubviews) {
-                for (UIView *subview in _subviews) {
-                    [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
-                }
+    if (CGRectEqualToRect(oldBounds, newBounds)) {
+        return;
+    }
+    if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
+        if (_flags.autoresizesSubviews) {
+            for (UIView* subview in _subviews) {
+                [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
             }
         }
     }
