@@ -54,11 +54,6 @@ typedef NS_ENUM(NSUInteger, NSSelectionGranularity) {
     NSSelectByParagraph = 2
 };
 
-typedef NS_ENUM(NSUInteger, NSSelectionAffinity) {
-    NSSelectionAffinityUpstream = 0,
-    NSSelectionAffinityDownstream = 1
-};
-
 
 NSString *const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidBeginEditingNotification";
 NSString *const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeNotification";
@@ -119,10 +114,10 @@ static NSString* const kUIEditableKey = @"UIEditable";
     } _flags;
     
     NSUInteger _selectionOrigin;
-    NSSelectionAffinity _selectionAffinity;
     NSSelectionGranularity _selectionGranularity;
 }
 @dynamic delegate;
+@synthesize selectionAffinity = _selectionAffinity;
 
 static void _commonInitForUITextView(UITextView* self)
 {
@@ -1097,7 +1092,7 @@ static void _commonInitForUITextView(UITextView* self)
     [self _setAndScrollToRange:range upstream:YES];
 }
 
-- (void) _setSelectedRange:(NSRange)selectedRange affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelecting
+- (void) _setSelectedRange:(NSRange)selectedRange affinity:(UITextStorageDirection)affinity stillSelecting:(BOOL)stillSelecting
 {
     if (_selectedRange.location == selectedRange.location && _selectedRange.length == selectedRange.length) {
         return;
