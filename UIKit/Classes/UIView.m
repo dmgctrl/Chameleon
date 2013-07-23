@@ -104,7 +104,60 @@ static SEL displayLayerSelector;
 static DrawRectMethod* defaultImplementationOfDrawRect;
 static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
-#pragma mark Initializing a View Object
++ (void) initialize
+{
+    if (self == [UIView class]) {
+        _animationGroups = [[NSMutableArray alloc] init];
+        drawRectSelector = @selector(drawRect:);
+        displayLayerSelector = @selector(displayLayer:);
+        defaultImplementationOfDrawRect = (DrawRectMethod*)[UIView instanceMethodForSelector:drawRectSelector];
+        defaultImplementationOfDisplayLayer = (DisplayLayerMethod*)[UIView instanceMethodForSelector:displayLayerSelector];
+    }
+}
+
+- (void) dealloc
+{
+    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    _layer.layoutManager = nil;
+    _layer.delegate = nil;
+    [_layer removeFromSuperlayer];
+    _layer = nil;
+}
+
+
+#pragma mark Initialization
+
+- (void) _commonInitForUIView
+{
+    _flags.overridesDisplayLayer = (defaultImplementationOfDisplayLayer != (DisplayLayerMethod*)[[self class] instanceMethodForSelector:displayLayerSelector]);
+    
+    DrawRectMethod* ourDrawRect = (DrawRectMethod*)[[self class] instanceMethodForSelector:drawRectSelector];
+    if (ourDrawRect != defaultImplementationOfDrawRect) {
+        ourDrawRect_ = ourDrawRect;
+    }
+    
+    _flags.clearsContextBeforeDrawing = YES;
+    _flags.autoresizesSubviews = YES;
+    _flags.userInteractionEnabled = YES;
+    
+    _subviews = [[NSMutableSet alloc] init];
+    _gestureRecognizers = [[NSMutableSet alloc] init];
+    
+    _layer = [[[[self class] layerClass] alloc] init];
+    _layer.delegate = self;
+    _layer.layoutManager = [_UIViewLayoutManager layoutManager];
+    _flags.layerHasContentScale = [_layer respondsToSelector:@selector(setContentsScale:)];
+    
+    self.alpha = 1;
+    self.opaque = YES;
+    [self setNeedsDisplay];
+}
+
+- (id) init
+{
+    return [self initWithFrame:CGRectZero];
+}
+
 - (id) initWithFrame:(CGRect)theFrame
 {
     if (nil != (self = [super init])) {
@@ -113,6 +166,63 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
     return self;
 }
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super init])) {
+        [self _commonInitForUIView];
+        if ([coder containsValueForKey:kUIAlphaKey]) {
+            self.alpha = [coder decodeFloatForKey:kUIAlphaKey];
+        }
+        if ([coder containsValueForKey:kUIAutoresizeSubviewsKey]) {
+            self.autoresizesSubviews = [coder decodeBoolForKey:kUIAutoresizeSubviewsKey];
+        }
+        if ([coder containsValueForKey:kUIAutoresizingMaskKey]) {
+            self.autoresizingMask = [coder decodeIntegerForKey:kUIAutoresizingMaskKey];
+        }
+        if ([coder containsValueForKey:kUIBackgroundColorKey]) {
+            self.backgroundColor = [coder decodeObjectForKey:kUIBackgroundColorKey];
+        }
+        if ([coder containsValueForKey:kUIBoundsKey]) {
+            self.bounds = [coder decodeCGRectForKey:kUIBoundsKey];
+        }
+        if ([coder containsValueForKey:kUICenterKey]) {
+            self.center = [coder decodeCGPointForKey:kUICenterKey];
+        }
+        if ([coder containsValueForKey:kUIClearsContextBeforeDrawingKey]) {
+            self.clearsContextBeforeDrawing = [coder decodeBoolForKey:kUIClearsContextBeforeDrawingKey];
+        }
+        if ([coder containsValueForKey:kUIClipsToBoundsKey]) {
+            self.clipsToBounds = [coder decodeBoolForKey:kUIClipsToBoundsKey];
+        }
+        if ([coder containsValueForKey:kUIContentModeKey]) {
+            self.contentMode = [coder decodeIntegerForKey:kUIContentModeKey];
+        }
+        if ([coder containsValueForKey:kUIContentStretchKey]) {
+            self.contentStretch = [coder decodeCGRectForKey:kUIContentStretchKey];
+        }
+        if ([coder containsValueForKey:kUIHiddenKey]) {
+            self.hidden = [coder decodeBoolForKey:kUIHiddenKey];
+        }
+        if ([coder containsValueForKey:kUIMultipleTouchEnabledKey]) {
+            self.multipleTouchEnabled = [coder decodeBoolForKey:kUIMultipleTouchEnabledKey];
+        }
+        if ([coder containsValueForKey:kUIOpaqueKey]) {
+            self.opaque = [coder decodeBoolForKey:kUIOpaqueKey];
+        }
+        if ([coder containsValueForKey:kUITagKey]) {
+            self.tag = [coder decodeIntegerForKey:kUITagKey];
+        }
+        if ([coder containsValueForKey:kUIUserInteractionDisabledKey]) {
+            self.userInteractionEnabled = ![coder decodeBoolForKey:kUIUserInteractionDisabledKey];
+        }
+        for (UIView* subview in [coder decodeObjectForKey:kUISubviewsKey]) {
+            [self addSubview:subview];
+        }
+    }
+    return self;
+}
+
 
 #pragma mark Configuring a View’s Visual Appearance
 
@@ -193,7 +303,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return [CALayer class];
 }
 
+
 #pragma mark Configuring the Event-Related Behavior
+
 - (BOOL) isUserInteractionEnabled
 {
     return _flags.userInteractionEnabled;
@@ -214,7 +326,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     _flags.multipleTouchEnabled = multipleTouchEnabled;
 }
 
+
 #pragma mark Configuring the Bounds and Frame Rectangles
+
 - (CGRect) frame
 {
     return _layer.frame;
@@ -269,7 +383,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
+
 #pragma mark Managing the View Hierarchy
+
 - (NSArray*) subviews
 {
     NSArray* sublayers = _layer.sublayers;
@@ -419,7 +535,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return NO;
 }
 
+
 #pragma mark Configuring the Resizing Behavior
+
 - (BOOL) autoresizesSubviews
 {
     return _flags.autoresizesSubviews;
@@ -519,7 +637,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
+
 #pragma mark Laying out Subviews
+
 - (void) layoutSubviews
 {
     // Intentionally Empty
@@ -534,6 +654,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 {
     [_layer layoutIfNeeded];
 }
+
 
 #pragma mark Opting in to Constraint-Based Layout
 
@@ -590,7 +711,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark Measuring in Constraint-Based Layout
+
 - (CGSize) systemLayoutSizeFittingSize:(CGSize)targetSize
 {
 #warning Stub
@@ -666,7 +789,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return nil;
 }
 
+
 #pragma mark Triggering Constraint-Based Layout
+
 - (BOOL) needsUpdateConstraints
 {
 #warning Stub
@@ -692,7 +817,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark Debugging Constraint-Based Layout
+
 - (NSArray*) constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis
 {
 #warning Stub
@@ -713,7 +840,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark Drawing and Updating the View
+
 - (void)drawRect:(CGRect)rect
 {
 #warning Stub
@@ -749,7 +878,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
+
 #pragma mark Formatting Printed View Content
+
 - (UIViewPrintFormatter*) viewPrintFormatter
 {
 #warning Stub
@@ -763,7 +894,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark Managing Gesture Recognizers
+
 - (void) addGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
 {
     if (![_gestureRecognizers containsObject:gestureRecognizer]) {
@@ -804,7 +937,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return NO;
 }
 
+
 #pragma mark Animating Views with Blocks
+
 + (void) animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
 {
     const BOOL ignoreInteractionEvents = !((options & UIViewAnimationOptionAllowUserInteraction) == UIViewAnimationOptionAllowUserInteraction);
@@ -876,7 +1011,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark Animating Views
+
 + (void) beginAnimations:(NSString*)animationID context:(void*)context
 {
     [_animationGroups addObject:[UIViewAnimationGroup animationGroupWithName:animationID context:context]];
@@ -956,7 +1093,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return _animationsEnabled;
 }
 
+
 #pragma mark Preserving and Restoring State
+
 - (void) encodeRestorableStateWithCoder:(NSCoder*)coder
 {
 #warning Stub
@@ -969,7 +1108,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark Identifying the View at Runtime
+
 - (UIView*) viewWithTag:(NSInteger)tagToFind
 {
     UIView* foundView = nil;
@@ -987,7 +1128,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return foundView;
 }
 
+
 #pragma mark Converting Between View Coordinate Systems
+
 - (CGPoint) convertPoint:(CGPoint)toConvert toView:(UIView*)toView
 {
     assert(!toView || toView.window == self.window);
@@ -1027,6 +1170,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 }
 
 #pragma mark Hit Testing in a View
+
 - (UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event
 {
     if (self.hidden || !self.userInteractionEnabled || self.alpha < 0.01 || ![self pointInside:point withEvent:event]) {
@@ -1150,37 +1294,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-#pragma mark Overriding NSObject methods
-
-+ (void) initialize
-{
-    if (self == [UIView class]) {
-        _animationGroups = [[NSMutableArray alloc] init];
-        drawRectSelector = @selector(drawRect:);
-        displayLayerSelector = @selector(displayLayer:);
-        defaultImplementationOfDrawRect = (DrawRectMethod*)[UIView instanceMethodForSelector:drawRectSelector];
-        defaultImplementationOfDisplayLayer = (DisplayLayerMethod*)[UIView instanceMethodForSelector:displayLayerSelector];
-    }
-}
-
-- (id) init
-{
-    if (nil != (self = [self initWithFrame:CGRectZero])) {
-        /**/
-    }
-    return self;
-}
-
-- (void) dealloc
-{
-    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    _layer.layoutManager = nil;
-    _layer.delegate = nil;
-    [_layer removeFromSuperlayer];
-    _layer = nil;
-}
 
 #pragma mark NSObject Protocol
+
 - (BOOL) respondsToSelector:(SEL)aSelector
 {
     // For notes about why this is done, see displayLayer: above.
@@ -1194,61 +1310,6 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 }
 
 #pragma mark NSCoding Protocol
-- (id) initWithCoder:(NSCoder*)coder
-{
-    if (nil != (self = [super init])) {
-        [self _commonInitForUIView];
-        if ([coder containsValueForKey:kUIAlphaKey]) {
-            self.alpha = [coder decodeFloatForKey:kUIAlphaKey];
-        }
-        if ([coder containsValueForKey:kUIAutoresizeSubviewsKey]) {
-            self.autoresizesSubviews = [coder decodeBoolForKey:kUIAutoresizeSubviewsKey];
-        }
-        if ([coder containsValueForKey:kUIAutoresizingMaskKey]) {
-            self.autoresizingMask = [coder decodeIntegerForKey:kUIAutoresizingMaskKey];
-        }
-        if ([coder containsValueForKey:kUIBackgroundColorKey]) {
-            self.backgroundColor = [coder decodeObjectForKey:kUIBackgroundColorKey];
-        }
-        if ([coder containsValueForKey:kUIBoundsKey]) {
-            self.bounds = [coder decodeCGRectForKey:kUIBoundsKey];
-        }
-        if ([coder containsValueForKey:kUICenterKey]) {
-            self.center = [coder decodeCGPointForKey:kUICenterKey];
-        }
-        if ([coder containsValueForKey:kUIClearsContextBeforeDrawingKey]) {
-            self.clearsContextBeforeDrawing = [coder decodeBoolForKey:kUIClearsContextBeforeDrawingKey];
-        }
-        if ([coder containsValueForKey:kUIClipsToBoundsKey]) {
-            self.clipsToBounds = [coder decodeBoolForKey:kUIClipsToBoundsKey];
-        }
-        if ([coder containsValueForKey:kUIContentModeKey]) {
-            self.contentMode = [coder decodeIntegerForKey:kUIContentModeKey];
-        }
-        if ([coder containsValueForKey:kUIContentStretchKey]) {
-            self.contentStretch = [coder decodeCGRectForKey:kUIContentStretchKey];
-        }
-        if ([coder containsValueForKey:kUIHiddenKey]) {
-            self.hidden = [coder decodeBoolForKey:kUIHiddenKey];
-        }
-        if ([coder containsValueForKey:kUIMultipleTouchEnabledKey]) {
-            self.multipleTouchEnabled = [coder decodeBoolForKey:kUIMultipleTouchEnabledKey];
-        }
-        if ([coder containsValueForKey:kUIOpaqueKey]) {
-            self.opaque = [coder decodeBoolForKey:kUIOpaqueKey];
-        }
-        if ([coder containsValueForKey:kUITagKey]) {
-            self.tag = [coder decodeIntegerForKey:kUITagKey];
-        }
-        if ([coder containsValueForKey:kUIUserInteractionDisabledKey]) {
-            self.userInteractionEnabled = ![coder decodeBoolForKey:kUIUserInteractionDisabledKey];
-        }
-        for (UIView* subview in [coder decodeObjectForKey:kUISubviewsKey]) {
-            [self addSubview:subview];
-        }
-    }
-    return self;
-}
 
 - (void) encodeWithCoder:(NSCoder*)coder
 {
@@ -1256,7 +1317,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self doesNotRecognizeSelector:_cmd];
 }
 
+
 #pragma mark NSLayerDelegateContentsScaleUpdating Protocol Reference
+
 - (BOOL) layer:(CALayer*)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
     _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
@@ -1265,7 +1328,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 }
 
 
-#pragma mark Mics.
+#pragma mark Misc.
+
 + (NSSet*) keyPathsForValuesAffectingFrame
 {
     return [NSSet setWithObject:@"center"];
@@ -1277,31 +1341,6 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 }
 
 #pragma mark private methods
-- (void) _commonInitForUIView
-{
-    _flags.overridesDisplayLayer = (defaultImplementationOfDisplayLayer != (DisplayLayerMethod*)[[self class] instanceMethodForSelector:displayLayerSelector]);
-    
-    DrawRectMethod* ourDrawRect = (DrawRectMethod*)[[self class] instanceMethodForSelector:drawRectSelector];
-    if (ourDrawRect != defaultImplementationOfDrawRect) {
-        ourDrawRect_ = ourDrawRect;
-    }
-    
-    _flags.clearsContextBeforeDrawing = YES;
-    _flags.autoresizesSubviews = YES;
-    _flags.userInteractionEnabled = YES;
-    
-    _subviews = [[NSMutableSet alloc] init];
-    _gestureRecognizers = [[NSMutableSet alloc] init];
-    
-    _layer = [[[[self class] layerClass] alloc] init];
-    _layer.delegate = self;
-    _layer.layoutManager = [_UIViewLayoutManager layoutManager];
-    _flags.layerHasContentScale = [_layer respondsToSelector:@selector(setContentsScale:)];
-    
-    self.alpha = 1;
-    self.opaque = YES;
-    [self setNeedsDisplay];
-}
 
 - (void) _willMoveFromWindow:(UIWindow*)fromWindow toWindow:(UIWindow*)toWindow
 {
