@@ -126,7 +126,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     self.textColor = [UIColor blackColor];
     self.font = [UIFont systemFontOfSize:17];
-    self.dataDetectorTypes = UIDataDetectorTypeAll;
+    self.dataDetectorTypes = UIDataDetectorTypeNone;
     self.editable = YES;
     self.contentMode = UIViewContentModeScaleToFill;
     self.clipsToBounds = YES;
