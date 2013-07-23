@@ -462,12 +462,13 @@ static void _commonInitForUITextView(UITextView* self)
     return NO;
 }
 
-- (BOOL) doCommandBySelector:(SEL)selector
+- (void) doCommandBySelector:(SEL)selector
 {
-    if (_delegateHas.doCommandBySelector) {
-        return [(id<UITextViewDelegatePlus>)[self delegate] textView:self doCommandBySelector:selector];
-    } else {
-        return NO;
+    if (_delegateHas.doCommandBySelector && [(id<UITextViewDelegatePlus>)[self delegate] textView:self doCommandBySelector:selector]) {
+        /* Do Nothing */
+    } else if ([self respondsToSelector:selector]) {
+        void (*command)(id, SEL, id) = (void*)[[self class] instanceMethodForSelector:selector];
+        command(self, selector, self);
     }
 }
 
