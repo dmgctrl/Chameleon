@@ -86,12 +86,11 @@ describe(@"UITextView", ^{
                 });
             });
         });
-
     });
 
     context(@"UITextInput Support", ^{
         NSString* text = @"The quick brown fox jumped over the lazy dog.";
-
+        NSInteger textLength = [text length];
         context(@"Text Positions", ^{
             UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [textView setText:text];
@@ -117,8 +116,70 @@ describe(@"UITextView", ^{
             });
             
             context(@"Measurements", ^{
-                context(@"-offestFromPositionToPosition", ^{
-                    [[@([textView offsetFromPosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@([text length])];
+    
+                context(@"offsets given position", ^{
+                    context(@"beginning of document", ^{
+                        it(@"should be 0", ^{
+                            [[@([textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocument]) should] equal:@(0)];
+                        });
+                    });
+                    context(@"end of document", ^{
+                        it(@"should be 0", ^{
+                            [[@([textView offsetFromPosition:endOfDocument toPosition:endOfDocument]) should] equal:@(0)];
+                        });
+                    });
+                    context(@"beginning of document to end", ^{
+                        it(@"should be length of text", ^{
+                            [[@([textView offsetFromPosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@(textLength)];
+                        });
+                    });
+                    context(@"end of document to beginning", ^{
+                        it(@"should be 0", ^{
+                            [[@([textView offsetFromPosition:endOfDocument toPosition:beginningOfDocument]) should] equal:@(-textLength)];
+                        });
+                    });
+                });
+                context(@"positions given offsets", ^{
+                    context(@"of zero from beginning", ^{
+                        UITextPosition* beginningOfDocumentOffsetByZero = [textView positionFromPosition:beginningOfDocument offset:0];
+                        it(@"should be beginning", ^{
+                            [[@([textView comparePosition:beginningOfDocumentOffsetByZero toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"of text length from beginning", ^{
+                        UITextPosition* beginningOfDocumentOffsetByTextLength = [textView positionFromPosition:beginningOfDocument offset:textLength];
+                        it(@"should be end", ^{
+                            [[@([textView comparePosition:beginningOfDocumentOffsetByTextLength toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"of zero from end", ^{
+                        UITextPosition* endOfDocumentOffsetByZero = [textView positionFromPosition:endOfDocument offset:0];
+                        it(@"should be end", ^{
+                            [[@([textView comparePosition:endOfDocumentOffsetByZero toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"of -text length before end", ^{
+                        UITextPosition* endOfDocumentOffsetByTextLength = [textView positionFromPosition:endOfDocument offset:-textLength];
+                        it(@"should be beginning", ^{
+                            [[@([textView comparePosition:endOfDocumentOffsetByTextLength toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                });
+                context(@"offsets from positions from offsets", ^{
+                    context(@"of 5 after beginning", ^{
+                        UITextPosition* beginningOfDocumentOffsetByFive = [textView positionFromPosition:beginningOfDocument offset:5];
+                        NSInteger offsetByFiveFromBeginning = [textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocumentOffsetByFive];
+                        it(@"should be 5 after beginning", ^{
+                            [[@(offsetByFiveFromBeginning) should] equal:@(5)];
+                        });
+                    });
+                    context(@"of 5 before end", ^{
+                        UITextPosition* endOfDocumentOffsetByFive = [textView positionFromPosition:endOfDocument offset:-5];
+                        NSInteger offsetByFiveFromEnd = [textView offsetFromPosition:endOfDocument toPosition:endOfDocumentOffsetByFive];
+                        it(@"should be 5 before end", ^{
+                            [[@(offsetByFiveFromEnd) should] equal:@(-5)];
+                        });
+                    });
                 });
             });
             
@@ -132,7 +193,7 @@ describe(@"UITextView", ^{
             UITextPosition* beginningOfDocument = [textView beginningOfDocument];
             UITextPosition* endOfDocument = [textView endOfDocument];
             UITextRange* entireTextRange = [textView textRangeFromPosition:beginningOfDocument toPosition:endOfDocument];
-
+            UITextRange* zeroRange = [textView textRangeFromPosition:endOfDocument toPosition:endOfDocument];
             context(@"-textRangeFromPosition:toPosition:", ^{
                 context(@"when given beginning and end of document", ^{
                     it(@"returns an object", ^{
@@ -156,7 +217,6 @@ describe(@"UITextView", ^{
             context(@"Comparisons", ^{
             });
         });
-        
     });
 });
 SPEC_END
