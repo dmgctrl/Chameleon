@@ -131,6 +131,8 @@ static void _commonInitForUITextView(UITextView* self)
     self.contentMode = UIViewContentModeScaleToFill;
     self.clipsToBounds = YES;
 
+    self->_selectedRange = (NSRange){ NSNotFound, 0 };
+    
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
     [self->_textContainerView setTextContainer:[self textContainer]];
     [self->_textContainerView setBackgroundColor:[self backgroundColor]];
