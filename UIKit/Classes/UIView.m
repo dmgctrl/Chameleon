@@ -163,6 +163,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     if (nil != (self = [super init])) {
         [self _commonInitForUIView];
         self.frame = theFrame;
+        [self setNeedsDisplay];
     }
     return self;
 }
@@ -219,6 +220,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
         for (UIView* subview in [coder decodeObjectForKey:kUISubviewsKey]) {
             [self addSubview:subview];
         }
+        [self setNeedsDisplay];
     }
     return self;
 }
