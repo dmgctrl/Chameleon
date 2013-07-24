@@ -340,11 +340,11 @@ static void _commonInitForUITextView(UITextView* self)
 {
     [super layoutSubviews];
 
-    CGSize size = [self bounds].size;
+    CGRect bounds = [self bounds];
     NSTextContainer* textContainer = [self textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
     UIEdgeInsets contentInset = [self contentInset];
-    CGFloat containerWidth = size.width - (contentInset.left + contentInset.right);
+    CGFloat containerWidth = bounds.size.width - (contentInset.left + contentInset.right);
     [textContainer setContainerSize:(CGSize){
         containerWidth,
         CGFLOAT_MAX
@@ -358,6 +358,7 @@ static void _commonInitForUITextView(UITextView* self)
     [_textContainerView setFrame:(CGRect){
         .size = contentSize
     }];
+    [_textContainerView setNeedsDisplayInRect:bounds];
 }
 
 
@@ -1407,7 +1408,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSTextContainer* textContainer = [self textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
-    NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+    NSRange glyphRange = [layoutManager glyphRangeForBoundingRect:rect inTextContainer:textContainer];
     if (glyphRange.length) {
         [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:CGPointZero];
         [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:CGPointZero];
