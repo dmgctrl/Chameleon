@@ -572,7 +572,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) moveUp:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingUpFromIndex:[self selectedRange].location],
+        [self _indexWhenMovingNumberOfLines:1 upFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -580,14 +580,14 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) moveUpAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingUpFromIndex:index];
+        return [self _indexWhenMovingNumberOfLines:1 upFromIndex:index];
     }];
 }
 
 - (void) moveDown:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingDownFromIndex:NSMaxRange([self selectedRange])],
+        [self _indexWhenMovingNumberOfLines:1 downFromIndex:NSMaxRange([self selectedRange])],
         0
     }];
 }
@@ -595,7 +595,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) moveDownAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingDownFromIndex:index];
+        return [self _indexWhenMovingNumberOfLines:1 downFromIndex:index];
     }];
 }
 
@@ -897,8 +897,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
 #warning Implement -positionFromPosition:inDirection:offset:
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return [self positionFromPosition:position offset:NSIntegerMax];
 }
 
 - (UITextPosition*) beginningOfDocument
@@ -1261,49 +1260,84 @@ static void _commonInitForUITextView(UITextView* self)
     return MIN(newIndex, maxIndex);
 }
 
-- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index
+- (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines upFromIndex:(NSInteger)index
 {
-    NSTextStorage* textStorage = [self textStorage];
-    NSInteger length = [textStorage length];
-    NSString* string = [textStorage string];
-    NSInteger newIndex = index;
-    
-    if (index <= length) {
-        NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
-        if (line.location > 0) {
-            NSRange prevLine = [string lineRangeForRange:(NSRange){ line.location - 1, 0 }];
-            NSInteger offset = index - line.location;
-            NSInteger prevLineMax = NSMaxRange(prevLine);
-            newIndex = MIN(prevLine.location + offset, prevLineMax - 1);
-        } else {
-            newIndex = 0;
-        }
+    if (numberOfLines <= 0) {
+        return index;
     }
     
-    return newIndex;
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+
+    if (index <= 0) {
+        return 0;
+    }
+
+    NSInteger newIndex = MIN(index, numberOfGlyphs - 1);
+    NSInteger lineNumber = 0;
+    CGPoint location = [layoutManager locationForGlyphAtIndex:newIndex];
+    do {
+        NSRange range;
+        NSRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
+        location.y = CGRectGetMinY(fragmentRect);
+        if (lineNumber >= numberOfLines) {
+            break;
+        }
+        lineNumber++;
+        newIndex = range.location - 1;
+    } while (newIndex > 0);
+
+    if (newIndex <= 0) {
+        return 0;
+    }
+    
+    CGFloat fraction = 0;
+    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
+        glyphIndex += (fraction > 0.5);
+    }
+    return glyphIndex;
 }
 
-- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index
+- (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines downFromIndex:(NSInteger)index
 {
-    NSTextStorage* textStorage = [self textStorage];
-    NSUInteger length = [textStorage length];
-    NSString* string = [textStorage string];
-    NSInteger newIndex = index;
-    
-    if (index < length) {
-        NSRange line = [string lineRangeForRange:(NSRange){ index, 0 }];
-        NSInteger max = NSMaxRange(line);
-        if (max < length) {
-            NSRange nextLine = [string lineRangeForRange:(NSRange){ max, 0 }];
-            NSInteger offset = index - line.location;
-            NSInteger nextLineMax = NSMaxRange(nextLine);
-            newIndex = MIN(nextLine.location + offset, nextLineMax - 1);
-        } else {
-            newIndex = length;
-        }
+    if (numberOfLines <= 0) {
+        return index;
     }
 
-    return newIndex;
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+
+    if (index >= numberOfGlyphs) {
+        return numberOfGlyphs;
+    }
+
+    NSInteger newIndex = MAX(index, 0);
+    CGPoint location = [layoutManager locationForGlyphAtIndex:newIndex];
+    NSInteger lineNumber = 0;
+    do {
+        NSRange range;
+        NSRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
+        location.y = CGRectGetMinY(fragmentRect);
+        if (lineNumber >= numberOfLines) {
+            break;
+        }
+        lineNumber++;
+        newIndex = NSMaxRange(range);
+    } while (newIndex < numberOfGlyphs);
+
+    if (newIndex >= numberOfGlyphs) {
+        return numberOfGlyphs;
+    }
+
+    CGFloat fraction = 0;
+    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
+        glyphIndex += (fraction > 0.5);
+    }
+    return glyphIndex;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
@@ -1450,7 +1484,7 @@ static void _commonInitForUITextView(UITextView* self)
             result = [layoutManager extraLineFragmentRect];
         } else {
             NSUInteger rectCount = 0;
-            NSRect* rectArray = [layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:range inTextContainer:textContainer rectCount:&rectCount];
+            NSRect* rectArray = [layoutManager rectArrayForCharacterRange:(NSRange){ range.location, 1 } withinSelectedCharacterRange:range inTextContainer:textContainer rectCount:&rectCount];
             if (rectCount) {
                 result = rectArray[0];
             }

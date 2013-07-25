@@ -119,24 +119,96 @@ describe(@"UITextView", ^{
             context(@"Measurements", ^{
     
                 context(@"offsets given position", ^{
-                    context(@"beginning of document", ^{
-                        it(@"should be 0", ^{
-                            [[@([textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocument]) should] equal:@(0)];
+                    context(@"w/o direction", ^{
+                        context(@"beginning of document", ^{
+                            it(@"should be 0", ^{
+                                [[@([textView offsetFromPosition:beginningOfDocument toPosition:beginningOfDocument]) should] equal:@(0)];
+                            });
+                        });
+                        context(@"end of document", ^{
+                            it(@"should be 0", ^{
+                                [[@([textView offsetFromPosition:endOfDocument toPosition:endOfDocument]) should] equal:@(0)];
+                            });
+                        });
+                        context(@"beginning of document to end", ^{
+                            it(@"should be length of text", ^{
+                                [[@([textView offsetFromPosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@(textLength)];
+                            });
+                        });
+                        context(@"end of document to beginning", ^{
+                            it(@"should be 0", ^{
+                                [[@([textView offsetFromPosition:endOfDocument toPosition:beginningOfDocument]) should] equal:@(-textLength)];
+                            });
                         });
                     });
-                    context(@"end of document", ^{
-                        it(@"should be 0", ^{
-                            [[@([textView offsetFromPosition:endOfDocument toPosition:endOfDocument]) should] equal:@(0)];
+
+                    context(@"with direction", ^{
+                        NSString* loremText = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium";
+                        UITextView* loremTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                        [loremTextView setFont:[UIFont systemFontOfSize:14]];
+                        [loremTextView setText:loremText];
+                        UITextPosition* beginningOfDocument = [loremTextView beginningOfDocument];
+                        context(@"from given position on second line", ^{
+                            UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                            context(@"up", ^{
+                                context(@"once", ^{
+                                    UITextPosition* upOne = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:1];
+                                    NSInteger upOneOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:upOne];
+                                    it(@"should be 4", ^{
+                                        [[@(upOneOffset) should] equal:@(4)];
+                                    });
+                                });
+                                context(@"twice", ^{
+                                    UITextPosition* upTwo = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:2];
+                                    NSInteger upTwoOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:upTwo];
+                                    it(@"should be 4", ^{
+                                        [[@(upTwoOffset) should] equal:@(0)];
+                                    });
+                                });
+                            });
+                            context(@"down", ^{
+                                context(@"once", ^{
+                                    UITextPosition* downOne = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
+                                    NSInteger downOneOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:downOne];
+                                    it(@"should be", ^{
+                                        [[@(downOneOffset) should] equal:@(31)];
+                                    });
+                                });
+                                context(@"twice", ^{
+                                    UITextPosition* downTwo = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:2];
+                                    NSInteger downTwoOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:downTwo];
+                                    it(@"should be", ^{
+                                        [[@(downTwoOffset) should] equal:@(40)];
+                                    });
+                                });
+                                context(@"thrice", ^{
+                                    UITextPosition* downThree = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:3];
+                                    NSInteger downThreeOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:downThree];
+                                    it(@"should be", ^{
+                                        [[@(downThreeOffset) should] equal:@(56)];
+                                    });
+                                });
+                                context(@"four times", ^{
+                                    UITextPosition* downFour = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:4];
+                                    NSInteger downFourOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:downFour];
+                                    it(@"should be", ^{
+                                        [[@(downFourOffset) should] equal:@([loremText length])];
+                                    });
+                                });
+                            });
                         });
-                    });
-                    context(@"beginning of document to end", ^{
-                        it(@"should be length of text", ^{
-                            [[@([textView offsetFromPosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@(textLength)];
-                        });
-                    });
-                    context(@"end of document to beginning", ^{
-                        it(@"should be 0", ^{
-                            [[@([textView offsetFromPosition:endOfDocument toPosition:beginningOfDocument]) should] equal:@(-textLength)];
+                        context(@"from one line down from second line", ^{
+                            UITextPosition* prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                            UITextPosition* position = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionDown offset:1];
+                            context(@"up", ^{
+                                context(@"twice", ^{
+                                    UITextPosition* upTwo = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:2];
+                                    NSInteger upTwoOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:upTwo];
+                                    it(@"should be", ^{
+                                        [[@(upTwoOffset) should] equal:@(3)];
+                                    });
+                                });
+                            });
                         });
                     });
                 });
