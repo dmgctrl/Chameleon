@@ -415,7 +415,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     UITouch* touch = [[event allTouches] anyObject];
     [self _setAndScrollToRange:(NSRange){
-        [self _characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]],
+        [self _characterIndexAtPoint:[touch locationInView:_textContainerView]],
         0
     }];
     [super touchesBegan:touches withEvent:event];
@@ -424,7 +424,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
 {
     UITouch* touch = [[event allTouches] anyObject];
-    NSUInteger index = [self _characterIndexAtPoint:[self convertPoint:[touch locationInView:self] toView:_textContainerView]];
+    NSUInteger index = [self _characterIndexAtPoint:[touch locationInView:_textContainerView]];
     NSRange range;
     if (_selectionOrigin > index) {
         range = (NSRange){ index, _selectionOrigin - index };
