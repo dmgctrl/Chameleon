@@ -572,7 +572,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) moveUp:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingNumberOfLines:1 upFromIndex:[self selectedRange].location],
+        [self _indexWhenMovingUpFromIndex:[self selectedRange].location by:1],
         0
     }];
 }
@@ -580,14 +580,14 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) moveUpAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingNumberOfLines:1 upFromIndex:index];
+        return [self _indexWhenMovingUpFromIndex:index by:1];
     }];
 }
 
 - (void) moveDown:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingNumberOfLines:1 downFromIndex:NSMaxRange([self selectedRange])],
+        [self _indexWhenMovingDownFromIndex:NSMaxRange([self selectedRange]) by:1],
         0
     }];
 }
@@ -595,7 +595,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) moveDownAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingNumberOfLines:1 downFromIndex:index];
+        return [self _indexWhenMovingDownFromIndex:index by:index];
     }];
 }
 
@@ -894,10 +894,27 @@ static void _commonInitForUITextView(UITextView* self)
     return [_UITextViewPosition positionWithOffset:newOffset];
 }
 
-- (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
+- (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-#warning Implement -positionFromPosition:inDirection:offset:
-    return [self positionFromPosition:position offset:NSIntegerMax];
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+    if (!position) {
+        return nil;
+    }
+    NSInteger index = [position offset];
+    switch (direction) {
+        case UITextLayoutDirectionDown: {
+            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingDownFromIndex:index by:offset]];
+        }
+        case UITextLayoutDirectionUp: {
+            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingUpFromIndex:index by:offset]];
+        }
+        case UITextLayoutDirectionLeft: {
+            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingLeftFromIndex:index by:offset]];
+        }
+        case UITextLayoutDirectionRight: {
+            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingRightFromIndex:index by:offset]];
+        }
+    }
 }
 
 - (UITextPosition*) beginningOfDocument
@@ -1206,20 +1223,39 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index
 {
-    NSInteger length = [[self textStorage] length];
-    if (index < length) {
-        return index + 1;
+    return [self _indexWhenMovingRightFromIndex:index by:1];
+}
+
+- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
+{
+    NSLayoutManager* layoutManager = [self layoutManager];
+    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+    NSInteger newIndex = index + byNumberOfGlyphs;
+    if (newIndex < 0) {
+        return 0;
+    } else if (newIndex >= numberOfGlyphs) {
+        return numberOfGlyphs;
     } else {
-        return index;
+        return newIndex;
     }
 }
 
 - (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index
 {
-    if (index > 0) {
-        return index - 1;
+    return [self _indexWhenMovingLeftFromIndex:index by:1];
+}
+
+- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
+{
+    NSLayoutManager* layoutManager = [self layoutManager];
+    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+    NSInteger newIndex = index - byNumberOfGlyphs;
+    if (newIndex < 0) {
+        return 0;
+    } else if (newIndex >= numberOfGlyphs) {
+        return numberOfGlyphs;
     } else {
-        return index;
+        return newIndex;
     }
 }
 
@@ -1260,7 +1296,7 @@ static void _commonInitForUITextView(UITextView* self)
     return MIN(newIndex, maxIndex);
 }
 
-- (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines upFromIndex:(NSInteger)index
+- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index by:(NSInteger)numberOfLines
 {
     if (numberOfLines <= 0) {
         return index;
@@ -1300,7 +1336,7 @@ static void _commonInitForUITextView(UITextView* self)
     return glyphIndex;
 }
 
-- (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines downFromIndex:(NSInteger)index
+- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index by:(NSInteger)numberOfLines
 {
     if (numberOfLines <= 0) {
         return index;
