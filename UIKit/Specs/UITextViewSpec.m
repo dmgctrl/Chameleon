@@ -247,6 +247,17 @@ describe(@"UITextView", ^{
                                     });
                                 });
                             });
+                            prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:30];
+                            position = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionUp offset:1];
+                            context(@"down", ^{
+                                context(@"once", ^{
+                                    UITextPosition* downOne = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
+                                    NSInteger downOneOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:downOne];
+                                    it(@"should be", ^{
+                                        [[@(downOneOffset) should] equal:@(29)];
+                                    });
+                                });
+                            });
                         });
                     });
                 });
