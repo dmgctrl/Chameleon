@@ -265,7 +265,7 @@ describe(@"UITextView", ^{
             });
             
             context(@"Comparisons", ^{
-                context(@"postitions", ^{
+                context(@"positions", ^{
                     UITextPosition* beginningOfDocumentOffsetBySmallOffset = [textView positionFromPosition:beginningOfDocument offset:smallOffset];
                     UITextPosition* endOfDocumentOffsetBySmallOffset = [textView positionFromPosition:endOfDocument offset:-smallOffset];
                     context(@"beginning of document", ^{
@@ -353,6 +353,30 @@ describe(@"UITextView", ^{
                         context(@"when compared to small offset before end", ^{
                             it(@"should be <", ^{
                                 [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
+                            });
+                        });
+                    });
+
+                    context(@"with direction to without", ^{
+                        NSString* loremText = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium";
+                        UITextView* loremTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                        [loremTextView setFont:[UIFont systemFontOfSize:14]];
+                        [loremTextView setText:loremText];
+                        UITextPosition* beginningOfDocument = [loremTextView beginningOfDocument];
+                        NSInteger unitOffset = 1;
+                        UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                        context(@"right", ^{
+                            UITextPosition* positionOneToRight = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:unitOffset];
+                            UITextPosition* positionPlusOne = [loremTextView positionFromPosition:position offset:unitOffset];
+                            it(@"should be same", ^{
+                                [[@([loremTextView comparePosition:positionOneToRight toPosition:positionPlusOne]) should] equal:@(NSOrderedSame)];
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextPosition* positionOneToLeft = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionLeft offset:unitOffset];
+                            UITextPosition* positionMinusOne = [loremTextView positionFromPosition:position offset:-unitOffset];
+                            it(@"should be same", ^{
+                                [[@([loremTextView comparePosition:positionOneToLeft toPosition:positionMinusOne]) should] equal:@(NSOrderedSame)];
                             });
                         });
                     });
