@@ -897,8 +897,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
 #warning Implement -positionFromPosition:inDirection:offset:
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return [self positionFromPosition:position offset:NSIntegerMax];
 }
 
 - (UITextPosition*) beginningOfDocument
