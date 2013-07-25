@@ -198,7 +198,45 @@ describe(@"UITextView", ^{
                             });
                         });
                         context(@"from one line down from second line", ^{
-                            UITextPosition* prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                            NSInteger startingIndex = 16;
+                            NSInteger unitOffset = 1;
+                            UITextPosition* prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:startingIndex];
+                            context(@"left", ^{
+                                context(@"offset > 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionLeft offset:unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be < starting index", ^{
+                                        [[@(newIndex) should] equal:@(startingIndex - unitOffset)];
+                                    });
+                                });
+#if (!TARGET_IPHONE_SIMULATOR && !TARGET_IPHONE_DEVICE) // Bug: iOS version returns, but it takes *minutes*. (This test is in response to ticket #1549)
+                                context(@"offset < 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionLeft offset:-unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be > starting index", ^{
+                                        [[@(newIndex) should] equal:@(startingIndex + unitOffset)];
+                                    });
+                                });
+#endif
+                            });
+                            context(@"right", ^{
+                                context(@"offset > 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionRight offset:unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be < starting index", ^{
+                                        [[@(newIndex) should] equal:@(startingIndex + unitOffset)];
+                                    });
+                                });
+#if (!TARGET_IPHONE_SIMULATOR && !TARGET_IPHONE_DEVICE) // Bug: iOS version returns, but it takes *minutes*. (This test is in response to ticket #1549)
+                                context(@"offset < 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionRight offset:-unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be > starting index", ^{
+                                        [[@(newIndex) should] equal:@(startingIndex - unitOffset)];
+                                    });
+                                });
+#endif
+                            });
                             UITextPosition* position = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionDown offset:1];
                             context(@"up", ^{
                                 context(@"twice", ^{
