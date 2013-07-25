@@ -1484,9 +1484,14 @@ static void _commonInitForUITextView(UITextView* self)
             result = [layoutManager extraLineFragmentRect];
         } else {
             NSUInteger rectCount = 0;
-            NSRect* rectArray = [layoutManager rectArrayForCharacterRange:(NSRange){ range.location, 1 } withinSelectedCharacterRange:range inTextContainer:textContainer rectCount:&rectCount];
+            NSRect* rectArray = [layoutManager rectArrayForCharacterRange:(NSRange){ range.location, 1 } withinSelectedCharacterRange:(NSRange){ NSNotFound, 0 } inTextContainer:textContainer rectCount:&rectCount];
             if (rectCount) {
                 result = rectArray[0];
+            } else {
+                rectArray = [layoutManager rectArrayForCharacterRange:(NSRange){ range.location, 0 } withinSelectedCharacterRange:(NSRange){ NSNotFound, 0 } inTextContainer:textContainer rectCount:&rectCount];
+                if (rectCount) {
+                    result = rectArray[0];
+                }
             }
         }
         result.size.width = 1;
