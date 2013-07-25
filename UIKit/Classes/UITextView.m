@@ -1312,11 +1312,11 @@ static void _commonInitForUITextView(UITextView* self)
 
     NSInteger newIndex = MIN(index, numberOfGlyphs - 1);
     NSInteger lineNumber = 0;
-    CGPoint location = [layoutManager locationForGlyphAtIndex:newIndex];
+    NSRect fragmentRect = {};
+    CGFloat x = floor([layoutManager locationForGlyphAtIndex:newIndex].x);
     do {
         NSRange range;
-        NSRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
-        location.y = CGRectGetMinY(fragmentRect);
+        fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
         if (lineNumber >= numberOfLines) {
             break;
         }
@@ -1329,9 +1329,9 @@ static void _commonInitForUITextView(UITextView* self)
     }
     
     CGFloat fraction = 0;
-    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:(CGPoint){ x, CGRectGetMinY(fragmentRect) } inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
     if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
-        glyphIndex += (fraction > 0.5);
+        glyphIndex += (fraction > 0.75);
     }
     return glyphIndex;
 }
@@ -1351,12 +1351,12 @@ static void _commonInitForUITextView(UITextView* self)
     }
 
     NSInteger newIndex = MAX(index, 0);
-    CGPoint location = [layoutManager locationForGlyphAtIndex:newIndex];
     NSInteger lineNumber = 0;
+    NSRect fragmentRect = {};
+    CGFloat x = floor([layoutManager locationForGlyphAtIndex:newIndex].x);
     do {
         NSRange range;
-        NSRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
-        location.y = CGRectGetMinY(fragmentRect);
+        fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
         if (lineNumber >= numberOfLines) {
             break;
         }
@@ -1369,9 +1369,9 @@ static void _commonInitForUITextView(UITextView* self)
     }
 
     CGFloat fraction = 0;
-    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:(CGPoint){ x, CGRectGetMinY(fragmentRect) } inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
     if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
-        glyphIndex += (fraction > 0.5);
+        glyphIndex += (fraction > 0.75);
     }
     return glyphIndex;
 }
