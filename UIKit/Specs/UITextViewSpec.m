@@ -92,6 +92,13 @@ describe(@"UITextView", ^{
         NSString* text = @"The quick brown fox jumped over the lazy dog.";
         NSInteger textLength = [text length];
         NSInteger smallOffset = 5;
+        NSInteger mediumOffset = 16;
+        NSInteger unitOffset = 1;
+        NSString* loremText = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium";
+        UITextView* loremTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+        [loremTextView setFont:[UIFont systemFontOfSize:14]];
+        [loremTextView setText:loremText];
+
         context(@"Text Positions", ^{
             UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [textView setText:text];
@@ -117,7 +124,6 @@ describe(@"UITextView", ^{
             });
             
             context(@"Measurements", ^{
-    
                 context(@"offsets given position", ^{
                     context(@"w/o direction", ^{
                         context(@"beginning of document", ^{
@@ -143,13 +149,9 @@ describe(@"UITextView", ^{
                     });
 
                     context(@"with direction", ^{
-                        NSString* loremText = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium";
-                        UITextView* loremTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
-                        [loremTextView setFont:[UIFont systemFontOfSize:14]];
-                        [loremTextView setText:loremText];
                         UITextPosition* beginningOfDocument = [loremTextView beginningOfDocument];
                         context(@"from given position on second line", ^{
-                            UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                            UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:mediumOffset];
                             context(@"up", ^{
                                 context(@"once", ^{
                                     UITextPosition* upOne = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:1];
@@ -166,6 +168,7 @@ describe(@"UITextView", ^{
                                     });
                                 });
                             });
+
                             context(@"down", ^{
                                 context(@"once", ^{
                                     UITextPosition* downOne = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
@@ -197,8 +200,9 @@ describe(@"UITextView", ^{
                                 });
                             });
                         });
+
                         context(@"from one line down from second line", ^{
-                            UITextPosition* prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                            UITextPosition* prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:mediumOffset];
                             UITextPosition* position = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionDown offset:1];
                             context(@"up", ^{
                                 context(@"twice", ^{
@@ -212,6 +216,7 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
+
                 context(@"positions given offsets", ^{
                     context(@"of zero from beginning", ^{
                         UITextPosition* beginningOfDocumentOffsetByZero = [textView positionFromPosition:beginningOfDocument offset:0];
@@ -238,6 +243,7 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
+
                 context(@"offsets from positions from offsets", ^{
                     context(@"of small offset after beginning", ^{
                         UITextPosition* beginningOfDocumentOffsetBySmallOffset = [textView positionFromPosition:beginningOfDocument offset:smallOffset];
@@ -358,13 +364,8 @@ describe(@"UITextView", ^{
                     });
 
                     context(@"with direction to without", ^{
-                        NSString* loremText = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium";
-                        UITextView* loremTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
-                        [loremTextView setFont:[UIFont systemFontOfSize:14]];
-                        [loremTextView setText:loremText];
                         UITextPosition* beginningOfDocument = [loremTextView beginningOfDocument];
-                        NSInteger unitOffset = 1;
-                        UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:16];
+                        UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:mediumOffset];
                         context(@"right", ^{
                             UITextPosition* positionOneToRight = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:unitOffset];
                             UITextPosition* positionPlusOne = [loremTextView positionFromPosition:position offset:unitOffset];
