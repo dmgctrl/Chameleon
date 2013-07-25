@@ -1262,65 +1262,76 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines upFromIndex:(NSInteger)index
 {
-    NSLayoutManager* layoutManager = [self layoutManager];
-    NSUInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
-    NSRange lineRange = {};
-    CGRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:index effectiveRange:&lineRange];
-    NSUInteger glyphIndex = lineRange.location;
-    if (glyphIndex >= numberOfGlyphs) {
-        return numberOfGlyphs - 1;
-    } else if (glyphIndex == 0) {
+    if (numberOfLines <= 0) {
+        return index;
+    }
+    
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+
+    if (index <= 0) {
         return 0;
     }
-    glyphIndex--;
-    
-    CGFloat y = CGRectGetMinY(fragmentRect);
-    for (NSInteger i = 0; (glyphIndex > 0) && (i < numberOfLines); ) {
-        fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:&lineRange];
-        glyphIndex = lineRange.location - 1;
-        CGFloat minY = CGRectGetMinY(fragmentRect);
-        if (minY < y) {
-            i++;
-            y = minY;
+
+    NSInteger newIndex = MIN(index, numberOfGlyphs - 1);
+    NSInteger lineNumber = 0;
+    CGPoint location = [layoutManager locationForGlyphAtIndex:newIndex];
+    do {
+        NSRange range;
+        NSRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
+        location.y = CGRectGetMinY(fragmentRect);
+        if (lineNumber >= numberOfLines) {
+            break;
         }
+        lineNumber++;
+        newIndex = range.location - 1;
+    } while (newIndex > 0);
+
+    if (newIndex <= 0) {
+        return 0;
     }
     
-    CGPoint glyphLocation = [layoutManager locationForGlyphAtIndex:index];
-    CGPoint targetGlyphLocation = (NSPoint){ .x = glyphLocation.x, .y = y };
     CGFloat fraction = 0;
-    NSInteger newIndex = [layoutManager characterIndexForPoint:targetGlyphLocation inTextContainer:[self textContainer] fractionOfDistanceBetweenInsertionPoints:&fraction];
-    return MIN(newIndex + (fraction > 0.75), numberOfGlyphs - 1);
+    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    return glyphIndex + (fraction > 0.5);
 }
 
 - (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines downFromIndex:(NSInteger)index
 {
-    NSLayoutManager* layoutManager = [self layoutManager];
-    NSUInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
-    NSRange lineRange = {};
-    CGRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:index effectiveRange:&lineRange];
-    NSUInteger glyphIndex = NSMaxRange(lineRange);
-    if (glyphIndex >= numberOfGlyphs) {
-        return numberOfGlyphs - 1;
-    } else if (glyphIndex == 0) {
-        return 0;
+    if (numberOfLines <= 0) {
+        return index;
     }
 
-    CGFloat y = CGRectGetMaxY(fragmentRect);
-    for (NSInteger i = 1; (glyphIndex < numberOfGlyphs) && (i < numberOfLines); ) {
-        fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:&lineRange];
-        glyphIndex = NSMaxRange(lineRange);
-        CGFloat maxY = CGRectGetMaxY(fragmentRect);
-        if (maxY > y) {
-            i++;
-            y = maxY;
+    NSTextContainer* textContainer = [self textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+
+    if (index >= numberOfGlyphs) {
+        return numberOfGlyphs;
+    }
+
+    NSInteger newIndex = MAX(index, 0);
+    CGPoint location = [layoutManager locationForGlyphAtIndex:newIndex];
+    NSInteger lineNumber = 0;
+    do {
+        NSRange range;
+        NSRect fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
+        location.y = CGRectGetMinY(fragmentRect);
+        if (lineNumber >= numberOfLines) {
+            break;
         }
+        lineNumber++;
+        newIndex = NSMaxRange(range);
+    } while (newIndex < numberOfGlyphs);
+
+    if (newIndex >= numberOfGlyphs) {
+        return numberOfGlyphs;
     }
 
-    CGPoint glyphLocation = [layoutManager locationForGlyphAtIndex:index];
-    CGPoint targetGlyphLocation = (NSPoint){ .x = glyphLocation.x, .y = y };
     CGFloat fraction = 0;
-    NSInteger newIndex = [layoutManager characterIndexForPoint:targetGlyphLocation inTextContainer:[self textContainer] fractionOfDistanceBetweenInsertionPoints:&fraction];
-    return MIN(newIndex + (fraction > 0.75), numberOfGlyphs - 1);
+    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    return glyphIndex + (fraction > 0.5);
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
@@ -1467,7 +1478,7 @@ static void _commonInitForUITextView(UITextView* self)
             result = [layoutManager extraLineFragmentRect];
         } else {
             NSUInteger rectCount = 0;
-            NSRect* rectArray = [layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:range inTextContainer:textContainer rectCount:&rectCount];
+            NSRect* rectArray = [layoutManager rectArrayForCharacterRange:(NSRange){ range.location, 1 } withinSelectedCharacterRange:range inTextContainer:textContainer rectCount:&rectCount];
             if (rectCount) {
                 result = rectArray[0];
             }
