@@ -1294,7 +1294,10 @@ static void _commonInitForUITextView(UITextView* self)
     
     CGFloat fraction = 0;
     NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
-    return glyphIndex + (fraction > 0.5);
+    if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
+        glyphIndex += (fraction > 0.5);
+    }
+    return glyphIndex;
 }
 
 - (NSInteger) _indexWhenMovingNumberOfLines:(NSInteger)numberOfLines downFromIndex:(NSInteger)index
@@ -1331,7 +1334,10 @@ static void _commonInitForUITextView(UITextView* self)
 
     CGFloat fraction = 0;
     NSInteger glyphIndex = [layoutManager glyphIndexForPoint:location inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
-    return glyphIndex + (fraction > 0.5);
+    if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
+        glyphIndex += (fraction > 0.5);
+    }
+    return glyphIndex;
 }
 
 - (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
