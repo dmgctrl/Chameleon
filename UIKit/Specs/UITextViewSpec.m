@@ -203,6 +203,43 @@ describe(@"UITextView", ^{
 
                         context(@"from one line down from second line", ^{
                             UITextPosition* prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:mediumOffset];
+                            context(@"left", ^{
+                                context(@"offset > 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionLeft offset:unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be < starting index", ^{
+                                        [[@(newIndex) should] equal:@(mediumOffset - unitOffset)];
+                                    });
+                                });
+#if (!TARGET_IPHONE_SIMULATOR && !TARGET_IPHONE_DEVICE) // Bug: iOS version returns, but it takes *minutes*. (This test is in response to ticket #1549)
+                                context(@"offset < 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionLeft offset:-unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be > starting index", ^{
+                                        [[@(newIndex) should] equal:@(mediumOffset + unitOffset)];
+                                    });
+                                });
+#endif
+                            });
+                            context(@"right", ^{
+                                context(@"offset > 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionRight offset:unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be < starting index", ^{
+                                        [[@(newIndex) should] equal:@(mediumOffset + unitOffset)];
+                                    });
+                                });
+#if (!TARGET_IPHONE_SIMULATOR && !TARGET_IPHONE_DEVICE) // Bug: iOS version returns, but it takes *minutes*. (This test is in response to ticket #1549)
+                                context(@"offset < 0", ^{
+                                    UITextPosition* newPosition = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionRight offset:-unitOffset];
+                                    NSInteger newIndex = [loremTextView offsetFromPosition:beginningOfDocument toPosition:newPosition];
+                                    it(@"index should be > starting index", ^{
+                                        [[@(newIndex) should] equal:@(mediumOffset - unitOffset)];
+                                    });
+                                });
+#endif
+                            });
+
                             UITextPosition* position = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionDown offset:1];
                             context(@"up", ^{
                                 context(@"twice", ^{
@@ -210,6 +247,17 @@ describe(@"UITextView", ^{
                                     NSInteger upTwoOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:upTwo];
                                     it(@"should be", ^{
                                         [[@(upTwoOffset) should] equal:@(3)];
+                                    });
+                                });
+                            });
+                            prePosition = [loremTextView positionFromPosition:beginningOfDocument offset:30];
+                            position = [loremTextView positionFromPosition:prePosition inDirection:UITextLayoutDirectionUp offset:1];
+                            context(@"down", ^{
+                                context(@"once", ^{
+                                    UITextPosition* downOne = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
+                                    NSInteger downOneOffset = [loremTextView offsetFromPosition:beginningOfDocument toPosition:downOne];
+                                    it(@"should be", ^{
+                                        [[@(downOneOffset) should] equal:@(29)];
                                     });
                                 });
                             });
