@@ -254,7 +254,8 @@ static void _commonInitForUITextField(UITextField* self)
         _attributedPlaceholder = [self _adjustAttributesForPlaceholder:attributedPlaceholder];
         if (!_placeholderTextLabel) {
             _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-            [_placeholderTextLabel setBackgroundColor:[self backgroundColor]];
+            [_placeholderTextLabel setBackgroundColor:nil];
+            [_placeholderTextLabel setOpaque:NO];
         }
         [_placeholderTextLabel setAttributedText:_attributedPlaceholder];
         if (![_placeholderTextLabel superview]) {
@@ -283,7 +284,8 @@ static void _commonInitForUITextField(UITextField* self)
         }
         if (!_textLabel) {
             _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-            [_textLabel setBackgroundColor:[self backgroundColor]];
+            [_textLabel setBackgroundColor:nil];
+            [_textLabel setOpaque:NO];
         }
         [_textLabel setAttributedText:attributedText];
         if (![_textLabel superview]) {
@@ -320,15 +322,6 @@ static void _commonInitForUITextField(UITextField* self)
     if (background != _background) {
         _background = background;
         [self setNeedsDisplay];
-    }
-}
-
-- (void) setBackgroundColor:(UIColor*)backgroundColor
-{
-    if (backgroundColor != [self backgroundColor]) {
-        [super setBackgroundColor:backgroundColor];
-        [_textLabel setBackgroundColor:backgroundColor];
-        [_placeholderTextLabel setBackgroundColor:backgroundColor];
     }
 }
 
@@ -745,6 +738,8 @@ static void _commonInitForUITextField(UITextField* self)
         [_placeholderTextLabel removeFromSuperview];
 
         _textFieldEditor = [[_UITextFieldEditor alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        [_textFieldEditor setOpaque:NO];
+        [_textFieldEditor setBackgroundColor:nil];
         [self addSubview:_textFieldEditor];
         
         return YES;
