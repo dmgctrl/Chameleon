@@ -436,25 +436,27 @@ describe(@"UITextView", ^{
             });
 
             context(@"from point", ^{
-                UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
-                context(@"origin", ^{
-                    UITextPosition* closestPointToOrigin = [loremTextView closestPositionToPoint:CGPointZero];
-                    it(@"should be beginning of document", ^{
-                        [[@([loremTextView comparePosition:closestPointToOrigin toPosition:beginningOfLoremText]) should] equal:@(NSOrderedSame)];
+                context(@"considering full range", ^{
+                    UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
+                    context(@"origin", ^{
+                        UITextPosition* postitionClosestToOrigin = [loremTextView closestPositionToPoint:CGPointZero];
+                        it(@"should be beginning of document", ^{
+                            [[@([loremTextView comparePosition:postitionClosestToOrigin toPosition:beginningOfLoremText]) should] equal:@(NSOrderedSame)];
+                        });
                     });
-                });
-                context(@"far corner", ^{
-                    UITextPosition* endOfLoremText = [loremTextView endOfDocument];
-                    UITextPosition* closestPointToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100)];
-                    it(@"should be end of document", ^{
-                        [[@([loremTextView comparePosition:closestPointToFarCorner toPosition:endOfLoremText]) should] equal:@(NSOrderedSame)];
+                    context(@"far corner", ^{
+                        UITextPosition* endOfLoremText = [loremTextView endOfDocument];
+                        UITextPosition* postitionClosestToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100)];
+                        it(@"should be end of document", ^{
+                            [[@([loremTextView comparePosition:postitionClosestToFarCorner toPosition:endOfLoremText]) should] equal:@(NSOrderedSame)];
+                        });
                     });
-                });
-                context(@"center", ^{
-                    UITextPosition* positionAtCenter = [loremTextView positionFromPosition:beginningOfLoremText offset:33];
-                    UITextPosition* closestPointToOrigin = [loremTextView closestPositionToPoint:[loremTextView center]];
-                    it(@"should be end of document", ^{
-                        [[@([loremTextView comparePosition:closestPointToOrigin toPosition:positionAtCenter]) should] equal:@(NSOrderedSame)];
+                    context(@"center", ^{
+                        UITextPosition* truePositionAtCenter = [loremTextView positionFromPosition:beginningOfLoremText offset:33];
+                        UITextPosition* positionClosestToCenter = [loremTextView closestPositionToPoint:[loremTextView center]];
+                        it(@"should be end of document", ^{
+                            [[@([loremTextView comparePosition:positionClosestToCenter toPosition:truePositionAtCenter]) should] equal:@(NSOrderedSame)];
+                        });
                     });
                 });
             });
