@@ -344,6 +344,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"end of document", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -366,6 +367,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"small offset after beginning", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -388,6 +390,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"small offset before end", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -431,6 +434,30 @@ describe(@"UITextView", ^{
                     });
                 });
             });
+
+            context(@"from point", ^{
+                UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
+                context(@"origin", ^{
+                    UITextPosition* closestPointToOrigin = [loremTextView closestPositionToPoint:CGPointZero];
+                    it(@"should be beginning of document", ^{
+                        [[@([loremTextView comparePosition:closestPointToOrigin toPosition:beginningOfLoremText]) should] equal:@(NSOrderedSame)];
+                    });
+                });
+                context(@"far corner", ^{
+                    UITextPosition* endOfLoremText = [loremTextView endOfDocument];
+                    UITextPosition* closestPointToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100)];
+                    it(@"should be end of document", ^{
+                        [[@([loremTextView comparePosition:closestPointToFarCorner toPosition:endOfLoremText]) should] equal:@(NSOrderedSame)];
+                    });
+                });
+                context(@"center", ^{
+                    UITextPosition* positionAtCenter = [loremTextView positionFromPosition:beginningOfLoremText offset:33];
+                    UITextPosition* closestPointToOrigin = [loremTextView closestPositionToPoint:[loremTextView center]];
+                    it(@"should be end of document", ^{
+                        [[@([loremTextView comparePosition:closestPointToOrigin toPosition:positionAtCenter]) should] equal:@(NSOrderedSame)];
+                    });
+                });
+            });
         });
 
         context(@"Composed characters", ^{
@@ -444,7 +471,6 @@ describe(@"UITextView", ^{
             [composedTextView setFont:[UIFont systemFontOfSize:14]];
             NSInteger tinyOffset = 2;
             UITextPosition* beginningOfDocument = [composedTextView beginningOfDocument];
-            UITextPosition* endOfDocument = [composedTextView endOfDocument];
             UITextPosition* prePosition = [composedTextView positionFromPosition:beginningOfDocument offset:smallOffset];
             NSInteger preIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:prePosition];
             context(@"positions", ^{
