@@ -27,21 +27,24 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIApplication+UIPrivate.h"
-#import "UIScreen+UIPrivate.h"
-#import "UIScreen+AppKit.h"
-#import "UIKitView.h"
+#import "UIApplication.h"
 #import "UIColor.h"
+#import "UINib.h"
+#import "UIStoryboard.h"
+//
+#import "NSEvent+UIKit.h"
+#import "UIKitView.h"
+#import "UIApplication+AppKit.h"
+#import "UIApplication+UIPrivate.h"
+#import "UIBackgroundTask.h"
 #import "UIEvent+UIPrivate.h"
-#import "UITouch+UIPrivate.h"
-#import "UIWindow+UIPrivate.h"
+#import "UIKey+UIPrivate.h"
 #import "UIPopoverController+UIPrivate.h"
 #import "UIResponder+AppKit.h"
-#import "UIApplication+AppKit.h"
-#import "UIKey+UIPrivate.h"
-#import "UIBackgroundTask.h"
-#import "UIStoryboard.h"
-#import "UINib.h"
+#import "UIScreen+AppKit.h"
+#import "UIScreen+UIPrivate.h"
+#import "UITouch+UIPrivate.h"
+#import "UIWindow+UIPrivate.h"
 
 #import <Cocoa/Cocoa.h>
 
@@ -130,15 +133,6 @@ UIKIT_EXTERN int UIApplicationMain(int argc, char *argv[], NSString* principalCl
     return 0;
 }
 
-CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent)
-{
-    CGPoint screenLocation = NSPointToCGPoint([[theScreen UIKitView] convertPoint:[theNSEvent locationInWindow] fromView:nil]);
-    if (![[theScreen UIKitView] isFlipped]) {
-        // the y coord from the NSView might be inverted
-        screenLocation.y = theScreen.bounds.size.height - screenLocation.y - 1;
-    }
-    return screenLocation;
-}
 
 static CGPoint ScrollDeltaFromNSEvent(NSEvent *theNSEvent)
 {
@@ -495,16 +489,6 @@ static BOOL TouchIsActive(UITouch *touch)
 - (void)_setKeyWindow:(UIWindow *)newKeyWindow
 {
     _keyWindow = newKeyWindow;
-
-    if (_keyWindow) {
-        // this will make the NSView that the key window lives on the first responder in its NSWindow
-        // highly confusing, but I think this is mostly the correct thing to do
-        // when a UIView is made first responder, it also tells its window to become the key window
-        // which means that we can ultimately end up here and if keyboard stuff is to work as expected
-        // (for example) the underlying NSView really needs to be the first responder as far as AppKit
-        // is concerned. this is all very confusing in my mind right now, but I think it makes sense.
-        [[[_keyWindow.screen UIKitView] window] makeFirstResponder:[_keyWindow.screen UIKitView]];
-    }
 }
 
 - (void)_windowDidBecomeVisible:(UIWindow *)theWindow
@@ -645,7 +629,7 @@ static BOOL TouchIsActive(UITouch *touch)
 
 - (void)_setCurrentEventTouchedViewWithNSEvent:(NSEvent *)theNSEvent fromScreen:(UIScreen *)theScreen
 {
-    const CGPoint screenLocation = ScreenLocationFromNSEvent(theScreen, theNSEvent);
+    const CGPoint screenLocation = [theNSEvent locationInScreen:theScreen];
     UITouch *touch = [[_currentEvent allTouches] anyObject];
     UIView *previousView = touch.view;
 
@@ -665,7 +649,7 @@ static BOOL TouchIsActive(UITouch *touch)
     [_currentEvent _setTimestamp:[theNSEvent timestamp]];
 
     const NSTimeInterval timestamp = [theNSEvent timestamp];
-    const CGPoint screenLocation = ScreenLocationFromNSEvent(theScreen, theNSEvent);
+    const CGPoint screenLocation = [theNSEvent locationInScreen:theScreen];
 
     if (TouchIsActiveGesture(touch) && ([theNSEvent type] == NSLeftMouseDown || [theNSEvent type] == NSRightMouseDown)) {
         // this is a special case to cancel any existing gestures (as far as the client code is concerned) if a mouse
