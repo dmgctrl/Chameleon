@@ -39,6 +39,7 @@
 #import "UIScreenMode.h"
 #import "UIResponder+AppKit.h"
 #import "UIView+AppKit.h"
+#import <UIKit/UITextInput.h>
 #import "UIKitView.h"
 #import "UIViewController.h"
 #import "UIGestureRecognizerSubclass.h"
@@ -75,6 +76,10 @@ NSString *const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserIn
 NSString *const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
 NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
+@interface UIKitView ()
+- (void) _setTextInput:(id)textInput;
+@end
+
 @interface UIWindow ()
 - (void)_showToolTipForView:(UIView *)view;
 - (void)_hideCurrentToolTip;
@@ -88,7 +93,6 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 @implementation UIWindow {
     UIResponder* _firstResponder;
-    UIResponder* _firstResponderWhenKeyLost;
     NSUndoManager* _undoManager;
 }
 
@@ -105,18 +109,11 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 - (void)dealloc
 {
+    [[self _firstResponder] resignFirstResponder];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self _stopTrackingPotentiallyNewToolTip];
 	[self _hideCurrentToolTip];
     [self _makeHidden];	// I don't really like this here, but the real UIKit seems to do something like this on window destruction as it sends a notification and we also need to remove it from the app's list of windows
-    
-    // since UIView's dealloc is called after this one, it's hard ot say what might happen in there due to all of the subview removal stuff
-    // so it's safer to make sure these things are nil now rather than potential garbage. I don't like how much work UIView's -dealloc is doing
-    // but at the moment I don't see a good way around it...
-    _screen = nil;
-    _undoManager = nil;
-    _rootViewController = nil;
-    
 }
 
 - (void)setRootViewController:(UIViewController *)rootViewController
@@ -130,7 +127,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 - (BOOL) _acceptsFirstResponder
 {
-    return _firstResponder || _firstResponderWhenKeyLost;
+    return _firstResponder != nil;
 }
 
 - (UIResponder *)_firstResponder
@@ -138,10 +135,13 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     return _firstResponder;
 }
 
-- (void)_setFirstResponder:(UIResponder *)newFirstResponder
+- (void) _setFirstResponder:(UIResponder*)firstResponder
 {
-    _firstResponderWhenKeyLost = nil;
-    _firstResponder = newFirstResponder;
+    if (_firstResponder != firstResponder) {
+        _firstResponder = firstResponder;
+        NSLog(@"%@: %d", NSStringFromClass([firstResponder class]), [firstResponder conformsToProtocol:@protocol(UITextInput)]);
+        [[[self screen] UIKitView] _setTextInput:[firstResponder conformsToProtocol:@protocol(UITextInput)] ? firstResponder : nil];
+    }
 }
 
 - (NSUndoManager *)undoManager
@@ -257,11 +257,13 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 
 - (void)becomeKeyWindow
 {
-    id firstResponder = [self _firstResponder] ?: _firstResponderWhenKeyLost;
-    if ([firstResponder respondsToSelector:@selector(becomeKeyWindow)]) {
-        [firstResponder becomeKeyWindow];
+    UIKitView* uikitView = [[self screen] UIKitView];
+    if ([[uikitView window] makeFirstResponder:uikitView]) {
+        id firstResponder = [self _firstResponder];
+        if ([firstResponder respondsToSelector:@selector(windowDidBecomeKey)]) {
+            [firstResponder windowDidBecomeKey];
+        }
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidBecomeKeyNotification object:self];
 }
 
 - (void)makeKeyWindow
@@ -281,11 +283,9 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 - (void)resignKeyWindow
 {
     id firstResponder = [self _firstResponder];
-    if ([firstResponder respondsToSelector:@selector(resignKeyWindow)]) {
-        [firstResponder resignKeyWindow];
+    if ([firstResponder respondsToSelector:@selector(windowDidResignKey)]) {
+        [firstResponder windowDidResignKey];
     }
-    [firstResponder resignFirstResponder];
-    _firstResponderWhenKeyLost = firstResponder;
     [[UIApplication sharedApplication] _setKeyWindow:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidResignKeyNotification object:self];
 }

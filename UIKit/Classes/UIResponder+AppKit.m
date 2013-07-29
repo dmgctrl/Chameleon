@@ -37,6 +37,14 @@
 
 @implementation UIResponder (AppKitIntegration)
 
+- (void) windowDidBecomeKey
+{
+}
+
+- (void) windowDidResignKey
+{
+}
+
 - (void) scrollWheelMoved:(CGPoint)delta withEvent:(UIEvent *)event
 {
     id responder = [self nextResponder];

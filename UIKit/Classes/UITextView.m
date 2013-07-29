@@ -39,6 +39,7 @@
 //
 #import "UIColor+AppKit.h"
 #import "UIFont+UIPrivate.h"
+#import "UIResponder+AppKit.h"
 #import "_UITextStorage.h"
 #import "_UITextInteractionAssistant.h"
 //
@@ -115,6 +116,9 @@ static NSString* const kUIEditableKey = @"UIEditable";
     
     NSUInteger _selectionOrigin;
     NSSelectionGranularity _selectionGranularity;
+    
+    id _ob1;
+    id _ob2;
 }
 @dynamic delegate;
 @synthesize markedTextStyle = _markedTextStyle;
@@ -408,8 +412,24 @@ static void _commonInitForUITextView(UITextView* self)
     }
 }
 
-
 #pragma mark UIResponder
+
+- (BOOL) acceptsFirstMouse
+{
+    return YES;
+}
+
+- (void) windowDidBecomeKey
+{
+    [super windowDidBecomeKey];
+    [_textContainerView setShouldShowInsertionPoint:[self isFirstResponder]];
+}
+
+- (void) windowDidResignKey
+{
+    [super windowDidResignKey];
+    [_textContainerView setShouldShowInsertionPoint:NO];
+}
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -866,7 +886,6 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
 #warning Implement -setMarkedText:selectedRange:
-    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) unmarkText
@@ -1598,7 +1617,7 @@ static NSUInteger hashForTextPosition;
 
 - (BOOL) isEmpty
 {
-    return _start == _end;
+    return [_start isEqual:_end];
 }
 
 @end

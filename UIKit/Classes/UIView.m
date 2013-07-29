@@ -424,20 +424,16 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
         }
         [subview willMoveToSuperview:self];
         
-        {
-            
-            if (subview.superview) {
-                [subview.layer removeFromSuperlayer];
-                [subview.superview->_subviews removeObject:subview];
-            }
-            
-            [subview willChangeValueForKey:@"superview"];
-            [_subviews addObject:subview];
-            subview->_superview = self;
-            [_layer addSublayer:subview.layer];
-            [subview didChangeValueForKey:@"superview"];
-            
+        if (subview.superview) {
+            [subview.layer removeFromSuperlayer];
+            [subview.superview->_subviews removeObject:subview];
         }
+        
+        [subview willChangeValueForKey:@"superview"];
+        [_subviews addObject:subview];
+        subview->_superview = self;
+        [_layer addSublayer:subview.layer];
+        [subview didChangeValueForKey:@"superview"];
         
         if (oldWindow.screen != newWindow.screen) {
             [subview _didMoveToScreenWithScale:[[newWindow screen] scale]];
@@ -1348,18 +1344,14 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 - (void) _willMoveFromWindow:(UIWindow*)fromWindow toWindow:(UIWindow*)toWindow
 {
     if (fromWindow != toWindow) {
-        
-        // need to manage the responder chain. apparently UIKit (at least by version 4.2) seems to make sure that if a view was first responder
-        // and it or it's parent views are disconnected from their window, the first responder gets reset to nil. Honestly, I don't think this
-        // was always true - but it's certainly a much better and less-crashy design. Hopefully this check here replicates the behavior properly.
-        if (!toWindow && [self isFirstResponder]) {
+        if ([self isFirstResponder]) {
             [self resignFirstResponder];
         }
         
         [_viewController _viewWillMoveToWindow:toWindow];
         [self _setAppearanceNeedsUpdate];
         [self willMoveToWindow:toWindow];
-        
+
         for (UIView*subview in self.subviews) {
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }

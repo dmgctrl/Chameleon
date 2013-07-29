@@ -27,20 +27,36 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIKitView.h"
+#import <QuartzCore/QuartzCore.h>
+//
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIPopoverController.h>
+#import <UIKit/UITextInput.h>
+//
+#import <UIKit/UIKitView.h>
+//
 #import "UIApplication+UIPrivate.h"
 #import "UIScreen+UIPrivate.h"
+#import "UIScreen+AppKit.h"
 #import "UIWindow+UIPrivate.h"
-#import "UIImage.h"
-#import "UIImageView.h"
-#import "UIColor.h"
-#import "UIPopoverController.h"
-#import <QuartzCore/QuartzCore.h>
+#import "UIResponder+AppKit.h"
+#import "NSEvent+UIKit.h"
+
+
+@interface _UIKitViewTextInputClient : NSObject <NSTextInputClient>
+- (instancetype) initWithUIKitView:(UIKitView*)view;
+@property (nonatomic, weak, readonly) UIKitView* UIKitView;
+@property (nonatomic, weak) UIResponder<UITextInput>* textInput;
+@end
 
 
 @implementation UIKitView {
     id ob1;
     id ob2;
+    NSTextInputContext* _textInputContext;
+    _UIKitViewTextInputClient* _textInputClient;
 }
 
 - (void) viewWillMoveToWindow:(NSWindow*)window
@@ -140,6 +156,16 @@
     [self updateUIKitView];
 }
 
+- (BOOL) acceptsFirstMouse:(NSEvent*)event
+{
+    UIScreen* screen = [[self UIWindow] screen];
+    UIResponder* responder = [screen _hitTest:[event locationInScreen:screen] event:nil];
+    if ([responder respondsToSelector:@selector(acceptsFirstMouse)]) {
+        return [responder acceptsFirstMouse];
+    }
+    return [super acceptsFirstMouse:event];
+}
+
 - (BOOL) acceptsFirstResponder
 {
     return [[self UIWindow] _acceptsFirstResponder];
@@ -207,18 +233,36 @@
 // this is a special case, UIKit doesn't normally send anything like this.
 // if a UIKit first responder can't handle it, then we'll pass it through to the next responder
 // because something else might want to deal with it somewhere else.
-- (void)cancelOperation:(id)sender
+- (void) cancelOperation:(id)sender
 {
     [self sendActionToFirstResponder:@selector(cancel:) from:sender];
 }
 
-// capture the key presses here and turn them into key events which are sent down the UIKit responder chain
-// if they come back as unhandled, pass them along the AppKit responder chain.
-- (void)keyDown:(NSEvent *)theEvent
+- (void) keyDown:(NSEvent *)theEvent
 {
-    if (![[UIApplication sharedApplication] _sendKeyboardNSEvent:theEvent fromScreen:_screen]) {
-        [super keyDown:theEvent];
+    UIResponder* firstResponder = [[self UIWindow] _firstResponder];
+    if ([firstResponder conformsToProtocol:@protocol(UITextInput)]) {
+        [[self inputContext] handleEvent:theEvent];
+        return;
     }
+    if ([[UIApplication sharedApplication] _sendKeyboardNSEvent:theEvent fromScreen:_screen]) {
+        return;
+    }
+    [super keyDown:theEvent];
+}
+
+- (NSTextInputContext*) inputContext
+{
+    if (!_textInputContext) {
+        _textInputClient = [[_UIKitViewTextInputClient alloc] initWithUIKitView:self];
+        _textInputContext = [[NSTextInputContext alloc] initWithClient:_textInputClient];
+    }
+    return _textInputContext;
+}
+
+- (void) _setTextInput:(id)textInput
+{
+    [_textInputClient setTextInput:textInput];
 }
 
 - (void)updateTrackingAreas
@@ -231,21 +275,33 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
+    if ([[self inputContext] handleEvent:theEvent]) {
+        return;
+    }
     [[UIApplication sharedApplication] _sendMouseNSEvent:theEvent fromScreen:_screen];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+    if ([[self inputContext] handleEvent:theEvent]) {
+        return;
+    }
     [[UIApplication sharedApplication] _sendMouseNSEvent:theEvent fromScreen:_screen];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
+    if ([[self inputContext] handleEvent:theEvent]) {
+        return;
+    }
     [[UIApplication sharedApplication] _sendMouseNSEvent:theEvent fromScreen:_screen];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
+    if ([[self inputContext] handleEvent:theEvent]) {
+        return;
+    }
     [[UIApplication sharedApplication] _sendMouseNSEvent:theEvent fromScreen:_screen];
 }
 
@@ -336,6 +392,181 @@
     } else {
         [self _launchApplicationWithDefaultWindow:nil];
     }
+}
+
+@end
+
+
+@implementation _UIKitViewTextInputClient {
+    struct {
+        bool textStorage : 1;
+        bool layoutManager : 1;
+        bool textContainer : 1;
+        bool doCommandBySelector : 1;
+    } _textInputHas;
+}
+
+- (instancetype) initWithUIKitView:(UIKitView*)view
+{
+    if (nil != (self = [super init])) {
+        _UIKitView = view;
+    }
+    return self;
+}
+
+- (void) setTextInput:(UIResponder<UITextInput>*)textInput
+{
+    if (_textInput != textInput) {
+        _textInput = textInput;
+        _textInputHas.textStorage = [textInput respondsToSelector:@selector(textStorage)];
+        _textInputHas.layoutManager = [textInput respondsToSelector:@selector(layoutManager)];
+        _textInputHas.textContainer = [textInput respondsToSelector:@selector(textContainer)];
+        _textInputHas.doCommandBySelector = [textInput respondsToSelector:@selector(doCommandBySelector:)];
+    }
+}
+
+- (void) insertText:(id)string replacementRange:(NSRange)replacementRange
+{
+    [_textInput insertText:string];
+}
+
+- (void) doCommandBySelector:(SEL)selector
+{
+    if ([_textInput respondsToSelector:selector]) {
+        [_textInput performSelector:selector withObject:nil];
+    } else if (_textInputHas.doCommandBySelector) {
+        [(id)_textInput doCommandBySelector:selector];
+    }
+}
+
+- (void) setMarkedText:(id)string selectedRange:(NSRange)selectedRange replacementRange:(NSRange)replacementRange
+{
+    [_textInput setMarkedText:string selectedRange:selectedRange];
+}
+
+- (void) unmarkText
+{
+    [_textInput unmarkText];
+}
+
+- (NSRange) selectedRange
+{
+    return [self _rangeFromTextRange:[_textInput selectedTextRange]];
+}
+
+- (NSRange) markedRange
+{
+    return [self _rangeFromTextRange:[_textInput markedTextRange]];
+}
+
+- (BOOL) hasMarkedText
+{
+    UITextRange* markedTextRange = [_textInput markedTextRange];
+    return markedTextRange && [markedTextRange isEmpty] == NO;
+}
+
+- (NSAttributedString*) attributedSubstringForProposedRange:(NSRange)range actualRange:(NSRangePointer)actualRange
+{
+    if (!_textInputHas.textStorage) {
+        return nil;
+    }
+    return [[(id)_textInput textStorage] attributedSubstringFromRange:range];
+}
+
+- (NSArray*) validAttributesForMarkedText
+{
+    return nil;
+}
+
+- (NSRect) firstRectForCharacterRange:(NSRange)range actualRange:(NSRangePointer)actualRange
+{
+    if (!_textInputHas.textContainer || !_textInputHas.layoutManager) {
+        return (NSRect){};
+    }
+    NSTextContainer* textContainer = [(id)_textInput textContainer];
+    NSLayoutManager* layoutManager = [(id)_textInput layoutManager];
+    NSRect rect = [layoutManager boundingRectForGlyphRange:[layoutManager glyphRangeForCharacterRange:range actualCharacterRange:actualRange] inTextContainer:textContainer];
+    return [self _convertViewRectToScreen:rect];
+}
+
+- (NSUInteger) characterIndexForPoint:(NSPoint)point
+{
+    if (!_textInputHas.textContainer || !_textInputHas.layoutManager) {
+        return NSNotFound;
+    }
+    NSTextContainer* textContainer = [(id)_textInput textContainer];
+    NSLayoutManager* layoutManager = [(id)_textInput layoutManager];
+    return [layoutManager characterIndexForPoint:[self _convertScreenPointToView:point] inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:NULL];
+}
+
+- (NSAttributedString*) attributedString
+{
+    if (!_textInputHas.textStorage) {
+        return nil;
+    }
+    return [(id)_textInput textStorage];
+}
+
+- (CGFloat) fractionOfDistanceThroughGlyphForPoint:(NSPoint)point
+{
+    return 0.0;
+}
+
+- (CGFloat) baselineDeltaForCharacterAtIndex:(NSUInteger)index
+{
+    if (!_textInputHas.layoutManager) {
+        return 0;
+    }
+    NSLayoutManager* layoutManager = [(id)_textInput layoutManager];
+    NSUInteger glyphIndex = [layoutManager glyphIndexForCharacterAtIndex:index];
+    NSUInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+    if (glyphIndex >= numberOfGlyphs) {
+        return 0;
+    }
+    CGFloat lineFragmentHeight = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL].size.height;
+    CGFloat baselineOffset = [[layoutManager typesetter] baselineOffsetInLayoutManager:layoutManager glyphIndex:glyphIndex];
+    return lineFragmentHeight - baselineOffset;
+}
+
+- (NSInteger) windowLevel
+{
+    return [[_UIKitView window] level];
+}
+
+- (BOOL) drawsVerticallyForCharacterAtIndex:(NSUInteger)charIndex
+{
+    return NO;
+}
+
+
+#pragma mark Private Methods
+
+- (NSRange) _rangeFromTextRange:(UITextRange*)selectedTextRange
+{
+    if (!selectedTextRange) {
+        return (NSRange){ NSNotFound, 0 };
+    }
+    UITextPosition* beginningOfDocument = [_textInput beginningOfDocument];
+    NSInteger start = [_textInput offsetFromPosition:beginningOfDocument toPosition:[selectedTextRange start]];
+    NSInteger end = [_textInput offsetFromPosition:beginningOfDocument toPosition:[selectedTextRange end]];
+    return (NSRange){
+        .location = start,
+        .length = end - start
+    };
+}
+
+- (CGRect) _convertViewRectToScreen:(CGRect)rect
+{
+    UIWindow* window = [_UIKitView UIWindow];
+    CGRect r1 = [(UIView*)_textInput convertRect:rect toView:nil];
+    return [[window screen] convertRect:r1 toScreen:nil];
+}
+
+- (CGPoint) _convertScreenPointToView:(CGPoint)point
+{
+    UIWindow* window = [_UIKitView UIWindow];
+    CGPoint p1 = [[window screen] convertPoint:point fromScreen:nil];
+    return [window convertPoint:p1 toView:(UIView*)_textInput];
 }
 
 @end
