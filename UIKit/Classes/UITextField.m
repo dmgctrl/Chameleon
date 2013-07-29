@@ -203,16 +203,20 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) _isLeftViewVisible
 {
-    return _leftView && (_leftViewMode == UITextFieldViewModeAlways
-                         || (_editing && _leftViewMode == UITextFieldViewModeWhileEditing)
-                         || (!_editing && _leftViewMode == UITextFieldViewModeUnlessEditing));
+    return _leftView && (
+        _leftViewMode == UITextFieldViewModeAlways
+    || (_editing && _leftViewMode == UITextFieldViewModeWhileEditing)
+    || (!_editing && _leftViewMode == UITextFieldViewModeUnlessEditing)
+    );
 }
 
 - (BOOL) _isRightViewVisible
 {
-    return _rightView && (_rightViewMode == UITextFieldViewModeAlways
-                          || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
-                          || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing));
+    return _rightView && (
+        _rightViewMode == UITextFieldViewModeAlways
+     || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
+     || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing)
+    );
 }
 
 - (void) layoutSubviews
@@ -346,12 +350,12 @@ static void _commonInitForUITextField(UITextField* self)
         [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
         
         sharedDefaultTextAttributes = @{
-                                        UITextAttributeFont: [UIFont systemFontOfSize:17.0f],
-                                        UITextAttributeTextColor: [UIColor colorWithWhite:0.0f alpha:1.0f],
-                                        NSKernAttributeName: @(0.0f),
-                                        NSLigatureAttributeName: @(0.0f),
-                                        NSParagraphStyleAttributeName: paragraphStyle,
-                                        };
+            UITextAttributeFont: [UIFont systemFontOfSize:17.0f],
+            UITextAttributeTextColor: [UIColor colorWithWhite:0.0f alpha:1.0f],
+            NSKernAttributeName: @(0.0f),
+            NSLigatureAttributeName: @(0.0f),
+            NSParagraphStyleAttributeName: paragraphStyle,
+        };
     });
     if (_defaultTextAttributes) {
         return [_defaultTextAttributes copy];
