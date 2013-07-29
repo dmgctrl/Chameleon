@@ -433,6 +433,59 @@ describe(@"UITextView", ^{
             });
         });
 
+        context(@"Composed characters", ^{
+            NSString* composedText = @"0e\u030A3e\u030A6e\u030A9e\u030A2e\u030A5";
+            // |0|1,2|3|4,5|6|7,8|9|10,11|12|13,14|15 character index
+            // |0|eo |3|eo |6|eo |9|eo   |2 |eo   |5  character (ignore space and |)
+            // |0|e̊  |3|e̊  |6|e̊  |9|e̊    |2 |e̊    |5  glyph (ignore space and |)
+            // |0|1  |2|3  |4|5  |6|7    |8 |9    |10 glyph index
+            UITextView* composedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+            [composedTextView setText:composedText];
+            [composedTextView setFont:[UIFont systemFontOfSize:14]];
+            NSInteger tinyOffset = 2;
+            UITextPosition* beginningOfDocument = [composedTextView beginningOfDocument];
+            UITextPosition* endOfDocument = [composedTextView endOfDocument];
+            UITextPosition* prePosition = [composedTextView positionFromPosition:beginningOfDocument offset:smallOffset];
+            NSInteger preIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:prePosition];
+            context(@"positions", ^{
+                context(@"measurements", ^{
+                    context(@"positive", ^{
+                        it(@"should start at correct character index", ^{
+                            [[@(preIndex) should] equal:@(7)];
+                        });
+                        UITextPosition* position = [composedTextView positionFromPosition:prePosition offset:tinyOffset];
+                        context(@"positions from offsets", ^{
+                            UITextPosition* positionFromBeginning = [composedTextView positionFromPosition:beginningOfDocument offset:(smallOffset + tinyOffset)];
+                            it(@"should be correct", ^{
+                                [[@([composedTextView comparePosition:position toPosition:positionFromBeginning]) should] equal:@(NSOrderedSame)];
+                            });
+                        });
+                        context(@"offsets from position", ^{
+                            NSInteger positionIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:position];
+                            it(@"should be sum of start and offset", ^{
+                                [[@(positionIndex) should] equal:@(10)];
+                            });
+                        });
+                    });
+                    context(@"negative", ^{
+                        UITextPosition* position = [composedTextView positionFromPosition:prePosition offset:-tinyOffset];
+                        context(@"positions from offsets", ^{
+                            UITextPosition* positionFromBeginning = [composedTextView positionFromPosition:beginningOfDocument offset:(smallOffset - tinyOffset)];
+                            it(@"should be correct", ^{
+                                [[@([composedTextView comparePosition:position toPosition:positionFromBeginning]) should] equal:@(NSOrderedSame)];
+                            });
+                        });
+                        context(@"offsets from position", ^{
+                            NSInteger positionIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:position];
+                            it(@"should be sum of start and offset", ^{
+                                [[@(positionIndex) should] equal:@(4)];
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
         context(@"Text Ranges", ^{
             UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [textView setText:text];
