@@ -87,19 +87,19 @@
 
 - (void) deleteBackward
 {
-    NSRange range = [self selectedRange];
-    if (range.length > 0) {
-        if (![self _canChangeTextInRange:range replacementText:@""]) {
+    UITextRange* range = [self selectedTextRange];
+    if ([range isEmpty]) {
+        UITextPosition* toPosition = [range start];
+        UITextPosition* fromPosition = [self positionFromPosition:[range start] offset:-1];
+        if (!fromPosition) {
             return;
         }
-        [self _replaceCharactersInRange:range withString:@""];
-    } else if (range.location > 0) {
-        range.location--;
-        if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
-            return;
-        }
-        [self _replaceCharactersInRange:(NSRange){ range.location, 1 } withString:@""];
+        range = [self textRangeFromPosition:fromPosition toPosition:toPosition];
     }
+    if (![self shouldChangeTextInRange:range replacementText:@""]) {
+        return;
+    }
+    [self replaceRange:range withText:@""];
 }
 
 

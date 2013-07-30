@@ -527,7 +527,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     UITextRange* range = [self selectedTextRange];
     if ([range isEmpty]) {
-        range = [_inputController textRangeFromPosition:[range start] toPosition:[_inputController positionFromPosition:[range start] offset:1]];
+        UITextPosition* fromPosition = [range start];
+        UITextPosition* toPosition = [_inputController positionFromPosition:[range start] offset:1];
+        if (!toPosition) {
+            return;
+        }
+        range = [_inputController textRangeFromPosition:fromPosition toPosition:toPosition];
     }
     if (![_inputController shouldChangeTextInRange:range replacementText:@""]) {
         return;
