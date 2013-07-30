@@ -1,11 +1,3 @@
-//
-//  _UITextViewRange.m
-//  UIKit
-//
-//  Created by Jason Allum on 7/29/13.
-//
-//
-
 #import "_UITextViewRange.h"
 
 @implementation _UITextViewRange
@@ -23,7 +15,7 @@
 
 - (BOOL) isEmpty
 {
-    return _start == _end;
+    return [_start isEqual:_end];
 }
 
 @end
