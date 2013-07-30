@@ -19,11 +19,15 @@
         bool textInputPrepareAttributedTextForInsertion : 1;
     } _delegateHas;
 }
+@synthesize markedTextStyle;
+@synthesize tokenizer;
+@synthesize inputDelegate;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager
 {
     if (nil != (self = [super init])) {
         _layoutManager = layoutManager;
+        _selectedRange = (NSRange){ NSNotFound, 0 };
     }
     return self;
 }
@@ -78,6 +82,24 @@
 
 - (void) insertText:(NSString*)text
 {
+    [self _replaceCharactersInRange:[self selectedRange] withString:text];
+}
+
+- (void) deleteBackward
+{
+    NSRange range = [self selectedRange];
+    if (range.length > 0) {
+        if (![self _canChangeTextInRange:range replacementText:@""]) {
+            return;
+        }
+        [self _replaceCharactersInRange:range withString:@""];
+    } else if (range.location > 0) {
+        range.location--;
+        if (![self _canChangeTextInRange:(NSRange){ range.location, 1 } replacementText:@""]) {
+            return;
+        }
+        [self _replaceCharactersInRange:(NSRange){ range.location, 1 } withString:@""];
+    }
 }
 
 
@@ -121,6 +143,14 @@
     return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
 }
 
+- (UITextRange*) characterRangeByExtendingPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+#warning Implement -characterRangeByExtendingPosition:inDirection:
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (NSComparisonResult) comparePosition:(_UITextViewPosition*)position toPosition:(_UITextViewPosition*)other
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
@@ -141,6 +171,23 @@
 - (UITextPosition*) endOfDocument
 {
     return [_UITextViewPosition positionWithOffset:[[self _textStorage] length]];
+}
+
+- (UITextRange*) markedTextRange
+{
+#warning Implement -markedTextRange
+    return nil;
+}
+
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
+{
+#warning Implement -setMarkedText:selectedRange:
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) unmarkText
+{
+#warning Implement -unmarkText
 }
 
 - (NSInteger) offsetFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
@@ -187,6 +234,50 @@
             return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingRightFromIndex:index by:offset]];
         }
     }
+}
+
+- (UITextPosition*) positionWithinRange:(_UITextViewRange*)range farthestInDirection:(UITextLayoutDirection)direction
+{
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+#warning Implement -positionWithinRange:farthestInDirection:
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (UITextWritingDirection) baseWritingDirectionForPosition:(_UITextViewPosition*)position inDirection:(UITextStorageDirection)direction
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+#warning Implement -baseWritingDirectionForPosition:inDirection:
+    [self doesNotRecognizeSelector:_cmd];
+    return UITextWritingDirectionNatural;
+}
+
+- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
+{
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+#warning Implement -setBaseWritingDirection:forRange:
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (CGRect) firstRectForRange:(_UITextViewRange*)range
+{
+#warning Implement -firstRectForRange:
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+    return CGRectZero;
+}
+
+- (CGRect) caretRectForPosition:(_UITextViewPosition*)position
+{
+#warning Implement -caretRectForPosition:
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+    return CGRectZero;
+}
+
+- (NSArray*) selectionRectsForRange:(_UITextViewRange*)range
+{
+#warning Implement -selectionRectsForRange:
+    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+    return nil;
 }
 
 - (void) replaceRange:(_UITextViewRange*)range withText:(NSString*)text
