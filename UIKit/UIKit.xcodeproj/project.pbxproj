@@ -334,6 +334,12 @@
 		F913BAE8179DAECD0095FE6F /* UITextInput.m in Sources */ = {isa = PBXBuildFile; fileRef = F913BAE7179DAECD0095FE6F /* UITextInput.m */; };
 		F9177F9613BA317200619E3D /* UITableViewCellLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */; };
 		F9177F9713BA317200619E3D /* UITableViewCellLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */; };
+		F91A1E0217A71809008E87F5 /* _UITextInputController.h in Headers */ = {isa = PBXBuildFile; fileRef = F91A1E0017A71809008E87F5 /* _UITextInputController.h */; };
+		F91A1E0317A71809008E87F5 /* _UITextInputController.m in Sources */ = {isa = PBXBuildFile; fileRef = F91A1E0117A71809008E87F5 /* _UITextInputController.m */; };
+		F91A1E0617A71AD7008E87F5 /* _UITextViewPosition.h in Headers */ = {isa = PBXBuildFile; fileRef = F91A1E0417A71AD7008E87F5 /* _UITextViewPosition.h */; };
+		F91A1E0717A71AD7008E87F5 /* _UITextViewPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = F91A1E0517A71AD7008E87F5 /* _UITextViewPosition.m */; };
+		F91A1E0A17A71B03008E87F5 /* _UITextViewRange.h in Headers */ = {isa = PBXBuildFile; fileRef = F91A1E0817A71B03008E87F5 /* _UITextViewRange.h */; };
+		F91A1E0B17A71B03008E87F5 /* _UITextViewRange.m in Sources */ = {isa = PBXBuildFile; fileRef = F91A1E0917A71B03008E87F5 /* _UITextViewRange.m */; };
 		F91AA4FE176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */; };
 		F91AA505176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */; };
 		F91AA506176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */; };
@@ -415,6 +421,7 @@
 		F9647EE513B91BDC0040B2D6 /* UITableViewCellBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9647EE313B91BDC0040B2D6 /* UITableViewCellBackgroundView.m */; };
 		F9647EE913B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = F9647EE713B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.h */; };
 		F9647EEA13B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9647EE813B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m */; };
+		F966690F17A81500005B7FA6 /* _UITextInputPlus.h in Headers */ = {isa = PBXBuildFile; fileRef = F966690E17A81500005B7FA6 /* _UITextInputPlus.h */; };
 		F9767490176940CB0073489E /* UIStoryboard.h in Headers */ = {isa = PBXBuildFile; fileRef = F976748E176940CB0073489E /* UIStoryboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9767491176940CB0073489E /* UIStoryboard.m in Sources */ = {isa = PBXBuildFile; fileRef = F976748F176940CB0073489E /* UIStoryboard.m */; };
 		F97674961769433E0073489E /* UIStoryboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F97674941769433E0073489E /* UIStoryboardSpec.m */; };
@@ -871,6 +878,12 @@
 		F913BAE7179DAECD0095FE6F /* UITextInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextInput.m; sourceTree = "<group>"; };
 		F9177F9413BA317200619E3D /* UITableViewCellLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITableViewCellLayoutManager.h; sourceTree = "<group>"; };
 		F9177F9513BA317200619E3D /* UITableViewCellLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellLayoutManager.m; sourceTree = "<group>"; };
+		F91A1E0017A71809008E87F5 /* _UITextInputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInputController.h; sourceTree = "<group>"; };
+		F91A1E0117A71809008E87F5 /* _UITextInputController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextInputController.m; sourceTree = "<group>"; };
+		F91A1E0417A71AD7008E87F5 /* _UITextViewPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextViewPosition.h; sourceTree = "<group>"; };
+		F91A1E0517A71AD7008E87F5 /* _UITextViewPosition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextViewPosition.m; sourceTree = "<group>"; };
+		F91A1E0817A71B03008E87F5 /* _UITextViewRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextViewRange.h; sourceTree = "<group>"; };
+		F91A1E0917A71B03008E87F5 /* _UITextViewRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextViewRange.m; sourceTree = "<group>"; };
 		F91AA4FC176BE7B7001B6D5F /* UIStoryboard+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+UIPrivate.h"; sourceTree = "<group>"; };
 		F91AA503176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardModalSegueTemplate.h; sourceTree = "<group>"; };
 		F91AA504176E5A7B001B6D5F /* UIStoryboardModalSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardModalSegueTemplate.m; sourceTree = "<group>"; };
@@ -949,6 +962,7 @@
 		F9647EE313B91BDC0040B2D6 /* UITableViewCellBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellBackgroundView.m; sourceTree = "<group>"; };
 		F9647EE713B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITableViewCellSelectedBackgroundView.h; sourceTree = "<group>"; };
 		F9647EE813B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewCellSelectedBackgroundView.m; sourceTree = "<group>"; };
+		F966690E17A81500005B7FA6 /* _UITextInputPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInputPlus.h; sourceTree = "<group>"; };
 		F976748E176940CB0073489E /* UIStoryboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboard.h; sourceTree = "<group>"; };
 		F976748F176940CB0073489E /* UIStoryboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboard.m; sourceTree = "<group>"; };
 		F97674941769433E0073489E /* UIStoryboardSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardSpec.m; sourceTree = "<group>"; };
@@ -1377,7 +1391,14 @@
 				F93D770417953F930073B778 /* _UITextInteractionAssistant.m */,
 				F9D9772F13B794700086F226 /* UITextInput.h */,
 				F913BAE7179DAECD0095FE6F /* UITextInput.m */,
+				F966690E17A81500005B7FA6 /* _UITextInputPlus.h */,
+				F91A1E0017A71809008E87F5 /* _UITextInputController.h */,
+				F91A1E0117A71809008E87F5 /* _UITextInputController.m */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
+				F91A1E0417A71AD7008E87F5 /* _UITextViewPosition.h */,
+				F91A1E0517A71AD7008E87F5 /* _UITextViewPosition.m */,
+				F91A1E0817A71B03008E87F5 /* _UITextViewRange.h */,
+				F91A1E0917A71B03008E87F5 /* _UITextViewRange.m */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
 				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
@@ -1997,6 +2018,7 @@
 				14CB384912689949003334AD /* UIPopoverOverlayNSView.h in Headers */,
 				1457DD3F128DDE610057A7F9 /* UITransitionView.h in Headers */,
 				F93D770517953F930073B778 /* _UITextInteractionAssistant.h in Headers */,
+				F91A1E0617A71AD7008E87F5 /* _UITextViewPosition.h in Headers */,
 				14805F5A12A6E2AE0080C4BA /* UIScrollView+UIPrivate.h in Headers */,
 				14EEF76712DF67CF00EB7D95 /* UIEvent+UIPrivate.h in Headers */,
 				14EEF7A912DF6D9C00EB7D95 /* UIKey+UIPrivate.h in Headers */,
@@ -2021,6 +2043,7 @@
 				148985C712EE2CFF003D4751 /* UIScreen+AppKit.h in Headers */,
 				148985C912EE2CFF003D4751 /* UIScreenMode.h in Headers */,
 				F93D77001794A3410073B778 /* _UITextFieldEditor.h in Headers */,
+				F91A1E0217A71809008E87F5 /* _UITextInputController.h in Headers */,
 				148985CB12EE2CFF003D4751 /* UIScrollView.h in Headers */,
 				148985CD12EE2CFF003D4751 /* UISplitViewController.h in Headers */,
 				148985CF12EE2CFF003D4751 /* UIStringDrawing.h in Headers */,
@@ -2058,6 +2081,7 @@
 				F94CB9D613C8C0A9001DF656 /* UIBarButtonItem+UIPrivate.h in Headers */,
 				F94CB9D913C8C242001DF656 /* UIButton+UIPrivate.h in Headers */,
 				F95416F013C9FC9D000A9282 /* UITableView+UIPrivate.h in Headers */,
+				F966690F17A81500005B7FA6 /* _UITextInputPlus.h in Headers */,
 				F953D4FE13CD3BAC006B941C /* UITableViewCellUnhighlightedState.h in Headers */,
 				F99E83AD13CF7E7F00107358 /* UICustomObject.h in Headers */,
 				F99E83B213CF7EEE00107358 /* UIProxyObject.h in Headers */,
@@ -2109,6 +2133,7 @@
 				F926DEC81781CF88009C3D88 /* NSStringDrawing.h in Headers */,
 				F926DED117820670009C3D88 /* NSText.h in Headers */,
 				F92B72B21784B27B00D55A2E /* NSTextStorage.h in Headers */,
+				F91A1E0A17A71B03008E87F5 /* _UITextViewRange.h in Headers */,
 				F92B72B41784B2B200D55A2E /* NSLayoutManager.h in Headers */,
 				F964250A179888C800AD5556 /* NSTextContainer.h in Headers */,
 				3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */,
@@ -2376,6 +2401,7 @@
 				14FA8C6C121DA4A000C4264B /* UITableViewSection.m in Sources */,
 				14FA8C6E121DA4A000C4264B /* UITableViewSectionLabel.m in Sources */,
 				14FA8C70121DA4A000C4264B /* UIThreePartImage.m in Sources */,
+				F91A1E0B17A71B03008E87F5 /* _UITextViewRange.m in Sources */,
 				14FA8C72121DA4A000C4264B /* UIViewAnimationGroup.m in Sources */,
 				14FA8C74121DA4A000C4264B /* _UIViewLayoutManager.m in Sources */,
 				145335661226F03E0005644F /* UITextLayer.m in Sources */,
@@ -2443,9 +2469,11 @@
 				148985D812EE2CFF003D4751 /* UITableViewCell.m in Sources */,
 				148985DA12EE2CFF003D4751 /* UITableViewController.m in Sources */,
 				78D533DE133A9434006F17CA /* UISearchDisplayController.m in Sources */,
+				F91A1E0717A71AD7008E87F5 /* _UITextViewPosition.m in Sources */,
 				148985DC12EE2CFF003D4751 /* UITapGestureRecognizer.m in Sources */,
 				148985DE12EE2CFF003D4751 /* UITextField.m in Sources */,
 				148985E112EE2CFF003D4751 /* UITextView.m in Sources */,
+				F91A1E0317A71809008E87F5 /* _UITextInputController.m in Sources */,
 				148985E312EE2CFF003D4751 /* UIToolbar.m in Sources */,
 				148985E512EE2CFF003D4751 /* UITouch.m in Sources */,
 				148985E712EE2CFF003D4751 /* UIView.m in Sources */,

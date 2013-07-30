@@ -284,7 +284,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (NSArray*) indexPathsForVisibleRows
 {
-    [self _layoutTableView];
+    [self layoutIfNeeded];
     
     NSMutableArray* indexes = [NSMutableArray arrayWithCapacity:[_cachedCells count]];
     const CGRect bounds = self.bounds;
@@ -424,6 +424,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     [self _updateSectionsCache];
     [self _setContentSize];
     _needsReload = NO;
+    [self setNeedsLayout];
 }
 
 - (void) reloadRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {

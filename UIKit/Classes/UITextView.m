@@ -40,7 +40,11 @@
 #import "UIColor+AppKit.h"
 #import "UIFont+UIPrivate.h"
 #import "_UITextStorage.h"
+#import "_UITextInputController.h"
+#import "_UITextInputPlus.h"
 #import "_UITextInteractionAssistant.h"
+#import "_UITextViewPosition.h"
+#import "_UITextViewRange.h"
 //
 #import <AppKit/NSColor.h>
 #import <AppKit/NSCursor.h>
@@ -75,17 +79,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 @end
 
 
-@interface _UITextViewPosition : UITextPosition
-+ (instancetype) positionWithOffset:(NSInteger)offset;
-- (instancetype) initWithOffset:(NSInteger)offset;
-@property (nonatomic, assign) NSInteger offset;
-@end
-
-
-@interface _UITextViewRange : UITextRange
-- (instancetype) initWithStart:(_UITextViewPosition*)start end:(_UITextViewPosition*)end;
-@property (nonatomic, readonly) _UITextViewPosition* start;
-@property (nonatomic, readonly) _UITextViewPosition* end;
+@interface UITextView () <_UITextInputControllerDelegate, _UITextInputPlus>
 @end
 
 
@@ -97,32 +91,41 @@ static NSString* const kUIEditableKey = @"UIEditable";
     _UITextContainerView* _textContainerView;
 
     _UITextInteractionAssistant* _interactionAssistant;
+    _UITextInputController* _inputController;
     
     struct {
-        BOOL shouldBeginEditing : 1;
-        BOOL didBeginEditing : 1;
-        BOOL shouldEndEditing : 1;
-        BOOL didEndEditing : 1;
-        BOOL shouldChangeText : 1;
-        BOOL didChange : 1;
-        BOOL didChangeSelection : 1;
-        BOOL doCommandBySelector : 1;
+        bool shouldBeginEditing : 1;
+        bool didBeginEditing : 1;
+        bool shouldEndEditing : 1;
+        bool didEndEditing : 1;
+        bool shouldChangeText : 1;
+        bool didChange : 1;
+        bool didChangeSelection : 1;
+        bool doCommandBySelector : 1;
     } _delegateHas;
+    
+    struct {
+        bool selectionWillChange : 1;
+        bool selectionDidChange : 1;
+        bool textWillChange : 1;
+        bool textDidChange : 1;
+    } _inputDelegateHas;
 
     struct {
-        bool didBeginEditing : 1;
+        bool editing : 1;
     } _flags;
     
+    BOOL _stillSelecting;
     NSUInteger _selectionOrigin;
     NSSelectionGranularity _selectionGranularity;
 }
 @dynamic delegate;
 @synthesize markedTextStyle = _markedTextStyle;
 @synthesize selectionAffinity = _selectionAffinity;
-@synthesize inputDelegate;
+@synthesize inputDelegate = _inputDelegate;
 @synthesize tokenizer;
 
-static void _commonInitForUITextView(UITextView* self)
+static void _commonInitForUITextView(UITextView* self, NSTextContainer* textContainer)
 {
     self.textColor = [UIColor blackColor];
     self.font = [UIFont systemFontOfSize:17];
@@ -132,6 +135,16 @@ static void _commonInitForUITextView(UITextView* self)
     self.clipsToBounds = YES;
 
     self->_selectedRange = (NSRange){ NSNotFound, 0 };
+
+    self->_textContainer = textContainer ?: [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
+    [self->_textContainer setWidthTracksTextView:YES];
+    self->_textStorage = [[_UITextStorage alloc] init];
+    self->_layoutManager = [[NSLayoutManager alloc] init];
+    [self->_layoutManager addTextContainer:self->_textContainer];
+    [self->_textStorage addLayoutManager:self->_layoutManager];
+    
+    self->_inputController = [[_UITextInputController alloc] initWithLayoutManager:self->_layoutManager];
+    [self->_inputController setDelegate:self];
     
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
     [self->_textContainerView setTextContainer:[self textContainer]];
@@ -142,8 +155,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (instancetype) initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)textContainer
 {
     if (nil != (self = [super initWithFrame:frame])) {
-        _textContainer = textContainer;
-        _commonInitForUITextView(self);
+        _commonInitForUITextView(self, textContainer);
     }
     return self;
 }
@@ -156,7 +168,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
-        _commonInitForUITextView(self);
+        _commonInitForUITextView(self, nil);
         if ([coder containsValueForKey:kUIEditableKey]) {
             self.editable = [coder decodeBoolForKey:kUIEditableKey];
         }
@@ -260,7 +272,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (void) setSelectedRange:(NSRange)range
 {
-    [self _setSelectedRange:range affinity:_selectionAffinity stillSelecting:NO];
+    [_inputController setSelectedRange:range];
 }
 
 - (NSString*) text
@@ -291,19 +303,6 @@ static void _commonInitForUITextView(UITextView* self)
     [_textContainerView setNeedsDisplay];
 }
 
-- (NSTextContainer*) textContainer
-{
-    if (!_textContainer) {
-        _textContainer = [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
-        [_textContainer setWidthTracksTextView:YES];
-        _textStorage = [[_UITextStorage alloc] init];
-        _layoutManager = [[NSLayoutManager alloc] init];
-        [_layoutManager addTextContainer:_textContainer];
-        [_textStorage addLayoutManager:_layoutManager];
-    }
-    return _textContainer;
-}
-
 - (NSTextStorage*) textStorage
 {
     return [[[self textContainer] layoutManager] textStorage];
@@ -330,6 +329,17 @@ static void _commonInitForUITextView(UITextView* self)
         _delegateHas.didChange = [delegate respondsToSelector:@selector(textViewDidChange:)];
         _delegateHas.didChangeSelection = [delegate respondsToSelector:@selector(textViewDidChangeSelection:)];
         _delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textView:doCommandBySelector:)];
+    }
+}
+
+- (void) setInputDelegate:(id<UITextInputDelegate>)inputDelegate
+{
+    if (_inputDelegate != inputDelegate) {
+        _inputDelegate = inputDelegate;
+        _inputDelegateHas.selectionDidChange = [inputDelegate respondsToSelector:@selector(selectionDidChange:)];
+        _inputDelegateHas.selectionWillChange = [inputDelegate respondsToSelector:@selector(selectionWillChange:)];
+        _inputDelegateHas.textDidChange = [inputDelegate respondsToSelector:@selector(textDidChange:)];
+        _inputDelegateHas.textWillChange = [inputDelegate respondsToSelector:@selector(textWillChange:)];
     }
 }
 
@@ -418,6 +428,7 @@ static void _commonInitForUITextView(UITextView* self)
         [self _characterIndexAtPoint:[touch locationInView:_textContainerView]],
         0
     }];
+    _stillSelecting = YES;
     [super touchesBegan:touches withEvent:event];
 }
 
@@ -433,32 +444,57 @@ static void _commonInitForUITextView(UITextView* self)
         range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
         [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
     }
-    [self _setSelectedRange:range affinity:_selectionAffinity stillSelecting:YES];
+    [self setSelectedRange:range];
     [super touchesMoved:touches withEvent:event];
+}
+
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    _stillSelecting = NO;
 }
 
 - (BOOL) canBecomeFirstResponder
 {
-    return (self.window != nil);
+    return (self.window != nil) && [self isEditable] && (!_delegateHas.shouldBeginEditing || [[self delegate] textViewShouldBeginEditing:self]);
 }
 
 - (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
+        _flags.editing = YES;
+
+        if (_delegateHas.didBeginEditing) {
+            [[self delegate] textViewDidBeginEditing:self];
+        }
+        
         [_textContainerView setShouldShowInsertionPoint:YES];
-        _flags.didBeginEditing = NO;
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidBeginEditingNotification object:self];
         return YES;
     }
     return NO;
 }
 
+- (BOOL) canResignFirstResponder
+{
+    return (!_delegateHas.shouldEndEditing || [[self delegate] textViewShouldEndEditing:self]);
+}
+
 - (BOOL) resignFirstResponder
 {
-    if ([self _endEditingIfNecessary]) {
-        if ([super resignFirstResponder]) {
-            [_textContainerView setShouldShowInsertionPoint:NO];
-            return YES;
+    if ([super resignFirstResponder]) {
+        [_textContainerView setShouldShowInsertionPoint:NO];
+        
+        if (_delegateHas.didEndEditing) {
+            [[self delegate] textViewDidEndEditing:self];
         }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidEndEditingNotification object:self];
+        
+        _flags.editing = NO;
+        
+        return YES;
     }
     return NO;
 }
@@ -760,14 +796,11 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (BOOL) hasText
 {
-    return [[self textStorage] length] > 0;
+    return [_inputController hasText];
 }
 
 - (void) insertText:(NSString*)text
 {
-    if (![self _beginEditingIfNecessary]) {
-        return;
-    }
     NSRange range = [self selectedRange];
     if (![self _canChangeTextInRange:range replacementText:text]) {
         return;
@@ -801,60 +834,27 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSString*) textInRange:(_UITextViewRange*)range
 {
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    if (!range) {
-        return nil;
-    }
-    NSInteger start = [[range start] offset];
-    NSInteger end = [[range end] offset];
-    NSTextStorage* textStorage = [self textStorage];
-    if (start < 0 || end < start || end > [textStorage length]) {
-        return nil;
-    }
-    return [[textStorage string] substringWithRange:(NSRange){ start, end - start }];
+    return [_inputController textInRange:range];
 }
 
 - (void) replaceRange:(_UITextViewRange*)range withText:(NSString*)text
 {
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    NSInteger start = [[range start] offset];
-    NSInteger end = [[range end] offset];
-    if (start < 0 || end < start || end > [[self textStorage] length]) {
-        return /* Question: Exception? */;
-    }
-    [self _replaceCharactersInRange:(NSRange){ start, end - start } withString:text];
+    [_inputController replaceRange:range withText:text];
 }
 
 - (BOOL) shouldChangeTextInRange:(_UITextViewRange*)range replacementText:(NSString*)text
 {
-    NSInteger start = [[range start] offset];
-    NSInteger end = [[range end] offset];
-    if (start < 0 || end < start || end > [[self textStorage] length]) {
-        return NO;
-    }
-    return [self _canChangeTextInRange:(NSRange){ start, end - start } replacementText:text];
+    return [_inputController shouldChangeTextInRange:range replacementText:text];
 }
 
 - (UITextRange*) selectedTextRange
 {
-    NSRange range = [self selectedRange];
-    if (range.location == NSNotFound && range.length == 0) {
-        return nil;
-    } else {
-        return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
-    }
+    return [_inputController selectedTextRange];
 }
 
 - (void) setSelectedTextRange:(_UITextViewRange*)selectedTextRange
 {
-    NSAssert(!selectedTextRange || [selectedTextRange isKindOfClass:[_UITextViewRange class]], @"???");
-    if (selectedTextRange) {
-        NSInteger start = [[selectedTextRange start] offset];
-        NSInteger count = [[selectedTextRange end] offset] - start;
-        [self setSelectedRange:(NSRange){ start, count }];
-    } else {
-        [self setSelectedRange:(NSRange){ NSNotFound, 0 }];
-    }
+    [_inputController setSelectedTextRange:selectedTextRange];
 }
 
 - (UITextRange*) markedTextRange
@@ -874,84 +874,39 @@ static void _commonInitForUITextView(UITextView* self)
 #warning Implement -unmarkText
 }
 
-- (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
+- (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    NSAssert([fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    NSAssert([toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    return [[_UITextViewRange alloc] initWithStart:fromPosition end:toPosition];
+    return [_inputController textRangeFromPosition:fromPosition toPosition:toPosition];
 }
 
-- (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position offset:(NSInteger)offset
+- (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position) {
-        return nil;
-    }
-    NSInteger newOffset = [position offset] + offset;
-    if (newOffset < 0 || newOffset > [[self textStorage] length]) {
-        return nil;
-    }
-    return [_UITextViewPosition positionWithOffset:newOffset];
+    return [_inputController positionFromPosition:position offset:offset];
 }
 
 - (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position) {
-        return nil;
-    }
-    NSInteger index = [position offset];
-    switch (direction) {
-        case UITextLayoutDirectionDown: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingDownFromIndex:index by:offset]];
-        }
-        case UITextLayoutDirectionUp: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingUpFromIndex:index by:offset]];
-        }
-        case UITextLayoutDirectionLeft: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingLeftFromIndex:index by:offset]];
-        }
-        case UITextLayoutDirectionRight: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingRightFromIndex:index by:offset]];
-        }
-    }
+    return [_inputController positionFromPosition:position inDirection:direction offset:offset];
 }
 
 - (UITextPosition*) beginningOfDocument
 {
-    return [_UITextViewPosition positionWithOffset:0];
+    return [_inputController beginningOfDocument];
 }
 
 - (UITextPosition*) endOfDocument
 {
-    return [_UITextViewPosition positionWithOffset:[[self textStorage] length]];
+    return [_inputController endOfDocument];
 }
 
-- (NSComparisonResult) comparePosition:(_UITextViewPosition*)position toPosition:(_UITextViewPosition*)other
+- (NSComparisonResult) comparePosition:(UITextPosition*)position toPosition:(UITextPosition*)other
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    NSAssert(!other || [other isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position || !other) {
-        return NSOrderedSame;
-    }
-    NSInteger delta = [position offset] - [other offset];
-    if (delta > 0) {
-        return NSOrderedDescending;
-    } else if (delta < 0) {
-        return NSOrderedAscending;
-    } else {
-        return NSOrderedSame;
-    }
+    return [_inputController comparePosition:position toPosition:other];
 }
 
-- (NSInteger) offsetFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
+- (NSInteger) offsetFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    NSAssert(!fromPosition || [fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    NSAssert(!toPosition || [toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!fromPosition || !toPosition) {
-        return 0;
-    }
-    return [toPosition offset] - [fromPosition offset];
+    return [_inputController offsetFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionWithinRange:(_UITextViewRange*)range farthestInDirection:(UITextLayoutDirection)direction
@@ -1008,35 +963,69 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
 {
-    NSInteger offset = [self _characterIndexAtPoint:point];
-    return [_UITextViewPosition positionWithOffset:offset];
+    return [_inputController closestPositionToPoint:point];
 }
 
-- (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(_UITextViewRange*)range
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(UITextRange*)range
 {
-    UITextPosition* position = [self closestPositionToPoint:point];
-    if (NSOrderedDescending == [self comparePosition:[range start] toPosition:position]) {
-        return [range start];
-    }
-    if (NSOrderedAscending == [self comparePosition:[range end] toPosition:position]) {
-        return [range end];
-    }
-    return position;
+    return [_inputController closestPositionToPoint:point withinRange:range];
 }
 
 - (UITextRange*) characterRangeAtPoint:(CGPoint)point
 {
-    NSTextContainer* textContainer = [self textContainer];
-    NSLayoutManager* layoutManager = [textContainer layoutManager];
-    
-    NSRange actualGlyphRange;
-    NSUInteger glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer];
-    NSRange range = [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:&actualGlyphRange];
-    if (!range.length) {
-        return nil;
-    }
+    return [_inputController characterRangeAtPoint:point];
+}
 
-    return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
+
+#pragma mark _UITextInputPlus
+
+- (void) beginSelectionChange
+{
+    if (_inputDelegateHas.selectionWillChange) {
+        [[self inputDelegate] selectionWillChange:self];
+    }
+}
+
+- (void) endSelectionChange
+{
+    if (_inputDelegateHas.selectionDidChange) {
+        [[self inputDelegate] selectionDidChange:self];
+    }
+}
+
+
+#pragma mark _UITextInputController
+
+- (NSRange) textInput:(_UITextInputController*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
+{
+    [self beginSelectionChange];
+    if (!_stillSelecting && !toRange.length) {
+        _selectionOrigin = toRange.location;
+    }
+    NSLayoutManager* layoutManager = [self layoutManager];
+    if (_selectedRange.length) {
+        [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:_selectedRange];
+    }
+    return toRange;
+}
+
+- (void) textInputDidChangeSelection:(_UITextInputController*)controller
+{
+    NSLayoutManager* layoutManager = [self layoutManager];
+    NSRange selectedRange = [controller selectedRange];
+    _textContainerView.selectedRange = selectedRange;
+    if (selectedRange.length) {
+        [layoutManager addTemporaryAttribute:NSBackgroundColorAttributeName value:[NSColor selectedTextBackgroundColor] forCharacterRange:selectedRange];
+    }
+    if (_delegateHas.didChangeSelection) {
+        [[self delegate] textViewDidChangeSelection:self];
+    }
+    [self endSelectionChange];
+}
+
+- (void) textInputDidChange:(_UITextInputController*)controller
+{
+    [self _didChangeText];
 }
 
 
@@ -1058,39 +1047,6 @@ static void _commonInitForUITextView(UITextView* self)
     } else {
         return index + (fraction > 0.75);
     }
-}
-
-- (BOOL) _beginEditingIfNecessary
-{
-    if (![self isEditable]) {
-        return NO;
-    }
-    if (!_flags.didBeginEditing) {
-        if (_delegateHas.shouldBeginEditing && ![[self delegate] textViewShouldBeginEditing:self]) {
-            return NO;
-        }
-        if (_delegateHas.didBeginEditing) {
-            [[self delegate] textViewDidBeginEditing:self];
-        }
-        _flags.didBeginEditing = YES;
-        [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidBeginEditingNotification object:self];
-    }
-    return YES;
-}
-
-- (BOOL) _endEditingIfNecessary
-{
-    if (_flags.didBeginEditing) {
-        if (_delegateHas.shouldEndEditing && ![[self delegate] textViewShouldEndEditing:self]) {
-            return NO;
-        }
-        if (_delegateHas.didEndEditing) {
-            [[self delegate] textViewDidEndEditing:self];
-        }
-        _flags.didBeginEditing = NO;
-        [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidEndEditingNotification object:self];
-    }
-    return YES;
 }
 
 - (BOOL) _canChangeTextInRange:(NSRange)range replacementText:(NSString*)string
@@ -1134,33 +1090,6 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) _setAndScrollToRange:(NSRange)range
 {
     [self _setAndScrollToRange:range upstream:YES];
-}
-
-- (void) _setSelectedRange:(NSRange)selectedRange affinity:(UITextStorageDirection)affinity stillSelecting:(BOOL)stillSelecting
-{
-    if (_selectedRange.location == selectedRange.location && _selectedRange.length == selectedRange.length) {
-        return;
-    }
-    if (!stillSelecting && !selectedRange.length) {
-        _selectionOrigin = selectedRange.location;
-    }
-
-    NSLayoutManager* layoutManager = [self layoutManager];
-    if (_selectedRange.length) {
-        [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:_selectedRange];
-    }
-    if (selectedRange.length) {
-        [layoutManager addTemporaryAttribute:NSBackgroundColorAttributeName value:[NSColor selectedTextBackgroundColor] forCharacterRange:selectedRange];
-    }
-    _selectedRange = selectedRange;
-    _selectionAffinity = affinity;
-    _selectionGranularity = NSSelectByCharacter;
-
-    _textContainerView.selectedRange = selectedRange;
-    
-    if (_delegateHas.didChangeSelection) {
-        [self.delegate textViewDidChangeSelection:self];
-    }
 }
 
 - (NSDictionary*) _stringAttributes
@@ -1543,63 +1472,3 @@ static void _commonInitForUITextView(UITextView* self)
 }
 
 @end
-
-
-@implementation _UITextViewPosition
-
-static NSUInteger hashForTextPosition;
-
-+ (void) initialize
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        hashForTextPosition = [[_UITextViewPosition class] hash];
-    });
-}
-
-+ (instancetype) positionWithOffset:(NSInteger)offset
-{
-    return [[_UITextViewPosition alloc] initWithOffset:offset];
-}
-
-- (instancetype) initWithOffset:(NSInteger)offset
-{
-    if (nil != (self = [super init])) {
-        _offset = offset;
-    }
-    return self;
-}
-
-- (BOOL) isEqual:(id)object
-{
-    return self == object || ([object isKindOfClass:[_UITextViewPosition class]] && [((_UITextViewPosition*)object) offset] == [self offset]);
-}
-
-- (NSUInteger) hash
-{
-    return (37 * _offset) ^ hashForTextPosition;
-}
-
-@end
-
-
-@implementation _UITextViewRange 
-@synthesize start = _start;
-@synthesize end = _end;
-
-- (instancetype) initWithStart:(_UITextViewPosition*)start end:(_UITextViewPosition*)end
-{
-    if (nil != (self = [super init])) {
-        _start = start;
-        _end = end;
-    }
-    return self;
-}
-
-- (BOOL) isEmpty
-{
-    return _start == _end;
-}
-
-@end
-
