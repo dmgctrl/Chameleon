@@ -40,6 +40,7 @@
 #import "UIPopoverOverlayNSView.h"
 #import "UIPopoverNSView.h"
 #import "UIImage+UIPrivate.h"
+#import "NSEvent+UIKit.h"
 
 
 @implementation UIPopoverController {
@@ -279,7 +280,7 @@
 
 - (void) _sendLeftMouseDownWithEvent:(NSEvent *)theNSEvent
 {
-    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    CGPoint screenLocation = [theNSEvent locationInScreen:[_presentingWindow screen]];
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
         _isTouchValid = YES;
@@ -305,7 +306,7 @@
 
 - (void) _sendRightMouseDownWithEvent:(NSEvent *)theNSEvent
 {
-    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    CGPoint screenLocation = [theNSEvent locationInScreen:[_presentingWindow screen]];
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
         _isTouchValid = YES;
