@@ -177,14 +177,19 @@
 
 - (BOOL)respondsToSelector:(SEL)cmd
 {
-    if (cmd == @selector(copy:) ||
+    if (cmd == @selector(undo:)) {
+        return [[self undoManagerForFirstResponder] canUndo];
+    } else if (cmd == @selector(redo:)) {
+        return [[self undoManagerForFirstResponder] canRedo];
+    } else if (cmd == @selector(copy:) ||
         cmd == @selector(cut:) ||
         cmd == @selector(delete:) ||
         cmd == @selector(paste:) ||
         cmd == @selector(select:) ||
         cmd == @selector(selectAll:) ||
         cmd == @selector(commit:) ||
-        cmd == @selector(cancel:)) {
+        cmd == @selector(cancel:)
+    ) {
         return [self firstResponderCanPerformAction:cmd withSender:nil];
     } else if (cmd == @selector(cancelOperation:)) {
         return [self firstResponderCanPerformAction:@selector(cancel:) withSender:nil];
@@ -203,6 +208,7 @@
 // these are special additions
 - (void)cancel:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
 - (void)commit:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
+
 
 // this is a special case, UIKit doesn't normally send anything like this.
 // if a UIKit first responder can't handle it, then we'll pass it through to the next responder
@@ -336,6 +342,23 @@
     } else {
         [self _launchApplicationWithDefaultWindow:nil];
     }
+}
+
+#pragma mark Undo & Redo
+
+- (NSUndoManager*) undoManagerForFirstResponder
+{
+    return [[[UIApplication sharedApplication] _firstResponderForScreen:_screen] undoManager];
+}
+
+- (void) undo:(id)sender
+{
+    [[self undoManagerForFirstResponder] undo];
+}
+
+- (void) redo:(id)sender
+{
+    [[self undoManagerForFirstResponder] redo];
 }
 
 @end
