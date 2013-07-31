@@ -33,19 +33,17 @@
 
 @implementation UITapGestureRecognizer
 
-- (id)initWithTarget:(id)target action:(SEL)action
+- (id) initWithTarget:(id)target action:(SEL)action
 {
-    if ((self=[super initWithTarget:target action:action])) {
+    if (nil != (self = [super initWithTarget:target action:action])) {
         _numberOfTapsRequired = 1;
         _numberOfTouchesRequired = 1;
     }
     return self;
 }
 
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer
+- (BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer
 {
-    // this logic is here based on a note in the docs for -canBePreventedByGestureRecognizer:
-    // it may not be correct :)
     if ([preventingGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
         return (((UITapGestureRecognizer *)preventingGestureRecognizer).numberOfTapsRequired > self.numberOfTapsRequired);
     } else {
@@ -53,10 +51,8 @@
     }
 }
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer
+- (BOOL) canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer
 {
-    // this logic is here based on a note in the docs for -canPreventGestureRecognizer:
-    // it may not be correct :)
     if ([preventedGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
         return (((UITapGestureRecognizer *)preventedGestureRecognizer).numberOfTapsRequired <= self.numberOfTapsRequired);
     } else {
@@ -64,7 +60,7 @@
     }
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent*)event
 {
     UITouch *touch = [touches anyObject];
     if (touch.tapCount >= self.numberOfTapsRequired) {
@@ -76,21 +72,21 @@
     }
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent*)event
 {
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateCancelled;
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent*)event
 {
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateEnded;
     }
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent*)event
 {
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateCancelled;
