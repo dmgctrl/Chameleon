@@ -578,6 +578,11 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 #pragma mark UIResponder
 
+- (BOOL) acceptsFirstMouse
+{
+    return [self canBecomeFirstResponder];
+}
+
 - (BOOL) canBecomeFirstResponder {
 	return self.window != nil;
 }

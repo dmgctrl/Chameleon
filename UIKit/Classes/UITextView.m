@@ -411,6 +411,11 @@ static void _commonInitForUITextView(UITextView* self)
 
 #pragma mark UIResponder
 
+- (BOOL) acceptsFirstMouse
+{
+    return [self canBecomeFirstResponder];
+}
+
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch* touch = [[event allTouches] anyObject];
