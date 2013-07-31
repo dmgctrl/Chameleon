@@ -315,9 +315,7 @@
 {
     NSAssert(!selectedTextRange || [selectedTextRange isKindOfClass:[_UITextViewRange class]], @"???");
     if (selectedTextRange) {
-        NSInteger start = [[selectedTextRange start] offset];
-        NSInteger count = [[selectedTextRange end] offset] - start;
-        [self setSelectedRange:(NSRange){ start, count }];
+        [self setSelectedRange:[selectedTextRange NSRange]];
     } else {
         [self setSelectedRange:(NSRange){ NSNotFound, 0 }];
     }
@@ -343,6 +341,39 @@
     NSAssert([fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
     NSAssert([toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
     return [[_UITextViewRange alloc] initWithStart:fromPosition end:toPosition];
+}
+
+
+#pragma mark _UITextInputPlus
+
+- (UITextRange*) textRangeOfWordContainingPosition:(_UITextViewPosition*)position
+{
+    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+    if (!position) {
+        return nil;
+    }
+    
+    NSString* text = [[self _textStorage] string];
+    NSInteger index = [position offset];
+    __block NSUInteger start = 0;
+    [text enumerateSubstringsInRange:NSMakeRange(0, index) options:(NSStringEnumerationByWords | NSStringEnumerationReverse) usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
+        if (enclosingRange.length > substringRange.length) {
+            start = enclosingRange.location + substringRange.length;
+        } else {
+            start = substringRange.location;
+        }
+        *stop = YES;
+    }];
+    __block NSUInteger end = 0;
+    [text enumerateSubstringsInRange:NSMakeRange(index, [text length] - index) options:(NSStringEnumerationByWords) usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
+        if (enclosingRange.location < substringRange.location) {
+            end = substringRange.location;
+        } else {
+            end = substringRange.location + substringRange.length;
+        }
+        *stop = YES;
+    }];
+    return [_UITextViewRange rangeWithNSRange:(NSRange){ start, end - start }];
 }
 
 

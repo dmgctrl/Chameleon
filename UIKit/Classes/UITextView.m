@@ -415,9 +415,10 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     [super willMoveToWindow:window];
     if (window) {
         _interactionAssistant = [[_UITextInteractionAssistant alloc] initWithView:self];
-        [self addGestureRecognizer:[_interactionAssistant singleTapGesture]];
+        [_interactionAssistant addOneFingerTapRecognizerToView:self];
+        [_interactionAssistant addOneFingerDoubleTapRecognizerToView:self];
     } else {
-        [self removeGestureRecognizer:[_interactionAssistant singleTapGesture]];
+        [_interactionAssistant removeGestureRecognizersFromView:self];
         _interactionAssistant = nil;
     }
 }
@@ -956,6 +957,11 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     if (_inputDelegateHas.selectionDidChange) {
         [[self inputDelegate] selectionDidChange:self];
     }
+}
+
+- (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position
+{
+    return [_inputController textRangeOfWordContainingPosition:position];
 }
 
 

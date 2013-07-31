@@ -4,4 +4,5 @@
 @optional
 - (void) beginSelectionChange;
 - (void) endSelectionChange;
+- (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position;
 @end

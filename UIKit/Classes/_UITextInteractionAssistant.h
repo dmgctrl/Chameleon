@@ -9,6 +9,9 @@
 - (instancetype) initWithView:(UIView<UITextInput>*)view;
 
 @property (readonly, nonatomic) UIResponder<UITextInput>* view;
-@property (readonly, nonatomic) UITapGestureRecognizer* singleTapGesture;
+
+- (UITapGestureRecognizer*) addOneFingerTapRecognizerToView:(UIView*)view;
+- (UITapGestureRecognizer*) addOneFingerDoubleTapRecognizerToView:(UIView*)view;
+- (void) removeGestureRecognizersFromView:(UIView*)view;
 
 @end

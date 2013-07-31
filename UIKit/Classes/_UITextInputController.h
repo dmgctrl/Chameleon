@@ -28,4 +28,6 @@ UIKIT_HIDDEN
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager;
 
+- (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position;
+
 @end
