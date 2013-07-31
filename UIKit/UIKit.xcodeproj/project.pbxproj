@@ -433,6 +433,8 @@
 		F97BE02115AFD6E00081F45A /* UIAppearanceProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */; };
 		F97BE02215AFD6E00081F45A /* UIAppearanceProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */; };
 		F97BE02315AFD6E00081F45A /* UIAppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */; };
+		F9847F8D17A2CB7A00B14DC1 /* NSEvent+UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = F9847F8B17A2CB7A00B14DC1 /* NSEvent+UIKit.h */; };
+		F9847F8E17A2CB7A00B14DC1 /* NSEvent+UIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = F9847F8C17A2CB7A00B14DC1 /* NSEvent+UIKit.m */; };
 		F98A10AD17737A3000BF8586 /* UIStringDrawingSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */; };
 		F99115461772230200B4389A /* UIKitDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115451772230200B4389A /* UIKitDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F99115481772236700B4389A /* UINibDeclarations.h in Headers */ = {isa = PBXBuildFile; fileRef = F99115471772236700B4389A /* UINibDeclarations.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -966,6 +968,8 @@
 		F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProperty.m; sourceTree = "<group>"; };
 		F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearanceProxy.h; sourceTree = "<group>"; };
 		F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProxy.m; sourceTree = "<group>"; };
+		F9847F8B17A2CB7A00B14DC1 /* NSEvent+UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEvent+UIKit.h"; sourceTree = "<group>"; };
+		F9847F8C17A2CB7A00B14DC1 /* NSEvent+UIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEvent+UIKit.m"; sourceTree = "<group>"; };
 		F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStringDrawingSpec.m; sourceTree = "<group>"; };
 		F99115451772230200B4389A /* UIKitDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIKitDefines.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F99115471772236700B4389A /* UINibDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDeclarations.h; sourceTree = "<group>"; };
@@ -1734,6 +1738,8 @@
 			isa = PBXGroup;
 			children = (
 				F9EB69551768EE6B00EBBD4C /* AppKitIntegration.h */,
+				F9847F8B17A2CB7A00B14DC1 /* NSEvent+UIKit.h */,
+				F9847F8C17A2CB7A00B14DC1 /* NSEvent+UIKit.m */,
 				148984F112EE2CFE003D4751 /* UIActionSheet+AppKit.h */,
 				148984F812EE2CFE003D4751 /* UIApplication+AppKit.h */,
 				1489850412EE2CFE003D4751 /* UIColor+AppKit.h */,
@@ -2042,6 +2048,7 @@
 				148985EC12EE2CFF003D4751 /* UIWebView.h in Headers */,
 				148985EE12EE2CFF003D4751 /* UIWindow.h in Headers */,
 				1489860212EE2D9F003D4751 /* UIRotationGestureRecognizer.h in Headers */,
+				F9847F8D17A2CB7A00B14DC1 /* NSEvent+UIKit.h in Headers */,
 				1489860612EE2DBD003D4751 /* UISwipeGestureRecognizer.h in Headers */,
 				1489860A12EE2DDC003D4751 /* UIPanGestureRecognizer.h in Headers */,
 				149148BC12EE45ED00F7C34E /* UIGestureRecognizerSubclass.h in Headers */,
@@ -2519,6 +2526,7 @@
 				3AC20B97179606AD0070E759 /* UIPrintFormatter.m in Sources */,
 				F94CAD6817998F3900A560E8 /* UITableViewHeaderFooterView.m in Sources */,
 				F94CAD771799965300A560E8 /* UIRefreshControl.m in Sources */,
+				F9847F8E17A2CB7A00B14DC1 /* NSEvent+UIKit.m in Sources */,
 				F913BAE8179DAECD0095FE6F /* UITextInput.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2617,7 +2625,7 @@
 				GCC_PREFIX_HEADER = UIKit_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = UIKit;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
@@ -2639,7 +2647,7 @@
 				GCC_PREFIX_HEADER = UIKit_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = UIKit;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
