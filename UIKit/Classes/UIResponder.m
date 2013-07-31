@@ -170,7 +170,11 @@
 #pragma mark Getting the Undo Manager
 - (NSUndoManager *)undoManager
 {
-    return [[self nextResponder] undoManager];
+    NSUndoManager *undoManager = [[self nextResponder] undoManager];
+    if (!undoManager) {
+        undoManager = [[NSUndoManager alloc] init];
+    }
+    return undoManager;
 }
 
 #pragma mark Validating Commands
