@@ -175,7 +175,7 @@
             if (transition->shouldNotify) {
                 for (UIAction* action in _registeredActions) {
                     @try {
-                        [action.target performSelector:action.action withObject:self];
+                        [[UIApplication sharedApplication] sendAction:action.action to:action.target from:self forEvent:nil];
                     } @catch (id) {
                         /* IGNORED */
                     }
