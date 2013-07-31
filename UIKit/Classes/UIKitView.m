@@ -36,6 +36,8 @@
 #import "UIColor.h"
 #import "UIPopoverController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "NSEvent+UIKit.h"
+#import "UIResponder+AppKit.h"
 
 
 @implementation UIKitView {
@@ -138,6 +140,16 @@
         [self setScreenLayer];
     }
     [self updateUIKitView];
+}
+
+- (BOOL) acceptsFirstMouse:(NSEvent*)event
+{
+    UIScreen* screen = [[self UIWindow] screen];
+    UIResponder* responder = [screen _hitTest:[event locationInScreen:screen] event:nil];
+    if ([responder respondsToSelector:@selector(acceptsFirstMouse)]) {
+        return [responder acceptsFirstMouse];
+    }
+    return [super acceptsFirstMouse:event];
 }
 
 - (BOOL) acceptsFirstResponder

@@ -62,6 +62,8 @@
 - (void) doCommandBySelector:(SEL)selector;
 - (BOOL) tryToPerform:(SEL)selector with:(id)object;
 
+- (BOOL) acceptsFirstMouse;
+
 @end
 
 
