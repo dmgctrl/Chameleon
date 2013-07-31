@@ -61,7 +61,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
     NSMutableSet* _reusableCells;
     NSMutableArray* _sections;
     NSMutableArray* _selectedRows;
-    BOOL _needsReload;
     
     struct {
         BOOL heightForRowAtIndexPath : 1;
@@ -423,7 +422,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     [_selectedRows removeAllObjects];
     [self _updateSectionsCache];
     [self _setContentSize];
-    _needsReload = NO;
+
     [self setNeedsLayout];
 }
 
@@ -489,7 +488,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
     _dataSourceHas.numberOfSectionsInTableView = [_dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)];
     _dataSourceHas.titleForHeaderInSection = [_dataSource respondsToSelector:@selector(tableView:titleForHeaderInSection:)];
     _dataSourceHas.titleForFooterInSection = [_dataSource respondsToSelector:@selector(tableView:titleForFooterInSection:)];
-    [self _setNeedsReload];
+    [self reloadData];
 }
 
 - (void) setDelegate:(id<UITableViewDelegate>)newDelegate
@@ -573,7 +572,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
 - (void) layoutSubviews
 {
     [super layoutSubviews];
-    [self _reloadDataIfNeeded];
     [self _layoutTableView];
 }
 
@@ -718,8 +716,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
     if (_style == UITableViewStylePlain && !self.backgroundColor) {
         self.backgroundColor = [UIColor whiteColor];
     }
-    
-    [self _setNeedsReload];
 }
 
 - (UITableViewCell*) _ensureCellExistsAtIndexPath:(NSIndexPath*)indexPath
@@ -905,13 +901,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
     return [self _CGRectFromVerticalOffset:offset height:height];
 }
 
-- (void) _reloadDataIfNeeded
-{
-    if (_needsReload) {
-        [self reloadData];
-    }
-}
-
 - (void) _scrollRectToVisible:(CGRect)aRect atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated
 {
     if (!CGRectIsNull(aRect) && aRect.size.height > 0) {
@@ -977,12 +966,6 @@ static NSString* const kUIStyleKey = @"UIStyle";
         height += _tableFooterView.frame.size.height;
     }
     self.contentSize = CGSizeMake(0, height - 1);
-}
-
-- (void) _setNeedsReload
-{
-    _needsReload = YES;
-    [self setNeedsLayout];
 }
 
 - (void) _showEditMenuForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -1084,7 +1067,7 @@ static NSString* const kUIStyleKey = @"UIStyle";
 
 - (void) selectRowAtIndexPath:(NSIndexPath*)indexPath exclusively:(BOOL)exclusively animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition
 {
-    [self _reloadDataIfNeeded];
+    [self layoutIfNeeded];
     [self scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
     
     if (!self.allowsMultipleSelection) {

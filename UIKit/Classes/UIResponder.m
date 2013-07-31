@@ -168,10 +168,12 @@
 }
 
 #pragma mark Getting the Undo Manager
-- (NSUndoManager *)undoManager
+
+- (NSUndoManager*) undoManager
 {
     return [[self nextResponder] undoManager];
 }
+
 
 #pragma mark Validating Commands
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
@@ -179,7 +181,12 @@
     if ([[self class] instancesRespondToSelector:action]) {
         return YES;
     } else {
-        return [[self nextResponder] canPerformAction:action withSender:sender];
+        UIResponder* nextResponder = [self nextResponder];
+        if ([nextResponder isKindOfClass:[UIResponder class]]) {
+            return [[self nextResponder] canPerformAction:action withSender:sender];
+        } else {
+            return NO;
+        }
     }
 }
 
