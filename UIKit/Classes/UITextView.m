@@ -252,7 +252,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) setInputDelegate:(id<UITextInputDelegate>)inputDelegate
 {
-    if (_inputDelegate != inputDelegate) {
+    if (!inputDelegate || ([self isFirstResponder] && (_inputDelegate != inputDelegate))) {
         _inputDelegate = inputDelegate;
         _inputDelegateHas.selectionDidChange = [inputDelegate respondsToSelector:@selector(selectionDidChange:)];
         _inputDelegateHas.selectionWillChange = [inputDelegate respondsToSelector:@selector(selectionWillChange:)];
@@ -496,6 +496,8 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
         
         [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidEndEditingNotification object:self];
         
+        [self setInputDelegate:nil];
+        
         _flags.editing = NO;
         
         return YES;
@@ -526,7 +528,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) deleteForward:(id)sender
 {
     UITextRange* range = [self selectedTextRange];
-    if ([range isEmpty]) {
+    if (!range || [range isEmpty]) {
         UITextPosition* fromPosition = [range start];
         UITextPosition* toPosition = [_inputController positionFromPosition:[range start] offset:1];
         if (!toPosition) {

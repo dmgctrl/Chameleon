@@ -36,4 +36,9 @@ static NSUInteger hashForTextPosition;
     return (37 * _offset) ^ hashForTextPosition;
 }
 
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"<%@: %p> %ld", NSStringFromClass([self class]), self, _offset];
+}
+
 @end

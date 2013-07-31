@@ -88,7 +88,7 @@
 - (void) deleteBackward
 {
     UITextRange* range = [self selectedTextRange];
-    if ([range isEmpty]) {
+    if (!range || [range isEmpty]) {
         UITextPosition* toPosition = [range start];
         UITextPosition* fromPosition = [self positionFromPosition:[range start] offset:-1];
         if (!fromPosition) {

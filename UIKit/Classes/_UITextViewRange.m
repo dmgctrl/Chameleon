@@ -18,4 +18,9 @@
     return [_start isEqual:_end];
 }
 
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"<%@: %p> (%ld, %ld)", NSStringFromClass([self class]), self, [_start offset], [_end offset] - [_start offset]];
+}
+
 @end
