@@ -30,4 +30,21 @@ UIKIT_HIDDEN
 
 - (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position;
 
+- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
+- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
+- (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index by:(NSInteger)numberOfLines;
+- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index by:(NSInteger)numberOfLines;
+- (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index;
+- (BOOL) _isLocationAtBeginningOfParagraph;
+- (BOOL) _isLocationAtEndOfParagraph;
+- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index;
+- (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index;
+
 @end

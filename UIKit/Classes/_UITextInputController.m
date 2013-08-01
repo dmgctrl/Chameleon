@@ -146,9 +146,15 @@
 - (UITextRange*) characterRangeByExtendingPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-#warning Implement -characterRangeByExtendingPosition:inDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    if (!position) {
+        return nil;
+    }
+    UITextPosition* targetPosition = [self positionFromPosition:position inDirection:direction offset:1];
+    if (NSOrderedSame <= [self comparePosition:position toPosition:targetPosition]) {
+        return [self textRangeFromPosition:position toPosition:targetPosition];
+    } else {
+        return [self textRangeFromPosition:targetPosition toPosition:position];
+    }
 }
 
 - (NSComparisonResult) comparePosition:(_UITextViewPosition*)position toPosition:(_UITextViewPosition*)other

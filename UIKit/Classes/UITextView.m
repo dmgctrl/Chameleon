@@ -389,7 +389,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     NSRange range = [self selectedRange];
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
     [self setSelectedRange:range];
@@ -399,7 +399,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     NSRange range = [self selectedRange];
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
     [self setSelectedRange:range];
@@ -573,23 +573,22 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) moveLeft:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingLeftFromIndex:[self selectedRange].location],
-        0
-    }];
+    UITextPosition* position = [[self selectedTextRange] start];
+    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionLeft offset:1];
+    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
 }
 
 - (void) moveLeftAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingLeftFromIndex:index];
+        return [_inputController _indexWhenMovingLeftFromIndex:index];
     }];
 }
 
 - (void) moveWordLeft:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -597,29 +596,28 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveWordLeftAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingWordLeftFromIndex:index];
+        return [_inputController _indexWhenMovingWordLeftFromIndex:index];
     }];
 }
 
 - (void) moveRight:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingRightFromIndex:NSMaxRange([self selectedRange])],
-        0
-    }];
+    UITextPosition* position = [[self selectedTextRange] start];
+    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:1];
+    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
 }
 
 - (void) moveRightAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingRightFromIndex:index];
+        return [_inputController _indexWhenMovingRightFromIndex:index];
     }];
 }
 
 - (void) moveWordRight:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -627,44 +625,42 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveWordRightAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingWordRightFromIndex:index];
+        return [_inputController _indexWhenMovingWordRightFromIndex:index];
     }];
 }
 
 - (void) moveUp:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingUpFromIndex:[self selectedRange].location by:1],
-        0
-    }];
+    UITextPosition* position = [[self selectedTextRange] start];
+    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:1];
+    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
 }
 
 - (void) moveUpAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingUpFromIndex:index by:1];
+        return [_inputController _indexWhenMovingUpFromIndex:index by:1];
     }];
 }
 
 - (void) moveDown:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingDownFromIndex:NSMaxRange([self selectedRange]) by:1],
-        0
-    }];
+    UITextPosition* position = [[self selectedTextRange] start];
+    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
+    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
 }
 
 - (void) moveDownAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingDownFromIndex:index by:index];
+        return [_inputController _indexWhenMovingDownFromIndex:index by:index];
     }];
 }
 
 - (void) moveToBeginningOfLine:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -672,14 +668,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToBeginningOfLineAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingToBeginningOfLineFromIndex:index];
+        return [_inputController _indexWhenMovingToBeginningOfLineFromIndex:index];
     }];
 }
 
 - (void) moveToEndOfLine:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
+        [_inputController _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
         0
     }];
 }
@@ -687,14 +683,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToEndOfLineAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingToEndOfLineFromIndex:index];
+        return [_inputController _indexWhenMovingToEndOfLineFromIndex:index];
     }];    
 }
 
 - (void) moveToBeginningOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -702,13 +698,13 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveParagraphBackwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+        return [_inputController _indexWhenMovingToBeginningOfParagraphFromIndex:index];
     }];
 }
 
 - (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
 {
-    if ([self _isLocationAtBeginningOfParagraph]) {
+    if ([_inputController _isLocationAtBeginningOfParagraph]) {
         [self moveUp:self];
     } else {
         [self moveToBeginningOfParagraph:self];
@@ -717,7 +713,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
-    if ([self _isLocationAtBeginningOfParagraph]) {
+    if ([_inputController _isLocationAtBeginningOfParagraph]) {
         [self moveUpAndModifySelection:self];
     } else {
         [self moveParagraphBackwardAndModifySelection:self];
@@ -727,14 +723,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToEndOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveToEndOfParagraphOrMoveDown:(id)sender
 {
-    if ([self _isLocationAtEndOfParagraph]) {
+    if ([_inputController _isLocationAtEndOfParagraph]) {
         [self moveDown:self];
     } else {
         [self moveToEndOfParagraph:self];
@@ -744,13 +740,13 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveParagraphForwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingToEndOfParagraphFromIndex:index];
+        return [_inputController _indexWhenMovingToEndOfParagraphFromIndex:index];
     }];
 }
 
 - (void) moveParagraphForwardOrMoveDownAndModifySelection:(id)sender
 {
-    if ([self _isLocationAtEndOfParagraph]) {
+    if ([_inputController _isLocationAtEndOfParagraph]) {
         [self moveDownAndModifySelection:self];
     } else {
         [self moveParagraphForwardAndModifySelection:self];
@@ -760,7 +756,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToBeginningOfDocument:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -768,14 +764,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingToBeginningOfDocumentFromIndex:index];
+        return [_inputController _indexWhenMovingToBeginningOfDocumentFromIndex:index];
     }];
 }
 
 - (void) moveToEndOfDocument:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [self _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        [_inputController _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -783,7 +779,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToEndOfDocumentAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [self _indexWhenMovingToEndOfDocumentFromIndex:index];
+        return [_inputController _indexWhenMovingToEndOfDocumentFromIndex:index];
     }];
 }
 
@@ -1126,233 +1122,6 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
         range.length = _selectionOrigin - index;
     }
     [self _setAndScrollToRange:range upstream:upstream];
-}
-
-- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index
-{
-    return [self _indexWhenMovingRightFromIndex:index by:1];
-}
-
-- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
-{
-    NSLayoutManager* layoutManager = [self layoutManager];
-    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
-    NSInteger newIndex = index + byNumberOfGlyphs;
-    if (newIndex < 0) {
-        return 0;
-    } else if (newIndex >= numberOfGlyphs) {
-        return numberOfGlyphs;
-    } else {
-        return newIndex;
-    }
-}
-
-- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index
-{
-    return [self _indexWhenMovingLeftFromIndex:index by:1];
-}
-
-- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
-{
-    NSLayoutManager* layoutManager = [self layoutManager];
-    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
-    NSInteger newIndex = index - byNumberOfGlyphs;
-    if (newIndex < 0) {
-        return 0;
-    } else if (newIndex >= numberOfGlyphs) {
-        return numberOfGlyphs;
-    } else {
-        return newIndex;
-    }
-}
-
-- (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index
-{
-    NSString* text = [self text];
-    NSRange range = NSMakeRange(0, index);
-    NSInteger __block newIndex;
-    NSInteger __block counter = 0;
-    [text enumerateSubstringsInRange:range options:(NSStringEnumerationByWords | NSStringEnumerationReverse) usingBlock:^(
-        NSString *substring,
-        NSRange substringRange,
-        NSRange enclosingRange,
-        BOOL *stop){
-        newIndex = substringRange.location;
-            counter++;
-            *stop = YES;
-        }
-    ];
-    return newIndex < 0 ? 0 : newIndex;
-}
-
-- (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index
-{
-    NSString* text = [self text];
-    NSInteger maxIndex = [text length];
-    NSRange range = NSMakeRange(index, maxIndex - index);
-    NSInteger __block newIndex;
-    [text enumerateSubstringsInRange:range options:NSStringEnumerationByWords usingBlock:^(
-        NSString *substring,
-        NSRange substringRange,
-        NSRange enclosingRange,
-        BOOL *stop){
-            newIndex = substringRange.location + substring.length;
-            *stop = YES;
-        }
-    ];
-    return MIN(newIndex, maxIndex);
-}
-
-- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index by:(NSInteger)numberOfLines
-{
-    if (numberOfLines <= 0) {
-        return index;
-    }
-    
-    NSTextContainer* textContainer = [self textContainer];
-    NSLayoutManager* layoutManager = [textContainer layoutManager];
-    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
-
-    if (index <= 0) {
-        return 0;
-    }
-
-    NSInteger newIndex = MIN(index, numberOfGlyphs - 1);
-    NSInteger lineNumber = 0;
-    NSRect fragmentRect = {};
-    CGFloat x = floor([layoutManager locationForGlyphAtIndex:newIndex].x);
-    do {
-        NSRange range;
-        fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
-        if (lineNumber >= numberOfLines) {
-            break;
-        }
-        lineNumber++;
-        newIndex = range.location - 1;
-    } while (newIndex > 0);
-
-    if (newIndex <= 0) {
-        return 0;
-    }
-    
-    CGFloat fraction = 0;
-    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:(CGPoint){ x, CGRectGetMinY(fragmentRect) } inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
-    if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
-        glyphIndex += (fraction > 0.75);
-    }
-    return glyphIndex;
-}
-
-- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index by:(NSInteger)numberOfLines
-{
-    if (numberOfLines <= 0) {
-        return index;
-    }
-
-    NSTextContainer* textContainer = [self textContainer];
-    NSLayoutManager* layoutManager = [textContainer layoutManager];
-    NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
-
-    if (index >= numberOfGlyphs) {
-        return numberOfGlyphs;
-    }
-
-    NSInteger newIndex = MAX(index, 0);
-    NSInteger lineNumber = 0;
-    NSRect fragmentRect = {};
-    CGFloat x = floor([layoutManager locationForGlyphAtIndex:newIndex].x);
-    do {
-        NSRange range;
-        fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
-        if (lineNumber >= numberOfLines) {
-            break;
-        }
-        lineNumber++;
-        newIndex = NSMaxRange(range);
-    } while (newIndex < numberOfGlyphs);
-
-    if (newIndex >= numberOfGlyphs) {
-        return numberOfGlyphs;
-    }
-
-    CGFloat fraction = 0;
-    NSInteger glyphIndex = [layoutManager glyphIndexForPoint:(CGPoint){ x, CGRectGetMinY(fragmentRect) } inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
-    if (![layoutManager notShownAttributeForGlyphAtIndex:glyphIndex]) {
-        glyphIndex += (fraction > 0.75);
-    }
-    return glyphIndex;
-}
-
-- (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
-{
-    NSInteger textLength = [[self textStorage] length];
-    NSRange lineFragmentRange;
-    [[self layoutManager] lineFragmentRectForGlyphAtIndex:(index >= textLength ? textLength - 1 : index) effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
-    NSInteger newIndex = lineFragmentRange.location;
-    if (newIndex >= textLength) {
-        return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
-    }
-    return MAX(newIndex, [self _indexWhenMovingToBeginningOfParagraphFromIndex:index]);
-}
-
-- (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index
-{
-    NSInteger textLength = [[self textStorage] length];
-    if (index >= textLength) {
-        return textLength;
-    }
-    NSRange lineFragmentRange;
-    [[self layoutManager] lineFragmentRectForGlyphAtIndex:index effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
-    NSInteger newIndex = NSMaxRange(lineFragmentRange);
-    if (newIndex == textLength) {
-        return newIndex;
-    }
-    return MIN(newIndex - 1, [self _indexWhenMovingToEndOfParagraphFromIndex:index]);
-}
-
-
-- (BOOL) _isLocationAtBeginningOfParagraph
-{ // needs to know what to do if downstream.
-    NSRange range = [self selectedRange];
-    NSInteger start = range.location;
-    NSInteger end = NSMaxRange(range);
-    BOOL upstream = (end <= _selectionOrigin);
-    NSInteger index = upstream ? start : end;
-    NSString* string = [self text];
-    return [string lineRangeForRange:(NSRange){ index, 0 }].location == index;
-}
-
-- (BOOL) _isLocationAtEndOfParagraph
-{ //Needs upstream distinction
-    NSString* string = [self text];
-    NSUInteger index = NSMaxRange([self selectedRange]);
-    return NSMaxRange([string paragraphRangeForRange:(NSRange){ index, 0 }]) == index + 1;
-}
-
-- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index
-{
-    NSString* string = [self text];
-    return [string paragraphRangeForRange:(NSRange){ index, 0 }].location;
-}
-
-- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index
-{
-    NSString* string = [self text];
-    NSInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
-    if (newIndex > 0 && [[NSCharacterSet newlineCharacterSet] characterIsMember:[string characterAtIndex:newIndex - 1]]) {
-        newIndex--;
-    }
-    return newIndex;
-}
-
-- (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index
-{
-    return 0;
-}
-
-- (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index
-{
-    return [[self textStorage] length];
 }
 
 @end
