@@ -99,7 +99,6 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 - (id)initWithFrame:(CGRect)theFrame
 {
     if ((self=[super initWithFrame:theFrame])) {
-        _undoManager = [[NSUndoManager alloc] init];
         [self _makeHidden];	// do this first because before the screen is set, it will prevent any visibility notifications from being sent.
         self.screen = [UIScreen mainScreen];
         self.opaque = NO;
@@ -139,13 +138,25 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 {
     if (_firstResponder != firstResponder) {
         _firstResponder = firstResponder;
-        NSLog(@"%@: %d", NSStringFromClass([firstResponder class]), [firstResponder conformsToProtocol:@protocol(UITextInput)]);
-        [[[self screen] UIKitView] _setTextInput:[firstResponder conformsToProtocol:@protocol(UITextInput)] ? firstResponder : nil];
+        
+        UIKitView* uikitView = [[self screen] UIKitView];
+
+        if (firstResponder) {
+            NSWindow* window = [uikitView window];
+            if (uikitView != [window firstResponder]) {
+                [window makeFirstResponder:uikitView];
+            }
+        }
+
+        [uikitView _setTextInput:[firstResponder conformsToProtocol:@protocol(UITextInput)] ? firstResponder : nil];
     }
 }
 
-- (NSUndoManager *)undoManager
+- (NSUndoManager*) undoManager
 {
+    if (!_undoManager) {
+        _undoManager = [[NSUndoManager alloc] init];
+    }
     return _undoManager;
 }
 

@@ -166,26 +166,25 @@
             break;
         }
     }
-
     NSAssert2((transition != NULL), @"invalid state transition from %d to %d", _state, state);
 
-    if (transition) {
-        _state = transition->toState;
-        
-        if (transition->shouldNotify) {
-            for (UIAction *actionRecord in _registeredActions) {
-                // docs mention that the action messages are sent on the next run loop, so we'll do that here.
-                // note that this means that reset can't happen until the next run loop, either otherwise
-                // the state property is going to be wrong when the action handler looks at it, so as a result
-                // I'm also delaying the reset call (if necessary) just below here.
-                [actionRecord.target performSelector:actionRecord.action withObject:self afterDelay:0];
+    _state = state;
+    
+    if (transition->shouldNotify || transition->shouldReset) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (transition->shouldNotify) {
+                for (UIAction* action in _registeredActions) {
+                    @try {
+                        [[UIApplication sharedApplication] sendAction:action.action to:action.target from:self forEvent:nil];
+                    } @catch (id) {
+                        /* IGNORED */
+                    }
+                }
             }
-        }
-        
-        if (transition->shouldReset) {
-            // see note above about the delay
-            [self performSelector:@selector(reset) withObject:nil afterDelay:0];
-        }
+            if (transition->shouldReset) {
+                [self reset];
+            }
+        });
     }
 }
 

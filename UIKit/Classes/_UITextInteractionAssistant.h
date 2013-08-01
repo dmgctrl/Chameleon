@@ -1,15 +1,17 @@
 #import <Foundation/NSObject.h>
-#import <UIKit/UIResponder.h>
-#import <UIkit/UITextInput.h>
-#import <UIKit/UIGestureRecognizer.h>
+#import <UIKit/UITextInput.h>
 
+@class UIView;
 @class UITapGestureRecognizer;
 
-@interface _UITextInteractionAssistant : NSObject <UIGestureRecognizerDelegate>
+@interface _UITextInteractionAssistant : NSObject
 
-- (instancetype) initWithView:(UIResponder<UITextInput>*)view;
+- (instancetype) initWithView:(UIView<UITextInput>*)view;
 
 @property (readonly, nonatomic) UIResponder<UITextInput>* view;
-@property (readonly, nonatomic) UITapGestureRecognizer* singleTapGesture;
+
+- (UITapGestureRecognizer*) addOneFingerTapRecognizerToView:(UIView*)view;
+- (UITapGestureRecognizer*) addOneFingerDoubleTapRecognizerToView:(UIView*)view;
+- (void) removeGestureRecognizersFromView:(UIView*)view;
 
 @end

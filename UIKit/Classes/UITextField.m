@@ -34,10 +34,14 @@
 #import "UIGraphics.h"
 #import "UILabel.h"
 #import "UITapGestureRecognizer.h"
+#import <UIKit/NSTextStorage.h>
+#import <UIKit/NSTextContainer.h>
+#import <UIKit/NSLayoutManager.h>
+/**/
 #import "_UITextStorage.h"
 #import "_UITextInteractionAssistant.h"
 #import "_UITextFieldEditor.h"
-#import "NSParagraphStyle.h"
+#import "_UITextInputController.h"
 /**/
 #import "UIImage.h"
 #import "UIImage+UIPrivate.h"
@@ -78,6 +82,9 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
 @implementation UITextField {
     NSTextStorage* _textStorage;
+    NSTextContainer* _textContainer;
+    NSLayoutManager* _layoutManager;
+    
     NSMutableDictionary* _defaultTextAttributes;
     
     UILabel* _placeholderTextLabel;
@@ -85,6 +92,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     _UITextFieldEditor* _textFieldEditor;
     
     _UITextInteractionAssistant* _interactionAssistant;
+    _UITextInputController* _inputController;
     
     struct {
         bool shouldBeginEditing : 1;
@@ -96,12 +104,22 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
         bool shouldReturn : 1;
         bool doCommandBySelector : 1;
     } _delegateHas;
+
+    struct {
+        bool selectionWillChange : 1;
+        bool selectionDidChange : 1;
+        bool textWillChange : 1;
+        bool textDidChange : 1;
+    } _inputDelegateHas;
     
     struct {
         bool didBeginEditing : 1;
         bool hasText : 1;
     } _flags;
 }
+@synthesize inputDelegate = _inputDelegate;
+@synthesize markedTextStyle;
+@synthesize tokenizer;
 
 static void _commonInitForUITextField(UITextField* self)
 {
@@ -114,7 +132,14 @@ static void _commonInitForUITextField(UITextField* self)
     self.rightViewMode = UITextFieldViewModeNever;
     self.opaque = NO;
     
+    self->_textContainer = [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
+    [self->_textContainer setWidthTracksTextView:YES];
     self->_textStorage = [[_UITextStorage alloc] init];
+    self->_layoutManager = [[NSLayoutManager alloc] init];
+    [self->_layoutManager addTextContainer:self->_textContainer];
+    [self->_textStorage addLayoutManager:self->_layoutManager];
+    
+    self->_inputController = [[_UITextInputController alloc] initWithLayoutManager:self->_layoutManager];
 }
 
 - (id) initWithFrame:(CGRect)frame
@@ -254,7 +279,8 @@ static void _commonInitForUITextField(UITextField* self)
         _attributedPlaceholder = [self _adjustAttributesForPlaceholder:attributedPlaceholder];
         if (!_placeholderTextLabel) {
             _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-            [_placeholderTextLabel setBackgroundColor:[self backgroundColor]];
+            [_placeholderTextLabel setBackgroundColor:nil];
+            [_placeholderTextLabel setOpaque:NO];
         }
         [_placeholderTextLabel setAttributedText:_attributedPlaceholder];
         if (![_placeholderTextLabel superview]) {
@@ -277,13 +303,17 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if (attributedText) {
         [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length] } withAttributedString:attributedText];
+        UITextPosition* endOfDocument = [_inputController endOfDocument];
+        [_inputController setSelectedTextRange:[_inputController textRangeFromPosition:endOfDocument toPosition:endOfDocument]];
+
         _flags.hasText = [_textStorage length] > 0;
         if ([self hasText]) {
             [_placeholderTextLabel removeFromSuperview];
         }
         if (!_textLabel) {
             _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-            [_textLabel setBackgroundColor:[self backgroundColor]];
+            [_textLabel setBackgroundColor:nil];
+            [_textLabel setOpaque:NO];
         }
         [_textLabel setAttributedText:attributedText];
         if (![_textLabel superview]) {
@@ -320,15 +350,6 @@ static void _commonInitForUITextField(UITextField* self)
     if (background != _background) {
         _background = background;
         [self setNeedsDisplay];
-    }
-}
-
-- (void) setBackgroundColor:(UIColor*)backgroundColor
-{
-    if (backgroundColor != [self backgroundColor]) {
-        [super setBackgroundColor:backgroundColor];
-        [_textLabel setBackgroundColor:backgroundColor];
-        [_placeholderTextLabel setBackgroundColor:backgroundColor];
     }
 }
 
@@ -421,6 +442,17 @@ static void _commonInitForUITextField(UITextField* self)
     if (!CGRectEqualToRect(frame,self.frame)) {
         [super setFrame:frame];
         [self setNeedsDisplay];
+    }
+}
+
+- (void) setInputDelegate:(id<UITextInputDelegate>)inputDelegate
+{
+    if (!inputDelegate || ([self isFirstResponder] && (_inputDelegate != inputDelegate))) {
+        _inputDelegate = inputDelegate;
+        _inputDelegateHas.selectionDidChange = [inputDelegate respondsToSelector:@selector(selectionDidChange:)];
+        _inputDelegateHas.selectionWillChange = [inputDelegate respondsToSelector:@selector(selectionWillChange:)];
+        _inputDelegateHas.textDidChange = [inputDelegate respondsToSelector:@selector(textDidChange:)];
+        _inputDelegateHas.textWillChange = [inputDelegate respondsToSelector:@selector(textWillChange:)];
     }
 }
 
@@ -521,6 +553,23 @@ static void _commonInitForUITextField(UITextField* self)
         _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
     }
     [_defaultTextAttributes setObject:textColor forKey:UITextAttributeTextColor];
+}
+
+
+#pragma mark _UITextInputPlus
+
+- (void) beginSelectionChange
+{
+    if (_inputDelegateHas.selectionWillChange) {
+        [[self inputDelegate] selectionWillChange:self];
+    }
+}
+
+- (void) endSelectionChange
+{
+    if (_inputDelegateHas.selectionDidChange) {
+        [[self inputDelegate] selectionDidChange:self];
+    }
 }
 
 
@@ -686,26 +735,149 @@ static void _commonInitForUITextField(UITextField* self)
 }
 
 
-#pragma mark UITextInput
-
-- (id<UITextInput>) inputDelegate
-{
-    return nil;
-}
-
-- (void) setInputDelegate:(id<UITextInput>)inputDelegate
-{
-    // TODO
-}
+#pragma mark UIKeyInput
 
 - (BOOL) hasText
 {
-    return _flags.hasText;
+    return [_inputController hasText];
 }
 
 - (void) insertText:(NSString*)text
 {
-    // TODO
+    [_inputController insertText:text];
+}
+
+- (void) deleteBackward
+{
+    [_inputController deleteBackward];
+}
+
+
+#pragma mark UITextInput
+
+- (NSString*) textInRange:(UITextRange*)range
+{
+    return [_inputController textInRange:range];
+}
+
+- (void) replaceRange:(UITextRange*)range withText:(NSString*)text
+{
+    [_inputController replaceRange:range withText:text];
+}
+
+- (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text
+{
+    return [_inputController shouldChangeTextInRange:range replacementText:text];
+}
+
+- (UITextRange*) selectedTextRange
+{
+    return [_inputController selectedTextRange];
+}
+
+- (void) setSelectedTextRange:(UITextRange*)selectedTextRange
+{
+    [_inputController setSelectedTextRange:selectedTextRange];
+}
+
+- (UITextRange*) markedTextRange
+{
+    return [_inputController markedTextRange];
+}
+
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
+{
+    [_inputController setMarkedText:markedText selectedRange:selectedRange];
+}
+
+- (void) unmarkText
+{
+    [_inputController unmarkText];
+}
+
+- (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
+{
+    return [_inputController textRangeFromPosition:fromPosition toPosition:toPosition];
+}
+
+- (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
+{
+    return [_inputController positionFromPosition:position offset:offset];
+}
+
+- (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
+{
+    return [_inputController positionFromPosition:position inDirection:direction offset:offset];
+}
+
+- (UITextPosition*) beginningOfDocument
+{
+    return [_inputController beginningOfDocument];
+}
+
+- (UITextPosition*) endOfDocument
+{
+    return [_inputController endOfDocument];
+}
+
+- (NSComparisonResult) comparePosition:(UITextPosition*)position toPosition:(UITextPosition*)other
+{
+    return [_inputController comparePosition:position toPosition:other];
+}
+
+- (NSInteger) offsetFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
+{
+    return [_inputController offsetFromPosition:fromPosition toPosition:toPosition];
+}
+
+- (UITextPosition*) positionWithinRange:(UITextRange*)range farthestInDirection:(UITextLayoutDirection)direction
+{
+    return [_inputController positionWithinRange:range farthestInDirection:direction];
+}
+
+- (UITextRange*) characterRangeByExtendingPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction
+{
+    return [_inputController characterRangeByExtendingPosition:position inDirection:direction];
+}
+
+- (UITextWritingDirection) baseWritingDirectionForPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction
+{
+    return [_inputController baseWritingDirectionForPosition:position inDirection:direction];
+}
+
+- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
+{
+    [_inputController setBaseWritingDirection:writingDirection forRange:range];
+}
+
+- (CGRect) firstRectForRange:(UITextRange*)range
+{
+    return [_inputController firstRectForRange:range];
+}
+
+- (CGRect) caretRectForPosition:(UITextPosition*)position
+{
+    return [_inputController caretRectForPosition:position];
+}
+
+- (NSArray*) selectionRectsForRange:(UITextRange*)range
+{
+    return [_inputController selectionRectsForRange:range];
+}
+
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point
+{
+    return [_inputController closestPositionToPoint:point];
+}
+
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(UITextRange*)range
+{
+    return [_inputController closestPositionToPoint:point withinRange:range];
+}
+
+- (UITextRange*) characterRangeAtPoint:(CGPoint)point
+{
+    return [_inputController characterRangeAtPoint:point];
 }
 
 
@@ -716,9 +888,10 @@ static void _commonInitForUITextField(UITextField* self)
     [super willMoveToWindow:window];
     if (window) {
         _interactionAssistant = [[_UITextInteractionAssistant alloc] initWithView:self];
-        [self addGestureRecognizer:[_interactionAssistant singleTapGesture]];
+        [_interactionAssistant addOneFingerTapRecognizerToView:self];
+        [_interactionAssistant addOneFingerDoubleTapRecognizerToView:self];
     } else {
-        [self removeGestureRecognizer:[_interactionAssistant singleTapGesture]];
+        [_interactionAssistant removeGestureRecognizersFromView:self];
         _interactionAssistant = nil;
     }
 }
@@ -728,36 +901,44 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) canBecomeFirstResponder
 {
-    return ([self window] != nil) && [self isEnabled] && [self _textShouldBeginEditing];
-}
-
-- (BOOL) canResignFirstResponder
-{
-    return [self _textShouldEndEditing];
+    return (self.window != nil) && [self isEnabled] && (!_delegateHas.shouldBeginEditing || [[self delegate] textFieldShouldBeginEditing:self]);
 }
 
 - (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
         _editing = YES;
-        [self _textDidBeginEditing];
-        [_textLabel removeFromSuperview];
-        [_placeholderTextLabel removeFromSuperview];
-
-        _textFieldEditor = [[_UITextFieldEditor alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
-        [self addSubview:_textFieldEditor];
         
+        _textFieldEditor = [[_UITextFieldEditor alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        [_textFieldEditor setOpaque:NO];
+        [_textFieldEditor setBackgroundColor:nil];
+        [self addSubview:_textFieldEditor];
+
+        if (_clearsOnBeginEditing && (!_delegateHas.shouldClear || [_delegate textFieldShouldClear:self])) {
+            [self setText:@""];
+        }
+        
+        if (_delegateHas.didBeginEditing) {
+            [[self delegate] textFieldDidBeginEditing:self];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
+
         return YES;
-    } else {
-        return NO;
     }
+    return NO;
+}
+
+- (BOOL) canResignFirstResponder
+{
+    return (!_delegateHas.shouldEndEditing || [[self delegate] textFieldShouldEndEditing:self]);
 }
 
 - (BOOL) resignFirstResponder
 {
     if ([super resignFirstResponder]) {
         _editing = NO;
-        [self _textDidEndEditing];
+        
         if ([self hasText]) {
             if (_textLabel) {
                 [self addSubview:_textLabel];
@@ -767,7 +948,17 @@ static void _commonInitForUITextField(UITextField* self)
                 [self addSubview:_placeholderTextLabel];
             }
         }
+        
+        [self setInputDelegate:nil];
+        
         [_textFieldEditor removeFromSuperview], _textFieldEditor = nil;
+
+        if (_delegateHas.didEndEditing) {
+            [[self delegate] textFieldDidEndEditing:self];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:self];
+        
         return YES;
     } else {
         return NO;
@@ -775,64 +966,28 @@ static void _commonInitForUITextField(UITextField* self)
 }
 
 
+#pragma mark _UITextInputController
+
+- (NSRange) textInput:(_UITextInputController*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
+{
+    return toRange;
+}
+
+- (void) textInputDidChangeSelection:(_UITextInputController*)controller
+{
+}
+
+- (void) textInputDidChange:(_UITextInputController*)controller
+{
+    [self _didChangeText];
+}
+
+- (void) textInput:(_UITextInputController*)controller prepareAttributedTextForInsertion:(id)text
+{
+}
+
+
 #pragma mark Events & Notification
-
-- (BOOL) _textShouldBeginEditing
-{
-    return _delegateHas.shouldBeginEditing? [_delegate textFieldShouldBeginEditing:self] : YES;
-}
-
-- (void) _textDidBeginEditing
-{
-    BOOL shouldClear = _clearsOnBeginEditing;
-    
-    if (shouldClear && _delegateHas.shouldClear) {
-        shouldClear = [_delegate textFieldShouldClear:self];
-    }
-    
-    if (shouldClear) {
-        [self setText:@""];
-    }
-    
-    if (_delegateHas.didBeginEditing) {
-        [_delegate textFieldDidBeginEditing:self];
-    }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
-}
-
-- (BOOL) _textShouldEndEditing
-{
-    return _delegateHas.shouldEndEditing? [_delegate textFieldShouldEndEditing:self] : YES;
-}
-
-- (void) _textDidEndEditing
-{
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
-    
-    if (_delegateHas.didEndEditing) {
-        [_delegate textFieldDidEndEditing:self];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:self];
-}
-
-- (BOOL) _textShouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    return _delegateHas.shouldChangeCharacters? [_delegate textField:self shouldChangeCharactersInRange:range replacementString:text] : YES;
-}
-
-- (void) _textDidChange
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
-}
-
-- (void) _textDidReceiveReturnKey
-{
-    if (_delegateHas.shouldReturn) {
-        [_delegate textFieldShouldReturn:self];
-    }
-}
 
 - (BOOL) _textShouldDoCommandBySelector:(SEL)selector
 {
@@ -840,7 +995,9 @@ static void _commonInitForUITextField(UITextField* self)
 		return [(id)self.delegate textField:self doCommandBySelector:selector];
 	} else {
 		if(selector == @selector(insertNewline:) || selector == @selector(insertNewlineIgnoringFieldEditor:)) {
-			[self _textDidReceiveReturnKey];
+            if (_delegateHas.shouldReturn) {
+                [_delegate textFieldShouldReturn:self];
+            }
 			return YES;
 		}
 	}
@@ -850,6 +1007,12 @@ static void _commonInitForUITextField(UITextField* self)
 
 
 #pragma mark Misc.
+
+- (void) _didChangeText
+{
+    [self setNeedsLayout];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
+}
 
 - (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
 {

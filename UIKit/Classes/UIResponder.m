@@ -168,10 +168,12 @@
 }
 
 #pragma mark Getting the Undo Manager
-- (NSUndoManager *)undoManager
+
+- (NSUndoManager*) undoManager
 {
     return [[self nextResponder] undoManager];
 }
+
 
 #pragma mark Validating Commands
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender

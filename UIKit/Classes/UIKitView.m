@@ -108,6 +108,7 @@
 - (id)initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
+        _textInputClient = [[_UIKitViewTextInputClient alloc] initWithUIKitView:self];
         _screen = [[UIScreen alloc] init];
         [self setScreenLayer];
     }
@@ -206,14 +207,19 @@
 
 - (BOOL)respondsToSelector:(SEL)cmd
 {
-    if (cmd == @selector(copy:) ||
+    if (cmd == @selector(undo:)) {
+        return [[self undoManagerForFirstResponder] canUndo];
+    } else if (cmd == @selector(redo:)) {
+        return [[self undoManagerForFirstResponder] canRedo];
+    } else if (cmd == @selector(copy:) ||
         cmd == @selector(cut:) ||
         cmd == @selector(delete:) ||
         cmd == @selector(paste:) ||
         cmd == @selector(select:) ||
         cmd == @selector(selectAll:) ||
         cmd == @selector(commit:) ||
-        cmd == @selector(cancel:)) {
+        cmd == @selector(cancel:)
+    ) {
         return [self firstResponderCanPerformAction:cmd withSender:nil];
     } else if (cmd == @selector(cancelOperation:)) {
         return [self firstResponderCanPerformAction:@selector(cancel:) withSender:nil];
@@ -232,6 +238,7 @@
 // these are special additions
 - (void)cancel:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
 - (void)commit:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
+
 
 // this is a special case, UIKit doesn't normally send anything like this.
 // if a UIKit first responder can't handle it, then we'll pass it through to the next responder
@@ -257,7 +264,6 @@
 - (NSTextInputContext*) inputContext
 {
     if (!_textInputContext) {
-        _textInputClient = [[_UIKitViewTextInputClient alloc] initWithUIKitView:self];
         _textInputContext = [[NSTextInputContext alloc] initWithClient:_textInputClient];
     }
     return _textInputContext;
@@ -397,6 +403,23 @@
     }
 }
 
+#pragma mark Undo & Redo
+
+- (NSUndoManager*) undoManagerForFirstResponder
+{
+    return [[[UIApplication sharedApplication] _firstResponderForScreen:_screen] undoManager];
+}
+
+- (void) undo:(id)sender
+{
+    [[self undoManagerForFirstResponder] undo];
+}
+
+- (void) redo:(id)sender
+{
+    [[self undoManagerForFirstResponder] redo];
+}
+
 @end
 
 
@@ -435,7 +458,9 @@
 
 - (void) doCommandBySelector:(SEL)selector
 {
-    if ([_textInput respondsToSelector:selector]) {
+    if (!_textInput) {
+        return;
+    } else if ([_textInput respondsToSelector:selector]) {
         [_textInput performSelector:selector withObject:nil];
     } else if (_textInputHas.doCommandBySelector) {
         [(id)_textInput doCommandBySelector:selector];
