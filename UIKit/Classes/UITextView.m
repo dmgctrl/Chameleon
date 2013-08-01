@@ -431,32 +431,6 @@ static void _commonInitForUITextView(UITextView* self)
     [_textContainerView setShouldShowInsertionPoint:NO];
 }
 
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch = [[event allTouches] anyObject];
-    [self _setAndScrollToRange:(NSRange){
-        [self _characterIndexAtPoint:[touch locationInView:_textContainerView]],
-        0
-    }];
-    [super touchesBegan:touches withEvent:event];
-}
-
-- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch = [[event allTouches] anyObject];
-    NSUInteger index = [self _characterIndexAtPoint:[touch locationInView:_textContainerView]];
-    NSRange range;
-    if (_selectionOrigin > index) {
-        range = (NSRange){ index, _selectionOrigin - index };
-        [self scrollRangeToVisible:range];
-    } else {
-        range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
-        [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
-    }
-    [self _setSelectedRange:range affinity:_selectionAffinity stillSelecting:YES];
-    [super touchesMoved:touches withEvent:event];
-}
-
 - (BOOL) canBecomeFirstResponder
 {
     return (self.window != nil);
@@ -481,6 +455,32 @@ static void _commonInitForUITextView(UITextView* self)
         }
     }
     return NO;
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch* touch = [[event allTouches] anyObject];
+    [self _setAndScrollToRange:(NSRange){
+        [self _characterIndexAtPoint:[touch locationInView:_textContainerView]],
+        0
+    }];
+    [super touchesBegan:touches withEvent:event];
+}
+
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
+{
+    UITouch* touch = [[event allTouches] anyObject];
+    NSUInteger index = [self _characterIndexAtPoint:[touch locationInView:_textContainerView]];
+    NSRange range;
+    if (_selectionOrigin > index) {
+        range = (NSRange){ index, _selectionOrigin - index };
+        [self scrollRangeToVisible:range];
+    } else {
+        range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
+        [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
+    }
+    [self _setSelectedRange:range affinity:_selectionAffinity stillSelecting:YES];
+    [super touchesMoved:touches withEvent:event];
 }
 
 - (void) doCommandBySelector:(SEL)selector
