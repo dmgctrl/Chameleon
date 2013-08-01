@@ -416,7 +416,7 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (BOOL) acceptsFirstMouse
 {
-    return YES;
+    return [self canBecomeFirstResponder];
 }
 
 - (void) windowDidBecomeKey
@@ -1488,6 +1488,15 @@ static void _commonInitForUITextView(UITextView* self)
             @"position": [NSNull null],
             @"hidden": [NSNull null],
         };
+
+        CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+        [animation setKeyTimes:@[ @0.0f, @0.45, @0.5f ]];
+        [animation setValues:@[ @0.0f, @0.0, @1.0f ]];
+        [animation setDuration:0.5f];
+        [animation setAutoreverses:YES];
+        [animation setRepeatCount:CGFLOAT_MAX];
+        [_insertionPoint addAnimation:animation forKey:@"opacity"];
+
         [self.layer addSublayer:_insertionPoint];
     }
     return self;

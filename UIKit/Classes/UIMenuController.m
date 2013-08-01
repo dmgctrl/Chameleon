@@ -52,6 +52,7 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     CGPoint _menuLocation;
     BOOL _rightAlignMenu;
     UIWindow *_window;
+    UIView* _targetView;
 }
 
 + (UIMenuController *)sharedMenuController
@@ -155,6 +156,7 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     // we have to have some window somewhere to use as a basis, so if there isn't a view, we'll just use the
     // keyWindow and go from there.
     _window = targetView.window ?: [UIApplication sharedApplication].keyWindow;
+    _targetView = targetView;
 
     // if the rect is CGRectNull, this is a fancy trigger in my OSX version to use the mouse position as the location for
     // the menu instead of the requiring a given rect. this is often a much better feel on OSX than the usual UIKit way is.
@@ -192,7 +194,7 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
 - (void)update
 {
     UIApplication *app = [UIApplication sharedApplication];
-    UIResponder *firstResponder = [app.keyWindow _firstResponder];
+    UIResponder* firstResponder = _targetView ?: [app.keyWindow _firstResponder];
     NSArray *allItems = [[[self class] _defaultMenuItems] arrayByAddingObjectsFromArray:_menuItems];
 
     [_enabledMenuItems removeAllObjects];
@@ -244,6 +246,8 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
 {
     if (menu == _menu) {
         _menu = nil;
+        _window = nil;
+        _targetView = nil;
     }
 }
 

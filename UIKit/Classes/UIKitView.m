@@ -160,8 +160,11 @@
 {
     UIScreen* screen = [[self UIWindow] screen];
     UIResponder* responder = [screen _hitTest:[event locationInScreen:screen] event:nil];
-    if ([responder respondsToSelector:@selector(acceptsFirstMouse)]) {
-        return [responder acceptsFirstMouse];
+    while (responder) {
+        if ([responder respondsToSelector:@selector(acceptsFirstMouse)]) {
+            return [responder acceptsFirstMouse];
+        }
+        responder = [responder nextResponder];
     }
     return [super acceptsFirstMouse:event];
 }

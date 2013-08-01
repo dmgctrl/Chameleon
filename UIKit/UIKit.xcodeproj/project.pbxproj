@@ -968,8 +968,8 @@
 		F97BE01A15AFD6E00081F45A /* UIAppearanceProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProperty.m; sourceTree = "<group>"; };
 		F97BE01B15AFD6E00081F45A /* UIAppearanceProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppearanceProxy.h; sourceTree = "<group>"; };
 		F97BE01C15AFD6E00081F45A /* UIAppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppearanceProxy.m; sourceTree = "<group>"; };
-		F9847F8B17A2CB7A00B14DC1 /* NSEvent+UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEvent+UIKit.h"; sourceTree = "<group>"; };
-		F9847F8C17A2CB7A00B14DC1 /* NSEvent+UIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEvent+UIKit.m"; sourceTree = "<group>"; };
+		F9847F8B17A2CB7A00B14DC1 /* NSEvent+UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSEvent+UIKit.h"; path = "Classes/NSEvent+UIKit.h"; sourceTree = "<group>"; };
+		F9847F8C17A2CB7A00B14DC1 /* NSEvent+UIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSEvent+UIKit.m"; path = "Classes/NSEvent+UIKit.m"; sourceTree = "<group>"; };
 		F98A10AB17737A3000BF8586 /* UIStringDrawingSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStringDrawingSpec.m; sourceTree = "<group>"; };
 		F99115451772230200B4389A /* UIKitDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIKitDefines.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F99115471772236700B4389A /* UINibDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibDeclarations.h; sourceTree = "<group>"; };

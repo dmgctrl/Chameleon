@@ -179,7 +179,12 @@
     if ([[self class] instancesRespondToSelector:action]) {
         return YES;
     } else {
-        return [[self nextResponder] canPerformAction:action withSender:sender];
+        UIResponder* nextResponder = [self nextResponder];
+        if ([nextResponder isKindOfClass:[UIResponder class]]) {
+            return [[self nextResponder] canPerformAction:action withSender:sender];
+        } else {
+            return NO;
+        }
     }
 }
 
