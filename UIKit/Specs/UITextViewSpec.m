@@ -601,13 +601,28 @@ describe(@"UITextView", ^{
                     it(@"has an end property equal to endOfDocument", ^{
                         [[[entireTextRange end] should] equal:endOfDocument];
                     });
-                });
-            });
 
-            context(@"Measurements", ^{
-            });
-            
-            context(@"Comparisons", ^{
+                    context(@"Measurements", ^{
+                        it(@"should not be empty", ^{
+                            [[@([entireTextRange isEmpty]) should] beNo];
+                        });
+                        context(@"range lenght", ^{
+                            NSInteger rangeOffsetFromBeginning = [textView offsetFromPosition:[entireTextRange start] toPosition:[entireTextRange end]];
+                            it(@"should be same as text length", ^{
+                                [[@(rangeOffsetFromBeginning) should] equal: @(textLength)];
+                            });
+                        });
+                        context(@"range text", ^{
+                            NSString* textInRange = [textView textInRange:entireTextRange];
+                            it(@"should be same as text", ^{
+                                [[@([textInRange isEqualToString:text]) should] beYes];
+                            });
+                        });
+                    });
+                });
+                
+                context(@"Comparisons", ^{
+                });
             });
         });
     });
