@@ -887,7 +887,7 @@ static void _commonInitForUITextField(UITextField* self)
 {
     [super willMoveToWindow:window];
     if (window) {
-        _interactionController = [[_UITextInteractionController alloc] initWithView:self];
+        _interactionController = [[_UITextInteractionController alloc] initWithView:self inputModel:_inputModel];
         [_interactionController addOneFingerTapRecognizerToView:self];
         [_interactionController addOneFingerDoubleTapRecognizerToView:self];
     } else {

@@ -627,4 +627,9 @@
     return [[self _textStorage] length];
 }
 
+- (NSInteger) _endOfDocument
+{
+    return [[self _textStorage] length];
+}
+
 @end

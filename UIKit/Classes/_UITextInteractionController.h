@@ -3,15 +3,18 @@
 
 @class UIView;
 @class UITapGestureRecognizer;
+@class _UITextInputModel;
 
 @interface _UITextInteractionController : NSObject
 
-- (instancetype) initWithView:(UIView<UITextInput>*)view;
+- (instancetype) initWithView:(UIResponder<UITextInput>*)view inputModel:(_UITextInputModel*)inputModel;
 
 @property (readonly, nonatomic) UIResponder<UITextInput>* view;
 
 - (UITapGestureRecognizer*) addOneFingerTapRecognizerToView:(UIView*)view;
 - (UITapGestureRecognizer*) addOneFingerDoubleTapRecognizerToView:(UIView*)view;
 - (void) removeGestureRecognizersFromView:(UIView*)view;
+
+- (void) doCommandBySelector:(SEL)selector;
 
 @end

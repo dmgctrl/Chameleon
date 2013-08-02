@@ -46,5 +46,6 @@ UIKIT_HIDDEN
 - (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index;
 - (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index;
 - (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index;
+- (NSInteger) _endOfDocument;
 
 @end

@@ -418,7 +418,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     [super willMoveToWindow:window];
     if (window) {
-        _interactionController = [[_UITextInteractionController alloc] initWithView:self];
+        _interactionController = [[_UITextInteractionController alloc] initWithView:self inputModel:_inputModel];
         [_interactionController addOneFingerTapRecognizerToView:self];
         [_interactionController addOneFingerDoubleTapRecognizerToView:self];
     } else {
@@ -530,284 +530,39 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     if (_delegateHas.doCommandBySelector && [(id<UITextViewDelegatePlus>)[self delegate] textView:self doCommandBySelector:selector]) {
         /* Do Nothing */
-    } else if ([self respondsToSelector:selector]) {
-        void (*command)(id, SEL, id) = (void*)[[self class] instanceMethodForSelector:selector];
-        command(self, selector, self);
+    } else {
+        [_interactionController doCommandBySelector:selector];
     }
 }
 
-- (void) selectAll:(id)sender
-{
-    [self setSelectedRange:NSMakeRange(0, [[self textStorage] length])];
-}
 
-- (void) deleteBackward:(id)sender
-{
-    [self deleteBackward];
-}
+#pragma mark UIResponderStandardEditActions
 
-- (void) deleteForward:(id)sender
+- (void) copy:(id)sender
 {
     UITextRange* range = [self selectedTextRange];
-    if (!range || [range isEmpty]) {
-        UITextPosition* fromPosition = [range start];
-        UITextPosition* toPosition = [_inputModel positionFromPosition:[range start] offset:1];
-        if (!toPosition) {
-            return;
-        }
-        range = [_inputModel textRangeFromPosition:fromPosition toPosition:toPosition];
+    if (![range isEmpty]) {
+        [[UIPasteboard generalPasteboard] setString:[self textInRange:range]];
     }
-    if (![_inputModel shouldChangeTextInRange:range replacementText:@""]) {
-        return;
-    }
-    [_inputModel replaceRange:range withText:@""];
-}
-
-- (void) deleteWordBackward:(id)sender
-{
-    if ([self selectedRange].length == 0) {
-        [self moveWordLeftAndModifySelection:self];
-    }
-    [self deleteBackward:self];
-}
-
-- (void) moveLeft:(id)sender
-{
-    UITextPosition* position = [[self selectedTextRange] start];
-    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionLeft offset:1];
-    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
-}
-
-- (void) moveLeftAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingLeftFromIndex:index];
-    }];
-}
-
-- (void) moveWordLeft:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveWordLeftAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingWordLeftFromIndex:index];
-    }];
-}
-
-- (void) moveRight:(id)sender
-{
-    UITextPosition* position = [[self selectedTextRange] start];
-    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:1];
-    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
-}
-
-- (void) moveRightAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingRightFromIndex:index];
-    }];
-}
-
-- (void) moveWordRight:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveWordRightAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingWordRightFromIndex:index];
-    }];
-}
-
-- (void) moveUp:(id)sender
-{
-    UITextPosition* position = [[self selectedTextRange] start];
-    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:1];
-    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
-}
-
-- (void) moveUpAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingUpFromIndex:index by:1];
-    }];
-}
-
-- (void) moveDown:(id)sender
-{
-    UITextPosition* position = [[self selectedTextRange] start];
-    UITextPosition* newPosition = [self positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
-    [self setSelectedTextRange:[self textRangeFromPosition:newPosition toPosition:newPosition]];
-}
-
-- (void) moveDownAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingDownFromIndex:index by:index];
-    }];
-}
-
-- (void) moveToBeginningOfLine:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveToBeginningOfLineAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:index];
-    }];
-}
-
-- (void) moveToEndOfLine:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
-        0
-    }];
-}
-
-- (void) moveToEndOfLineAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToEndOfLineFromIndex:index];
-    }];    
-}
-
-- (void) moveToBeginningOfParagraph:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveParagraphBackwardAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:index];
-    }];
-}
-
-- (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
-{
-    if ([_inputModel _isLocationAtBeginningOfParagraph]) {
-        [self moveUp:self];
-    } else {
-        [self moveToBeginningOfParagraph:self];
-    }
-}
-
-- (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
-{
-    if ([_inputModel _isLocationAtBeginningOfParagraph]) {
-        [self moveUpAndModifySelection:self];
-    } else {
-        [self moveParagraphBackwardAndModifySelection:self];
-    }
-}
-
-- (void) moveToEndOfParagraph:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveToEndOfParagraphOrMoveDown:(id)sender
-{
-    if ([_inputModel _isLocationAtEndOfParagraph]) {
-        [self moveDown:self];
-    } else {
-        [self moveToEndOfParagraph:self];
-    }
-}
-
-- (void) moveParagraphForwardAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:index];
-    }];
-}
-
-- (void) moveParagraphForwardOrMoveDownAndModifySelection:(id)sender
-{
-    if ([_inputModel _isLocationAtEndOfParagraph]) {
-        [self moveDownAndModifySelection:self];
-    } else {
-        [self moveParagraphForwardAndModifySelection:self];
-    }
-}
-
-- (void) moveToBeginningOfDocument:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:index];
-    }];
-}
-
-- (void) moveToEndOfDocument:(id)sender
-{
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
-        0
-    }];
-}
-
-- (void) moveToEndOfDocumentAndModifySelection:(id)sender
-{
-    [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:index];
-    }];
 }
 
 - (void) cut:(id)sender
 {
     UITextRange* range = [self selectedTextRange];
     if (![range isEmpty]) {
-        [[UIPasteboard generalPasteboard] setString:[_inputModel textInRange:range]];
+        [[UIPasteboard generalPasteboard] setString:[self textInRange:range]];
         [_inputModel replaceRange:range withText:@""];
-    }
-}
-
-- (void) copy:(id)sender
-{
-    UITextRange* range = [self selectedTextRange];
-    if (![range isEmpty]) {
-        [[UIPasteboard generalPasteboard] setString:[_inputModel textInRange:range]];
     }
 }
 
 - (void) paste:(id)sender
 {
-    [_inputModel replaceRange:[_inputModel selectedTextRange] withText:[[UIPasteboard generalPasteboard] string]];
+    [self replaceRange:[self selectedTextRange] withText:[[UIPasteboard generalPasteboard] string]];
 }
 
-- (void) insertNewline:(id)sender
+- (void) selectAll:(id)sender
 {
-    [self insertText:@"\n"];
+    [self setSelectedRange:NSMakeRange(0, [_inputModel _endOfDocument])];
 }
 
 
