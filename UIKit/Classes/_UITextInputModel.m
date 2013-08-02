@@ -1,4 +1,4 @@
-#import "_UITextInputController.h"
+#import "_UITextInputModel.h"
 //
 #import <UIKit/NSTextStorage.h>
 #import <UIKit/NSTextContainer.h>
@@ -8,7 +8,7 @@
 #import "_UITextViewRange.h"
 
 
-@implementation _UITextInputController {
+@implementation _UITextInputModel {
     struct {
         bool textInputShouldBeginEditing : 1;
         bool textInputShouldChangeCharactersInRangeReplacementText : 1;

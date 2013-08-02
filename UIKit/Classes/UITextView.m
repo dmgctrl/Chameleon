@@ -41,7 +41,7 @@
 #import "UIFont+UIPrivate.h"
 #import "UIResponder+AppKit.h"
 #import "_UITextStorage.h"
-#import "_UITextInputController.h"
+#import "_UITextInputModel.h"
 #import "_UITextInputPlus.h"
 #import "_UITextInteractionAssistant.h"
 //
@@ -90,7 +90,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
     _UITextContainerView* _textContainerView;
 
     _UITextInteractionAssistant* _interactionAssistant;
-    _UITextInputController* _inputController;
+    _UITextInputModel* _inputModel;
     
     struct {
         bool shouldBeginEditing : 1;
@@ -144,8 +144,8 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     [self->_layoutManager addTextContainer:self->_textContainer];
     [self->_textStorage addLayoutManager:self->_layoutManager];
     
-    self->_inputController = [[_UITextInputController alloc] initWithLayoutManager:self->_layoutManager];
-    [self->_inputController setDelegate:self];
+    self->_inputModel = [[_UITextInputModel alloc] initWithLayoutManager:self->_layoutManager];
+    [self->_inputModel setDelegate:self];
     
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
     [self->_textContainerView setTextContainer:[self textContainer]];
@@ -299,12 +299,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (NSRange) selectedRange
 {
-    return [_inputController selectedRange];
+    return [_inputModel selectedRange];
 }
 
 - (void) setSelectedRange:(NSRange)range
 {
-    [_inputController setSelectedRange:range];
+    [_inputModel setSelectedRange:range];
 }
 
 - (NSString*) text
@@ -389,7 +389,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     NSRange range = [self selectedRange];
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
     [self setSelectedRange:range];
@@ -399,7 +399,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     NSRange range = [self selectedRange];
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
     [self setSelectedRange:range];
@@ -551,16 +551,16 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     UITextRange* range = [self selectedTextRange];
     if (!range || [range isEmpty]) {
         UITextPosition* fromPosition = [range start];
-        UITextPosition* toPosition = [_inputController positionFromPosition:[range start] offset:1];
+        UITextPosition* toPosition = [_inputModel positionFromPosition:[range start] offset:1];
         if (!toPosition) {
             return;
         }
-        range = [_inputController textRangeFromPosition:fromPosition toPosition:toPosition];
+        range = [_inputModel textRangeFromPosition:fromPosition toPosition:toPosition];
     }
-    if (![_inputController shouldChangeTextInRange:range replacementText:@""]) {
+    if (![_inputModel shouldChangeTextInRange:range replacementText:@""]) {
         return;
     }
-    [_inputController replaceRange:range withText:@""];
+    [_inputModel replaceRange:range withText:@""];
 }
 
 - (void) deleteWordBackward:(id)sender
@@ -581,14 +581,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveLeftAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingLeftFromIndex:index];
+        return [_inputModel _indexWhenMovingLeftFromIndex:index];
     }];
 }
 
 - (void) moveWordLeft:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -596,7 +596,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveWordLeftAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingWordLeftFromIndex:index];
+        return [_inputModel _indexWhenMovingWordLeftFromIndex:index];
     }];
 }
 
@@ -610,14 +610,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveRightAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingRightFromIndex:index];
+        return [_inputModel _indexWhenMovingRightFromIndex:index];
     }];
 }
 
 - (void) moveWordRight:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -625,7 +625,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveWordRightAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingWordRightFromIndex:index];
+        return [_inputModel _indexWhenMovingWordRightFromIndex:index];
     }];
 }
 
@@ -639,7 +639,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveUpAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingUpFromIndex:index by:1];
+        return [_inputModel _indexWhenMovingUpFromIndex:index by:1];
     }];
 }
 
@@ -653,14 +653,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveDownAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingDownFromIndex:index by:index];
+        return [_inputModel _indexWhenMovingDownFromIndex:index by:index];
     }];
 }
 
 - (void) moveToBeginningOfLine:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -668,14 +668,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToBeginningOfLineAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingToBeginningOfLineFromIndex:index];
+        return [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:index];
     }];
 }
 
 - (void) moveToEndOfLine:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
+        [_inputModel _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
         0
     }];
 }
@@ -683,14 +683,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToEndOfLineAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingToEndOfLineFromIndex:index];
+        return [_inputModel _indexWhenMovingToEndOfLineFromIndex:index];
     }];    
 }
 
 - (void) moveToBeginningOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -698,13 +698,13 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveParagraphBackwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+        return [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:index];
     }];
 }
 
 - (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
 {
-    if ([_inputController _isLocationAtBeginningOfParagraph]) {
+    if ([_inputModel _isLocationAtBeginningOfParagraph]) {
         [self moveUp:self];
     } else {
         [self moveToBeginningOfParagraph:self];
@@ -713,7 +713,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
-    if ([_inputController _isLocationAtBeginningOfParagraph]) {
+    if ([_inputModel _isLocationAtBeginningOfParagraph]) {
         [self moveUpAndModifySelection:self];
     } else {
         [self moveParagraphBackwardAndModifySelection:self];
@@ -723,14 +723,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToEndOfParagraph:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveToEndOfParagraphOrMoveDown:(id)sender
 {
-    if ([_inputController _isLocationAtEndOfParagraph]) {
+    if ([_inputModel _isLocationAtEndOfParagraph]) {
         [self moveDown:self];
     } else {
         [self moveToEndOfParagraph:self];
@@ -740,13 +740,13 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveParagraphForwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingToEndOfParagraphFromIndex:index];
+        return [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:index];
     }];
 }
 
 - (void) moveParagraphForwardOrMoveDownAndModifySelection:(id)sender
 {
-    if ([_inputController _isLocationAtEndOfParagraph]) {
+    if ([_inputModel _isLocationAtEndOfParagraph]) {
         [self moveDownAndModifySelection:self];
     } else {
         [self moveParagraphForwardAndModifySelection:self];
@@ -756,7 +756,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToBeginningOfDocument:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -764,14 +764,14 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingToBeginningOfDocumentFromIndex:index];
+        return [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:index];
     }];
 }
 
 - (void) moveToEndOfDocument:(id)sender
 {
     [self _setAndScrollToRange:(NSRange){
-        [_inputController _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
+        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -779,7 +779,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (void) moveToEndOfDocumentAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputController _indexWhenMovingToEndOfDocumentFromIndex:index];
+        return [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:index];
     }];
 }
 
@@ -787,8 +787,8 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     UITextRange* range = [self selectedTextRange];
     if (![range isEmpty]) {
-        [[UIPasteboard generalPasteboard] setString:[_inputController textInRange:range]];
-        [_inputController replaceRange:range withText:@""];
+        [[UIPasteboard generalPasteboard] setString:[_inputModel textInRange:range]];
+        [_inputModel replaceRange:range withText:@""];
     }
 }
 
@@ -796,13 +796,13 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     UITextRange* range = [self selectedTextRange];
     if (![range isEmpty]) {
-        [[UIPasteboard generalPasteboard] setString:[_inputController textInRange:range]];
+        [[UIPasteboard generalPasteboard] setString:[_inputModel textInRange:range]];
     }
 }
 
 - (void) paste:(id)sender
 {
-    [_inputController replaceRange:[_inputController selectedTextRange] withText:[[UIPasteboard generalPasteboard] string]];
+    [_inputModel replaceRange:[_inputModel selectedTextRange] withText:[[UIPasteboard generalPasteboard] string]];
 }
 
 - (void) insertNewline:(id)sender
@@ -815,19 +815,19 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (BOOL) hasText
 {
-    return [_inputController hasText];
+    return [_inputModel hasText];
 }
 
 - (void) insertText:(NSString*)text
 {
     _flags.scrollToSelectionAfterLayout = YES;
-    [_inputController insertText:text];
+    [_inputModel insertText:text];
 }
 
 - (void) deleteBackward
 {
     _flags.scrollToSelectionAfterLayout = YES;
-    [_inputController deleteBackward];
+    [_inputModel deleteBackward];
 }
 
 
@@ -835,127 +835,127 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (NSString*) textInRange:(UITextRange*)range
 {
-    return [_inputController textInRange:range];
+    return [_inputModel textInRange:range];
 }
 
 - (void) replaceRange:(UITextRange*)range withText:(NSString*)text
 {
-    [_inputController replaceRange:range withText:text];
+    [_inputModel replaceRange:range withText:text];
 }
 
 - (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text
 {
-    return [_inputController shouldChangeTextInRange:range replacementText:text];
+    return [_inputModel shouldChangeTextInRange:range replacementText:text];
 }
 
 - (UITextRange*) selectedTextRange
 {
-    return [_inputController selectedTextRange];
+    return [_inputModel selectedTextRange];
 }
 
 - (void) setSelectedTextRange:(UITextRange*)selectedTextRange
 {
-    [_inputController setSelectedTextRange:selectedTextRange];
+    [_inputModel setSelectedTextRange:selectedTextRange];
 }
 
 - (UITextRange*) markedTextRange
 {
-    return [_inputController markedTextRange];
+    return [_inputModel markedTextRange];
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
-    [_inputController setMarkedText:markedText selectedRange:selectedRange];
+    [_inputModel setMarkedText:markedText selectedRange:selectedRange];
 }
 
 - (void) unmarkText
 {
-    [_inputController unmarkText];
+    [_inputModel unmarkText];
 }
 
 - (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    return [_inputController textRangeFromPosition:fromPosition toPosition:toPosition];
+    return [_inputModel textRangeFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
 {
-    return [_inputController positionFromPosition:position offset:offset];
+    return [_inputModel positionFromPosition:position offset:offset];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-    return [_inputController positionFromPosition:position inDirection:direction offset:offset];
+    return [_inputModel positionFromPosition:position inDirection:direction offset:offset];
 }
 
 - (UITextPosition*) beginningOfDocument
 {
-    return [_inputController beginningOfDocument];
+    return [_inputModel beginningOfDocument];
 }
 
 - (UITextPosition*) endOfDocument
 {
-    return [_inputController endOfDocument];
+    return [_inputModel endOfDocument];
 }
 
 - (NSComparisonResult) comparePosition:(UITextPosition*)position toPosition:(UITextPosition*)other
 {
-    return [_inputController comparePosition:position toPosition:other];
+    return [_inputModel comparePosition:position toPosition:other];
 }
 
 - (NSInteger) offsetFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    return [_inputController offsetFromPosition:fromPosition toPosition:toPosition];
+    return [_inputModel offsetFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionWithinRange:(UITextRange*)range farthestInDirection:(UITextLayoutDirection)direction
 {
-    return [_inputController positionWithinRange:range farthestInDirection:direction];
+    return [_inputModel positionWithinRange:range farthestInDirection:direction];
 }
 
 - (UITextRange*) characterRangeByExtendingPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction
 {
-    return [_inputController characterRangeByExtendingPosition:position inDirection:direction];
+    return [_inputModel characterRangeByExtendingPosition:position inDirection:direction];
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction
 {
-    return [_inputController baseWritingDirectionForPosition:position inDirection:direction];
+    return [_inputModel baseWritingDirectionForPosition:position inDirection:direction];
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
 {
-    [_inputController setBaseWritingDirection:writingDirection forRange:range];
+    [_inputModel setBaseWritingDirection:writingDirection forRange:range];
 }
 
 - (CGRect) firstRectForRange:(UITextRange*)range
 {
-    return [_inputController firstRectForRange:range];
+    return [_inputModel firstRectForRange:range];
 }
 
 - (CGRect) caretRectForPosition:(UITextPosition*)position
 {
-    return [_inputController caretRectForPosition:position];
+    return [_inputModel caretRectForPosition:position];
 }
 
 - (NSArray*) selectionRectsForRange:(UITextRange*)range
 {
-    return [_inputController selectionRectsForRange:range];
+    return [_inputModel selectionRectsForRange:range];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
 {
-    return [_inputController closestPositionToPoint:point];
+    return [_inputModel closestPositionToPoint:point];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(UITextRange*)range
 {
-    return [_inputController closestPositionToPoint:point withinRange:range];
+    return [_inputModel closestPositionToPoint:point withinRange:range];
 }
 
 - (UITextRange*) characterRangeAtPoint:(CGPoint)point
 {
-    return [_inputController characterRangeAtPoint:point];
+    return [_inputModel characterRangeAtPoint:point];
 }
 
 
@@ -977,13 +977,13 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position
 {
-    return [_inputController textRangeOfWordContainingPosition:position];
+    return [_inputModel textRangeOfWordContainingPosition:position];
 }
 
 
 #pragma mark _UITextInputController
 
-- (NSRange) textInput:(_UITextInputController*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
+- (NSRange) textInput:(_UITextInputModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
 {
     [self beginSelectionChange];
     if (!_stillSelecting && !toRange.length) {
@@ -996,7 +996,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     return toRange;
 }
 
-- (void) textInputDidChangeSelection:(_UITextInputController*)controller
+- (void) textInputDidChangeSelection:(_UITextInputModel*)controller
 {
     NSLayoutManager* layoutManager = [self layoutManager];
     NSRange selectedRange = [controller selectedRange];
@@ -1010,12 +1010,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     [self endSelectionChange];
 }
 
-- (void) textInputDidChange:(_UITextInputController*)controller
+- (void) textInputDidChange:(_UITextInputModel*)controller
 {
     [self _didChangeText];
 }
 
-- (void) textInput:(_UITextInputController*)controller prepareAttributedTextForInsertion:(id)text
+- (void) textInput:(_UITextInputModel*)controller prepareAttributedTextForInsertion:(id)text
 {
     [text setAttributes:[self _stringAttributes] range:(NSRange){ 0, [text length] }];
 }

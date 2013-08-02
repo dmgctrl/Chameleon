@@ -3,23 +3,23 @@
 
 @class NSLayoutManager;
 @class NSTextContainer;
-@class _UITextInputController;
+@class _UITextInputModel;
 
 
 UIKIT_HIDDEN
 @protocol _UITextInputControllerDelegate <NSObject>
 @optional
-- (void) textInputDidChangeSelection:(_UITextInputController*)controller;
-- (NSRange) textInput:(_UITextInputController*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange;
-- (void) textInputDidChange:(_UITextInputController*)controller;
-- (void) textInput:(_UITextInputController*)controller prepareAttributedTextForInsertion:(id)text;
-- (BOOL) textInput:(_UITextInputController*)controller shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
-- (BOOL) textInputShouldBeginEditing:(_UITextInputController*)controller;
+- (void) textInputDidChangeSelection:(_UITextInputModel*)controller;
+- (NSRange) textInput:(_UITextInputModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange;
+- (void) textInputDidChange:(_UITextInputModel*)controller;
+- (void) textInput:(_UITextInputModel*)controller prepareAttributedTextForInsertion:(id)text;
+- (BOOL) textInput:(_UITextInputModel*)controller shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
+- (BOOL) textInputShouldBeginEditing:(_UITextInputModel*)controller;
 @end
 
 
 UIKIT_HIDDEN
-@interface _UITextInputController : NSObject <UITextInput>
+@interface _UITextInputModel : NSObject <UITextInput>
 
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
