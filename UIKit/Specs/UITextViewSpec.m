@@ -530,11 +530,11 @@ describe(@"UITextView", ^{
         });
 
         context(@"Composed characters", ^{
-            NSString* composedText = @"0e\u030A3e\u030A6e\u030A9e\u030A2e\u030A5";
-            // |0|1,2|3|4,5|6|7,8|9|10,11|12|13,14|15 character index
-            // |0|eo |3|eo |6|eo |9|eo   |2 |eo   |5  character (ignore space and |)
-            // |0|e̊  |3|e̊  |6|e̊  |9|e̊    |2 |e̊    |5  glyph (ignore space and |)
-            // |0|1  |2|3  |4|5  |6|7    |8 |9    |10 glyph index
+            NSString* composedText = @"0e\u030A3e\u030A6e\u030A9e\u030A2e\u030A";
+            // |0|1,2|3|4,5|6|7,8|9|10,11|12|13,14 character index
+            // |0|eo |3|eo |6|eo |9|eo   |2 |eo    character (ignore space and |)
+            // |0|e̊  |3|e̊  |6|e̊  |9|e̊    |2 |e̊     glyph (ignore space and |)
+            // |0|1  |2|3  |4|5  |6|7    |8 |9     glyph index
             UITextView* composedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [composedTextView setText:composedText];
             [composedTextView setFont:[UIFont systemFontOfSize:14]];
@@ -578,6 +578,176 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) //remove once characterRangeByExtendingPostion:inDirection implemented for UIKit
+                context(@"characterRangeByExtendingPostion:inDirection", ^{
+                    context(@"for composed character in middle", ^{
+                        UITextPosition* position = [composedTextView positionFromPosition:beginningOfDocument offset:3];
+                        UITextPosition* postPosition = [composedTextView positionFromPosition:beginningOfDocument offset:4];
+                        context(@"right", ^{
+                            UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionRight];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextRange* rangeExtendedLeft = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionLeft];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"up", ^{
+                            UITextRange* rangeExtendedUp = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionUp];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"down", ^{
+                            UITextRange* rangeExtendedDown = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionDown];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                    });
+                    context(@"beginning of document", ^{
+                        UITextPosition* unitPosition = [composedTextView positionFromPosition:beginningOfDocument offset:1];
+                        context(@"right", ^{
+                            UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionRight];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextRange* rangeExtendedLeft = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionLeft];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"up", ^{
+                            UITextRange* rangeExtendedUp = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionUp];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"down", ^{
+                            UITextRange* rangeExtendedDown = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionDown];
+                            context(@"start", ^{
+                                it(@"should = to beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                    });
+                    context(@"end of document", ^{
+                        UITextPosition* penultimatePosition = [composedTextView positionFromPosition:endOfDocument offset:-1];
+                        context(@"right", ^{
+                            UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionRight];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextRange* rangeExtendedLeft = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionLeft];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"up", ^{
+                            UITextRange* rangeExtendedUp = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionUp];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"down", ^{
+                            UITextRange* rangeExtendedDown = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionDown];
+                            context(@"start", ^{
+                                it(@"should = to beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                    });
+                });
+#endif
             });
         });
 
