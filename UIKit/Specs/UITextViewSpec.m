@@ -516,6 +516,7 @@ describe(@"UITextView", ^{
         });
 #if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) // markedtext methods and properties not yes implemented for uikit.
         context(@"marked text", ^{
+            NSString* newText = @"taco";
             context(@"not set", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
@@ -534,14 +535,14 @@ describe(@"UITextView", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
                 [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
-                [markedTextView setMarkedText:@"taco" selectedRange:NSMakeRange(0, 1)];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
                 UITextRange* markedTextRange = [markedTextView markedTextRange];
                 NSDictionary* selectedTextStyleDict = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"UITextInputTextBackgroundColorKey",
                                                        [UIColor blackColor], @"UITextInputTextColorKey",
                                                        [markedTextView font], @"UITextInputTextFontKey",
                                                        nil];
                 it(@"should insert", ^{
-                    [[[markedTextView text] should] equal:@"taco"];
+                    [[[markedTextView text] should] equal:newText];
                 });
                 it(@"style should be correct", ^{
                     [[markedTextView markedTextStyle] isEqualToDictionary:selectedTextStyleDict];
@@ -557,7 +558,7 @@ describe(@"UITextView", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
                 [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
-                [markedTextView setMarkedText:@"taco" selectedRange:NSMakeRange(0, 1)];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
                 [markedTextView unmarkText];
                 it(@"should have no range", ^{
                     [[[markedTextView markedTextRange] should] beNil];
@@ -567,9 +568,9 @@ describe(@"UITextView", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
                 [markedTextView setMarkedText:@"0123456789" selectedRange:NSMakeRange(0, 0)];
-                [markedTextView setMarkedText:@"abc" selectedRange:NSMakeRange(0, 0)];
-                it(@"spanky", ^{
-                    [[[markedTextView text] should] equal:[text stringByAppendingString:@"abc"]];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 0)];
+                it(@"have second marked text inserted", ^{
+                    [[[markedTextView text] should] equal:[text stringByAppendingString:newText]];
                 });
             });
         });
