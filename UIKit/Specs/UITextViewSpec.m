@@ -959,6 +959,18 @@ describe(@"UITextView", ^{
                     [[[selectionTextView selectedTextRange] should] beNil];
                 });
             });
+            context(@"affinity", ^{
+                UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [selectionTextView setText:selectionText];
+                UITextPosition* beginningOfDocument = [selectionTextView beginningOfDocument];
+                UITextPosition* endOfFirstLine = [selectionTextView positionFromPosition:beginningOfDocument offset:19];
+                UITextRange* selectedTextRange = [selectionTextView textRangeFromPosition:beginningOfDocument toPosition:endOfFirstLine];
+                [selectionTextView setSelectedTextRange:selectedTextRange];
+                [selectionTextView setSelectionAffinity:UITextStorageDirectionBackward]; //setter seems to ignore input in harness. Haven't found instance of Backward
+                it(@"should be forward", ^{
+                    [[@([selectionTextView selectionAffinity]) should] equal:@(UITextStorageDirectionForward)];
+                });
+            });
         });
     });
 });
