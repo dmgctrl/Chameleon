@@ -827,9 +827,6 @@ describe(@"UITextView", ^{
                         });
 #endif
                     });
-                    
-                    context(@"Comparisons", ^{
-                    });
                 });
 
                 context(@"no length", ^{
@@ -882,6 +879,54 @@ describe(@"UITextView", ^{
                             });
                         });
 #endif
+                    });
+                });
+            });
+        });
+
+        context(@"Selection", ^{
+            NSString* selectionText = @"The quick brown fox /n/njumped over the lazy dog.";
+            context(@"entire document", ^{
+                UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [selectionTextView setText:selectionText];
+                UITextPosition* beginningOfDocument = [selectionTextView beginningOfDocument];
+                UITextPosition* endOfDocument = [selectionTextView endOfDocument];
+                UITextRange* fullSelectionRange = [selectionTextView textRangeFromPosition:beginningOfDocument toPosition:endOfDocument];
+                [selectionTextView setSelectedTextRange:fullSelectionRange];
+                context(@"when set then gotten", ^{
+                    UITextRange* selectedTextRange = [selectionTextView selectedTextRange];
+                    UITextPosition* start = [fullSelectionRange start];
+                    UITextPosition* end = [fullSelectionRange end];
+                    it(@"should not be empty", ^{
+                        [[@([selectedTextRange isEmpty]) should] beNo];
+                    });
+                    it(@"should have correct start", ^{
+                        [[@([selectionTextView comparePosition:start toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                    });
+                    it(@"should have correct end", ^{
+                        [[@([selectionTextView comparePosition:end toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                    });
+                    context(@"when selected range has not been explicitly set", ^{
+                        NSInteger startCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:start];
+                        NSInteger endCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:end];
+                        NSRange selectedTextCharacterRange = NSMakeRange(startCharacterOffset, endCharacterOffset);
+                        it(@"should = selected range", ^{
+                            [[@(NSEqualRanges(selectedTextCharacterRange, [selectionTextView selectedRange])) should] beYes];
+                        });
+                    });
+                });
+            });
+            context(@"not set", ^{
+                context(@"when the text's selectionRange is set", ^{
+                    UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [selectionTextView setText:selectionText];
+                    [selectionTextView setSelectedRange:NSMakeRange(0, [selectionText length])];
+                    UITextPosition* beginningOfDocument = [selectionTextView beginningOfDocument];
+                    UITextRange* selectedTextRange = [selectionTextView selectedTextRange];
+                    NSInteger startCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:[selectedTextRange start]];
+                    NSInteger endCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:[selectedTextRange end]];
+                    it(@"should get set", ^{
+                        [[@(NSEqualRanges([selectionTextView selectedRange], NSMakeRange(startCharacterOffset, endCharacterOffset))) should] beYes];
                     });
                 });
             });
