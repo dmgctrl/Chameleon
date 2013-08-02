@@ -929,6 +929,35 @@ describe(@"UITextView", ^{
                         [[@(NSEqualRanges([selectionTextView selectedRange], NSMakeRange(startCharacterOffset, endCharacterOffset))) should] beYes];
                     });
                 });
+                context(@"when the text's selectionRange will not be set", ^{
+                    UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [selectionTextView setText:selectionText];
+                    UITextRange* selectionTextRange = [selectionTextView selectedTextRange];
+                    it(@"should be", ^{
+                        [[selectionTextRange should] beNonNil];
+                    });
+                    it(@"should have and empty range", ^{
+                        [[@([selectionTextRange isEmpty]) should] beYes];
+                    });
+                    it(@"should be caret at end of document", ^{
+                        [[@([selectionTextView comparePosition:[selectionTextRange start] toPosition:[selectionTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
+                    });
+                });
+                context(@"when text is not yet set", ^{
+                    UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    UITextRange* selectionTextRange = [selectionTextView selectedTextRange];
+                    it(@"should be nil", ^{
+                        [[selectionTextRange should] beNil];
+                    });
+                });
+            });
+            context(@"when set to nil", ^{
+                UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [selectionTextView setText:selectionText];
+                [selectionTextView setSelectedTextRange:nil];
+                it(@"should be nil", ^{
+                    [[[selectionTextView selectedTextRange] should] beNil];
+                });
             });
         });
     });
