@@ -619,9 +619,44 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
-                });
-                
-                context(@"Comparisons", ^{
+                    
+                    context(@"Comparisons", ^{
+                        it(@"start should be < end", ^{
+                            [[@([textView comparePosition:[entireTextRange start] toPosition:[entireTextRange end]]) should] equal:@(NSOrderedAscending)];
+                        });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+                        // This is not yet implemented in UIKit. It is written in response to ticket #1567. It tests an optional method in the UITextInput protocol
+                        // that the harness implements.
+                        context(@"-positionWithinRange:farthestInDirection:", ^{
+                            context(@"layout direction", ^{
+                                context(@"up", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"left", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionLeft];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"down", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionDown];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"right", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionRight];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                            });
+                        });
+#endif
+                    });
                 });
             });
         });
