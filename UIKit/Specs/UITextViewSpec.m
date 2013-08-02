@@ -658,6 +658,21 @@ describe(@"UITextView", ^{
 #endif
                     });
                 });
+
+                context(@"no length", ^{
+                    context(@"Measurements", ^{
+                        UITextRange* zeroTextRange = [textView textRangeFromPosition:beginningOfDocument toPosition:beginningOfDocument];
+                        it(@"should measure zero", ^{
+                            [[@([textView offsetFromPosition:[zeroTextRange start] toPosition:[zeroTextRange end]]) should] equal:@(0)];
+                        });
+                        it(@"should be empty", ^{
+                            [[@([zeroTextRange isEmpty]) should] beYes];
+                        });
+                        it(@"should have no text", ^{
+                            [[@([[textView textInRange:zeroTextRange] isEqualToString:@""]) should] beYes];
+                        });
+                    });
+                });
             });
         });
     });
