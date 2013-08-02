@@ -344,6 +344,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"end of document", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -366,6 +367,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"small offset after beginning", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -388,6 +390,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"small offset before end", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -431,6 +434,59 @@ describe(@"UITextView", ^{
                     });
                 });
             });
+
+            context(@"from point", ^{
+                context(@"not considering range", ^{
+                    UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
+                    context(@"origin", ^{
+                        UITextPosition* postitionClosestToOrigin = [loremTextView closestPositionToPoint:CGPointZero];
+                        it(@"should be beginning of document", ^{
+                            [[@([loremTextView comparePosition:postitionClosestToOrigin toPosition:beginningOfLoremText]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"far corner", ^{
+                        UITextPosition* endOfLoremText = [loremTextView endOfDocument];
+                        UITextPosition* postitionClosestToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100)];
+                        it(@"should be end of document", ^{
+                            [[@([loremTextView comparePosition:postitionClosestToFarCorner toPosition:endOfLoremText]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"center", ^{
+                        UITextPosition* truePositionAtCenter = [loremTextView positionFromPosition:beginningOfLoremText offset:33];
+                        UITextPosition* positionClosestToCenter = [loremTextView closestPositionToPoint:[loremTextView center]];
+                        it(@"should be near middle of document", ^{
+                            [[@([loremTextView comparePosition:positionClosestToCenter toPosition:truePositionAtCenter]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                });
+                context(@"considering partial range", ^{
+                    UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
+                    UITextPosition* beginningOfSampleRange = [loremTextView positionFromPosition:beginningOfLoremText offset:12];
+                    UITextPosition* endOfSampleRange = [loremTextView positionFromPosition:beginningOfLoremText offset:28];
+                    UITextRange* sampleRange = [loremTextView textRangeFromPosition:beginningOfSampleRange toPosition:endOfSampleRange];
+                    context(@"before range,", ^{
+                        UITextPosition* positionInSampleRangeClosestToOrigin = [loremTextView closestPositionToPoint:CGPointZero withinRange:sampleRange];
+                        it(@"should be beginning of that range", ^{
+                            [[@([loremTextView comparePosition:positionInSampleRangeClosestToOrigin toPosition:beginningOfSampleRange]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"after range,", ^{
+                        UITextPosition* postionInSampleRangeClosestToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100) withinRange:sampleRange];
+                        it(@"should be end of that range", ^{
+                            [[@([loremTextView comparePosition:postionInSampleRangeClosestToFarCorner toPosition:endOfSampleRange]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"point within range", ^{
+                        CGRect sampleRect = [loremTextView firstRectForRange:sampleRange];
+                        CGPoint pointAtCenterOfSampleRange = CGPointMake(sampleRect.origin.x + sampleRect.size.width/2.0, sampleRect.origin.y + sampleRect.size.height/2.0);
+                        UITextPosition* truePositionInSampleRangeClosestToCenterOfSampleRange = [loremTextView positionFromPosition:beginningOfLoremText offset:17];
+                        UITextPosition* positionInSampleRangeClosestToCenterOfSampleRange = [loremTextView closestPositionToPoint:pointAtCenterOfSampleRange withinRange:sampleRange];
+                        it(@"should be position somewhere within range", ^{
+                            [[@([loremTextView comparePosition:positionInSampleRangeClosestToCenterOfSampleRange toPosition:truePositionInSampleRangeClosestToCenterOfSampleRange]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                });
+            });
         });
 
         context(@"Composed characters", ^{
@@ -444,7 +500,6 @@ describe(@"UITextView", ^{
             [composedTextView setFont:[UIFont systemFontOfSize:14]];
             NSInteger tinyOffset = 2;
             UITextPosition* beginningOfDocument = [composedTextView beginningOfDocument];
-            UITextPosition* endOfDocument = [composedTextView endOfDocument];
             UITextPosition* prePosition = [composedTextView positionFromPosition:beginningOfDocument offset:smallOffset];
             NSInteger preIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:prePosition];
             context(@"positions", ^{
