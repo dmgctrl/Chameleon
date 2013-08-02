@@ -215,10 +215,8 @@
         cmd == @selector(cut:) ||
         cmd == @selector(delete:) ||
         cmd == @selector(paste:) ||
-        cmd == @selector(select:) ||
         cmd == @selector(selectAll:) ||
-        cmd == @selector(commit:) ||
-        cmd == @selector(cancel:)
+        cmd == @selector(commit:)
     ) {
         return [self firstResponderCanPerformAction:cmd withSender:nil];
     } else if (cmd == @selector(cancelOperation:)) {
@@ -228,16 +226,12 @@
     }
 }
 
-- (void)copy:(id)sender				{ [self sendActionToFirstResponder:_cmd from:sender]; }
 - (void)cut:(id)sender				{ [self sendActionToFirstResponder:_cmd from:sender]; }
-- (void)delete:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
+- (void)copy:(id)sender				{ [self sendActionToFirstResponder:_cmd from:sender]; }
 - (void)paste:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
-- (void)select:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
+- (void)delete:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
 - (void)selectAll:(id)sender		{ [self sendActionToFirstResponder:_cmd from:sender]; }
-
-// these are special additions
 - (void)cancel:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
-- (void)commit:(id)sender			{ [self sendActionToFirstResponder:_cmd from:sender]; }
 
 
 // this is a special case, UIKit doesn't normally send anything like this.
@@ -461,7 +455,8 @@
     if (!_textInput) {
         return;
     } else if ([_textInput respondsToSelector:selector]) {
-        [_textInput performSelector:selector withObject:nil];
+        void (*command)(id, SEL, id) = (void*)[_textInput methodForSelector:selector];
+        command(_textInput, selector, nil);
     } else if (_textInputHas.doCommandBySelector) {
         [(id)_textInput doCommandBySelector:selector];
     }
