@@ -506,15 +506,76 @@ describe(@"UITextView", ^{
                     it(@"has an end property equal to endOfDocument", ^{
                         [[[entireTextRange end] should] equal:endOfDocument];
                     });
+
+                    context(@"Measurements", ^{
+                    });
+                    
+                    context(@"Comparisons", ^{
+                    });
                 });
             });
-
-            context(@"Measurements", ^{
+        });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+        context(@"marked text", ^{
+            context(@"not set", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                context(@"range", ^{
+                    it(@"should be nil", ^{
+                        [[[markedTextView markedTextRange] should] beNil];
+                    });
+                });
+                context(@"style", ^{
+                    it(@"should be nil", ^{
+                        [[[markedTextView markedTextStyle] should] beNil];
+                    });
+                });
             });
-            
-            context(@"Comparisons", ^{
+            context(@"set once", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setMarkedText:@"taco" selectedRange:NSMakeRange(0, 1)];
+                UITextRange* markedTextRange = [markedTextView markedTextRange];
+                NSDictionary* selectedTextStyleDict = @{
+                  UITextInputTextBackgroundColorKey:[UIColor whiteColor],
+                  UITextInputTextColorKey:[UIColor blackColor],
+                  UITextInputTextFontKey:[markedTextView font],
+                };
+                it(@"should insert", ^{
+                    [[[markedTextView text] should] equal:@"taco"];
+                });
+                it(@"style should be correct", ^{
+                    [[markedTextView markedTextStyle] isEqualToDictionary:selectedTextStyleDict];
+                });
+                it(@"should have correct start", ^{
+                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:[markedTextView beginningOfDocument]]) should] equal:@(NSOrderedSame)];
+                });
+                it(@"should have correct end", ^{
+                    [[@([markedTextView comparePosition:[markedTextRange end] toPosition:[markedTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
+                });
+            });
+            context(@"set once then unmarked", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setMarkedText:@"taco" selectedRange:NSMakeRange(0, 1)];
+                [markedTextView unmarkText];
+                it(@"should have no range", ^{
+                    [[[markedTextView markedTextRange] should] beNil];
+                });
+            });
+            context(@"set twice", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setMarkedText:@"0123456789" selectedRange:NSMakeRange(0, 0)];
+                [markedTextView setMarkedText:@"abc" selectedRange:NSMakeRange(0, 0)];
+                it(@"spanky", ^{
+                    [[[markedTextView text] should] equal:[text stringByAppendingString:@"abc"]];
+                });
             });
         });
+#endif
     });
 });
 SPEC_END
