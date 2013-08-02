@@ -5,6 +5,11 @@
 @implementation _UITextInputModelAdapter {
     _UITextInputModel* _inputModel;
 }
+@synthesize markedTextRange;
+@synthesize markedTextStyle;
+@synthesize inputDelegate;
+@synthesize tokenizer;
+
 
 - (instancetype) initWithInputModel:(_UITextInputModel*)inputModel
 {
@@ -14,6 +19,27 @@
     }
     return self;
 }
+
+
+#pragma mark UIKeyInput
+
+- (BOOL) hasText
+{
+    return [_inputModel hasText];
+}
+
+- (void) insertText:(NSString*)text
+{
+    [_inputModel insertText:text];
+}
+
+- (void) deleteBackward
+{
+    [_inputModel deleteBackward];
+}
+
+
+#pragma mark UITextInput
 
 - (NSString*) textInRange:(UITextRange*)range
 {

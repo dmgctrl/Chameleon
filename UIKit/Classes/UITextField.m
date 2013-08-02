@@ -42,6 +42,7 @@
 #import "_UITextInteractionController.h"
 #import "_UITextFieldEditor.h"
 #import "_UITextInputModel.h"
+#import "_UITextInputModelAdapter.h"
 /**/
 #import "UIImage.h"
 #import "UIImage+UIPrivate.h"
@@ -93,6 +94,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     
     _UITextInteractionController* _interactionController;
     _UITextInputModel* _inputModel;
+    _UITextInputModelAdapter* _inputModelAdapter;
     
     struct {
         bool shouldBeginEditing : 1;
@@ -140,6 +142,8 @@ static void _commonInitForUITextField(UITextField* self)
     [self->_textStorage addLayoutManager:self->_layoutManager];
     
     self->_inputModel = [[_UITextInputModel alloc] initWithLayoutManager:self->_layoutManager];
+    
+    self->_inputModelAdapter = [[_UITextInputModelAdapter alloc] initWithInputModel:self->_inputModel];
 }
 
 - (id) initWithFrame:(CGRect)frame
@@ -739,17 +743,17 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) hasText
 {
-    return [_inputModel hasText];
+    return [_inputModelAdapter hasText];
 }
 
 - (void) insertText:(NSString*)text
 {
-    [_inputModel insertText:text];
+    [_inputModelAdapter insertText:text];
 }
 
 - (void) deleteBackward
 {
-    [_inputModel deleteBackward];
+    [_inputModelAdapter deleteBackward];
 }
 
 
@@ -757,127 +761,127 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (NSString*) textInRange:(UITextRange*)range
 {
-    return [_inputModel textInRange:range];
+    return [_inputModelAdapter textInRange:range];
 }
 
 - (void) replaceRange:(UITextRange*)range withText:(NSString*)text
 {
-    [_inputModel replaceRange:range withText:text];
+    [_inputModelAdapter replaceRange:range withText:text];
 }
 
 - (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text
 {
-    return [_inputModel shouldChangeTextInRange:range replacementText:text];
+    return [_inputModelAdapter shouldChangeTextInRange:range replacementText:text];
 }
 
 - (UITextRange*) selectedTextRange
 {
-    return [_inputModel selectedTextRange];
+    return [_inputModelAdapter selectedTextRange];
 }
 
 - (void) setSelectedTextRange:(UITextRange*)selectedTextRange
 {
-    [_inputModel setSelectedTextRange:selectedTextRange];
+    [_inputModelAdapter setSelectedTextRange:selectedTextRange];
 }
 
 - (UITextRange*) markedTextRange
 {
-    return [_inputModel markedTextRange];
+    return [_inputModelAdapter markedTextRange];
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
-    [_inputModel setMarkedText:markedText selectedRange:selectedRange];
+    [_inputModelAdapter setMarkedText:markedText selectedRange:selectedRange];
 }
 
 - (void) unmarkText
 {
-    [_inputModel unmarkText];
+    [_inputModelAdapter unmarkText];
 }
 
 - (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    return [_inputModel textRangeFromPosition:fromPosition toPosition:toPosition];
+    return [_inputModelAdapter textRangeFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
 {
-    return [_inputModel positionFromPosition:position offset:offset];
+    return [_inputModelAdapter positionFromPosition:position offset:offset];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-    return [_inputModel positionFromPosition:position inDirection:direction offset:offset];
+    return [_inputModelAdapter positionFromPosition:position inDirection:direction offset:offset];
 }
 
 - (UITextPosition*) beginningOfDocument
 {
-    return [_inputModel beginningOfDocument];
+    return [_inputModelAdapter beginningOfDocument];
 }
 
 - (UITextPosition*) endOfDocument
 {
-    return [_inputModel endOfDocument];
+    return [_inputModelAdapter endOfDocument];
 }
 
 - (NSComparisonResult) comparePosition:(UITextPosition*)position toPosition:(UITextPosition*)other
 {
-    return [_inputModel comparePosition:position toPosition:other];
+    return [_inputModelAdapter comparePosition:position toPosition:other];
 }
 
 - (NSInteger) offsetFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    return [_inputModel offsetFromPosition:fromPosition toPosition:toPosition];
+    return [_inputModelAdapter offsetFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionWithinRange:(UITextRange*)range farthestInDirection:(UITextLayoutDirection)direction
 {
-    return [_inputModel positionWithinRange:range farthestInDirection:direction];
+    return [_inputModelAdapter positionWithinRange:range farthestInDirection:direction];
 }
 
 - (UITextRange*) characterRangeByExtendingPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction
 {
-    return [_inputModel characterRangeByExtendingPosition:position inDirection:direction];
+    return [_inputModelAdapter characterRangeByExtendingPosition:position inDirection:direction];
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction
 {
-    return [_inputModel baseWritingDirectionForPosition:position inDirection:direction];
+    return [_inputModelAdapter baseWritingDirectionForPosition:position inDirection:direction];
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
 {
-    [_inputModel setBaseWritingDirection:writingDirection forRange:range];
+    [_inputModelAdapter setBaseWritingDirection:writingDirection forRange:range];
 }
 
 - (CGRect) firstRectForRange:(UITextRange*)range
 {
-    return [_inputModel firstRectForRange:range];
+    return [_inputModelAdapter firstRectForRange:range];
 }
 
 - (CGRect) caretRectForPosition:(UITextPosition*)position
 {
-    return [_inputModel caretRectForPosition:position];
+    return [_inputModelAdapter caretRectForPosition:position];
 }
 
 - (NSArray*) selectionRectsForRange:(UITextRange*)range
 {
-    return [_inputModel selectionRectsForRange:range];
+    return [_inputModelAdapter selectionRectsForRange:range];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
 {
-    return [_inputModel closestPositionToPoint:point];
+    return [_inputModelAdapter closestPositionToPoint:point];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(UITextRange*)range
 {
-    return [_inputModel closestPositionToPoint:point withinRange:range];
+    return [_inputModelAdapter closestPositionToPoint:point withinRange:range];
 }
 
 - (UITextRange*) characterRangeAtPoint:(CGPoint)point
 {
-    return [_inputModel characterRangeAtPoint:point];
+    return [_inputModelAdapter characterRangeAtPoint:point];
 }
 
 

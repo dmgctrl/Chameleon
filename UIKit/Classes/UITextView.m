@@ -567,19 +567,19 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (BOOL) hasText
 {
-    return [_inputModel hasText];
+    return [_inputModelAdapter hasText];
 }
 
 - (void) insertText:(NSString*)text
 {
     _flags.scrollToSelectionAfterLayout = YES;
-    [_inputModel insertText:text];
+    [_inputModelAdapter insertText:text];
 }
 
 - (void) deleteBackward
 {
     _flags.scrollToSelectionAfterLayout = YES;
-    [_inputModel deleteBackward];
+    [_inputModelAdapter deleteBackward];
 }
 
 
