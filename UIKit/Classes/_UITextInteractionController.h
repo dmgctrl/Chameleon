@@ -4,7 +4,7 @@
 @class UIView;
 @class UITapGestureRecognizer;
 
-@interface _UITextInteractionAssistant : NSObject
+@interface _UITextInteractionController : NSObject
 
 - (instancetype) initWithView:(UIView<UITextInput>*)view;
 

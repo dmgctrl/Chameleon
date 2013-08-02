@@ -39,7 +39,7 @@
 #import <UIKit/NSLayoutManager.h>
 /**/
 #import "_UITextStorage.h"
-#import "_UITextInteractionAssistant.h"
+#import "_UITextInteractionController.h"
 #import "_UITextFieldEditor.h"
 #import "_UITextInputModel.h"
 /**/
@@ -91,7 +91,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     UILabel* _textLabel;
     _UITextFieldEditor* _textFieldEditor;
     
-    _UITextInteractionAssistant* _interactionAssistant;
+    _UITextInteractionController* _interactionController;
     _UITextInputModel* _inputModel;
     
     struct {
@@ -887,12 +887,12 @@ static void _commonInitForUITextField(UITextField* self)
 {
     [super willMoveToWindow:window];
     if (window) {
-        _interactionAssistant = [[_UITextInteractionAssistant alloc] initWithView:self];
-        [_interactionAssistant addOneFingerTapRecognizerToView:self];
-        [_interactionAssistant addOneFingerDoubleTapRecognizerToView:self];
+        _interactionController = [[_UITextInteractionController alloc] initWithView:self];
+        [_interactionController addOneFingerTapRecognizerToView:self];
+        [_interactionController addOneFingerDoubleTapRecognizerToView:self];
     } else {
-        [_interactionAssistant removeGestureRecognizersFromView:self];
-        _interactionAssistant = nil;
+        [_interactionController removeGestureRecognizersFromView:self];
+        _interactionController = nil;
     }
 }
 

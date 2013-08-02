@@ -1,4 +1,4 @@
-#import "_UITextInteractionAssistant.h"
+#import "_UITextInteractionController.h"
 #import "_UITextInputPlus.h"
 //
 #import <UIKit/UIView.h>
@@ -6,11 +6,11 @@
 #import <UIKit/UITapGestureRecognizer.h>
 
 
-@interface _UITextInteractionAssistant () <UIGestureRecognizerDelegate>
+@interface _UITextInteractionController () <UIGestureRecognizerDelegate>
 @end
 
 
-@implementation _UITextInteractionAssistant {
+@implementation _UITextInteractionController {
     NSMutableArray* _gestureRecognizers;
     struct {
         bool beginSelectionChange : 1;

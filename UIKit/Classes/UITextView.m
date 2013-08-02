@@ -43,7 +43,7 @@
 #import "_UITextStorage.h"
 #import "_UITextInputModel.h"
 #import "_UITextInputPlus.h"
-#import "_UITextInteractionAssistant.h"
+#import "_UITextInteractionController.h"
 //
 #import <AppKit/NSColor.h>
 #import <AppKit/NSCursor.h>
@@ -89,7 +89,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 
     _UITextContainerView* _textContainerView;
 
-    _UITextInteractionAssistant* _interactionAssistant;
+    _UITextInteractionController* _interactionController;
     _UITextInputModel* _inputModel;
     
     struct {
@@ -418,12 +418,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 {
     [super willMoveToWindow:window];
     if (window) {
-        _interactionAssistant = [[_UITextInteractionAssistant alloc] initWithView:self];
-        [_interactionAssistant addOneFingerTapRecognizerToView:self];
-        [_interactionAssistant addOneFingerDoubleTapRecognizerToView:self];
+        _interactionController = [[_UITextInteractionController alloc] initWithView:self];
+        [_interactionController addOneFingerTapRecognizerToView:self];
+        [_interactionController addOneFingerDoubleTapRecognizerToView:self];
     } else {
-        [_interactionAssistant removeGestureRecognizersFromView:self];
-        _interactionAssistant = nil;
+        [_interactionController removeGestureRecognizersFromView:self];
+        _interactionController = nil;
     }
 }
 

@@ -373,8 +373,8 @@
 		F93791A2176F4396006439EC /* UIStoryboardSegue+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */; };
 		F93D77001794A3410073B778 /* _UITextFieldEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D76FE1794A3410073B778 /* _UITextFieldEditor.h */; };
 		F93D77011794A3410073B778 /* _UITextFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */; };
-		F93D770517953F930073B778 /* _UITextInteractionAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770317953F930073B778 /* _UITextInteractionAssistant.h */; };
-		F93D770617953F930073B778 /* _UITextInteractionAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D770417953F930073B778 /* _UITextInteractionAssistant.m */; };
+		F93D770517953F930073B778 /* _UITextInteractionController.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770317953F930073B778 /* _UITextInteractionController.h */; };
+		F93D770617953F930073B778 /* _UITextInteractionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D770417953F930073B778 /* _UITextInteractionController.m */; };
 		F93D770817954E3A0073B778 /* NSParagraphStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770717954E3A0073B778 /* NSParagraphStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F947AF14176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */; };
 		F947AF15176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */; };
@@ -921,8 +921,8 @@
 		F93791A0176F4396006439EC /* UIStoryboardSegue+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboardSegue+UIPrivate.h"; sourceTree = "<group>"; };
 		F93D76FE1794A3410073B778 /* _UITextFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextFieldEditor.h; sourceTree = "<group>"; };
 		F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextFieldEditor.m; sourceTree = "<group>"; };
-		F93D770317953F930073B778 /* _UITextInteractionAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInteractionAssistant.h; sourceTree = "<group>"; };
-		F93D770417953F930073B778 /* _UITextInteractionAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextInteractionAssistant.m; sourceTree = "<group>"; };
+		F93D770317953F930073B778 /* _UITextInteractionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInteractionController.h; sourceTree = "<group>"; };
+		F93D770417953F930073B778 /* _UITextInteractionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextInteractionController.m; sourceTree = "<group>"; };
 		F93D770717954E3A0073B778 /* NSParagraphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSParagraphStyle.h; sourceTree = "<group>"; };
 		F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegueTemplate.h; sourceTree = "<group>"; };
 		F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardPushSegueTemplate.m; sourceTree = "<group>"; };
@@ -1391,8 +1391,8 @@
 				1489855812EE2CFE003D4751 /* UITextField.m */,
 				F93D76FE1794A3410073B778 /* _UITextFieldEditor.h */,
 				F93D76FF1794A3410073B778 /* _UITextFieldEditor.m */,
-				F93D770317953F930073B778 /* _UITextInteractionAssistant.h */,
-				F93D770417953F930073B778 /* _UITextInteractionAssistant.m */,
+				F93D770317953F930073B778 /* _UITextInteractionController.h */,
+				F93D770417953F930073B778 /* _UITextInteractionController.m */,
 				F9D9772F13B794700086F226 /* UITextInput.h */,
 				F913BAE7179DAECD0095FE6F /* UITextInput.m */,
 				F966690E17A81500005B7FA6 /* _UITextInputPlus.h */,
@@ -2023,7 +2023,7 @@
 				14CB384512689907003334AD /* UIPopoverNSWindow.h in Headers */,
 				14CB384912689949003334AD /* UIPopoverOverlayNSView.h in Headers */,
 				1457DD3F128DDE610057A7F9 /* UITransitionView.h in Headers */,
-				F93D770517953F930073B778 /* _UITextInteractionAssistant.h in Headers */,
+				F93D770517953F930073B778 /* _UITextInteractionController.h in Headers */,
 				F91A1E0617A71AD7008E87F5 /* _UITextViewPosition.h in Headers */,
 				14805F5A12A6E2AE0080C4BA /* UIScrollView+UIPrivate.h in Headers */,
 				14EEF76712DF67CF00EB7D95 /* UIEvent+UIPrivate.h in Headers */,
@@ -2516,7 +2516,7 @@
 				F99E83FE13D05A3D00107358 /* UIRuntimeOutletConnection.m in Sources */,
 				F922DB5C13D32D6C00469869 /* UIClassSwapper.m in Sources */,
 				F922DB6213D3310000469869 /* UITextSelectionView.m in Sources */,
-				F93D770617953F930073B778 /* _UITextInteractionAssistant.m in Sources */,
+				F93D770617953F930073B778 /* _UITextInteractionController.m in Sources */,
 				F922DB6B13D3506300469869 /* UITableViewCellContentView.m in Sources */,
 				14C0715F13CF5A2400B76E35 /* UIAction.m in Sources */,
 				14C0716313CF66B800B76E35 /* UIScrollWheelGestureRecognizer.m in Sources */,
