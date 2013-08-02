@@ -499,6 +499,8 @@
 		F9FAA3AD1787336200954470 /* UIFontDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA3AB1787336200954470 /* UIFontDescriptor.m */; };
 		F9FBEF6717AC2ED700F0831C /* _UITextContainerView.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FBEF6517AC2ED700F0831C /* _UITextContainerView.h */; };
 		F9FBEF6817AC2ED700F0831C /* _UITextContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FBEF6617AC2ED700F0831C /* _UITextContainerView.m */; };
+		F9FBEF6B17AC338700F0831C /* _UITextInputModelAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FBEF6917AC338700F0831C /* _UITextInputModelAdapter.h */; };
+		F9FBEF6C17AC338700F0831C /* _UITextInputModelAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FBEF6A17AC338700F0831C /* _UITextInputModelAdapter.m */; };
 		F9FFDE2915C6E88A000EDAA0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2815C6E88A000EDAA0 /* main.m */; };
 		F9FFDE2D15C6E88A000EDAA0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2C15C6E88A000EDAA0 /* AppDelegate.m */; };
 		F9FFDE3415C6E88A000EDAA0 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
@@ -1028,6 +1030,8 @@
 		F9FAA3AB1787336200954470 /* UIFontDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIFontDescriptor.m; sourceTree = "<group>"; };
 		F9FBEF6517AC2ED700F0831C /* _UITextContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextContainerView.h; sourceTree = "<group>"; };
 		F9FBEF6617AC2ED700F0831C /* _UITextContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextContainerView.m; sourceTree = "<group>"; };
+		F9FBEF6917AC338700F0831C /* _UITextInputModelAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInputModelAdapter.h; sourceTree = "<group>"; };
+		F9FBEF6A17AC338700F0831C /* _UITextInputModelAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextInputModelAdapter.m; sourceTree = "<group>"; };
 		F9FFDE1D15C6E88A000EDAA0 /* TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9FFDE2415C6E88A000EDAA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F9FFDE2815C6E88A000EDAA0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1402,6 +1406,8 @@
 				F966690E17A81500005B7FA6 /* _UITextInputPlus.h */,
 				F91A1E0017A71809008E87F5 /* _UITextInputModel.h */,
 				F91A1E0117A71809008E87F5 /* _UITextInputModel.m */,
+				F9FBEF6917AC338700F0831C /* _UITextInputModelAdapter.h */,
+				F9FBEF6A17AC338700F0831C /* _UITextInputModelAdapter.m */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				F91A1E0417A71AD7008E87F5 /* _UITextViewPosition.h */,
 				F91A1E0517A71AD7008E87F5 /* _UITextViewPosition.m */,
@@ -2114,6 +2120,7 @@
 				F900793013E7405600DFAF19 /* UISegment.h in Headers */,
 				A249874A13EC7EBB0011DB73 /* UIPopoverController+AppKit.h in Headers */,
 				F97BE00C15AFD3920081F45A /* UIColor+UIPrivate.h in Headers */,
+				F9FBEF6B17AC338700F0831C /* _UITextInputModelAdapter.h in Headers */,
 				F97BE01215AFD43B0081F45A /* UIImageRep.h in Headers */,
 				F97BE01D15AFD6E00081F45A /* UIAppearance.h in Headers */,
 				F97BE01E15AFD6E00081F45A /* UIAppearanceInstance.h in Headers */,
@@ -2507,6 +2514,7 @@
 				14541DB31360D6F300C1006D /* UIPhotosAlbum.m in Sources */,
 				882B8EF7136636C8002E8F21 /* UISearchField.m in Sources */,
 				8842BC781387316400D148FF /* UIGradient.m in Sources */,
+				F9FBEF6C17AC338700F0831C /* _UITextInputModelAdapter.m in Sources */,
 				F9647EE513B91BDC0040B2D6 /* UITableViewCellBackgroundView.m in Sources */,
 				F9647EEA13B91D120040B2D6 /* UITableViewCellSelectedBackgroundView.m in Sources */,
 				F9177F9713BA317200619E3D /* UITableViewCellLayoutManager.m in Sources */,
