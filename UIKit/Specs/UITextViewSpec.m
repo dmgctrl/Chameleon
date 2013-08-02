@@ -444,7 +444,6 @@ describe(@"UITextView", ^{
             [composedTextView setFont:[UIFont systemFontOfSize:14]];
             NSInteger tinyOffset = 2;
             UITextPosition* beginningOfDocument = [composedTextView beginningOfDocument];
-            UITextPosition* endOfDocument = [composedTextView endOfDocument];
             UITextPosition* prePosition = [composedTextView positionFromPosition:beginningOfDocument offset:smallOffset];
             NSInteger preIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:prePosition];
             context(@"positions", ^{
@@ -515,7 +514,7 @@ describe(@"UITextView", ^{
                 });
             });
         });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) // markedtext methods and properties not yes implemented for uikit.
         context(@"marked text", ^{
             context(@"not set", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
@@ -537,11 +536,10 @@ describe(@"UITextView", ^{
                 [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
                 [markedTextView setMarkedText:@"taco" selectedRange:NSMakeRange(0, 1)];
                 UITextRange* markedTextRange = [markedTextView markedTextRange];
-                NSDictionary* selectedTextStyleDict = @{
-                  UITextInputTextBackgroundColorKey:[UIColor whiteColor],
-                  UITextInputTextColorKey:[UIColor blackColor],
-                  UITextInputTextFontKey:[markedTextView font],
-                };
+                NSDictionary* selectedTextStyleDict = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"UITextInputTextBackgroundColorKey",
+                                                       [UIColor blackColor], @"UITextInputTextColorKey",
+                                                       [markedTextView font], @"UITextInputTextFontKey",
+                                                       nil];
                 it(@"should insert", ^{
                     [[[markedTextView text] should] equal:@"taco"];
                 });
