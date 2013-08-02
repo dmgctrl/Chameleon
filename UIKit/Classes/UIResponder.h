@@ -68,13 +68,26 @@
 
 @end
 
-#pragma mark -
+
 @interface NSObject (UIResponderStandardEditActions)
+
+#pragma mark Handling Copy, Cut, Delete, and Paste Commands
 - (void) copy:(id)sender;
 - (void) cut:(id)sender;
 - (void) delete:(id)sender;
 - (void) paste:(id)sender;
+
+#pragma mark Handling Selection Commands
 - (void) select:(id)sender;
 - (void) selectAll:(id)sender;
+
+#pragma mark Handling Styled Text Editing
+- (void) toggleBoldface:(id)sender;
+- (void) toggleItalics:(id)sender;
+- (void) toggleUnderline:(id)sender;
+
+#pragma mark Handling Writing Direction Changes
+- (void) makeTextWritingDirectionLeftToRight:(id)sender;
+- (void) makeTextWritingDirectionRightToLeft:(id)sender;
 
 @end
