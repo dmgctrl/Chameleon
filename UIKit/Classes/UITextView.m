@@ -72,7 +72,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 @end
 
 
-@interface UITextView () <_UITextInputControllerDelegate, _UITextInputPlus>
+@interface UITextView () <_UITextInputModelDelegate, _UITextInputPlus>
 @end
 
 

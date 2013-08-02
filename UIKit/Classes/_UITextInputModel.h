@@ -7,7 +7,7 @@
 
 
 UIKIT_HIDDEN
-@protocol _UITextInputControllerDelegate <NSObject>
+@protocol _UITextInputModelDelegate <NSObject>
 @optional
 - (void) textInputDidChangeSelection:(_UITextInputModel*)controller;
 - (NSRange) textInput:(_UITextInputModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange;
@@ -24,7 +24,7 @@ UIKIT_HIDDEN
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextContainer* textContainer;
-@property (nonatomic) id <_UITextInputControllerDelegate> delegate;
+@property (nonatomic) id <_UITextInputModelDelegate> delegate;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager;
 

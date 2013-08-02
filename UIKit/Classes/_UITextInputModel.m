@@ -32,7 +32,7 @@
     return self;
 }
 
-- (void) setDelegate:(id<_UITextInputControllerDelegate>)delegate
+- (void) setDelegate:(id<_UITextInputModelDelegate>)delegate
 {
     if (_delegate != delegate) {
         _delegate = delegate;
