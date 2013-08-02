@@ -657,6 +657,9 @@ describe(@"UITextView", ^{
                         });
 #endif
                     });
+                    
+                    context(@"Comparisons", ^{
+                    });
                 });
 
                 context(@"no length", ^{
@@ -671,6 +674,44 @@ describe(@"UITextView", ^{
                         it(@"should have no text", ^{
                             [[@([[textView textInRange:zeroTextRange] isEqualToString:@""]) should] beYes];
                         });
+                    });
+                    context(@"Comparisons", ^{
+                        UITextRange* zeroTextRange = [textView textRangeFromPosition:beginningOfDocument toPosition:beginningOfDocument];
+                        it(@"start should = end", ^{
+                            [[@([textView comparePosition:[zeroTextRange start] toPosition:[zeroTextRange end]]) should] equal:@(NSOrderedSame)];
+                        });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+                        // This is not yet implemented in UIKit. It is written in response to ticket #1569. It tests an optional method in the UITextInput protocol
+                        // that the harness implements.
+                        context(@"-positionWithinRange:farthestInDirection:", ^{
+                            context(@"layout direction", ^{
+                                context(@"up", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"left", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionLeft];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"down", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionDown];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"right", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionRight];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                            });
+                        });
+#endif
                     });
                 });
             });
