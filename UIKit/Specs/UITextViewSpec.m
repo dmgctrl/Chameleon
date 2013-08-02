@@ -487,6 +487,46 @@ describe(@"UITextView", ^{
                     });
                 });
             });
+
+            context(@"text direction", ^{
+                context(@"beginning of document", ^{
+                    context(@"forward text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:beginningOfDocument inDirection:UITextStorageDirectionForward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                    context(@"reverse text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:beginningOfDocument inDirection:UITextStorageDirectionBackward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                });
+                context(@"end of document", ^{
+                    context(@"forward text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:endOfDocument inDirection:UITextStorageDirectionForward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                    context(@"reverse text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:endOfDocument inDirection:UITextStorageDirectionBackward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                });
+                context(@"at medium offset", ^{
+                    UITextPosition* position = [textView positionFromPosition:beginningOfDocument offset:mediumOffset];
+                    context(@"forward text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:position inDirection:UITextStorageDirectionForward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                    context(@"reverse text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:position inDirection:UITextStorageDirectionBackward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                });
+            });
         });
 
         context(@"Composed characters", ^{
