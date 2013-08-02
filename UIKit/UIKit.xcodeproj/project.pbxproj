@@ -497,6 +497,8 @@
 		F9EB69561768EE6B00EBBD4C /* AppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = F9EB69551768EE6B00EBBD4C /* AppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9FAA3AC1787336200954470 /* UIFontDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FAA3AA1787336200954470 /* UIFontDescriptor.h */; };
 		F9FAA3AD1787336200954470 /* UIFontDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA3AB1787336200954470 /* UIFontDescriptor.m */; };
+		F9FBEF6717AC2ED700F0831C /* _UITextContainerView.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FBEF6517AC2ED700F0831C /* _UITextContainerView.h */; };
+		F9FBEF6817AC2ED700F0831C /* _UITextContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FBEF6617AC2ED700F0831C /* _UITextContainerView.m */; };
 		F9FFDE2915C6E88A000EDAA0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2815C6E88A000EDAA0 /* main.m */; };
 		F9FFDE2D15C6E88A000EDAA0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FFDE2C15C6E88A000EDAA0 /* AppDelegate.m */; };
 		F9FFDE3415C6E88A000EDAA0 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95F642F15C34E8800F3523B /* SenTestingKit.framework */; };
@@ -1024,6 +1026,8 @@
 		F9EB69551768EE6B00EBBD4C /* AppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppKitIntegration.h; path = Classes/AppKitIntegration.h; sourceTree = "<group>"; };
 		F9FAA3AA1787336200954470 /* UIFontDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIFontDescriptor.h; sourceTree = "<group>"; };
 		F9FAA3AB1787336200954470 /* UIFontDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIFontDescriptor.m; sourceTree = "<group>"; };
+		F9FBEF6517AC2ED700F0831C /* _UITextContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextContainerView.h; sourceTree = "<group>"; };
+		F9FBEF6617AC2ED700F0831C /* _UITextContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextContainerView.m; sourceTree = "<group>"; };
 		F9FFDE1D15C6E88A000EDAA0 /* TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9FFDE2415C6E88A000EDAA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F9FFDE2815C6E88A000EDAA0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1403,6 +1407,8 @@
 				F91A1E0517A71AD7008E87F5 /* _UITextViewPosition.m */,
 				F91A1E0817A71B03008E87F5 /* _UITextViewRange.h */,
 				F91A1E0917A71B03008E87F5 /* _UITextViewRange.m */,
+				F9FBEF6517AC2ED700F0831C /* _UITextContainerView.h */,
+				F9FBEF6617AC2ED700F0831C /* _UITextContainerView.m */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
 				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
@@ -1994,6 +2000,7 @@
 				1489859B12EE2CFF003D4751 /* UIImage.h in Headers */,
 				1489859E12EE2CFF003D4751 /* UIImagePickerController.h in Headers */,
 				148985A012EE2CFF003D4751 /* UIImageView.h in Headers */,
+				F9FBEF6717AC2ED700F0831C /* _UITextContainerView.h in Headers */,
 				148985A212EE2CFF003D4751 /* UIKey.h in Headers */,
 				148985A412EE2CFF003D4751 /* UIKit.h in Headers */,
 				03E591AA13E863E100C6D194 /* UITableView+AppKit.h in Headers */,
@@ -2510,6 +2517,7 @@
 				F99E83B313CF7EEE00107358 /* UIProxyObject.m in Sources */,
 				F93D77011794A3410073B778 /* _UITextFieldEditor.m in Sources */,
 				F99E83B713CF836900107358 /* UINib.m in Sources */,
+				F9FBEF6817AC2ED700F0831C /* _UITextContainerView.m in Sources */,
 				F99E83F113CFCE9600107358 /* UIButtonContent.m in Sources */,
 				F99E83F613CFD52E00107358 /* UIImageNibPlaceholder.m in Sources */,
 				F99E83FA13D05A1F00107358 /* UIRuntimeEventConnection.m in Sources */,
