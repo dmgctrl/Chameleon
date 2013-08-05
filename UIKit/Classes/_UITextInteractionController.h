@@ -15,6 +15,8 @@
 - (UITapGestureRecognizer*) addOneFingerDoubleTapRecognizerToView:(UIView*)view;
 - (void) removeGestureRecognizersFromView:(UIView*)view;
 
+- (void) insertText:(NSString*)text;
+- (void) deleteBackward;
 - (void) doCommandBySelector:(SEL)selector;
 
 @end

@@ -540,6 +540,7 @@ describe(@"UITextView", ^{
             [composedTextView setFont:[UIFont systemFontOfSize:14]];
             NSInteger tinyOffset = 2;
             UITextPosition* beginningOfDocument = [composedTextView beginningOfDocument];
+            UITextPosition* endOfDocument = [composedTextView endOfDocument];
             UITextPosition* prePosition = [composedTextView positionFromPosition:beginningOfDocument offset:smallOffset];
             NSInteger preIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:prePosition];
             context(@"positions", ^{
@@ -959,6 +960,7 @@ describe(@"UITextView", ^{
                     [[[selectionTextView selectedTextRange] should] beNil];
                 });
             });
+#if 0
             context(@"affinity", ^{
                 UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [selectionTextView setText:selectionText];
@@ -971,6 +973,7 @@ describe(@"UITextView", ^{
                     [[@([selectionTextView selectionAffinity]) should] equal:@(UITextStorageDirectionForward)];
                 });
             });
+#endif
         });
     });
 });

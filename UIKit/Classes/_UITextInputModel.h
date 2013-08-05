@@ -19,16 +19,55 @@ UIKIT_HIDDEN
 
 
 UIKIT_HIDDEN
-@interface _UITextInputModel : NSObject <UITextInput>
+@interface _UITextInputModel : NSObject
 
+- (BOOL) hasText;
+
+- (NSString*) textInRange:(NSRange)range;
+- (void) replaceRange:(NSRange)range withText:(NSString*)text;
+
+@property (nonatomic, copy) NSDictionary* markedTextStyle;
+- (NSRange) markedTextRange;
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange;
+- (void) unmarkText;
+
+- (NSInteger) beginningOfDocument;
+- (NSInteger) endOfDocument;
+
+- (NSRange) textRangeFromPosition:(NSInteger)fromPosition toPosition:(NSInteger)toPosition;
+- (NSRange) textRangeOfWordContainingPosition:(NSInteger)position;
+
+- (NSInteger) positionFromPosition:(NSInteger)position offset:(NSInteger)offset;
+- (NSInteger) positionFromPosition:(NSInteger)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset;
+
+- (NSInteger) positionWithinRange:(NSRange)range farthestInDirection:(UITextLayoutDirection)direction;
+
+- (UITextWritingDirection) baseWritingDirectionForPosition:(NSInteger)position inDirection:(UITextStorageDirection)direction;
+- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(NSRange)range;
+
+- (CGRect) firstRectForRange:(NSRange)range;
+- (CGRect) caretRectForPosition:(NSInteger)position;
+- (NSArray*) selectionRectsForRange:(NSRange)range;
+
+- (NSInteger) closestPositionToPoint:(CGPoint)point;
+- (NSInteger) closestPositionToPoint:(CGPoint)point withinRange:(NSRange)range;
+- (NSRange) characterRangeAtPoint:(CGPoint)point;
+
+- (BOOL) shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
+
+- (NSDictionary*) textStylingAtPosition:(NSInteger)position inDirection:(UITextStorageDirection)direction;
+- (NSInteger) positionWithinRange:(NSRange)range atCharacterOffset:(NSInteger)offset;
+- (NSInteger) characterOffsetOfPosition:(NSInteger)position withinRange:(NSRange)range;
+
+@property (nonatomic) UITextStorageDirection selectionAffinity;
 @property (nonatomic) NSRange selectedRange;
+
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextContainer* textContainer;
 @property (nonatomic) id <_UITextInputModelDelegate> delegate;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager;
 
-- (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position;
 
 - (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index;
 - (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;

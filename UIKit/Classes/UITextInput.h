@@ -115,7 +115,7 @@ typedef NS_ENUM(NSInteger, UITextGranularity) {
 - (NSInteger) characterOffsetOfPosition:(UITextPosition*)position withinRange:(UITextRange*)range;
 
 @property (nonatomic, readonly) UIView* textInputView;
-@property (nonatomic) UITextStorageDirection selectionAffinity;
+@property (nonatomic, readonly) UITextStorageDirection selectionAffinity;
 
 - (void) insertDictationResult:(NSArray*)dictationResult;
 

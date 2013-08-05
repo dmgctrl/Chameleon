@@ -42,7 +42,7 @@
 #import "_UITextInteractionController.h"
 #import "_UITextFieldEditor.h"
 #import "_UITextInputModel.h"
-#import "_UITextInputModelAdapter.h"
+#import "_UITextInputAdapter.h"
 /**/
 #import "UIImage.h"
 #import "UIImage+UIPrivate.h"
@@ -94,7 +94,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     
     _UITextInteractionController* _interactionController;
     _UITextInputModel* _inputModel;
-    _UITextInputModelAdapter* _inputModelAdapter;
+    _UITextInputAdapter* _inputAdapter;
     
     struct {
         bool shouldBeginEditing : 1;
@@ -143,7 +143,16 @@ static void _commonInitForUITextField(UITextField* self)
     
     self->_inputModel = [[_UITextInputModel alloc] initWithLayoutManager:self->_layoutManager];
     
-    self->_inputModelAdapter = [[_UITextInputModelAdapter alloc] initWithInputModel:self->_inputModel];
+    self->_interactionController = [[_UITextInteractionController alloc] initWithView:self inputModel:self->_inputModel];
+    [self->_interactionController addOneFingerTapRecognizerToView:self];
+    [self->_interactionController addOneFingerDoubleTapRecognizerToView:self];
+    
+    self->_inputAdapter = [[_UITextInputAdapter alloc] initWithInputModel:self->_inputModel interactionController:self->_interactionController];
+}
+
+- (void) dealloc
+{
+    [_interactionController removeGestureRecognizersFromView:self];
 }
 
 - (id) initWithFrame:(CGRect)frame
@@ -307,8 +316,8 @@ static void _commonInitForUITextField(UITextField* self)
 {
     if (attributedText) {
         [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length] } withAttributedString:attributedText];
-        UITextPosition* endOfDocument = [_inputModel endOfDocument];
-        [_inputModel setSelectedTextRange:[_inputModel textRangeFromPosition:endOfDocument toPosition:endOfDocument]];
+        UITextPosition* endOfDocument = [_inputAdapter endOfDocument];
+        [_inputAdapter setSelectedTextRange:[_inputAdapter textRangeFromPosition:endOfDocument toPosition:endOfDocument]];
 
         _flags.hasText = [_textStorage length] > 0;
         if ([self hasText]) {
@@ -743,17 +752,17 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) hasText
 {
-    return [_inputModelAdapter hasText];
+    return [_inputModel hasText];
 }
 
 - (void) insertText:(NSString*)text
 {
-    [_inputModelAdapter insertText:text];
+    [_interactionController insertText:text];
 }
 
 - (void) deleteBackward
 {
-    [_inputModelAdapter deleteBackward];
+    [_interactionController deleteBackward];
 }
 
 
@@ -761,127 +770,127 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (NSString*) textInRange:(UITextRange*)range
 {
-    return [_inputModelAdapter textInRange:range];
+    return [_inputAdapter textInRange:range];
 }
 
 - (void) replaceRange:(UITextRange*)range withText:(NSString*)text
 {
-    [_inputModelAdapter replaceRange:range withText:text];
+    [_inputAdapter replaceRange:range withText:text];
 }
 
 - (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text
 {
-    return [_inputModelAdapter shouldChangeTextInRange:range replacementText:text];
+    return [_inputAdapter shouldChangeTextInRange:range replacementText:text];
 }
 
 - (UITextRange*) selectedTextRange
 {
-    return [_inputModelAdapter selectedTextRange];
+    return [_inputAdapter selectedTextRange];
 }
 
 - (void) setSelectedTextRange:(UITextRange*)selectedTextRange
 {
-    [_inputModelAdapter setSelectedTextRange:selectedTextRange];
+    [_inputAdapter setSelectedTextRange:selectedTextRange];
 }
 
 - (UITextRange*) markedTextRange
 {
-    return [_inputModelAdapter markedTextRange];
+    return [_inputAdapter markedTextRange];
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
-    [_inputModelAdapter setMarkedText:markedText selectedRange:selectedRange];
+    [_inputAdapter setMarkedText:markedText selectedRange:selectedRange];
 }
 
 - (void) unmarkText
 {
-    [_inputModelAdapter unmarkText];
+    [_inputAdapter unmarkText];
 }
 
 - (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    return [_inputModelAdapter textRangeFromPosition:fromPosition toPosition:toPosition];
+    return [_inputAdapter textRangeFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
 {
-    return [_inputModelAdapter positionFromPosition:position offset:offset];
+    return [_inputAdapter positionFromPosition:position offset:offset];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-    return [_inputModelAdapter positionFromPosition:position inDirection:direction offset:offset];
+    return [_inputAdapter positionFromPosition:position inDirection:direction offset:offset];
 }
 
 - (UITextPosition*) beginningOfDocument
 {
-    return [_inputModelAdapter beginningOfDocument];
+    return [_inputAdapter beginningOfDocument];
 }
 
 - (UITextPosition*) endOfDocument
 {
-    return [_inputModelAdapter endOfDocument];
+    return [_inputAdapter endOfDocument];
 }
 
 - (NSComparisonResult) comparePosition:(UITextPosition*)position toPosition:(UITextPosition*)other
 {
-    return [_inputModelAdapter comparePosition:position toPosition:other];
+    return [_inputAdapter comparePosition:position toPosition:other];
 }
 
 - (NSInteger) offsetFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
-    return [_inputModelAdapter offsetFromPosition:fromPosition toPosition:toPosition];
+    return [_inputAdapter offsetFromPosition:fromPosition toPosition:toPosition];
 }
 
 - (UITextPosition*) positionWithinRange:(UITextRange*)range farthestInDirection:(UITextLayoutDirection)direction
 {
-    return [_inputModelAdapter positionWithinRange:range farthestInDirection:direction];
+    return [_inputAdapter positionWithinRange:range farthestInDirection:direction];
 }
 
 - (UITextRange*) characterRangeByExtendingPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction
 {
-    return [_inputModelAdapter characterRangeByExtendingPosition:position inDirection:direction];
+    return [_inputAdapter characterRangeByExtendingPosition:position inDirection:direction];
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction
 {
-    return [_inputModelAdapter baseWritingDirectionForPosition:position inDirection:direction];
+    return [_inputAdapter baseWritingDirectionForPosition:position inDirection:direction];
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
 {
-    [_inputModelAdapter setBaseWritingDirection:writingDirection forRange:range];
+    [_inputAdapter setBaseWritingDirection:writingDirection forRange:range];
 }
 
 - (CGRect) firstRectForRange:(UITextRange*)range
 {
-    return [_inputModelAdapter firstRectForRange:range];
+    return [_inputAdapter firstRectForRange:range];
 }
 
 - (CGRect) caretRectForPosition:(UITextPosition*)position
 {
-    return [_inputModelAdapter caretRectForPosition:position];
+    return [_inputAdapter caretRectForPosition:position];
 }
 
 - (NSArray*) selectionRectsForRange:(UITextRange*)range
 {
-    return [_inputModelAdapter selectionRectsForRange:range];
+    return [_inputAdapter selectionRectsForRange:range];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
 {
-    return [_inputModelAdapter closestPositionToPoint:point];
+    return [_inputAdapter closestPositionToPoint:point];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(UITextRange*)range
 {
-    return [_inputModelAdapter closestPositionToPoint:point withinRange:range];
+    return [_inputAdapter closestPositionToPoint:point withinRange:range];
 }
 
 - (UITextRange*) characterRangeAtPoint:(CGPoint)point
 {
-    return [_inputModelAdapter characterRangeAtPoint:point];
+    return [_inputAdapter characterRangeAtPoint:point];
 }
 
 

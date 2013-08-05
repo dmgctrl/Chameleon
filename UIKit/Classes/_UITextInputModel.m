@@ -3,9 +3,6 @@
 #import <UIKit/NSTextStorage.h>
 #import <UIKit/NSTextContainer.h>
 #import <UIKit/NSLayoutManager.h>
-//
-#import "_UITextViewPosition.h"
-#import "_UITextViewRange.h"
 
 
 @implementation _UITextInputModel {
@@ -20,8 +17,6 @@
     } _delegateHas;
 }
 @synthesize markedTextStyle;
-@synthesize tokenizer;
-@synthesize inputDelegate;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager
 {
@@ -80,109 +75,56 @@
     return [[self _textStorage] length] > 0;
 }
 
-- (void) insertText:(NSString*)text
-{
-    [self _replaceCharactersInRange:[self selectedRange] withString:text];
-}
-
-- (void) deleteBackward
-{
-    UITextRange* range = [self selectedTextRange];
-    if (!range || [range isEmpty]) {
-        UITextPosition* toPosition = [range start];
-        UITextPosition* fromPosition = [self positionFromPosition:[range start] offset:-1];
-        if (!fromPosition) {
-            return;
-        }
-        range = [self textRangeFromPosition:fromPosition toPosition:toPosition];
-    }
-    if (![self shouldChangeTextInRange:range replacementText:@""]) {
-        return;
-    }
-    [self replaceRange:range withText:@""];
-}
-
 
 #pragma mark UITextInput
 
-- (UITextPosition*) beginningOfDocument
+- (NSInteger) beginningOfDocument
 {
-    return [_UITextViewPosition positionWithOffset:0];
+    return 0;
 }
 
-- (UITextPosition*) closestPositionToPoint:(CGPoint)point
+- (NSInteger) closestPositionToPoint:(CGPoint)point
 {
-    NSInteger offset = [self _characterIndexAtPoint:point];
-    return [_UITextViewPosition positionWithOffset:offset];
+    return [self _characterIndexAtPoint:point];
 }
 
-- (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(_UITextViewRange*)range
+- (NSInteger) closestPositionToPoint:(CGPoint)point withinRange:(NSRange)range
 {
-    UITextPosition* position = [self closestPositionToPoint:point];
-    if (NSOrderedDescending == [self comparePosition:[range start] toPosition:position]) {
-        return [range start];
-    }
-    if (NSOrderedAscending == [self comparePosition:[range end] toPosition:position]) {
-        return [range end];
+    NSInteger position = [self closestPositionToPoint:point];
+    if (position < range.location) {
+        return range.location;
+    } else if (position > (range.location + range.length)) {
+        return range.location + range.length;
     }
     return position;
 }
 
-- (UITextRange*) characterRangeAtPoint:(CGPoint)point
+- (NSRange) characterRangeAtPoint:(CGPoint)point
 {
     NSTextContainer* textContainer = [self _textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
     
     NSRange actualGlyphRange;
     NSUInteger glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer];
-    NSRange range = [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:&actualGlyphRange];
-    if (!range.length) {
-        return nil;
-    }
-    
-    return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
+    return [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:&actualGlyphRange];
 }
 
-- (UITextRange*) characterRangeByExtendingPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction
+- (NSInteger) characterOffsetOfPosition:(NSInteger)position withinRange:(NSRange)range
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position) {
-        return nil;
-    }
-    UITextPosition* targetPosition = [self positionFromPosition:position inDirection:direction offset:1];
-    if (NSOrderedSame <= [self comparePosition:position toPosition:targetPosition]) {
-        return [self textRangeFromPosition:position toPosition:targetPosition];
-    } else {
-        return [self textRangeFromPosition:targetPosition toPosition:position];
-    }
+#warning Implement -characterOffsetOfPosition:withinRange:
+    [self doesNotRecognizeSelector:_cmd];
+    return 0;
 }
 
-- (NSComparisonResult) comparePosition:(_UITextViewPosition*)position toPosition:(_UITextViewPosition*)other
+- (NSInteger) endOfDocument
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    NSAssert(!other || [other isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position || !other) {
-        return NSOrderedSame;
-    }
-    NSInteger delta = [position offset] - [other offset];
-    if (delta > 0) {
-        return NSOrderedDescending;
-    } else if (delta < 0) {
-        return NSOrderedAscending;
-    } else {
-        return NSOrderedSame;
-    }
+    return [[self _textStorage] length];
 }
 
-- (UITextPosition*) endOfDocument
-{
-    return [_UITextViewPosition positionWithOffset:[[self _textStorage] length]];
-}
-
-- (UITextRange*) markedTextRange
+- (NSRange) markedTextRange
 {
 #warning Implement -markedTextRange
-    return nil;
+    return (NSRange){};
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
@@ -196,171 +138,116 @@
 #warning Implement -unmarkText
 }
 
-- (NSInteger) offsetFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
+- (NSInteger) positionFromPosition:(NSInteger)position offset:(NSInteger)offset
 {
-    NSAssert(!fromPosition || [fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    NSAssert(!toPosition || [toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!fromPosition || !toPosition) {
+    NSInteger newOffset = position + offset;
+    if (newOffset < 0) {
         return 0;
+    } else if (newOffset > [[self _textStorage] length]) {
+        return [[self _textStorage] length];
     }
-    return [toPosition offset] - [fromPosition offset];
+    return newOffset;
 }
 
-- (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position offset:(NSInteger)offset
+- (NSInteger) positionFromPosition:(NSInteger)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position) {
-        return nil;
-    }
-    NSInteger newOffset = [position offset] + offset;
-    if (newOffset < 0 || newOffset > [[self _textStorage] length]) {
-        return nil;
-    }
-    return [_UITextViewPosition positionWithOffset:newOffset];
-}
-
-- (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
-{
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position) {
-        return nil;
-    }
-    NSInteger index = [position offset];
     switch (direction) {
         case UITextLayoutDirectionDown: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingDownFromIndex:index by:offset]];
+            return [self _indexWhenMovingDownFromIndex:position by:offset];
         }
         case UITextLayoutDirectionUp: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingUpFromIndex:index by:offset]];
+            return [self _indexWhenMovingUpFromIndex:position by:offset];
         }
         case UITextLayoutDirectionLeft: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingLeftFromIndex:index by:offset]];
+            return [self _indexWhenMovingLeftFromIndex:position by:offset];
         }
         case UITextLayoutDirectionRight: {
-            return [_UITextViewPosition positionWithOffset:[self _indexWhenMovingRightFromIndex:index by:offset]];
+            return [self _indexWhenMovingRightFromIndex:position by:offset];
         }
     }
 }
 
-- (UITextPosition*) positionWithinRange:(_UITextViewRange*)range farthestInDirection:(UITextLayoutDirection)direction
+- (NSInteger) positionWithinRange:(NSRange)range farthestInDirection:(UITextLayoutDirection)direction
 {
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -positionWithinRange:farthestInDirection:
     [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return 0;
 }
 
-- (UITextWritingDirection) baseWritingDirectionForPosition:(_UITextViewPosition*)position inDirection:(UITextStorageDirection)direction
+- (NSInteger) positionWithinRange:(NSRange)range atCharacterOffset:(NSInteger)offset
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+#warning Implement -positionWithinRange:farthestInDirection:
+    [self doesNotRecognizeSelector:_cmd];
+    return 0;
+}
+
+- (UITextWritingDirection) baseWritingDirectionForPosition:(NSInteger)position inDirection:(UITextStorageDirection)direction
+{
 #warning Implement -baseWritingDirectionForPosition:inDirection:
     [self doesNotRecognizeSelector:_cmd];
     return UITextWritingDirectionNatural;
 }
 
-- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
+- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(NSRange)range
 {
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -setBaseWritingDirection:forRange:
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (CGRect) firstRectForRange:(_UITextViewRange*)range
+- (CGRect) firstRectForRange:(NSRange)range
 {
 #warning Implement -firstRectForRange:
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
     return CGRectZero;
 }
 
-- (CGRect) caretRectForPosition:(_UITextViewPosition*)position
+- (CGRect) caretRectForPosition:(NSInteger)position
 {
 #warning Implement -caretRectForPosition:
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
     return CGRectZero;
 }
 
-- (NSArray*) selectionRectsForRange:(_UITextViewRange*)range
+- (NSArray*) selectionRectsForRange:(NSRange)range
 {
 #warning Implement -selectionRectsForRange:
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
     return nil;
 }
 
-- (void) replaceRange:(_UITextViewRange*)range withText:(NSString*)text
+- (void) replaceRange:(NSRange)range withText:(NSString*)text
 {
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    NSInteger start = [[range start] offset];
-    NSInteger end = [[range end] offset];
-    if (start < 0 || end < start || end > [[self _textStorage] length]) {
-        return /* Question: Exception? */;
-    }
-    [self _replaceCharactersInRange:(NSRange){ start, end - start } withString:text];
+    [self _replaceCharactersInRange:range withString:text];
 }
 
-- (BOOL) shouldChangeTextInRange:(_UITextViewRange*)range replacementText:(NSString*)text
+- (BOOL) shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text
 {
-    NSInteger start = [[range start] offset];
-    NSInteger end = [[range end] offset];
+    NSInteger start = range.location;
+    NSInteger end = range.location + range.length;
     if (start < 0 || end < start || end > [[self _textStorage] length]) {
         return NO;
     }
     return [self _canChangeTextInRange:(NSRange){ start, end - start } replacementText:text];
 }
 
-- (UITextRange*) selectedTextRange
+- (NSDictionary*) textStylingAtPosition:(NSInteger)position inDirection:(UITextStorageDirection)direction
 {
-    NSRange range = [self selectedRange];
-    if (range.location == NSNotFound && range.length == 0) {
-        return nil;
-    } else {
-        return [self textRangeFromPosition:[_UITextViewPosition positionWithOffset:range.location] toPosition:[_UITextViewPosition positionWithOffset:range.location + range.length]];
-    }
+    return [[self _textStorage] attributesAtIndex:position effectiveRange:NULL];
 }
 
-- (void) setSelectedTextRange:(_UITextViewRange*)selectedTextRange
+- (NSString*) textInRange:(NSRange)range
 {
-    NSAssert(!selectedTextRange || [selectedTextRange isKindOfClass:[_UITextViewRange class]], @"???");
-    if (selectedTextRange) {
-        [self setSelectedRange:[selectedTextRange NSRange]];
-    } else {
-        [self setSelectedRange:(NSRange){ NSNotFound, 0 }];
-    }
+    return [[[self _textStorage] string] substringWithRange:range];
 }
 
-- (NSString*) textInRange:(_UITextViewRange*)range
+- (NSRange) textRangeFromPosition:(NSInteger)fromPosition toPosition:(NSInteger)toPosition
 {
-    NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    if (!range) {
-        return nil;
-    }
-    NSInteger start = [[range start] offset];
-    NSInteger end = [[range end] offset];
-    NSTextStorage* textStorage = [self _textStorage];
-    if (start < 0 || end < start || end > [textStorage length]) {
-        return nil;
-    }
-    return [[textStorage string] substringWithRange:(NSRange){ start, end - start }];
-}
-
-- (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
-{
-    NSAssert([fromPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    NSAssert([toPosition isKindOfClass:[_UITextViewPosition class]], @"???");
-    return [[_UITextViewRange alloc] initWithStart:fromPosition end:toPosition];
+    return (NSRange){ fromPosition, toPosition - fromPosition };
 }
 
 
 #pragma mark _UITextInputPlus
 
-- (UITextRange*) textRangeOfWordContainingPosition:(_UITextViewPosition*)position
+- (NSRange) textRangeOfWordContainingPosition:(NSInteger)index
 {
-    NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    if (!position) {
-        return nil;
-    }
-    
     NSString* text = [[self _textStorage] string];
-    NSInteger index = [position offset];
     __block NSUInteger start = 0;
     [text enumerateSubstringsInRange:NSMakeRange(0, index) options:(NSStringEnumerationByWords | NSStringEnumerationReverse) usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
         if (enclosingRange.length > substringRange.length) {
@@ -379,7 +266,7 @@
         }
         *stop = YES;
     }];
-    return [_UITextViewRange rangeWithNSRange:(NSRange){ start, end - start }];
+    return (NSRange){ start, end - start };
 }
 
 

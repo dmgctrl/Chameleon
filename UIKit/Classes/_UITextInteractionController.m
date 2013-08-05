@@ -122,8 +122,32 @@
 }
 
 
-#pragma mark Keyboard Handling
+#pragma mark Basic Input
 
+- (void) insertText:(NSString*)text
+{
+    [_view replaceRange:[_view selectedTextRange] withText:text];
+}
+
+- (void) deleteBackward
+{
+    UITextRange* range = [_view selectedTextRange];
+    if (!range || [range isEmpty]) {
+        UITextPosition* toPosition = [range start];
+        UITextPosition* fromPosition = [_view positionFromPosition:[range start] offset:-1];
+        if (!fromPosition) {
+            return;
+        }
+        range = [_view textRangeFromPosition:fromPosition toPosition:toPosition];
+    }
+    if (![_view shouldChangeTextInRange:range replacementText:@""]) {
+        return;
+    }
+    [_view replaceRange:range withText:@""];
+}
+
+
+#pragma mark Keyboard Handling
 
 - (void) doCommandBySelector:(SEL)selector
 {
