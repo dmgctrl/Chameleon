@@ -6,13 +6,10 @@
 #import <UIKit/UIPasteboard.h>
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UITapGestureRecognizer.h>
+#import <UIKit/UITouch.h>
 
 
-@interface UIView (XXX_Temporary)
-- (void) _modifySelectionWith:(NSInteger(^)(NSInteger))calculation;
-- (void) _setAndScrollToRange:(NSRange)range;
-- (NSRange) setSelectedRange:(NSRange)range;
-- (NSRange) selectedRange;
+@interface UIView (XXX_Temporary) <_UITextInteractionControllerDelegate>
 @end
 
 
@@ -28,7 +25,15 @@
         bool beginSelectionChange : 1;
         bool endSelectionChange : 1;
         bool textRangeOfWordContainingPosition : 1;
+        bool textInteractionControllerDidChangeSelection : 1;
+        bool textInteractionControllerEditorDidChangeSelection : 1;
+        bool textInteractionControllerWillChangeSelectionFromCharacterRangeToCharacterRange : 1;
+        bool textInteractionControllerDidChangeCaretPosition : 1;
     } _viewHas;
+
+    BOOL _stillSelecting;
+    NSUInteger _selectionOrigin;
+//    NSSelectionGranularity _selectionGranularity;
 }
 
 - (instancetype) initWithView:(UIResponder<UITextInput>*)view inputModel:(_UITextInputModel*)inputModel
@@ -36,10 +41,15 @@
     NSAssert(nil != view, @"???");
     NSAssert(nil != inputModel, @"???");
     if (nil != (self = [super init])) {
+        _selectedRange = (NSRange){ NSNotFound, 0 };
         _view = (UIView<_UITextInputPlus>*)view;
         _viewHas.beginSelectionChange = [view respondsToSelector:@selector(beginSelectionChange)];
         _viewHas.endSelectionChange = [view respondsToSelector:@selector(endSelectionChange)];
         _viewHas.textRangeOfWordContainingPosition = [view respondsToSelector:@selector(textRangeOfWordContainingPosition:)];
+        _viewHas.textInteractionControllerDidChangeSelection = [view respondsToSelector:@selector(textInteractionControllerDidChangeSelection:)];
+        _viewHas.textInteractionControllerWillChangeSelectionFromCharacterRangeToCharacterRange = [view respondsToSelector:@selector(textInteractionController:willChangeSelectionFromCharacterRange:toCharacterRange:)];
+        _viewHas.textInteractionControllerEditorDidChangeSelection = [view respondsToSelector:@selector(textInteractionControllerEditorDidChangeSelection:)];
+        _viewHas.textInteractionControllerDidChangeCaretPosition = [view respondsToSelector:@selector(textInteractionController:didChangeCaretPosition:)];
         _inputModel = inputModel;
         _gestureRecognizers = [[NSMutableArray alloc] init];
     }
@@ -48,6 +58,22 @@
 
 
 #pragma mark Public Methods
+
+- (void) setSelectedRange:(NSRange)selectedRange
+{
+    if ((_selectedRange.location != selectedRange.location) || (_selectedRange.length != selectedRange.length)) {
+        if (_viewHas.textInteractionControllerWillChangeSelectionFromCharacterRangeToCharacterRange) {
+            selectedRange = [_view textInteractionController:self willChangeSelectionFromCharacterRange:_selectedRange toCharacterRange:selectedRange];
+        }
+        if (!_stillSelecting && !selectedRange.length) {
+            _selectionOrigin = selectedRange.location;
+        }
+        _selectedRange = selectedRange;
+        if (_viewHas.textInteractionControllerDidChangeSelection) {
+            [_view textInteractionControllerDidChangeSelection:self];
+        }
+    }
+}
 
 - (UITapGestureRecognizer*) addOneFingerTapRecognizerToView:(UIView*)view
 {
@@ -121,29 +147,60 @@
     }
 }
 
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch* touch = [[event allTouches] anyObject];
+    [self _setAndScrollToRange:[_inputModel characterRangeAtPoint:[touch locationInView:_view]]];
+    _stillSelecting = YES;
+}
+
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
+{
+    UITouch* touch = [[event allTouches] anyObject];
+    NSUInteger index = [_inputModel characterRangeAtPoint:[touch locationInView:_view]].location;
+    NSRange range;
+    if (_selectionOrigin > index) {
+        range = (NSRange){ index, _selectionOrigin - index };
+    } else {
+        range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
+    }
+    [self _setAndScrollToRange:range upstream:_selectionOrigin > index];
+}
+
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    _stillSelecting = NO;
+}
+
+
 
 #pragma mark Basic Input
 
 - (void) insertText:(NSString*)text
 {
-    [_view replaceRange:[_view selectedTextRange] withText:text];
+    NSRange range = [self selectedRange];
+    [_inputModel replaceRange:range withText:text];
+    [self setSelectedRange:(NSRange){ range.location + [text length], 0 }];
 }
 
 - (void) deleteBackward
 {
-    UITextRange* range = [_view selectedTextRange];
-    if (!range || [range isEmpty]) {
-        UITextPosition* toPosition = [range start];
-        UITextPosition* fromPosition = [_view positionFromPosition:[range start] offset:-1];
-        if (!fromPosition) {
-            return;
+    NSRange range = [self selectedRange];
+    if (!range.length) {
+        NSInteger end = range.location;
+        NSInteger start = [_inputModel positionFromPosition:range.location offset:-1];
+        if (start <= end) {
+            range = (NSRange){
+                .location = start,
+                .length = end - start
+            };
         }
-        range = [_view textRangeFromPosition:fromPosition toPosition:toPosition];
     }
-    if (![_view shouldChangeTextInRange:range replacementText:@""]) {
+    if (![_inputModel shouldChangeTextInRange:range replacementText:@""]) {
         return;
     }
-    [_view replaceRange:range withText:@""];
+    [_inputModel replaceRange:range withText:@""];
+    [self setSelectedRange:(NSRange){ range.location, 0 }];
 }
 
 
@@ -159,7 +216,7 @@
 
 - (void) deleteBackward:(id)sender
 {
-    [_view deleteBackward];
+    [self deleteBackward];
 }
 
 - (void) deleteForward:(id)sender
@@ -196,22 +253,22 @@
 
 - (void) moveLeftAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingLeftFromIndex:index];
     }];
 }
 
 - (void) moveWordLeft:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingWordLeftFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveWordLeftAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingWordLeftFromIndex:index];
     }];
 }
@@ -225,22 +282,22 @@
 
 - (void) moveRightAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingRightFromIndex:index];
     }];
 }
 
 - (void) moveWordRight:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingWordRightFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveWordRightAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingWordRightFromIndex:index];
     }];
 }
@@ -254,7 +311,7 @@
 
 - (void) moveUpAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingUpFromIndex:index by:1];
     }];
 }
@@ -268,52 +325,52 @@
 
 - (void) moveDownAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingDownFromIndex:index by:index];
     }];
 }
 
 - (void) moveToBeginningOfLine:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveToBeginningOfLineAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:index];
     }];
 }
 
 - (void) moveToEndOfLine:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([_view selectedRange])],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
         0
     }];
 }
 
 - (void) moveToEndOfLineAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingToEndOfLineFromIndex:index];
     }];
 }
 
 - (void) moveToBeginningOfParagraph:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveParagraphBackwardAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:index];
     }];
 }
@@ -338,8 +395,8 @@
 
 - (void) moveToEndOfParagraph:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
         0
     }];
 }
@@ -355,7 +412,7 @@
 
 - (void) moveParagraphForwardAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:index];
     }];
 }
@@ -371,37 +428,37 @@
 
 - (void) moveToBeginningOfDocument:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:index];
     }];
 }
 
 - (void) moveToEndOfDocument:(id)sender
 {
-    [_view _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[_view selectedRange].location],
+    [self _setAndScrollToRange:(NSRange){
+        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
         0
     }];
 }
 
 - (void) moveToEndOfDocumentAndModifySelection:(id)sender
 {
-    [_view _modifySelectionWith:^NSInteger(NSInteger index) {
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
         return [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:index];
     }];
 }
 
 - (void) insertNewline:(id)sender
 {
-    [_view insertText:@"\n"];
+    [self insertText:@"\n"];
 }
 
 
@@ -412,6 +469,41 @@
     if (![_view isFirstResponder]) {
         [_view becomeFirstResponder];
     }
+}
+
+
+
+#pragma mark Cursor Calculations
+
+- (void) _setAndScrollToRange:(NSRange)range upstream:(BOOL)upstream
+{
+    [self setSelectedRange:range];
+    if (_viewHas.textInteractionControllerDidChangeCaretPosition) {
+        NSInteger caretPosition = upstream ? range.location : NSMaxRange(range);
+        [_view textInteractionController:self didChangeCaretPosition:caretPosition];
+    }
+}
+
+- (void) _setAndScrollToRange:(NSRange)range
+{
+    [self _setAndScrollToRange:range upstream:YES];
+}
+
+- (void) _modifySelectionWith:(NSInteger(^)(NSInteger))calculation
+{
+    NSRange range = [self selectedRange];
+    NSInteger start = range.location;
+    NSInteger end = NSMaxRange(range);
+    BOOL upstream = (end <= _selectionOrigin);
+    NSInteger index = calculation(upstream ? start : end);
+    if (index > _selectionOrigin) {
+        range.location = _selectionOrigin;
+        range.length = index - _selectionOrigin;
+    } else {
+        range.location = index;
+        range.length = _selectionOrigin - index;
+    }
+    [self _setAndScrollToRange:range upstream:upstream];
 }
 
 @end

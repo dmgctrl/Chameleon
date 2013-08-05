@@ -10,9 +10,7 @@
         bool textInputShouldBeginEditing : 1;
         bool textInputShouldChangeCharactersInRangeReplacementText : 1;
         bool textInputDidChange : 1;
-        bool textInputDidChangeSelection : 1;
         bool textInputWillChangeSelectionFromCharacterRangeToCharacterRange : 1;
-        bool textInputEditorDidChangeSelection : 1;
         bool textInputPrepareAttributedTextForInsertion : 1;
     } _delegateHas;
 }
@@ -22,7 +20,6 @@
 {
     if (nil != (self = [super init])) {
         _layoutManager = layoutManager;
-        _selectedRange = (NSRange){ NSNotFound, 0 };
     }
     return self;
 }
@@ -32,12 +29,9 @@
     if (_delegate != delegate) {
         _delegate = delegate;
         _delegateHas.textInputDidChange = [delegate respondsToSelector:@selector(textInputDidChange:)];
-        _delegateHas.textInputDidChangeSelection = [delegate respondsToSelector:@selector(textInputDidChangeSelection:)];
-        _delegateHas.textInputEditorDidChangeSelection = [delegate respondsToSelector:@selector(textInputEditorDidChangeSelection:)];
         _delegateHas.textInputPrepareAttributedTextForInsertion = [delegate respondsToSelector:@selector(textInput:prepareAttributedTextForInsertion:)];
         _delegateHas.textInputShouldBeginEditing = [delegate respondsToSelector:@selector(textInputShouldBeginEditing:)];
         _delegateHas.textInputShouldChangeCharactersInRangeReplacementText = [delegate respondsToSelector:@selector(textInput:shouldChangeCharactersInRange:replacementText:)];
-        _delegateHas.textInputWillChangeSelectionFromCharacterRangeToCharacterRange = [delegate respondsToSelector:@selector(textInput:willChangeSelectionFromCharacterRange:toCharacterRange:)];
     }
 }
 
@@ -49,22 +43,6 @@
 - (NSTextStorage*) _textStorage
 {
     return [[self layoutManager] textStorage];
-}
-
-
-#pragma mark Public Methods
-
-- (void) setSelectedRange:(NSRange)selectedRange
-{
-    if ((_selectedRange.location != selectedRange.location) || (_selectedRange.length != selectedRange.length)) {
-        if (_delegateHas.textInputWillChangeSelectionFromCharacterRangeToCharacterRange) {
-            selectedRange = [[self delegate] textInput:self willChangeSelectionFromCharacterRange:_selectedRange toCharacterRange:selectedRange];
-        }
-        _selectedRange = selectedRange;
-        if (_delegateHas.textInputDidChangeSelection) {
-            [[self delegate] textInputDidChangeSelection:self];
-        }
-    }
 }
 
 
@@ -294,8 +272,6 @@
     if (_delegateHas.textInputDidChange) {
         [[self delegate] textInputDidChange:self];
     }
-    
-    [self setSelectedRange:(NSRange){ range.location + [string length], 0 }];
 }
 
 - (NSUInteger) _characterIndexAtPoint:(CGPoint)point

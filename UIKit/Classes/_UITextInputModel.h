@@ -9,8 +9,6 @@
 UIKIT_HIDDEN
 @protocol _UITextInputModelDelegate <NSObject>
 @optional
-- (void) textInputDidChangeSelection:(_UITextInputModel*)controller;
-- (NSRange) textInput:(_UITextInputModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange;
 - (void) textInputDidChange:(_UITextInputModel*)controller;
 - (void) textInput:(_UITextInputModel*)controller prepareAttributedTextForInsertion:(id)text;
 - (BOOL) textInput:(_UITextInputModel*)controller shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
@@ -58,9 +56,6 @@ UIKIT_HIDDEN
 - (NSDictionary*) textStylingAtPosition:(NSInteger)position inDirection:(UITextStorageDirection)direction;
 - (NSInteger) positionWithinRange:(NSRange)range atCharacterOffset:(NSInteger)offset;
 - (NSInteger) characterOffsetOfPosition:(NSInteger)position withinRange:(NSRange)range;
-
-@property (nonatomic) UITextStorageDirection selectionAffinity;
-@property (nonatomic) NSRange selectedRange;
 
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextContainer* textContainer;

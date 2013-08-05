@@ -58,6 +58,7 @@
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
     [_inputModel replaceRange:[range NSRange] withText:text];
+    [_interactionController setSelectedRange:(NSRange){ [range NSRange].location + [text length], 0 }];
 }
 
 - (BOOL) shouldChangeTextInRange:(_UITextViewRange*)range replacementText:(NSString*)text
@@ -68,7 +69,7 @@
 
 - (UITextRange*) selectedTextRange
 {
-    NSRange range = [_inputModel selectedRange];
+    NSRange range = [_interactionController selectedRange];
     if (range.location == NSNotFound && range.length == 0) {
         return nil;
     } else {
@@ -80,9 +81,9 @@
 {
     NSAssert(!selectedTextRange || [selectedTextRange isKindOfClass:[_UITextViewRange class]], @"???");
     if (!selectedTextRange) {
-        [_inputModel setSelectedRange:(NSRange){ NSNotFound, 0 }];
+        [_interactionController setSelectedRange:(NSRange){ NSNotFound, 0 }];
     } else {
-        [_inputModel setSelectedRange:[selectedTextRange NSRange]];
+        [_interactionController setSelectedRange:[selectedTextRange NSRange]];
     }
 }
 

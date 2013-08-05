@@ -110,10 +110,6 @@ static NSString* const kUIEditableKey = @"UIEditable";
         bool scrollToSelectionAfterLayout : 1;
     } _flags;
     
-    BOOL _stillSelecting;
-    NSUInteger _selectionOrigin;
-    NSSelectionGranularity _selectionGranularity;
-    
     id _ob1;
     id _ob2;
 }
@@ -305,12 +301,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (NSRange) selectedRange
 {
-    return [_inputModel selectedRange];
+    return [_interactionController selectedRange];
 }
 
 - (void) setSelectedRange:(NSRange)range
 {
-    [_inputModel setSelectedRange:range];
+    [_interactionController setSelectedRange:range];
 }
 
 - (NSString*) text
@@ -393,22 +389,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) scrollToBeginningOfDocument:(id)sender
 {
-    NSRange range = [self selectedRange];
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
-        0
-    }];
-    [self setSelectedRange:range];
+    [self scrollRangeToVisible:(NSRange){ [_inputModel beginningOfDocument], 0 }];
 }
 
 - (void) scrollToEndOfDocument:(id)sender
 {
-    NSRange range = [self selectedRange];
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
-        0
-    }];
-    [self setSelectedRange:range];
+    [self scrollRangeToVisible:(NSRange){ [_inputModel endOfDocument], 0 }];
 }
 
 
@@ -485,39 +471,6 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
         return YES;
     }
     return NO;
-}
-
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch = [[event allTouches] anyObject];
-    [self _setAndScrollToRange:(NSRange){
-        [self _characterIndexAtPoint:[touch locationInView:_textContainerView]],
-        0
-    }];
-    _stillSelecting = YES;
-    [super touchesBegan:touches withEvent:event];
-}
-
-- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch = [[event allTouches] anyObject];
-    NSUInteger index = [self _characterIndexAtPoint:[touch locationInView:_textContainerView]];
-    NSRange range;
-    if (_selectionOrigin > index) {
-        range = (NSRange){ index, _selectionOrigin - index };
-        [self scrollRangeToVisible:range];
-    } else {
-        range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
-        [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
-    }
-    [self setSelectedRange:range];
-    [super touchesMoved:touches withEvent:event];
-}
-
-- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesEnded:touches withEvent:event];
-    _stillSelecting = NO;
 }
 
 - (void) doCommandBySelector:(SEL)selector
@@ -730,14 +683,11 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 }
 
 
-#pragma mark _UITextInputController
+#pragma mark _UITextInteractionControllerDelegate
 
-- (NSRange) textInput:(_UITextInputModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
+- (NSRange) textInteractionController:(_UITextInteractionController*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
 {
     [self beginSelectionChange];
-    if (!_stillSelecting && !toRange.length) {
-        _selectionOrigin = toRange.location;
-    }
     NSLayoutManager* layoutManager = [self layoutManager];
     if (fromRange.length) {
         [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:fromRange];
@@ -745,26 +695,29 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     return toRange;
 }
 
-- (void) textInputDidChangeSelection:(_UITextInputModel*)controller
+- (void) textInteractionControllerDidChangeSelection:(_UITextInteractionController*)controller
 {
     NSLayoutManager* layoutManager = [self layoutManager];
-    NSRange selectedRange = [controller selectedRange];
-    _textContainerView.selectedRange = selectedRange;
+    NSRange selectedRange = [_interactionController selectedRange];
     if (selectedRange.length) {
         [layoutManager addTemporaryAttribute:NSBackgroundColorAttributeName value:[NSColor selectedTextBackgroundColor] forCharacterRange:selectedRange];
     }
+    _textContainerView.selectedRange = selectedRange;
     if (_delegateHas.didChangeSelection) {
         [[self delegate] textViewDidChangeSelection:self];
     }
     [self endSelectionChange];
 }
 
-- (void) textInputDidChange:(_UITextInputModel*)controller
+
+#pragma mark _UITextInputModelDelegate
+
+- (void) textInputDidChange:(_UITextInputModel*)inputModel
 {
     [self _didChangeText];
 }
 
-- (void) textInput:(_UITextInputModel*)controller prepareAttributedTextForInsertion:(id)text
+- (void) textInput:(_UITextInputModel*)inputModel prepareAttributedTextForInsertion:(id)text
 {
     [text setAttributes:[self _stringAttributes] range:(NSRange){ 0, [text length] }];
 }
@@ -797,22 +750,6 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
         [[self delegate] textViewDidChange:self];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:self];
-}
-
-- (void) _setAndScrollToRange:(NSRange)range upstream:(BOOL)upstream
-{
-    [self setSelectedRange:range];
-    
-    if (upstream) {
-        [self scrollRangeToVisible:(NSRange){ range.location, 0 }];
-    } else {
-        [self scrollRangeToVisible:(NSRange){ NSMaxRange(range), 0 }];
-    }
-}
-
-- (void) _setAndScrollToRange:(NSRange)range
-{
-    [self _setAndScrollToRange:range upstream:YES];
 }
 
 - (NSDictionary*) _stringAttributes
@@ -851,26 +788,6 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (id) mouseCursorForEvent:(UIEvent*)event
 {
     return self.editable? [NSCursor IBeamCursor] : nil;
-}
-
-
-#pragma mark Cursor Calculations
-
-- (void) _modifySelectionWith:(NSInteger(^)(NSInteger))calculation
-{
-    NSRange range = [self selectedRange];
-    NSInteger start = range.location;
-    NSInteger end = NSMaxRange(range);
-    BOOL upstream = (end <= _selectionOrigin);
-    NSInteger index = calculation(upstream ? start : end);
-    if (index > _selectionOrigin) {
-        range.location = _selectionOrigin;
-        range.length = index - _selectionOrigin;
-    } else {
-        range.location = index;
-        range.length = _selectionOrigin - index;
-    }
-    [self _setAndScrollToRange:range upstream:upstream];
 }
 
 @end
