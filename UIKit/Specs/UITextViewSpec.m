@@ -344,6 +344,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"end of document", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -366,6 +367,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"small offset after beginning", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -388,6 +390,7 @@ describe(@"UITextView", ^{
                             });
                         });
                     });
+
                     context(@"small offset before end", ^{
                         context(@"when compared to beginning", ^{
                             it(@"should be >", ^{
@@ -431,19 +434,113 @@ describe(@"UITextView", ^{
                     });
                 });
             });
+
+            context(@"from point", ^{
+                context(@"not considering range", ^{
+                    UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
+                    context(@"origin", ^{
+                        UITextPosition* postitionClosestToOrigin = [loremTextView closestPositionToPoint:CGPointZero];
+                        it(@"should be beginning of document", ^{
+                            [[@([loremTextView comparePosition:postitionClosestToOrigin toPosition:beginningOfLoremText]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"far corner", ^{
+                        UITextPosition* endOfLoremText = [loremTextView endOfDocument];
+                        UITextPosition* postitionClosestToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100)];
+                        it(@"should be end of document", ^{
+                            [[@([loremTextView comparePosition:postitionClosestToFarCorner toPosition:endOfLoremText]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"center", ^{
+                        UITextPosition* truePositionAtCenter = [loremTextView positionFromPosition:beginningOfLoremText offset:33];
+                        UITextPosition* positionClosestToCenter = [loremTextView closestPositionToPoint:[loremTextView center]];
+                        it(@"should be near middle of document", ^{
+                            [[@([loremTextView comparePosition:positionClosestToCenter toPosition:truePositionAtCenter]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                });
+                context(@"considering partial range", ^{
+                    UITextPosition* beginningOfLoremText = [loremTextView beginningOfDocument];
+                    UITextPosition* beginningOfSampleRange = [loremTextView positionFromPosition:beginningOfLoremText offset:12];
+                    UITextPosition* endOfSampleRange = [loremTextView positionFromPosition:beginningOfLoremText offset:28];
+                    UITextRange* sampleRange = [loremTextView textRangeFromPosition:beginningOfSampleRange toPosition:endOfSampleRange];
+                    context(@"before range,", ^{
+                        UITextPosition* positionInSampleRangeClosestToOrigin = [loremTextView closestPositionToPoint:CGPointZero withinRange:sampleRange];
+                        it(@"should be beginning of that range", ^{
+                            [[@([loremTextView comparePosition:positionInSampleRangeClosestToOrigin toPosition:beginningOfSampleRange]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"after range,", ^{
+                        UITextPosition* postionInSampleRangeClosestToFarCorner = [loremTextView closestPositionToPoint:CGPointMake(100, 100) withinRange:sampleRange];
+                        it(@"should be end of that range", ^{
+                            [[@([loremTextView comparePosition:postionInSampleRangeClosestToFarCorner toPosition:endOfSampleRange]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"point within range", ^{
+                        CGRect sampleRect = [loremTextView firstRectForRange:sampleRange];
+                        CGPoint pointAtCenterOfSampleRange = CGPointMake(sampleRect.origin.x + sampleRect.size.width/2.0, sampleRect.origin.y + sampleRect.size.height/2.0);
+                        UITextPosition* truePositionInSampleRangeClosestToCenterOfSampleRange = [loremTextView positionFromPosition:beginningOfLoremText offset:17];
+                        UITextPosition* positionInSampleRangeClosestToCenterOfSampleRange = [loremTextView closestPositionToPoint:pointAtCenterOfSampleRange withinRange:sampleRange];
+                        it(@"should be position somewhere within range", ^{
+                            [[@([loremTextView comparePosition:positionInSampleRangeClosestToCenterOfSampleRange toPosition:truePositionInSampleRangeClosestToCenterOfSampleRange]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                });
+            });
+
+            context(@"text direction", ^{
+                context(@"beginning of document", ^{
+                    context(@"forward text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:beginningOfDocument inDirection:UITextStorageDirectionForward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                    context(@"reverse text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:beginningOfDocument inDirection:UITextStorageDirectionBackward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                });
+                context(@"end of document", ^{
+                    context(@"forward text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:endOfDocument inDirection:UITextStorageDirectionForward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                    context(@"reverse text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:endOfDocument inDirection:UITextStorageDirectionBackward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                });
+                context(@"at medium offset", ^{
+                    UITextPosition* position = [textView positionFromPosition:beginningOfDocument offset:mediumOffset];
+                    context(@"forward text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:position inDirection:UITextStorageDirectionForward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                    context(@"reverse text storage", ^{
+                        it(@"should be l-to-r", ^{
+                            [[@([textView baseWritingDirectionForPosition:position inDirection:UITextStorageDirectionBackward]) should] equal:@(UITextWritingDirectionLeftToRight)];
+                        });
+                    });
+                });
+            });
         });
 
         context(@"Composed characters", ^{
-            NSString* composedText = @"0e\u030A3e\u030A6e\u030A9e\u030A2e\u030A5";
-            // |0|1,2|3|4,5|6|7,8|9|10,11|12|13,14|15 character index
-            // |0|eo |3|eo |6|eo |9|eo   |2 |eo   |5  character (ignore space and |)
-            // |0|e̊  |3|e̊  |6|e̊  |9|e̊    |2 |e̊    |5  glyph (ignore space and |)
-            // |0|1  |2|3  |4|5  |6|7    |8 |9    |10 glyph index
+            NSString* composedText = @"0e\u030A3e\u030A6e\u030A9e\u030A2e\u030A";
+            // |0|1,2|3|4,5|6|7,8|9|10,11|12|13,14 character index
+            // |0|eo |3|eo |6|eo |9|eo   |2 |eo    character (ignore space and |)
+            // |0|e̊  |3|e̊  |6|e̊  |9|e̊    |2 |e̊     glyph (ignore space and |)
+            // |0|1  |2|3  |4|5  |6|7    |8 |9     glyph index
             UITextView* composedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
             [composedTextView setText:composedText];
             [composedTextView setFont:[UIFont systemFontOfSize:14]];
             NSInteger tinyOffset = 2;
             UITextPosition* beginningOfDocument = [composedTextView beginningOfDocument];
+            UITextPosition* endOfDocument = [composedTextView endOfDocument];
             UITextPosition* prePosition = [composedTextView positionFromPosition:beginningOfDocument offset:smallOffset];
             NSInteger preIndex = [composedTextView offsetFromPosition:beginningOfDocument toPosition:prePosition];
             context(@"positions", ^{
@@ -482,6 +579,176 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) //remove once characterRangeByExtendingPostion:inDirection implemented for UIKit
+                context(@"characterRangeByExtendingPostion:inDirection", ^{
+                    context(@"for composed character in middle", ^{
+                        UITextPosition* position = [composedTextView positionFromPosition:beginningOfDocument offset:3];
+                        UITextPosition* postPosition = [composedTextView positionFromPosition:beginningOfDocument offset:4];
+                        context(@"right", ^{
+                            UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionRight];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextRange* rangeExtendedLeft = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionLeft];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"up", ^{
+                            UITextRange* rangeExtendedUp = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionUp];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"down", ^{
+                            UITextRange* rangeExtendedDown = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionDown];
+                            context(@"start", ^{
+                                it(@"should = position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown start] toPosition:position]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = position + 1", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown end] toPosition:postPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                    });
+                    context(@"beginning of document", ^{
+                        UITextPosition* unitPosition = [composedTextView positionFromPosition:beginningOfDocument offset:1];
+                        context(@"right", ^{
+                            UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionRight];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextRange* rangeExtendedLeft = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionLeft];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"up", ^{
+                            UITextRange* rangeExtendedUp = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionUp];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"down", ^{
+                            UITextRange* rangeExtendedDown = [composedTextView characterRangeByExtendingPosition:beginningOfDocument inDirection:UITextLayoutDirectionDown];
+                            context(@"start", ^{
+                                it(@"should = to beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown start] toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown end] toPosition:unitPosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                    });
+                    context(@"end of document", ^{
+                        UITextPosition* penultimatePosition = [composedTextView positionFromPosition:endOfDocument offset:-1];
+                        context(@"right", ^{
+                            UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionRight];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedRight end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"left", ^{
+                            UITextRange* rangeExtendedLeft = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionLeft];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedLeft end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"up", ^{
+                            UITextRange* rangeExtendedUp = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionUp];
+                            context(@"start", ^{
+                                it(@"should = beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedUp end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                        context(@"down", ^{
+                            UITextRange* rangeExtendedDown = [composedTextView characterRangeByExtendingPosition:endOfDocument inDirection:UITextLayoutDirectionDown];
+                            context(@"start", ^{
+                                it(@"should = to beginning of document", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown start] toPosition:penultimatePosition]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                            context(@"end", ^{
+                                it(@"should = to second position", ^{
+                                    [[@([composedTextView comparePosition:[rangeExtendedDown end] toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                });
+                            });
+                        });
+                    });
+                });
+#endif
             });
         });
 
@@ -507,13 +774,117 @@ describe(@"UITextView", ^{
                     });
 
                     context(@"Measurements", ^{
+                        it(@"should not be empty", ^{
+                            [[@([entireTextRange isEmpty]) should] beNo];
+                        });
+                        context(@"range lenght", ^{
+                            NSInteger rangeOffsetFromBeginning = [textView offsetFromPosition:[entireTextRange start] toPosition:[entireTextRange end]];
+                            it(@"should be same as text length", ^{
+                                [[@(rangeOffsetFromBeginning) should] equal: @(textLength)];
+                            });
+                        });
+                        context(@"range text", ^{
+                            NSString* textInRange = [textView textInRange:entireTextRange];
+                            it(@"should be same as text", ^{
+                                [[@([textInRange isEqualToString:text]) should] beYes];
+                            });
+                        });
                     });
                     
                     context(@"Comparisons", ^{
+                        it(@"start should be < end", ^{
+                            [[@([textView comparePosition:[entireTextRange start] toPosition:[entireTextRange end]]) should] equal:@(NSOrderedAscending)];
+                        });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+                        // This is not yet implemented in UIKit. It is written in response to ticket #1567. It tests an optional method in the UITextInput protocol
+                        // that the harness implements.
+                        context(@"-positionWithinRange:farthestInDirection:", ^{
+                            context(@"layout direction", ^{
+                                context(@"up", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"left", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionLeft];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"down", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionDown];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"right", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionRight];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                            });
+                        });
+#endif
+                    });
+                });
+
+                context(@"no length", ^{
+                    context(@"Measurements", ^{
+                        UITextRange* zeroTextRange = [textView textRangeFromPosition:beginningOfDocument toPosition:beginningOfDocument];
+                        it(@"should measure zero", ^{
+                            [[@([textView offsetFromPosition:[zeroTextRange start] toPosition:[zeroTextRange end]]) should] equal:@(0)];
+                        });
+                        it(@"should be empty", ^{
+                            [[@([zeroTextRange isEmpty]) should] beYes];
+                        });
+                        it(@"should have no text", ^{
+                            [[@([[textView textInRange:zeroTextRange] isEqualToString:@""]) should] beYes];
+                        });
+                    });
+                    context(@"Comparisons", ^{
+                        UITextRange* zeroTextRange = [textView textRangeFromPosition:beginningOfDocument toPosition:beginningOfDocument];
+                        it(@"start should = end", ^{
+                            [[@([textView comparePosition:[zeroTextRange start] toPosition:[zeroTextRange end]]) should] equal:@(NSOrderedSame)];
+                        });
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+                        // This is not yet implemented in UIKit. It is written in response to ticket #1569. It tests an optional method in the UITextInput protocol
+                        // that the harness implements.
+                        context(@"-positionWithinRange:farthestInDirection:", ^{
+                            context(@"layout direction", ^{
+                                context(@"up", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"left", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionLeft];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"down", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionDown];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                                context(@"right", ^{
+                                    UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionRight];
+                                    it(@"should equal end of document", ^{
+                                        [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                                    });
+                                });
+                            });
+                        });
+#endif
                     });
                 });
             });
         });
+
 #if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) // markedtext methods and properties not yes implemented for uikit.
         context(@"marked text", ^{
             NSString* newText = @"taco";
@@ -575,6 +946,95 @@ describe(@"UITextView", ^{
             });
         });
 #endif
+
+        context(@"Selection", ^{
+            NSString* selectionText = @"The quick brown fox /n/njumped over the lazy dog.";
+            context(@"entire document", ^{
+                UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [selectionTextView setText:selectionText];
+                UITextPosition* beginningOfDocument = [selectionTextView beginningOfDocument];
+                UITextPosition* endOfDocument = [selectionTextView endOfDocument];
+                UITextRange* fullSelectionRange = [selectionTextView textRangeFromPosition:beginningOfDocument toPosition:endOfDocument];
+                [selectionTextView setSelectedTextRange:fullSelectionRange];
+                context(@"when set then gotten", ^{
+                    UITextRange* selectedTextRange = [selectionTextView selectedTextRange];
+                    UITextPosition* start = [fullSelectionRange start];
+                    UITextPosition* end = [fullSelectionRange end];
+                    it(@"should not be empty", ^{
+                        [[@([selectedTextRange isEmpty]) should] beNo];
+                    });
+                    it(@"should have correct start", ^{
+                        [[@([selectionTextView comparePosition:start toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
+                    });
+                    it(@"should have correct end", ^{
+                        [[@([selectionTextView comparePosition:end toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                    });
+                    context(@"when selected range has not been explicitly set", ^{
+                        NSInteger startCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:start];
+                        NSInteger endCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:end];
+                        NSRange selectedTextCharacterRange = NSMakeRange(startCharacterOffset, endCharacterOffset);
+                        it(@"should = selected range", ^{
+                            [[@(NSEqualRanges(selectedTextCharacterRange, [selectionTextView selectedRange])) should] beYes];
+                        });
+                    });
+                });
+            });
+            context(@"not set", ^{
+                context(@"when the text's selectionRange is set", ^{
+                    UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [selectionTextView setText:selectionText];
+                    [selectionTextView setSelectedRange:NSMakeRange(0, [selectionText length])];
+                    UITextPosition* beginningOfDocument = [selectionTextView beginningOfDocument];
+                    UITextRange* selectedTextRange = [selectionTextView selectedTextRange];
+                    NSInteger startCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:[selectedTextRange start]];
+                    NSInteger endCharacterOffset = [selectionTextView offsetFromPosition:beginningOfDocument toPosition:[selectedTextRange end]];
+                    it(@"should get set", ^{
+                        [[@(NSEqualRanges([selectionTextView selectedRange], NSMakeRange(startCharacterOffset, endCharacterOffset))) should] beYes];
+                    });
+                });
+                context(@"when the text's selectionRange will not be set", ^{
+                    UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [selectionTextView setText:selectionText];
+                    UITextRange* selectionTextRange = [selectionTextView selectedTextRange];
+                    it(@"should be", ^{
+                        [[selectionTextRange should] beNonNil];
+                    });
+                    it(@"should have and empty range", ^{
+                        [[@([selectionTextRange isEmpty]) should] beYes];
+                    });
+                    it(@"should be caret at end of document", ^{
+                        [[@([selectionTextView comparePosition:[selectionTextRange start] toPosition:[selectionTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
+                    });
+                });
+                context(@"when text is not yet set", ^{
+                    UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    UITextRange* selectionTextRange = [selectionTextView selectedTextRange];
+                    it(@"should be nil", ^{
+                        [[selectionTextRange should] beNil];
+                    });
+                });
+            });
+            context(@"when set to nil", ^{
+                UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [selectionTextView setText:selectionText];
+                [selectionTextView setSelectedTextRange:nil];
+                it(@"should be nil", ^{
+                    [[[selectionTextView selectedTextRange] should] beNil];
+                });
+            });
+            context(@"affinity", ^{
+                UITextView* selectionTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [selectionTextView setText:selectionText];
+                UITextPosition* beginningOfDocument = [selectionTextView beginningOfDocument];
+                UITextPosition* endOfFirstLine = [selectionTextView positionFromPosition:beginningOfDocument offset:19];
+                UITextRange* selectedTextRange = [selectionTextView textRangeFromPosition:beginningOfDocument toPosition:endOfFirstLine];
+                [selectionTextView setSelectedTextRange:selectedTextRange];
+                [selectionTextView setSelectionAffinity:UITextStorageDirectionBackward]; //setter seems to ignore input in harness. Haven't found instance of Backward
+                it(@"should be forward", ^{
+                    [[@([selectionTextView selectionAffinity]) should] equal:@(UITextStorageDirectionForward)];
+                });
+            });
+        });
     });
 });
 SPEC_END
