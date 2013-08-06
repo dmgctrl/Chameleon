@@ -182,7 +182,7 @@ UIKIT_EXTERN NSString* const UITextInputTextFontKey;
 
 @interface UITextInputStringTokenizer : NSObject <UITextInputTokenizer>
 
-- (id)initWithTextInput:(UIResponder <UITextInput> *)textInput;
+- (id) initWithTextInput:(UIResponder <UITextInput> *)textInput;
 
 @end
 

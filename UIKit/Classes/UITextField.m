@@ -41,7 +41,7 @@
 #import "_UITextStorage.h"
 #import "_UITextInteractionController.h"
 #import "_UITextFieldEditor.h"
-#import "_UITextInputModel.h"
+#import "_UITextModel.h"
 #import "_UITextInputAdapter.h"
 /**/
 #import "UIImage.h"
@@ -93,7 +93,7 @@ static NSString* const kUIAttributedTextKey = @"UIAttributedText";
     _UITextFieldEditor* _textFieldEditor;
     
     _UITextInteractionController* _interactionController;
-    _UITextInputModel* _inputModel;
+    _UITextModel* _model;
     _UITextInputAdapter* _inputAdapter;
     
     struct {
@@ -141,13 +141,13 @@ static void _commonInitForUITextField(UITextField* self)
     [self->_layoutManager addTextContainer:self->_textContainer];
     [self->_textStorage addLayoutManager:self->_layoutManager];
     
-    self->_inputModel = [[_UITextInputModel alloc] initWithLayoutManager:self->_layoutManager];
+    self->_model = [[_UITextModel alloc] initWithLayoutManager:self->_layoutManager];
     
-    self->_interactionController = [[_UITextInteractionController alloc] initWithView:self inputModel:self->_inputModel];
+    self->_interactionController = [[_UITextInteractionController alloc] initWithView:self model:self->_model];
     [self->_interactionController addOneFingerTapRecognizerToView:self];
     [self->_interactionController addOneFingerDoubleTapRecognizerToView:self];
     
-    self->_inputAdapter = [[_UITextInputAdapter alloc] initWithInputModel:self->_inputModel interactionController:self->_interactionController];
+    self->_inputAdapter = [[_UITextInputAdapter alloc] initWithInputModel:self->_model interactionController:self->_interactionController];
 }
 
 - (void) dealloc
@@ -752,7 +752,7 @@ static void _commonInitForUITextField(UITextField* self)
 
 - (BOOL) hasText
 {
-    return [_inputModel hasText];
+    return [_model hasText];
 }
 
 - (void) insertText:(NSString*)text
@@ -900,7 +900,7 @@ static void _commonInitForUITextField(UITextField* self)
 {
     [super willMoveToWindow:window];
     if (window) {
-        _interactionController = [[_UITextInteractionController alloc] initWithView:self inputModel:_inputModel];
+        _interactionController = [[_UITextInteractionController alloc] initWithView:self model:_model];
         [_interactionController addOneFingerTapRecognizerToView:self];
         [_interactionController addOneFingerDoubleTapRecognizerToView:self];
     } else {
@@ -981,21 +981,21 @@ static void _commonInitForUITextField(UITextField* self)
 
 #pragma mark _UItextInteractionController
 
-- (NSRange) textInput:(_UITextInputModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
+- (NSRange) textModel:(_UITextModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
 {
     return toRange;
 }
 
-- (void) textInputDidChangeSelection:(_UITextInputModel*)controller
+- (void) textInputDidChangeSelection:(_UITextModel*)controller
 {
 }
 
-- (void) textInputDidChange:(_UITextInputModel*)controller
+- (void) textModelDidChange:(_UITextModel*)controller
 {
     [self _didChangeText];
 }
 
-- (void) textInput:(_UITextInputModel*)controller prepareAttributedTextForInsertion:(id)text
+- (void) textModel:(_UITextModel*)controller prepareAttributedTextForInsertion:(id)text
 {
 }
 

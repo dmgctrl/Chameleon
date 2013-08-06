@@ -1,13 +1,13 @@
 #import "_UITextInputAdapter.h"
 /**/
-#import "_UITextInputModel.h"
+#import "_UITextModel.h"
 #import "_UITextInteractionController.h"
 #import "_UITextViewPosition.h"
 #import "_UITextViewRange.h"
 
 
 @implementation _UITextInputAdapter {
-    _UITextInputModel* _inputModel;
+    _UITextModel* _model;
     _UITextInteractionController* _interactionController;
 }
 @synthesize markedTextRange;
@@ -16,12 +16,12 @@
 @synthesize tokenizer;
 
 
-- (instancetype) initWithInputModel:(_UITextInputModel*)inputModel interactionController:(_UITextInteractionController*)interactionController
+- (instancetype) initWithInputModel:(_UITextModel*)model interactionController:(_UITextInteractionController*)interactionController
 {
-    NSAssert(nil != inputModel, @"???");
+    NSAssert(nil != model, @"???");
     NSAssert(nil != interactionController, @"???");
     if (nil != (self = [super init])) {
-        _inputModel = inputModel;
+        _model = model;
         _interactionController = interactionController;
     }
     return self;
@@ -32,7 +32,7 @@
 
 - (BOOL) hasText
 {
-    return [_inputModel hasText];
+    return [_model hasText];
 }
 
 - (void) insertText:(NSString*)text
@@ -51,20 +51,20 @@
 - (NSString*) textInRange:(_UITextViewRange*)range
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_inputModel textInRange:[range NSRange]];
+    return [_model textInRange:[range NSRange]];
 }
 
 - (void) replaceRange:(_UITextViewRange*)range withText:(NSString*)text
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    [_inputModel replaceRange:[range NSRange] withText:text];
+    [_model replaceRange:[range NSRange] withText:text];
     [_interactionController setSelectedRange:(NSRange){ [range NSRange].location + [text length], 0 }];
 }
 
 - (BOOL) shouldChangeTextInRange:(_UITextViewRange*)range replacementText:(NSString*)text
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_inputModel shouldChangeTextInRange:[range NSRange] replacementText:text];
+    return [_model shouldChangeTextInRange:[range NSRange] replacementText:text];
 }
 
 - (UITextRange*) selectedTextRange
@@ -89,17 +89,17 @@
 
 - (UITextRange*) markedTextRange
 {
-    return [_UITextViewRange rangeWithNSRange:[_inputModel markedTextRange]];
+    return [_UITextViewRange rangeWithNSRange:[_model markedTextRange]];
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
-    [_inputModel setMarkedText:markedText selectedRange:selectedRange];
+    [_model setMarkedText:markedText selectedRange:selectedRange];
 }
 
 - (void) unmarkText
 {
-    [_inputModel unmarkText];
+    [_model unmarkText];
 }
 
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
@@ -115,7 +115,7 @@
     if (!position) {
         return nil;
     }
-    return [_UITextViewRange rangeWithNSRange:[_inputModel textRangeOfWordContainingPosition:[position offset]]];
+    return [_UITextViewRange rangeWithNSRange:[_model textRangeOfWordContainingPosition:[position offset]]];
 }
 
 - (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position offset:(NSInteger)offset
@@ -124,7 +124,7 @@
     if (!position) {
         return nil;
     }
-    return [_UITextViewPosition positionWithOffset:[_inputModel positionFromPosition:[position offset] offset:offset]];
+    return [_UITextViewPosition positionWithOffset:[_model positionFromPosition:[position offset] offset:offset]];
 }
 
 - (UITextPosition*) positionFromPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
@@ -133,17 +133,17 @@
     if (!position) {
         return nil;
     }
-    return [_UITextViewPosition positionWithOffset:[_inputModel positionFromPosition:[position offset] inDirection:direction offset:offset]];
+    return [_UITextViewPosition positionWithOffset:[_model positionFromPosition:[position offset] inDirection:direction offset:offset]];
 }
 
 - (UITextPosition*) beginningOfDocument
 {
-    return [_UITextViewPosition positionWithOffset:[_inputModel beginningOfDocument]];
+    return [_UITextViewPosition positionWithOffset:[_model beginningOfDocument]];
 }
 
 - (UITextPosition*) endOfDocument
 {
-    return [_UITextViewPosition positionWithOffset:[_inputModel endOfDocument]];
+    return [_UITextViewPosition positionWithOffset:[_model endOfDocument]];
 }
 
 - (NSComparisonResult) comparePosition:(_UITextViewPosition*)position toPosition:(_UITextViewPosition*)other
@@ -176,13 +176,13 @@
 - (UITextPosition*) positionWithinRange:(_UITextViewRange*)range farthestInDirection:(UITextLayoutDirection)direction
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_UITextViewPosition positionWithOffset:[_inputModel positionWithinRange:[range NSRange] farthestInDirection:direction]];
+    return [_UITextViewPosition positionWithOffset:[_model positionWithinRange:[range NSRange] farthestInDirection:direction]];
 }
 
 - (UITextPosition*) positionWithinRange:(_UITextViewRange*)range atCharacterOffset:(NSInteger)offset
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_UITextViewPosition positionWithOffset:[_inputModel positionWithinRange:[range NSRange] atCharacterOffset:offset]];
+    return [_UITextViewPosition positionWithOffset:[_model positionWithinRange:[range NSRange] atCharacterOffset:offset]];
 }
 
 - (UITextRange*) characterRangeByExtendingPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction
@@ -203,53 +203,53 @@
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_inputModel characterOffsetOfPosition:[position offset] withinRange:[range NSRange]];
+    return [_model characterOffsetOfPosition:[position offset] withinRange:[range NSRange]];
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(_UITextViewPosition*)position inDirection:(UITextStorageDirection)direction
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    return [_inputModel baseWritingDirectionForPosition:[position offset] inDirection:direction];
+    return [_model baseWritingDirectionForPosition:[position offset] inDirection:direction];
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(_UITextViewRange*)range
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    [_inputModel setBaseWritingDirection:writingDirection forRange:[range NSRange]];
+    [_model setBaseWritingDirection:writingDirection forRange:[range NSRange]];
 }
 
 - (CGRect) firstRectForRange:(_UITextViewRange*)range
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_inputModel firstRectForRange:[range NSRange]];
+    return [_model firstRectForRange:[range NSRange]];
 }
 
 - (CGRect) caretRectForPosition:(_UITextViewPosition*)position
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
-    return [_inputModel caretRectForPosition:[position offset]];
+    return [_model caretRectForPosition:[position offset]];
 }
 
 - (NSArray*) selectionRectsForRange:(_UITextViewRange*)range
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_inputModel selectionRectsForRange:[range NSRange]];
+    return [_model selectionRectsForRange:[range NSRange]];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
 {
-    return [_UITextViewPosition positionWithOffset:[_inputModel closestPositionToPoint:point]];
+    return [_UITextViewPosition positionWithOffset:[_model closestPositionToPoint:point]];
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(_UITextViewRange*)range
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return [_UITextViewPosition positionWithOffset:[_inputModel closestPositionToPoint:point withinRange:[range NSRange]]];
+    return [_UITextViewPosition positionWithOffset:[_model closestPositionToPoint:point withinRange:[range NSRange]]];
 }
 
 - (UITextRange*) characterRangeAtPoint:(CGPoint)point
 {
-    return [_UITextViewRange rangeWithNSRange:[_inputModel characterRangeAtPoint:point]];
+    return [_UITextViewRange rangeWithNSRange:[_model characterRangeAtPoint:point]];
 }
 
 @end

@@ -2,8 +2,9 @@
 #import <UIKit/UITextInput.h>
 
 @class UIView;
+@class UIPanGestureRecognizer;
 @class UITapGestureRecognizer;
-@class _UITextInputModel;
+@class _UITextModel;
 @class _UITextInteractionController;
 
 
@@ -19,16 +20,20 @@ UIKIT_HIDDEN
 
 @interface _UITextInteractionController : NSObject
 
-- (instancetype) initWithView:(UIResponder<UITextInput>*)view inputModel:(_UITextInputModel*)inputModel;
+- (instancetype) initWithView:(UIResponder<UITextInput>*)view model:(_UITextModel*)model;
 
 @property (readonly, nonatomic) UIResponder<UITextInput>* view;
 
 @property (nonatomic) UITextStorageDirection selectionAffinity;
 @property (nonatomic) NSRange selectedRange;
+@property (nonatomic) NSInteger insertionPoint;
 
 - (UITapGestureRecognizer*) addOneFingerTapRecognizerToView:(UIView*)view;
 - (UITapGestureRecognizer*) addOneFingerDoubleTapRecognizerToView:(UIView*)view;
+- (UIPanGestureRecognizer*) addSelectionPanGestureRecognizerToView:(UIView*)view;
+
 - (void) removeGestureRecognizersFromView:(UIView*)view;
+- (void) removeGestureRecognizers;
 
 - (void) insertText:(NSString*)text;
 - (void) deleteBackward;

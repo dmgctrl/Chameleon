@@ -1,11 +1,11 @@
-#import "_UITextInputModel.h"
+#import "_UITextModel.h"
 //
 #import <UIKit/NSTextStorage.h>
 #import <UIKit/NSTextContainer.h>
 #import <UIKit/NSLayoutManager.h>
 
 
-@implementation _UITextInputModel {
+@implementation _UITextModel {
     struct {
         bool textInputShouldBeginEditing : 1;
         bool textInputShouldChangeCharactersInRangeReplacementText : 1;
@@ -24,14 +24,14 @@
     return self;
 }
 
-- (void) setDelegate:(id<_UITextInputModelDelegate>)delegate
+- (void) setDelegate:(id<_UITextModelDelegate>)delegate
 {
     if (_delegate != delegate) {
         _delegate = delegate;
-        _delegateHas.textInputDidChange = [delegate respondsToSelector:@selector(textInputDidChange:)];
-        _delegateHas.textInputPrepareAttributedTextForInsertion = [delegate respondsToSelector:@selector(textInput:prepareAttributedTextForInsertion:)];
-        _delegateHas.textInputShouldBeginEditing = [delegate respondsToSelector:@selector(textInputShouldBeginEditing:)];
-        _delegateHas.textInputShouldChangeCharactersInRangeReplacementText = [delegate respondsToSelector:@selector(textInput:shouldChangeCharactersInRange:replacementText:)];
+        _delegateHas.textInputDidChange = [delegate respondsToSelector:@selector(textModelDidChange:)];
+        _delegateHas.textInputPrepareAttributedTextForInsertion = [delegate respondsToSelector:@selector(textModel:prepareAttributedTextForInsertion:)];
+        _delegateHas.textInputShouldBeginEditing = [delegate respondsToSelector:@selector(textModelShouldBeginEditing:)];
+        _delegateHas.textInputShouldChangeCharactersInRangeReplacementText = [delegate respondsToSelector:@selector(textModel:shouldChangeCharactersInRange:replacementText:)];
     }
 }
 
@@ -131,16 +131,16 @@
 {
     switch (direction) {
         case UITextLayoutDirectionDown: {
-            return [self _indexWhenMovingDownFromIndex:position by:offset];
+            return [self positionWhenMovingDownFromPosition:position by:offset];
         }
         case UITextLayoutDirectionUp: {
-            return [self _indexWhenMovingUpFromIndex:position by:offset];
+            return [self positionWhenMovingUpFromPosition:position by:offset];
         }
         case UITextLayoutDirectionLeft: {
-            return [self _indexWhenMovingLeftFromIndex:position by:offset];
+            return [self positionWhenMovingLeftFromPosition:position by:offset];
         }
         case UITextLayoutDirectionRight: {
-            return [self _indexWhenMovingRightFromIndex:position by:offset];
+            return [self positionWhenMovingRightFromPosition:position by:offset];
         }
     }
 }
@@ -253,7 +253,7 @@
 - (BOOL) _canChangeTextInRange:(NSRange)range replacementText:(NSString*)string
 {
     if (_delegateHas.textInputShouldChangeCharactersInRangeReplacementText) {
-        return [[self delegate] textInput:self shouldChangeCharactersInRange:range replacementText:string];
+        return [[self delegate] textModel:self shouldChangeCharactersInRange:range replacementText:string];
     } else {
         return YES;
     }
@@ -264,13 +264,13 @@
     NSTextStorage* textStorage = [self _textStorage];
     if (_delegateHas.textInputPrepareAttributedTextForInsertion) {
         NSMutableAttributedString* text = [[NSMutableAttributedString alloc] initWithString:string];
-        [[self delegate] textInput:self prepareAttributedTextForInsertion:text];
+        [[self delegate] textModel:self prepareAttributedTextForInsertion:text];
         [textStorage replaceCharactersInRange:range withAttributedString:text];
     } else {
         [textStorage replaceCharactersInRange:range withString:string];
     }
     if (_delegateHas.textInputDidChange) {
-        [[self delegate] textInputDidChange:self];
+        [[self delegate] textModelDidChange:self];
     }
 }
 
@@ -292,12 +292,12 @@
     }
 }
 
-- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingRightFromPosition:(NSInteger)index
 {
-    return [self _indexWhenMovingRightFromIndex:index by:1];
+    return [self positionWhenMovingRightFromPosition:index by:1];
 }
 
-- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
+- (NSInteger) positionWhenMovingRightFromPosition:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
 {
     NSLayoutManager* layoutManager = [self layoutManager];
     NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
@@ -311,12 +311,12 @@
     }
 }
 
-- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingLeftFromPosition:(NSInteger)index
 {
-    return [self _indexWhenMovingLeftFromIndex:index by:1];
+    return [self positionWhenMovingLeftFromPosition:index by:1];
 }
 
-- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
+- (NSInteger) positionWhenMovingLeftFromPosition:(NSInteger)index by:(NSInteger)byNumberOfGlyphs
 {
     NSLayoutManager* layoutManager = [self layoutManager];
     NSInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
@@ -330,7 +330,7 @@
     }
 }
 
-- (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingWordLeftFromPosition:(NSInteger)index
 {
     NSString* text = [[self _textStorage] string];
     NSRange range = NSMakeRange(0, index);
@@ -344,7 +344,7 @@
     return newIndex < 0 ? 0 : newIndex;
 }
 
-- (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingWordRightFromPosition:(NSInteger)index
 {
     NSString* text = [[self _textStorage] string];
     NSInteger maxIndex = [text length];
@@ -357,7 +357,7 @@
     return MIN(newIndex, maxIndex);
 }
 
-- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index by:(NSInteger)numberOfLines
+- (NSInteger) positionWhenMovingUpFromPosition:(NSInteger)index by:(NSInteger)numberOfLines
 {
     if (numberOfLines <= 0) {
         return index;
@@ -374,7 +374,13 @@
     NSInteger newIndex = MIN(index, numberOfGlyphs - 1);
     NSInteger lineNumber = 0;
     NSRect fragmentRect = {};
-    CGFloat x = floor([layoutManager locationForGlyphAtIndex:newIndex].x);
+    CGFloat x;
+    if (index < numberOfGlyphs) {
+        x = floor([layoutManager locationForGlyphAtIndex:newIndex].x);
+    } else {
+        x = floor([layoutManager extraLineFragmentRect].origin.x);
+        lineNumber++;
+    }
     do {
         NSRange range;
         fragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:newIndex effectiveRange:&range];
@@ -397,7 +403,7 @@
     return glyphIndex;
 }
 
-- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index by:(NSInteger)numberOfLines
+- (NSInteger) positionWhenMovingDownFromPosition:(NSInteger)index by:(NSInteger)numberOfLines
 {
     if (numberOfLines <= 0) {
         return index;
@@ -437,19 +443,19 @@
     return glyphIndex;
 }
 
-- (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingToBeginningOfLineFromPosition:(NSInteger)index
 {
     NSInteger textLength = [[self _textStorage] length];
     NSRange lineFragmentRange;
     [[self layoutManager] lineFragmentRectForGlyphAtIndex:(index >= textLength ? textLength - 1 : index) effectiveRange:&lineFragmentRange withoutAdditionalLayout:YES];
     NSInteger newIndex = lineFragmentRange.location;
     if (newIndex >= textLength) {
-        return [self _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+        return [self positionWhenMovingToBeginningOfParagraphFromPosition:index];
     }
-    return MAX(newIndex, [self _indexWhenMovingToBeginningOfParagraphFromIndex:index]);
+    return MAX(newIndex, [self positionWhenMovingToBeginningOfParagraphFromPosition:index]);
 }
 
-- (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingToEndOfLineFromPosition:(NSInteger)index
 {
     NSInteger textLength = [[self _textStorage] length];
     if (index >= textLength) {
@@ -464,7 +470,7 @@
     return MIN(newIndex - 1, [self _indexWhenMovingToEndOfParagraphFromIndex:index]);
 }
 
-- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingToBeginningOfParagraphFromPosition:(NSInteger)index
 {
     NSString* string = [[self _textStorage] string];
     return [string paragraphRangeForRange:(NSRange){ index, 0 }].location;
@@ -478,21 +484,6 @@
         newIndex--;
     }
     return newIndex;
-}
-
-- (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index
-{
-    return 0;
-}
-
-- (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index
-{
-    return [[self _textStorage] length];
-}
-
-- (NSInteger) _endOfDocument
-{
-    return [[self _textStorage] length];
 }
 
 @end

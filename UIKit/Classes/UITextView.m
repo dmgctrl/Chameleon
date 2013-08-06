@@ -41,7 +41,7 @@
 #import "UIFont+UIPrivate.h"
 #import "UIResponder+AppKit.h"
 #import "_UITextStorage.h"
-#import "_UITextInputModel.h"
+#import "_UITextModel.h"
 #import "_UITextInputAdapter.h"
 #import "_UITextInputPlus.h"
 #import "_UITextInteractionController.h"
@@ -72,7 +72,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
 @end
 
 
-@interface UITextView () <_UITextInputModelDelegate, _UITextInputPlus>
+@interface UITextView () <_UITextInteractionControllerDelegate, _UITextModelDelegate, _UITextInputPlus>
 @end
 
 
@@ -84,7 +84,7 @@ static NSString* const kUIEditableKey = @"UIEditable";
     _UITextContainerView* _textContainerView;
 
     _UITextInteractionController* _interactionController;
-    _UITextInputModel* _inputModel;
+    _UITextModel* _model;
     _UITextInputAdapter* _inputAdapter;
     
     struct {
@@ -135,19 +135,21 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     [self->_layoutManager addTextContainer:self->_textContainer];
     [self->_textStorage addLayoutManager:self->_layoutManager];
     
-    self->_inputModel = [[_UITextInputModel alloc] initWithLayoutManager:self->_layoutManager];
-    [self->_inputModel setDelegate:self];
-    
-    self->_interactionController = [[_UITextInteractionController alloc] initWithView:self inputModel:self->_inputModel];
-    [self->_interactionController addOneFingerTapRecognizerToView:self];
-    [self->_interactionController addOneFingerDoubleTapRecognizerToView:self];
-    
-    self->_inputAdapter = [[_UITextInputAdapter alloc] initWithInputModel:self->_inputModel interactionController:self->_interactionController];
-    
     self->_textContainerView = [[_UITextContainerView alloc] initWithFrame:CGRectZero];
     [self->_textContainerView setTextContainer:[self textContainer]];
     [self->_textContainerView setBackgroundColor:[self backgroundColor]];
     [self addSubview:self->_textContainerView];
+
+    self->_model = [[_UITextModel alloc] initWithLayoutManager:self->_layoutManager];
+    [self->_model setDelegate:self];
+    
+    self->_interactionController = [[_UITextInteractionController alloc] initWithView:self model:self->_model];
+    [self->_interactionController addOneFingerTapRecognizerToView:self];
+    [self->_interactionController addOneFingerDoubleTapRecognizerToView:self];
+    [self->_interactionController addOneFingerDoubleTapRecognizerToView:self];
+    [self->_interactionController addSelectionPanGestureRecognizerToView:self->_textContainerView];
+    
+    self->_inputAdapter = [[_UITextInputAdapter alloc] initWithInputModel:self->_model interactionController:self->_interactionController];
 }
 
 - (void) dealloc
@@ -389,12 +391,12 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) scrollToBeginningOfDocument:(id)sender
 {
-    [self scrollRangeToVisible:(NSRange){ [_inputModel beginningOfDocument], 0 }];
+    [self scrollRangeToVisible:(NSRange){ [_model beginningOfDocument], 0 }];
 }
 
 - (void) scrollToEndOfDocument:(id)sender
 {
-    [self scrollRangeToVisible:(NSRange){ [_inputModel endOfDocument], 0 }];
+    [self scrollRangeToVisible:(NSRange){ [_model endOfDocument], 0 }];
 }
 
 
@@ -509,7 +511,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (void) selectAll:(id)sender
 {
-    [self setSelectedRange:NSMakeRange(0, [_inputModel _endOfDocument])];
+    [_interactionController selectAll:sender];
 }
 
 
@@ -517,7 +519,7 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 
 - (BOOL) hasText
 {
-    return [_inputModel hasText];
+    return [_model hasText];
 }
 
 - (void) insertText:(NSString*)text
@@ -578,11 +580,6 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
 - (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
 {
     return [_inputAdapter textRangeFromPosition:fromPosition toPosition:toPosition];
-}
-
-- (UITextRange*) textRangeOfWordContainingPosition:(UITextPosition*)position
-{
-    return [_inputAdapter textRangeOfWordContainingPosition:position];
 }
 
 - (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
@@ -709,15 +706,21 @@ static void _commonInitForUITextView(UITextView* self, NSTextContainer* textCont
     [self endSelectionChange];
 }
 
+- (void) textInteractionController:(_UITextInteractionController*)controller didChangeCaretPosition:(NSInteger)caretPosition
+{
+    [self scrollRangeToVisible:(NSRange){ caretPosition, 0 }];
+    [_textContainerView setCaretPosition:caretPosition];
+}
 
-#pragma mark _UITextInputModelDelegate
 
-- (void) textInputDidChange:(_UITextInputModel*)inputModel
+#pragma mark _UITextModelDelegate
+
+- (void) textModelDidChange:(_UITextModel*)model
 {
     [self _didChangeText];
 }
 
-- (void) textInput:(_UITextInputModel*)inputModel prepareAttributedTextForInsertion:(id)text
+- (void) textModel:(_UITextModel*)model prepareAttributedTextForInsertion:(id)text
 {
     [text setAttributes:[self _stringAttributes] range:(NSRange){ 0, [text length] }];
 }

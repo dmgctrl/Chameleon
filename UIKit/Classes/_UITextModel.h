@@ -3,21 +3,21 @@
 
 @class NSLayoutManager;
 @class NSTextContainer;
-@class _UITextInputModel;
+@class _UITextModel;
 
 
 UIKIT_HIDDEN
-@protocol _UITextInputModelDelegate <NSObject>
+@protocol _UITextModelDelegate <NSObject>
 @optional
-- (void) textInputDidChange:(_UITextInputModel*)controller;
-- (void) textInput:(_UITextInputModel*)controller prepareAttributedTextForInsertion:(id)text;
-- (BOOL) textInput:(_UITextInputModel*)controller shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
-- (BOOL) textInputShouldBeginEditing:(_UITextInputModel*)controller;
+- (void) textModelDidChange:(_UITextModel*)controller;
+- (void) textModel:(_UITextModel*)controller prepareAttributedTextForInsertion:(id)text;
+- (BOOL) textModel:(_UITextModel*)controller shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
+- (BOOL) textModelShouldBeginEditing:(_UITextModel*)controller;
 @end
 
 
 UIKIT_HIDDEN
-@interface _UITextInputModel : NSObject
+@interface _UITextModel : NSObject
 
 - (BOOL) hasText;
 
@@ -59,27 +59,25 @@ UIKIT_HIDDEN
 
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextContainer* textContainer;
-@property (nonatomic) id <_UITextInputModelDelegate> delegate;
+@property (nonatomic) id <_UITextModelDelegate> delegate;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager;
 
 
-- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingRightFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
-- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingLeftFromIndex:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
-- (NSInteger) _indexWhenMovingWordLeftFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingWordRightFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingUpFromIndex:(NSInteger)index by:(NSInteger)numberOfLines;
-- (NSInteger) _indexWhenMovingDownFromIndex:(NSInteger)index by:(NSInteger)numberOfLines;
-- (NSInteger) _indexWhenMovingToBeginningOfLineFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingToEndOfLineFromIndex:(NSInteger)index;
+- (NSInteger) positionWhenMovingRightFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingRightFromPosition:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
+- (NSInteger) positionWhenMovingLeftFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingLeftFromPosition:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
+- (NSInteger) positionWhenMovingWordLeftFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingWordRightFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingUpFromPosition:(NSInteger)index by:(NSInteger)numberOfLines;
+- (NSInteger) positionWhenMovingDownFromPosition:(NSInteger)index by:(NSInteger)numberOfLines;
+- (NSInteger) positionWhenMovingToBeginningOfLineFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingToEndOfLineFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingToBeginningOfParagraphFromPosition:(NSInteger)index;
+- (NSInteger) positionWhenMovingToEndOfParagraphFromPosition:(NSInteger)index;
+
 - (BOOL) _isLocationAtBeginningOfParagraph;
 - (BOOL) _isLocationAtEndOfParagraph;
-- (NSInteger) _indexWhenMovingToBeginningOfParagraphFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingToBeginningOfDocumentFromIndex:(NSInteger)index;
-- (NSInteger) _indexWhenMovingToEndOfDocumentFromIndex:(NSInteger)index;
-- (NSInteger) _endOfDocument;
 
 @end

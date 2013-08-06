@@ -7,6 +7,7 @@
 @property (nonatomic) NSTextContainer* textContainer;
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic) BOOL shouldShowInsertionPoint;
+@property (nonatomic) NSInteger caretPosition;
 
 - (NSRect) _viewRectForCharacterRange:(NSRange)range;
 

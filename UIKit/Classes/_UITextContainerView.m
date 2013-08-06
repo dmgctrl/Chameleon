@@ -57,20 +57,20 @@
         [self setNeedsDisplay];
     }
     _selectedRange = selectedRange;
-    [self _updateInsertionPointPosition];
+    [self setShouldShowInsertionPoint:selectedRange.length == 0];
 }
 
 - (void) setShouldShowInsertionPoint:(BOOL)shouldShowInsertionPoint
 {
     if (_shouldShowInsertionPoint != shouldShowInsertionPoint) {
         _shouldShowInsertionPoint = shouldShowInsertionPoint;
-        [self _updateInsertionPointPosition];
+        _insertionPoint.hidden = !shouldShowInsertionPoint;
     }
 }
 
-- (void) _updateInsertionPointPosition
+- (void) setCaretPosition:(NSInteger)caretPosition
 {
-    CGRect rect = [self _viewRectForCharacterRange:[self selectedRange]];
+    CGRect rect = [self _viewRectForCharacterRange:(NSRange){ caretPosition, 0}];
     rect.origin.x = floor(rect.origin.x);
     _insertionPoint.frame = rect;
     _insertionPoint.hidden = !_shouldShowInsertionPoint || (_selectedRange.length > 0);

@@ -684,6 +684,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     // don't use paging mode in Twitterrific at the moment, I'm not suffeciently motivated to worry about it. :)
     
     if (gesture == _panGestureRecognizer) {
+#if 0 // Disabled: Handled below.
         if (_panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
             [self _beginDragging];
         } else if (_panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
@@ -692,6 +693,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
         } else if (_panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
             [self _endDraggingWithDecelerationVelocity:[_panGestureRecognizer velocityInView:self]];
         }
+#endif
     } else if (gesture == _scrollWheelGestureRecognizer) {
         if (_scrollWheelGestureRecognizer.state == UIGestureRecognizerStateRecognized) {
             const CGPoint delta = [_scrollWheelGestureRecognizer translationInView:self];

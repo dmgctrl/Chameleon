@@ -1,10 +1,11 @@
 #import "_UITextInteractionController.h"
 #import "_UITextInputPlus.h"
-#import "_UITextInputModel.h"
+#import "_UITextModel.h"
 //
 #import <UIKit/UIView.h>
 #import <UIKit/UIPasteboard.h>
 #import <UIKit/UIGestureRecognizer.h>
+#import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UITapGestureRecognizer.h>
 #import <UIKit/UITouch.h>
 
@@ -19,7 +20,7 @@
 
 @implementation _UITextInteractionController {
     UIView<_UITextInputPlus>* _view;
-    _UITextInputModel* _inputModel;
+    _UITextModel* _model;
     NSMutableArray* _gestureRecognizers;
     struct {
         bool beginSelectionChange : 1;
@@ -36,10 +37,10 @@
 //    NSSelectionGranularity _selectionGranularity;
 }
 
-- (instancetype) initWithView:(UIResponder<UITextInput>*)view inputModel:(_UITextInputModel*)inputModel
+- (instancetype) initWithView:(UIResponder<UITextInput>*)view model:(_UITextModel*)model
 {
     NSAssert(nil != view, @"???");
-    NSAssert(nil != inputModel, @"???");
+    NSAssert(nil != model, @"???");
     if (nil != (self = [super init])) {
         _selectedRange = (NSRange){ NSNotFound, 0 };
         _view = (UIView<_UITextInputPlus>*)view;
@@ -50,7 +51,7 @@
         _viewHas.textInteractionControllerWillChangeSelectionFromCharacterRangeToCharacterRange = [view respondsToSelector:@selector(textInteractionController:willChangeSelectionFromCharacterRange:toCharacterRange:)];
         _viewHas.textInteractionControllerEditorDidChangeSelection = [view respondsToSelector:@selector(textInteractionControllerEditorDidChangeSelection:)];
         _viewHas.textInteractionControllerDidChangeCaretPosition = [view respondsToSelector:@selector(textInteractionController:didChangeCaretPosition:)];
-        _inputModel = inputModel;
+        _model = model;
         _gestureRecognizers = [[NSMutableArray alloc] init];
     }
     return self;
@@ -60,6 +61,11 @@
 #pragma mark Public Methods
 
 - (void) setSelectedRange:(NSRange)selectedRange
+{
+    [self setSelectedRange:selectedRange upstream:YES];
+}
+
+- (void) setSelectedRange:(NSRange)selectedRange upstream:(BOOL)upstream
 {
     if ((_selectedRange.location != selectedRange.location) || (_selectedRange.length != selectedRange.length)) {
         if (_viewHas.textInteractionControllerWillChangeSelectionFromCharacterRangeToCharacterRange) {
@@ -71,6 +77,18 @@
         _selectedRange = selectedRange;
         if (_viewHas.textInteractionControllerDidChangeSelection) {
             [_view textInteractionControllerDidChangeSelection:self];
+        }
+        _selectionAffinity = upstream ? UITextStorageDirectionBackward : UITextStorageDirectionForward;
+        [self setInsertionPoint:upstream ? selectedRange.location : NSMaxRange(selectedRange)];
+    }
+}
+
+- (void) setInsertionPoint:(NSInteger)insertionPoint
+{
+    if (_insertionPoint != insertionPoint) {
+        _insertionPoint = insertionPoint;
+        if (_viewHas.textInteractionControllerDidChangeCaretPosition) {
+            [_view textInteractionController:self didChangeCaretPosition:insertionPoint];
         }
     }
 }
@@ -95,6 +113,14 @@
     return gesture;
 }
 
+- (UIPanGestureRecognizer*) addSelectionPanGestureRecognizerToView:(UIView*)view
+{
+    UIPanGestureRecognizer* gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(selectionPan:)];
+    [view addGestureRecognizer:gesture];
+    [_gestureRecognizers addObject:gesture];
+    return gesture;
+}
+
 - (void) removeGestureRecognizersFromView:(UIView*)view
 {
     NSMutableArray* newGestureRecognizers = [[NSMutableArray alloc] initWithCapacity:[_gestureRecognizers count]];
@@ -106,6 +132,14 @@
         }
     }
     _gestureRecognizers = newGestureRecognizers;
+}
+
+- (void) removeGestureRecognizers
+{
+    for (UIGestureRecognizer* gestureRecognizer in _gestureRecognizers) {
+        [[gestureRecognizer view] removeGestureRecognizer:gestureRecognizer];
+    }
+    [_gestureRecognizers removeAllObjects];
 }
 
 
@@ -147,31 +181,42 @@
     }
 }
 
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void) selectionPan:(UIPanGestureRecognizer*)gestureRecognizer
 {
-    UITouch* touch = [[event allTouches] anyObject];
-    [self _setAndScrollToRange:[_inputModel characterRangeAtPoint:[touch locationInView:_view]]];
-    _stillSelecting = YES;
-}
-
-- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch = [[event allTouches] anyObject];
-    NSUInteger index = [_inputModel characterRangeAtPoint:[touch locationInView:_view]].location;
-    NSRange range;
-    if (_selectionOrigin > index) {
-        range = (NSRange){ index, _selectionOrigin - index };
-    } else {
-        range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
+    switch ([gestureRecognizer state]) {
+        case UIGestureRecognizerStatePossible: {
+            break;
+        }
+            
+        case UIGestureRecognizerStateBegan: {
+            _selectionOrigin = [_model characterRangeAtPoint:[gestureRecognizer translationInView:[gestureRecognizer view]]].location;
+            _stillSelecting = YES;
+            [self setSelectedRange:(NSRange){ _selectionOrigin, 0}];
+            break;
+        }
+         
+        case UIGestureRecognizerStateChanged: {
+            NSRange characterRange = [_model characterRangeAtPoint:[gestureRecognizer translationInView:[gestureRecognizer view]]];
+            NSRange range;
+            bool upstream = _selectionOrigin >= characterRange.location;
+            NSUInteger index = upstream ? characterRange.location : NSMaxRange(characterRange);
+            if (upstream) {
+                range = (NSRange){ index, _selectionOrigin - index };
+            } else {
+                range = (NSRange){ _selectionOrigin, index - _selectionOrigin };
+            }
+            [self setSelectedRange:range upstream:upstream];
+            break;
+        }
+        
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateFailed:
+        case UIGestureRecognizerStateCancelled: {
+            _stillSelecting = NO;
+            break;
+        }
     }
-    [self _setAndScrollToRange:range upstream:_selectionOrigin > index];
 }
-
-- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    _stillSelecting = NO;
-}
-
 
 
 #pragma mark Basic Input
@@ -179,7 +224,7 @@
 - (void) insertText:(NSString*)text
 {
     NSRange range = [self selectedRange];
-    [_inputModel replaceRange:range withText:text];
+    [_model replaceRange:range withText:text];
     [self setSelectedRange:(NSRange){ range.location + [text length], 0 }];
 }
 
@@ -188,7 +233,7 @@
     NSRange range = [self selectedRange];
     if (!range.length) {
         NSInteger end = range.location;
-        NSInteger start = [_inputModel positionFromPosition:range.location offset:-1];
+        NSInteger start = [_model positionFromPosition:range.location offset:-1];
         if (start <= end) {
             range = (NSRange){
                 .location = start,
@@ -196,10 +241,10 @@
             };
         }
     }
-    if (![_inputModel shouldChangeTextInRange:range replacementText:@""]) {
+    if (![_model shouldChangeTextInRange:range replacementText:@""]) {
         return;
     }
-    [_inputModel replaceRange:range withText:@""];
+    [_model replaceRange:range withText:@""];
     [self setSelectedRange:(NSRange){ range.location, 0 }];
 }
 
@@ -214,6 +259,13 @@
     }
 }
 
+- (void) selectAll:(id)sender
+{
+    NSInteger start = [_model beginningOfDocument];
+    NSInteger end = [_model endOfDocument];
+    [self setSelectedRange:(NSRange){ start, end - start }];
+}
+
 - (void) deleteBackward:(id)sender
 {
     [self deleteBackward];
@@ -221,24 +273,28 @@
 
 - (void) deleteForward:(id)sender
 {
-    UITextRange* range = [_view selectedTextRange];
-    if (!range || [range isEmpty]) {
-        UITextPosition* fromPosition = [range start];
-        UITextPosition* toPosition = [_view positionFromPosition:[range start] offset:1];
-        if (!toPosition) {
-            return;
+    NSRange range = [self selectedRange];
+    if (!range.length) {
+        NSInteger end = range.location;
+        NSInteger start = [_model positionFromPosition:range.location offset:1];
+        if (start <= end) {
+            range = (NSRange){
+                .location = start,
+                .length = end - start
+            };
         }
-        range = [_view textRangeFromPosition:fromPosition toPosition:toPosition];
     }
-    if (![_view shouldChangeTextInRange:range replacementText:@""]) {
+    if (![_model shouldChangeTextInRange:range replacementText:@""]) {
         return;
     }
-    [_view replaceRange:range withText:@""];
+    [_model replaceRange:range withText:@""];
+    [self setSelectedRange:(NSRange){ range.location, 0 }];
 }
 
 - (void) deleteWordBackward:(id)sender
 {
-    if ([[_view selectedTextRange] isEmpty]) {
+    NSRange range = [self selectedRange];
+    if (!range.length) {
         [self moveWordLeftAndModifySelection:self];
     }
     [self deleteBackward:self];
@@ -246,138 +302,133 @@
 
 - (void) moveLeft:(id)sender
 {
-    UITextPosition* position = [[_view selectedTextRange] start];
-    UITextPosition* newPosition = [_view positionFromPosition:position inDirection:UITextLayoutDirectionLeft offset:1];
-    [_view setSelectedTextRange:[_view textRangeFromPosition:newPosition toPosition:newPosition]];
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingLeftFromPosition:index by:1];
+    }];
 }
 
 - (void) moveLeftAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingLeftFromIndex:index];
+        return [_model positionWhenMovingLeftFromPosition:index];
     }];
 }
 
 - (void) moveWordLeft:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingWordLeftFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingWordLeftFromPosition:index];
     }];
 }
 
 - (void) moveWordLeftAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingWordLeftFromIndex:index];
+        return [_model positionWhenMovingWordLeftFromPosition:index];
     }];
 }
 
 - (void) moveRight:(id)sender
 {
-    UITextPosition* position = [[_view selectedTextRange] start];
-    UITextPosition* newPosition = [_view positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:1];
-    [_view setSelectedTextRange:[_view textRangeFromPosition:newPosition toPosition:newPosition]];
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingRightFromPosition:index by:1];
+    }];
 }
 
 - (void) moveRightAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingRightFromIndex:index];
+        return [_model positionWhenMovingRightFromPosition:index];
     }];
 }
 
 - (void) moveWordRight:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingWordRightFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingWordRightFromPosition:index];
     }];
 }
 
 - (void) moveWordRightAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingWordRightFromIndex:index];
+        return [_model positionWhenMovingWordRightFromPosition:index];
     }];
 }
 
 - (void) moveUp:(id)sender
 {
-    UITextPosition* position = [[_view selectedTextRange] start];
-    UITextPosition* newPosition = [_view positionFromPosition:position inDirection:UITextLayoutDirectionUp offset:1];
-    [_view setSelectedTextRange:[_view textRangeFromPosition:newPosition toPosition:newPosition]];
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingUpFromPosition:index by:1];
+    }];
 }
 
 - (void) moveUpAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingUpFromIndex:index by:1];
+        return [_model positionWhenMovingUpFromPosition:index by:1];
     }];
 }
 
 - (void) moveDown:(id)sender
 {
-    UITextPosition* position = [[_view selectedTextRange] start];
-    UITextPosition* newPosition = [_view positionFromPosition:position inDirection:UITextLayoutDirectionDown offset:1];
-    [_view setSelectedTextRange:[_view textRangeFromPosition:newPosition toPosition:newPosition]];
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingDownFromPosition:index by:1];
+    }];
 }
 
 - (void) moveDownAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingDownFromIndex:index by:index];
+        return [_model positionWhenMovingDownFromPosition:index by:1];
     }];
 }
 
 - (void) moveToBeginningOfLine:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingToBeginningOfLineFromPosition:index];
     }];
 }
 
 - (void) moveToBeginningOfLineAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToBeginningOfLineFromIndex:index];
+        return [_model positionWhenMovingToBeginningOfLineFromPosition:index];
     }];
 }
 
 - (void) moveToEndOfLine:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfLineFromIndex:NSMaxRange([self selectedRange])],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingToEndOfLineFromPosition:index];
     }];
 }
 
 - (void) moveToEndOfLineAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToEndOfLineFromIndex:index];
+        return [_model positionWhenMovingToEndOfLineFromPosition:index];
     }];
 }
 
 - (void) moveToBeginningOfParagraph:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingToBeginningOfParagraphFromPosition:index];
     }];
 }
 
 - (void) moveParagraphBackwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToBeginningOfParagraphFromIndex:index];
+        return [_model positionWhenMovingToBeginningOfParagraphFromPosition:index];
     }];
 }
 
 - (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
 {
-    if ([_inputModel _isLocationAtBeginningOfParagraph]) {
+    if ([_model _isLocationAtBeginningOfParagraph]) {
         [self moveUp:self];
     } else {
         [self moveToBeginningOfParagraph:self];
@@ -386,7 +437,7 @@
 
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
-    if ([_inputModel _isLocationAtBeginningOfParagraph]) {
+    if ([_model _isLocationAtBeginningOfParagraph]) {
         [self moveUpAndModifySelection:self];
     } else {
         [self moveParagraphBackwardAndModifySelection:self];
@@ -395,64 +446,61 @@
 
 - (void) moveToEndOfParagraph:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        return [_model positionWhenMovingToEndOfParagraphFromPosition:index];
     }];
 }
 
 - (void) moveToEndOfParagraphOrMoveDown:(id)sender
 {
-    if ([_inputModel _isLocationAtEndOfParagraph]) {
-        [self moveDown:self];
+    if ([_model _isLocationAtEndOfParagraph]) {
+        [self moveDown:sender];
     } else {
-        [self moveToEndOfParagraph:self];
+        [self moveToEndOfParagraph:sender];
     }
 }
 
 - (void) moveParagraphForwardAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToEndOfParagraphFromIndex:index];
+        return [_model positionWhenMovingToEndOfParagraphFromPosition:index];
     }];
 }
 
 - (void) moveParagraphForwardOrMoveDownAndModifySelection:(id)sender
 {
-    if ([_inputModel _isLocationAtEndOfParagraph]) {
-        [self moveDownAndModifySelection:self];
+    if ([_model _isLocationAtEndOfParagraph]) {
+        [self moveDownAndModifySelection:sender];
     } else {
-        [self moveParagraphForwardAndModifySelection:self];
+        [self moveParagraphForwardAndModifySelection:sender];
     }
 }
 
 - (void) moveToBeginningOfDocument:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        return [_model beginningOfDocument];
     }];
 }
 
 - (void) moveToBeginningOfDocumentAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToBeginningOfDocumentFromIndex:index];
+        return [_model beginningOfDocument];
     }];
 }
 
 - (void) moveToEndOfDocument:(id)sender
 {
-    [self _setAndScrollToRange:(NSRange){
-        [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:[self selectedRange].location],
-        0
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        return [_model endOfDocument];
     }];
 }
 
 - (void) moveToEndOfDocumentAndModifySelection:(id)sender
 {
     [self _modifySelectionWith:^NSInteger(NSInteger index) {
-        return [_inputModel _indexWhenMovingToEndOfDocumentFromIndex:index];
+        return [_model endOfDocument];
     }];
 }
 
@@ -472,21 +520,16 @@
 }
 
 
-
 #pragma mark Cursor Calculations
 
-- (void) _setAndScrollToRange:(NSRange)range upstream:(BOOL)upstream
+- (void) _modifySelectionWithDirection:(UITextStorageDirection)direction calculation:(NSInteger(^)(NSInteger))calculation
 {
-    [self setSelectedRange:range];
-    if (_viewHas.textInteractionControllerDidChangeCaretPosition) {
-        NSInteger caretPosition = upstream ? range.location : NSMaxRange(range);
-        [_view textInteractionController:self didChangeCaretPosition:caretPosition];
+    NSRange range = [self selectedRange];
+    if (!range.length) {
+        [self setSelectedRange:(NSRange){ calculation(range.location) } upstream:YES];
+    } else {
+        [self setSelectedRange:(NSRange){ (direction == UITextStorageDirectionBackward) ? range.location : NSMaxRange(range) } upstream:YES];
     }
-}
-
-- (void) _setAndScrollToRange:(NSRange)range
-{
-    [self _setAndScrollToRange:range upstream:YES];
 }
 
 - (void) _modifySelectionWith:(NSInteger(^)(NSInteger))calculation
@@ -503,7 +546,7 @@
         range.location = index;
         range.length = _selectionOrigin - index;
     }
-    [self _setAndScrollToRange:range upstream:upstream];
+    [self setSelectedRange:range upstream:upstream];
 }
 
 @end
