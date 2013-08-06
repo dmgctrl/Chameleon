@@ -89,9 +89,13 @@
 
 - (NSInteger) characterOffsetOfPosition:(NSInteger)position withinRange:(NSRange)range
 {
-#warning Implement -characterOffsetOfPosition:withinRange:
-    [self doesNotRecognizeSelector:_cmd];
-    return 0;
+    if (position <= range.location) {
+        return range.location;
+    } else if (position >= (range.location + range.length)) {
+        return range.location + range.length;
+    } else {
+        return position;
+    }
 }
 
 - (NSInteger) endOfDocument
