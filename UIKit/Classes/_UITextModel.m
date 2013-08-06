@@ -63,7 +63,12 @@
 
 - (NSInteger) closestPositionToPoint:(CGPoint)point
 {
-    return [self _characterIndexAtPoint:point];
+    NSTextContainer* textContainer = [self _textContainer];
+    NSLayoutManager* layoutManager = [textContainer layoutManager];
+    CGFloat fraction = 0;
+    NSUInteger glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    NSRange range = [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:NULL];
+    return (fraction < 0.5) ? range.location : (range.location + range.length);
 }
 
 - (NSInteger) closestPositionToPoint:(CGPoint)point withinRange:(NSRange)range
@@ -81,10 +86,8 @@
 {
     NSTextContainer* textContainer = [self _textContainer];
     NSLayoutManager* layoutManager = [textContainer layoutManager];
-    
-    NSRange actualGlyphRange;
     NSUInteger glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer];
-    return [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:&actualGlyphRange];
+    return [layoutManager characterRangeForGlyphRange:(NSRange){ glyphIndex, 1 } actualGlyphRange:NULL];
 }
 
 - (NSInteger) characterOffsetOfPosition:(NSInteger)position withinRange:(NSRange)range
@@ -275,24 +278,6 @@
     }
     if (_delegateHas.textInputDidChange) {
         [[self delegate] textModelDidChange:self];
-    }
-}
-
-- (NSUInteger) _characterIndexAtPoint:(CGPoint)point
-{
-    NSTextContainer* textContainer = [self _textContainer];
-    NSLayoutManager* layoutManager = [textContainer layoutManager];
-    NSTextStorage* textStorage = [layoutManager textStorage];
-    NSUInteger length = [textStorage length];
-    
-    CGFloat fraction = 0;
-    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
-    if (index >= length) {
-        return length;
-    } else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[[textStorage string] characterAtIndex:index]]) {
-        return index;
-    } else {
-        return index + (fraction > 0.75);
     }
 }
 
