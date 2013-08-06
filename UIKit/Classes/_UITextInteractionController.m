@@ -32,6 +32,10 @@
         bool textInteractionControllerDidChangeCaretPosition : 1;
     } _viewHas;
 
+    struct {
+        bool hasSetInsertionPoint : 1;
+    } _flags;
+    
     BOOL _stillSelecting;
     NSUInteger _selectionOrigin;
 //    NSSelectionGranularity _selectionGranularity;
@@ -85,7 +89,8 @@
 
 - (void) setInsertionPoint:(NSInteger)insertionPoint
 {
-    if (_insertionPoint != insertionPoint) {
+    if (!_flags.hasSetInsertionPoint || _insertionPoint != insertionPoint) {
+        _flags.hasSetInsertionPoint = YES;
         _insertionPoint = insertionPoint;
         if (_viewHas.textInteractionControllerDidChangeCaretPosition) {
             [_view textInteractionController:self didChangeCaretPosition:insertionPoint];
@@ -189,7 +194,7 @@
         }
             
         case UIGestureRecognizerStateBegan: {
-            _selectionOrigin = [_model characterRangeAtPoint:[gestureRecognizer translationInView:[gestureRecognizer view]]].location;
+            _selectionOrigin = [_model closestPositionToPoint:[gestureRecognizer translationInView:[gestureRecognizer view]]];
             _stillSelecting = YES;
             [self setSelectedRange:(NSRange){ _selectionOrigin, 0}];
             break;
@@ -562,6 +567,3 @@
 }
 
 @end
-
-
-
