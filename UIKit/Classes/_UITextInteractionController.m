@@ -428,20 +428,26 @@
 
 - (void) moveToBeginningOfParagraphOrMoveUp:(id)sender
 {
-    if ([_model _isLocationAtBeginningOfParagraph]) {
-        [self moveUp:self];
-    } else {
-        [self moveToBeginningOfParagraph:self];
-    }
+    [self _modifySelectionWithDirection:UITextStorageDirectionBackward calculation:^NSInteger(NSInteger index) {
+        NSInteger beginningOfParagraph = [_model positionWhenMovingToBeginningOfParagraphFromPosition:index];
+        if (index != beginningOfParagraph) {
+            return beginningOfParagraph;
+        } else {
+            return [_model positionWhenMovingUpFromPosition:index by:1];
+        }
+    }];
 }
 
 - (void) moveParagraphBackwardOrMoveUpAndModifySelection:(id)sender
 {
-    if ([_model _isLocationAtBeginningOfParagraph]) {
-        [self moveUpAndModifySelection:self];
-    } else {
-        [self moveParagraphBackwardAndModifySelection:self];
-    }
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        NSInteger beginningOfParagraph = [_model positionWhenMovingToBeginningOfParagraphFromPosition:index];
+        if (index != beginningOfParagraph) {
+            return beginningOfParagraph;
+        } else {
+            return [_model positionWhenMovingUpFromPosition:index by:1];
+        }
+    }];
 }
 
 - (void) moveToEndOfParagraph:(id)sender
@@ -453,11 +459,14 @@
 
 - (void) moveToEndOfParagraphOrMoveDown:(id)sender
 {
-    if ([_model _isLocationAtEndOfParagraph]) {
-        [self moveDown:sender];
-    } else {
-        [self moveToEndOfParagraph:sender];
-    }
+    [self _modifySelectionWithDirection:UITextStorageDirectionForward calculation:^NSInteger(NSInteger index) {
+        NSInteger endOfParagraph = [_model positionWhenMovingToEndOfParagraphFromPosition:index];
+        if (index != endOfParagraph) {
+            return endOfParagraph;
+        } else {
+            return [_model positionWhenMovingDownFromPosition:index by:1];
+        }
+    }];
 }
 
 - (void) moveParagraphForwardAndModifySelection:(id)sender
@@ -469,11 +478,14 @@
 
 - (void) moveParagraphForwardOrMoveDownAndModifySelection:(id)sender
 {
-    if ([_model _isLocationAtEndOfParagraph]) {
-        [self moveDownAndModifySelection:sender];
-    } else {
-        [self moveParagraphForwardAndModifySelection:sender];
-    }
+    [self _modifySelectionWith:^NSInteger(NSInteger index) {
+        NSInteger endOfParagraph = [_model positionWhenMovingToEndOfParagraphFromPosition:index];
+        if (index != endOfParagraph) {
+            return endOfParagraph;
+        } else {
+            return [_model positionWhenMovingDownFromPosition:index by:1];
+        }
+    }];
 }
 
 - (void) moveToBeginningOfDocument:(id)sender

@@ -63,7 +63,6 @@ UIKIT_HIDDEN
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager;
 
-
 - (NSInteger) positionWhenMovingRightFromPosition:(NSInteger)index;
 - (NSInteger) positionWhenMovingRightFromPosition:(NSInteger)index by:(NSInteger)byNumberOfGlyphs;
 - (NSInteger) positionWhenMovingLeftFromPosition:(NSInteger)index;
@@ -76,8 +75,5 @@ UIKIT_HIDDEN
 - (NSInteger) positionWhenMovingToEndOfLineFromPosition:(NSInteger)index;
 - (NSInteger) positionWhenMovingToBeginningOfParagraphFromPosition:(NSInteger)index;
 - (NSInteger) positionWhenMovingToEndOfParagraphFromPosition:(NSInteger)index;
-
-- (BOOL) _isLocationAtBeginningOfParagraph;
-- (BOOL) _isLocationAtEndOfParagraph;
 
 @end

@@ -467,7 +467,7 @@
     if (newIndex == textLength) {
         return newIndex;
     }
-    return MIN(newIndex - 1, [self _indexWhenMovingToEndOfParagraphFromIndex:index]);
+    return MIN(newIndex - 1, [self positionWhenMovingToEndOfParagraphFromPosition:index]);
 }
 
 - (NSInteger) positionWhenMovingToBeginningOfParagraphFromPosition:(NSInteger)index
@@ -476,7 +476,7 @@
     return [string paragraphRangeForRange:(NSRange){ index, 0 }].location;
 }
 
-- (NSInteger) _indexWhenMovingToEndOfParagraphFromIndex:(NSInteger)index
+- (NSInteger) positionWhenMovingToEndOfParagraphFromPosition:(NSInteger)index
 {
     NSString* string = [[self _textStorage] string];
     NSInteger newIndex = NSMaxRange([string lineRangeForRange:(NSRange){ index, 0 }]);
