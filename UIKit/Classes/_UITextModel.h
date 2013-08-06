@@ -9,10 +9,10 @@
 UIKIT_HIDDEN
 @protocol _UITextModelDelegate <NSObject>
 @optional
-- (void) textModelDidChange:(_UITextModel*)controller;
-- (void) textModel:(_UITextModel*)controller prepareAttributedTextForInsertion:(id)text;
-- (BOOL) textModel:(_UITextModel*)controller shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
-- (BOOL) textModelShouldBeginEditing:(_UITextModel*)controller;
+- (void) textModelDidChange:(_UITextModel*)model;
+- (void) textModel:(_UITextModel*)model prepareAttributedTextForInsertion:(id)text;
+- (BOOL) textModel:(_UITextModel*)model shouldChangeCharactersInRange:(NSRange)range replacementText:(id)text;
+- (BOOL) textModelShouldBeginEditing:(_UITextModel*)model;
 @end
 
 
