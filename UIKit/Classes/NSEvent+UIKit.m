@@ -9,7 +9,7 @@
 {
     CGPoint screenLocation = [[screen UIKitView] convertPoint:[self locationInWindow] fromView:nil];
     if (![[screen UIKitView] isFlipped]) {
-        screenLocation.y = screen.bounds.size.height - screenLocation.y - 1;
+        screenLocation.y = screen.bounds.size.height - screenLocation.y;
     }
     return screenLocation;
 }
