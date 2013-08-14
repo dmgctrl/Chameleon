@@ -23,6 +23,16 @@ describe(@"UITouch", ^{
                     [[@([touch timestamp]) should] equal:@(0)];
                 });
             });
+            context(@"phase", ^{
+                it(@"should've begun", ^{
+                    [[@([touch timestamp]) should] equal:@(UITouchPhaseBegan)];
+                });
+            });
+            context(@"gestureRecognizers", ^{
+                it(@"should've begun", ^{
+                    [[@([[touch gestureRecognizers] count]) should] equal:@(0)];
+                });
+            });
         });
     });
 });
