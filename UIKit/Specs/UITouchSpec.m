@@ -13,6 +13,11 @@ describe(@"UITouch", ^{
                     [[[touch window] should] beNil];
                 });
             });
+            context(@"view", ^{
+                it(@"should not be", ^{
+                    [[@([touch tapCount]) should] equal:@(0)];
+                });
+            });
         });
     });
 });
