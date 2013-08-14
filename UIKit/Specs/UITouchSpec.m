@@ -18,6 +18,11 @@ describe(@"UITouch", ^{
                     [[@([touch tapCount]) should] equal:@(0)];
                 });
             });
+            context(@"timestamp", ^{
+                it(@"should be zero", ^{
+                    [[@([touch timestamp]) should] equal:@(0)];
+                });
+            });
         });
     });
 });
