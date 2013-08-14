@@ -13,8 +13,8 @@ describe(@"UITouch", ^{
                     [[[touch window] should] beNil];
                 });
             });
-            context(@"view", ^{
-                it(@"should not be", ^{
+            context(@"tapCount", ^{
+                it(@"should be zero", ^{
                     [[@([touch tapCount]) should] equal:@(0)];
                 });
             });
