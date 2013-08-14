@@ -29,6 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
+#pragma mark Constants
 typedef enum {
     UITouchPhaseBegan,
     UITouchPhaseMoved,
@@ -57,14 +58,18 @@ typedef enum {
 
 @interface UITouch : NSObject 
 
+#pragma mark Getting the Location of Touches
 - (CGPoint) locationInView:(UIView*)inView;
 - (CGPoint) previousLocationInView:(UIView*)inView;
-
-@property (nonatomic, readonly) NSTimeInterval timestamp;
-@property (nonatomic, readonly) NSUInteger tapCount;
-@property (nonatomic, readonly) UITouchPhase phase;
 @property (nonatomic, readonly, strong) UIView* view;
 @property (nonatomic, readonly, strong) UIWindow* window;
+
+#pragma mark Getting Touch Attributes
+@property (nonatomic, readonly) NSUInteger tapCount;
+@property (nonatomic, readonly) NSTimeInterval timestamp;
+@property (nonatomic, readonly) UITouchPhase phase;
+
+#pragma mark Getting a Touch Object’s Gesture Recognizers
 @property (nonatomic,readonly,copy) NSArray* gestureRecognizers;
 
 @end
