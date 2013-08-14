@@ -1,13 +1,14 @@
-//
-//  UITouchSpec.m
-//  UIKit
-//
-//  Created by Andrew Heim on 8/14/13.
-//
-//
-
-#import "UITouchSpec.h"
-
-@implementation UITouchSpec
-
-@end
+SPEC_BEGIN(UITouchSpec)
+describe(@"UITouch", ^{
+    context(@"default", ^{
+        UITouch* touch = [[UITouch alloc] init];
+        context(@"property", ^{
+            context(@"view", ^{
+                it(@"should ", ^{
+                    [[[touch view] should] beNil];
+                });
+            });
+        });
+    });
+});
+SPEC_END
