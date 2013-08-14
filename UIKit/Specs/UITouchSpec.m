@@ -4,8 +4,13 @@ describe(@"UITouch", ^{
         UITouch* touch = [[UITouch alloc] init];
         context(@"property", ^{
             context(@"view", ^{
-                it(@"should ", ^{
+                it(@"should not be", ^{
                     [[[touch view] should] beNil];
+                });
+            });
+            context(@"view", ^{
+                it(@"should not be", ^{
+                    [[[touch window] should] beNil];
                 });
             });
         });
