@@ -397,12 +397,14 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
 
 - (UIInterfaceOrientation) statusBarOrientation
 {
-    return UIInterfaceOrientationPortrait;
+#warning implement -statusBarOrientation
+    UIKIT_STUB_W_RETURN(@"-statusBarOrientation");
 }
 
 - (NSTimeInterval) statusBarOrientationAnimationDuration
 {
-    return 0.3;
+#warning implement -statusBarOrientationAnimationDuration
+    UIKIT_STUB_W_RETURN(@"-statusBarOrientationAnimationDuration");
 }
 
 
@@ -416,7 +418,8 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
 
 - (BOOL) isStatusBarHidden
 {
-    return YES;
+#warning implement -isStatusBarHidden
+    UIKIT_STUB_W_RETURN(@"-isStatusBarHidden");
 }
 
 - (void) setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated
@@ -433,11 +436,14 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
 
 - (UIStatusBarStyle) statusBarStyle
 {
-    return UIStatusBarStyleDefault;
+#warning implement -statusBarStyle
+    UIKIT_STUB_W_RETURN(@"-statusBarStyle");
 }
 
 - (CGRect) statusBarFrame
 {
+#warning implement -statusBarFrame
+    UIKIT_STUB(@"-statusBarFrame");
     return CGRectZero;
 }
 
