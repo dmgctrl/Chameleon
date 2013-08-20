@@ -31,11 +31,65 @@
 #import "UITouch.h"
 
 @implementation UIEvent {
-    UITouch *_touch;
+    UITouch* _touch;
     BOOL _unhandledKeyPressEvent;
 }
 
-- (id)initWithEventType:(UIEventType)type
+
+#pragma mark Getting the Touches for an Event
+
+- (NSSet*) allTouches
+{
+    return [NSSet setWithObject:_touch];
+}
+
+- (NSSet*) touchesForView:(UIView*)view
+{
+    NSMutableSet* touches = [NSMutableSet setWithCapacity:1];
+    for (UITouch* touch in [self allTouches]) {
+        if (touch.view == view) {
+            [touches addObject:touch];
+        }
+    }
+    return touches;
+}
+
+- (NSSet*) touchesForWindow:(UIWindow*)window
+{
+    NSMutableSet* touches = [NSMutableSet setWithCapacity:1];
+    for (UITouch* touch in [self allTouches]) {
+        if (touch.window == window) {
+            [touches addObject:touch];
+        }
+    }
+    return touches;
+}
+
+#pragma mark Getting the Event Type
+
+- (UIEventSubtype)subtype
+{
+    return UIEventSubtypeNone;
+}
+
+
+#pragma mark Getting the Touches for a Gesture Recognizer
+
+- (NSSet*) touchesForGestureRecognizer:(UIGestureRecognizer*)gesture
+{
+    NSMutableSet* touches = [NSMutableSet setWithCapacity:1];
+    for (UITouch* touch in [self allTouches]) {
+        if ([touch.gestureRecognizers containsObject:gesture]) {
+            [touches addObject:touch];
+        }
+    }
+    return touches;
+}
+
+
+#pragma mark Initialization
+
+- (id) initWithEventType:(UIEventType)type
 {
     if ((self=[super init])) {
         _type = type;
@@ -45,71 +99,28 @@
 }
 
 
-- (void)_setTouch:(UITouch *)t
+#pragma mark Private Methods
+
+- (BOOL) _isUnhandledKeyPressEvent
+{
+    return _unhandledKeyPressEvent;
+}
+
+- (void) _setTimestamp:(NSTimeInterval)timestamp
+{
+    _timestamp = timestamp;
+}
+
+- (void) _setTouch:(UITouch*)t
 {
     if (_touch != t) {
         _touch = t;
     }
 }
 
-- (void)_setTimestamp:(NSTimeInterval)timestamp
-{
-    _timestamp = timestamp;
-}
-
-// this is stupid hack so that keyboard events can fall to AppKit's next responder if nothing within UIKit handles it
-// I couldn't come up with a better way at the time. meh.
-- (void)_setUnhandledKeyPressEvent
+- (void) _setUnhandledKeyPressEvent
 {
     _unhandledKeyPressEvent = YES;
-}
-
-- (BOOL)_isUnhandledKeyPressEvent
-{
-    return _unhandledKeyPressEvent;
-}
-
-- (NSSet *)allTouches
-{
-    return [NSSet setWithObject:_touch];
-}
-
-- (NSSet *)touchesForView:(UIView *)view
-{
-    NSMutableSet *touches = [NSMutableSet setWithCapacity:1];
-    for (UITouch *touch in [self allTouches]) {
-        if (touch.view == view) {
-            [touches addObject:touch];
-        }
-    }
-    return touches;
-}
-
-- (NSSet *)touchesForWindow:(UIWindow *)window
-{
-    NSMutableSet *touches = [NSMutableSet setWithCapacity:1];
-    for (UITouch *touch in [self allTouches]) {
-        if (touch.window == window) {
-            [touches addObject:touch];
-        }
-    }
-    return touches;
-}
-
-- (NSSet *)touchesForGestureRecognizer:(UIGestureRecognizer *)gesture
-{
-    NSMutableSet *touches = [NSMutableSet setWithCapacity:1];
-    for (UITouch *touch in [self allTouches]) {
-        if ([touch.gestureRecognizers containsObject:gesture]) {
-            [touches addObject:touch];
-        }
-    }
-    return touches;
-}
-
-- (UIEventSubtype)subtype
-{
-    return UIEventSubtypeNone;
 }
 
 @end
