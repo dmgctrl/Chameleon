@@ -57,14 +57,28 @@ typedef enum {
 
 @interface UIEvent : NSObject 
 
+
+#pragma mark Getting the Touches for an Event
+
+- (NSSet*) allTouches;
+- (NSSet*) touchesForView:(UIView*)view;
+- (NSSet*) touchesForWindow:(UIWindow*)window;
+
+
+#pragma mark Getting Event Attributes
+
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 
-- (NSSet *)allTouches;
-- (NSSet *)touchesForView:(UIView*)view;
-- (NSSet *)touchesForWindow:(UIWindow *)window;
-- (NSSet *)touchesForGestureRecognizer:(UIGestureRecognizer *)gesture;
+
+#pragma mark Getting the Event Type
 
 @property (nonatomic, readonly) UIEventType type;
 @property (nonatomic, readonly) UIEventSubtype subtype;
+
+
+#pragma mark Getting the Touches for a Gesture Recognizer
+
+- (NSSet*) touchesForGestureRecognizer:(UIGestureRecognizer*)gesture;
+
 
 @end
