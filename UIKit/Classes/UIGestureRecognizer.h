@@ -47,29 +47,65 @@ typedef enum {
 
 @protocol UIGestureRecognizerDelegate <NSObject>
 @optional
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch;
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
+- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer;
+- (BOOL) gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch;
+- (BOOL) gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer;
 @end
 
 @interface UIGestureRecognizer : NSObject
 
-- (id)initWithTarget:(id)target action:(SEL)action;
 
-- (void)addTarget:(id)target action:(SEL)action;
-- (void)removeTarget:(id)target action:(SEL)action;
+#pragma mark Initializing a Gesture Recognizer
 
-- (void)requireGestureRecognizerToFail:(UIGestureRecognizer *)otherGestureRecognizer;
-- (CGPoint)locationInView:(UIView *)view;
+- (id) initWithTarget:(id)target action:(SEL)action;
 
-- (NSUInteger)numberOfTouches;
 
-@property (nonatomic, assign) id<UIGestureRecognizerDelegate> delegate;
-@property (nonatomic) BOOL delaysTouchesBegan;
-@property (nonatomic) BOOL delaysTouchesEnded;
-@property (nonatomic) BOOL cancelsTouchesInView;
-@property (nonatomic, getter=isEnabled) BOOL enabled;
+#pragma mark Adding and Removing Targets and Actions
+
+- (void) addTarget:(id)target action:(SEL)action;
+- (void) removeTarget:(id)target action:(SEL)action;
+
+
+#pragma mark Getting the Touches and Location of a Gesture
+
+- (CGPoint) locationInView:(UIView*)view;
+- (CGPoint) locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view;
+- (NSUInteger) numberOfTouches;
+
+
+#pragma mark Getting the Recognizer’s State and View
+
 @property (nonatomic, readonly) UIGestureRecognizerState state;
 @property (assign, nonatomic, readonly) UIView *view;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
+
+
+#pragma mark Canceling and Delaying Touches
+
+@property (nonatomic) BOOL cancelsTouchesInView;
+@property (nonatomic) BOOL delaysTouchesBegan;
+@property (nonatomic) BOOL delaysTouchesEnded;
+
+
+#pragma mark Specifying Dependencies Between Gesture Recognizers
+
+- (void) requireGestureRecognizerToFail:(UIGestureRecognizer*)otherGestureRecognizer;
+
+
+#pragma mark Setting and Getting the Delegate
+
+@property (nonatomic, assign) id<UIGestureRecognizerDelegate> delegate;
+
+
+#pragma mark Methods For Subclasses
+
+- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void) touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void) touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void) reset;
+- (void) ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event;
+- (BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer;
+- (BOOL) canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer;
 
 @end
