@@ -9,10 +9,26 @@ describe(@"UIEvent", ^{
             [[event should] beKindOfClass:[UIEvent class]];
         });
         context(@"property", ^{
-
-            context(@"", ^{
-                it(@"should ", ^{
-                    
+            context(@"timestamp", ^{
+                it(@"should equal 0", ^{
+                    [[@([event timestamp]) should] equal:@(0)];
+                });
+            });
+            context(@"type", ^{
+                it(@"should be none", ^{
+                    [[@([event type]) should] equal:@(-1)];
+                });
+            });
+            context(@"subtype", ^{
+                it(@"should be none", ^{
+                    [[@([event subtype]) should] equal:@(UIEventSubtypeNone)];
+                });
+            });
+        });
+        context(@"instance method", ^{
+            context(@"allTouches", ^{
+                it(@"", ^{
+                    [[@([[event allTouches] count]) should] equal:@(0)];
                 });
             });
         });
