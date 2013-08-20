@@ -259,6 +259,8 @@
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
+		3A9BDAA317C4090F006C3FAC /* UIEventSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */; };
+		3A9BDAA417C4090F006C3FAC /* UIEventSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
 		3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -801,6 +803,7 @@
 		3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIWebViewSpec.m; sourceTree = "<group>"; };
 		3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewControllerSpec.m; sourceTree = "<group>"; };
 		3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewControllerSpec.m; sourceTree = "<group>"; };
+		3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIEventSpec.m; sourceTree = "<group>"; };
 		3AC20B881795E6640070E759 /* UICollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionReusableView.h; sourceTree = "<group>"; };
 		3AC20B891795E6670070E759 /* UICollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableView.m; sourceTree = "<group>"; };
 		3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewPrintFormatter.h; sourceTree = "<group>"; };
@@ -1675,6 +1678,14 @@
 			name = UITableViewController;
 			sourceTree = "<group>";
 		};
+		3A9BDAA017C40898006C3FAC /* UIEvent */ = {
+			isa = PBXGroup;
+			children = (
+				3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */,
+			);
+			name = UIEvent;
+			sourceTree = "<group>";
+		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -1788,6 +1799,7 @@
 				3A1A39811784AD6200644CCB /* UICollectionView */,
 				3A7E65A91784C78100218CD7 /* UICollectionViewCell */,
 				3A6B0B7317957D92006F61FD /* UIControl */,
+				3A9BDAA017C40898006C3FAC /* UIEvent */,
 				F9B3C1F6177119B800C92009 /* UIFont */,
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
 				3A7E65B81784EF7500218CD7 /* UIImageView */,
@@ -2557,6 +2569,7 @@
 				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3A9BDAA417C4090F006C3FAC /* UIEventSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2595,6 +2608,7 @@
 				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3A9BDAA317C4090F006C3FAC /* UIEventSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
