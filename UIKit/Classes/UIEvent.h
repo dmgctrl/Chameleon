@@ -32,12 +32,22 @@
 typedef enum {
     UIEventTypeTouches,
     UIEventTypeMotion,
-    UIEventTypeKeyPress			// AppKitIntegration
+    UIEventTypeKeyPress
 } UIEventType;
 
 typedef enum {
     UIEventSubtypeNone        = 0,
     UIEventSubtypeMotionShake = 1,
+    UIEventSubtypeRemoteControlPlay                 = 100,
+    UIEventSubtypeRemoteControlPause                = 101,
+    UIEventSubtypeRemoteControlStop                 = 102,
+    UIEventSubtypeRemoteControlTogglePlayPause      = 103,
+    UIEventSubtypeRemoteControlNextTrack            = 104,
+    UIEventSubtypeRemoteControlPreviousTrack        = 105,
+    UIEventSubtypeRemoteControlBeginSeekingBackward = 106,
+    UIEventSubtypeRemoteControlEndSeekingBackward   = 107,
+    UIEventSubtypeRemoteControlBeginSeekingForward  = 108,
+    UIEventSubtypeRemoteControlEndSeekingForward    = 109,
 } UIEventSubtype;
 
 @class UITouch;
