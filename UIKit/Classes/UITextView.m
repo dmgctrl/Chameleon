@@ -871,7 +871,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
 #warning Implement -setMarkedText:selectedRange:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-setMarkedText:selectedRange:");
 }
 
 - (void) unmarkText
@@ -963,7 +963,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -positionWithinRange:farthestInDirection:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-positionWithinRange:farthestInDirection:");
     return nil;
 }
 
@@ -971,7 +971,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
 #warning Implement -characterRangeByExtendingPosition:inDirection:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-characterRangeByExtendingPosition:inDirection:");
     return nil;
 }
 
@@ -979,7 +979,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
 #warning Implement -baseWritingDirectionForPosition:inDirection:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-baseWritingDirectionForPosition:inDirection:");
     return UITextWritingDirectionNatural;
 }
 
@@ -987,7 +987,7 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -setBaseWritingDirection:forRange:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-setBaseWritingDirection:forRange:");
 }
 
 - (CGRect) firstRectForRange:(_UITextViewRange*)range
