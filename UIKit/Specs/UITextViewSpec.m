@@ -802,6 +802,12 @@ describe(@"UITextView", ^{
                             context(@"layout direction", ^{
                                 context(@"up", ^{
                                     UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should be", ^{
+                                        [[terminus should] beNonNil];
+                                    });
+                                    it(@"should yield instance of correct class", ^{
+                                        [[terminus should] beKindOfClass:[UITextPosition class]];
+                                    });
                                     it(@"should equal end of document", ^{
                                         [[@([textView comparePosition:terminus toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
                                     });
