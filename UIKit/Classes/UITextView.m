@@ -865,7 +865,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (UITextRange*) markedTextRange
 {
 #warning Implement -markedTextRange
-    return nil;
+    UIKIT_STUB_W_RETURN(@"-markedTextRange");
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
@@ -877,6 +877,7 @@ static void _commonInitForUITextView(UITextView* self)
 - (void) unmarkText
 {
 #warning Implement -unmarkText
+    UIKIT_STUB(@"-unmarkText");
 }
 
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
