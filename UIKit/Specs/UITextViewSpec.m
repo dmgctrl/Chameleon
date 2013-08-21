@@ -584,6 +584,12 @@ describe(@"UITextView", ^{
                         UITextPosition* postPosition = [composedTextView positionFromPosition:beginningOfDocument offset:4];
                         context(@"right", ^{
                             UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionRight];
+                            it(@"should be", ^{
+                                [[rangeExtendedRight should] beNonNil];
+                            });
+                            it(@"should be of correct class", ^{
+                                [[rangeExtendedRight should] beKindOfClass:[UITextRange class]];
+                            });
                             context(@"start", ^{
                                 it(@"should = position", ^{
                                     [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:position]) should] equal:@(NSOrderedSame)];
