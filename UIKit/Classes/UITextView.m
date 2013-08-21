@@ -979,7 +979,7 @@ static void _commonInitForUITextView(UITextView* self)
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
 #warning Implement -baseWritingDirectionForPosition:inDirection:
     UIKIT_STUB(@"-baseWritingDirectionForPosition:inDirection:");
-    return UITextWritingDirectionNatural;
+    return -NSIntegerMax;
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
