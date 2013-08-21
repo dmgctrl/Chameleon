@@ -991,15 +991,17 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (CGRect) firstRectForRange:(_UITextViewRange*)range
 {
-#warning Implement -firstRectForRange:
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+#warning Implement -firstRectForRange:
+    UIKIT_STUB(@"-firstRectForRange:");
     return CGRectZero;
 }
 
 - (CGRect) caretRectForPosition:(_UITextViewPosition*)position
 {
-#warning Implement -caretRectForPosition:
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+#warning Implement -caretRectForPosition:
+    UIKIT_STUB(@"-caretRectForPosition:");
     return CGRectZero;
 }
 
