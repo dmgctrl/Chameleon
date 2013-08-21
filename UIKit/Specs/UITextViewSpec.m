@@ -577,7 +577,7 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) //remove once characterRangeByExtendingPostion:inDirection implemented for UIKit
+
                 context(@"characterRangeByExtendingPostion:inDirection", ^{
                     context(@"for composed character in middle", ^{
                         UITextPosition* position = [composedTextView positionFromPosition:beginningOfDocument offset:3];
@@ -746,7 +746,6 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
-#endif
             });
         });
 
