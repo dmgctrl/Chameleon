@@ -27,20 +27,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIScreen.h"
-#import "UIScreen+AppKit.h"
-#import "UIImage+UIPrivate.h"
-#import "UIImageView.h"
-#import "UIApplication.h"
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIScreen+AppKit.h>
+#import <UIKit/UIImage+UIPrivate.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIApplication.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AppKit/AppKit.h>
-#import "_UIViewLayoutManager.h"
-#import "UIColor.h"
-#import "UIScreenMode+UIPrivate.h"
-#import "UIWindow.h"
-#import "UIKitView.h"
-#import "UIView+UIPrivate.h"
-#import "UIPopoverController.h"
+#import <UIKit/_UIViewLayoutManager.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIScreenMode+UIPrivate.h>
+#import <UIKit/UIWindow.h>
+#import <UIKit/UIKitView.h>
+#import <UIKit/UIView+UIPrivate.h>
+#import <UIKit/UIPopoverController.h>
 
 
 NSString *const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
