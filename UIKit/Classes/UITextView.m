@@ -964,16 +964,14 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -positionWithinRange:farthestInDirection:
-    UIKIT_STUB(@"-positionWithinRange:farthestInDirection:");
-    return nil;
+    UIKIT_STUB_W_RETURN(@"-positionWithinRange:farthestInDirection:");
 }
 
 - (UITextRange*) characterRangeByExtendingPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
 #warning Implement -characterRangeByExtendingPosition:inDirection:
-    UIKIT_STUB(@"-characterRangeByExtendingPosition:inDirection:");
-    return nil;
+    UIKIT_STUB_W_RETURN(@"-characterRangeByExtendingPosition:inDirection:");
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(_UITextViewPosition*)position inDirection:(UITextStorageDirection)direction
@@ -1007,9 +1005,9 @@ static void _commonInitForUITextView(UITextView* self)
 
 - (NSArray*) selectionRectsForRange:(_UITextViewRange*)range
 {
-#warning Implement -selectionRectsForRange:
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return nil;
+#warning Implement -selectionRectsForRange:
+    UIKIT_STUB_W_RETURN(@"-selectionRectsForRange:");
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
