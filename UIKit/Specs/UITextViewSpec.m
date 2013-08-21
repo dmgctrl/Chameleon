@@ -853,13 +853,17 @@ describe(@"UITextView", ^{
                         it(@"start should = end", ^{
                             [[@([textView comparePosition:[zeroTextRange start] toPosition:[zeroTextRange end]]) should] equal:@(NSOrderedSame)];
                         });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
-                        // This is not yet implemented in UIKit. It is written in response to ticket #1569. It tests an optional method in the UITextInput protocol
-                        // that the harness implements.
+
                         context(@"-positionWithinRange:farthestInDirection:", ^{
                             context(@"layout direction", ^{
                                 context(@"up", ^{
                                     UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should be", ^{
+                                        [[terminus should] beNonNil];
+                                    });
+                                    it(@"should yield instance of correct class", ^{
+                                        [[terminus should] beKindOfClass:[UITextPosition class]];
+                                    });
                                     it(@"should equal end of document", ^{
                                         [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
                                     });
@@ -884,7 +888,6 @@ describe(@"UITextView", ^{
                                 });
                             });
                         });
-#endif
                     });
                 });
             });
