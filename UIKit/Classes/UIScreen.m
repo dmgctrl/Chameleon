@@ -43,48 +43,103 @@
 #import <UIKit/UIPopoverController.h>
 
 
-NSString *const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
-NSString *const UIScreenDidDisconnectNotification = @"UIScreenDidDisconnectNotification";
-NSString *const UIScreenModeDidChangeNotification = @"UIScreenModeDidChangeNotification";
+NSString* const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
+NSString* const UIScreenDidDisconnectNotification = @"UIScreenDidDisconnectNotification";
+NSString* const UIScreenModeDidChangeNotification = @"UIScreenModeDidChangeNotification";
 
-NSMutableArray *_allScreens = nil;
+NSMutableArray* _allScreens = nil;
 
 @implementation UIScreen {
-    UIImageView *_grabber;
-    CALayer *_layer;
-    UIPopoverController *_popoverController;
+    UIImageView* _grabber;
+    CALayer* _layer;
+    UIPopoverController* _popoverController;
 }
 
-+ (void)initialize
-{
-    if (self == [UIScreen class]) {
-        _allScreens = [[NSMutableArray alloc] init];
-    }
-}
 
-+ (UIScreen *)mainScreen
+#pragma mark Getting the Available Screens
+
++ (UIScreen*) mainScreen
 {
     return ([_allScreens count] > 0)? [[_allScreens objectAtIndex:0] nonretainedObjectValue] : nil;
 }
 
-+ (NSArray *)screens
++ (NSArray*) screens
 {
-    NSMutableArray *screens = [NSMutableArray arrayWithCapacity:[_allScreens count]];
+    NSMutableArray* screens = [NSMutableArray arrayWithCapacity:[_allScreens count]];
 
-    for (NSValue *v in _allScreens) {
+    for (NSValue* v in _allScreens) {
         [screens addObject:[v nonretainedObjectValue]];
     }
 
     return screens;
 }
 
-- (id)init
+
+#pragma mark Getting the Bounds Information
+
+- (CGRect) bounds
+{
+    return _layer.bounds;
+}
+
+- (CGRect) applicationFrame
+{
+    const float statusBarHeight = [UIApplication sharedApplication].statusBarHidden? 0 : 20;
+    const CGSize size = [self bounds].size;
+    return CGRectMake(0,statusBarHeight,size.width,size.height-statusBarHeight);
+}
+
+- (CGFloat) scale
+{
+    if ([[_UIKitView window] respondsToSelector:@selector(backingScaleFactor)]) {
+        return [[_UIKitView window] backingScaleFactor];
+    } else {
+        return 1;
+    }
+}
+
+
+#pragma mark Accessing the Screen Modes
+
+- (NSArray*) availableModes
+{
+    return (self.currentMode)? @[self.currentMode] : nil;
+}
+
+
+#pragma mark Getting a Display Link
+
+- (CADisplayLink*) displayLinkWithTarget:(id)target selector:(SEL)sel
+{
+#warning implement -displayLinkWithTarget:selector:
+    UIKIT_STUB_W_RETURN(@"-displayLinkWithTarget:selector:");
+}
+
+
+#pragma mark NSObject Protocol
+
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"<%@: %p; bounds = %@; mode = %@>", [self className], self, NSStringFromCGRect(self.bounds), self.currentMode];
+}
+
+
+#pragma mark NSObject Overrides
+
++ (void) initialize
+{
+    if (self == [UIScreen class]) {
+        _allScreens = [[NSMutableArray alloc] init];
+    }
+}
+
+- (id) init
 {
     if ((self = [super init])) {
         _layer = [CALayer layer];
         _layer.delegate = self;		// required to get the magic of the UIViewLayoutManager...
         _layer.layoutManager = [_UIViewLayoutManager layoutManager];
-        
+
         _grabber = [[UIImageView alloc] initWithImage:[UIImage _windowResizeGrabberImage]];
         _grabber.layer.zPosition = 10000;
         [_layer addSublayer:_grabber.layer];
@@ -92,7 +147,7 @@ NSMutableArray *_allScreens = nil;
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_allScreens removeObject:[NSValue valueWithNonretainedObject:self]];
@@ -106,29 +161,21 @@ NSMutableArray *_allScreens = nil;
     
 }
 
-- (CGFloat)scale
+
+#pragma mark CALayerDelegate Informal Protocol
+
+- (id) actionForLayer:(CALayer*)layer forKey:(NSString*)event
 {
-    if ([[_UIKitView window] respondsToSelector:@selector(backingScaleFactor)]) {
-        return [[_UIKitView window] backingScaleFactor];
-    } else {
-        return 1;
-    }
+    return [NSNull null];
 }
 
-- (void)_setPopoverController:(UIPopoverController *)controller
-{
-    _popoverController = controller;
-}
 
-- (UIPopoverController *)_popoverController
-{
-    return _popoverController;
-}
+#pragma mark Private Methods
 
-- (BOOL)_hasResizeIndicator
+- (BOOL) _hasResizeIndicator
 {
-    NSWindow *realWindow = [_UIKitView window];
-    NSView *contentView = [realWindow contentView];
+    NSWindow* realWindow = [_UIKitView window];
+    NSView* contentView = [realWindow contentView];
 
     if (_UIKitView && realWindow && contentView && ([realWindow styleMask] & NSResizableWindowMask) && [realWindow showsResizeIndicator] && !NSEqualSizes([realWindow minSize], [realWindow maxSize])) {
         const CGRect myBounds = NSRectToCGRect([_UIKitView bounds]);
@@ -145,7 +192,27 @@ NSMutableArray *_allScreens = nil;
     return NO;
 }
 
-- (void)_layoutSubviews
+- (UIView*) _hitTest:(CGPoint)clickPoint event:(UIEvent*)theEvent
+{
+    for (UIWindow* window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
+        if (window.screen == self) {
+            CGPoint windowPoint = [window convertPoint:clickPoint fromWindow:nil];
+            UIView* clickedView = [window hitTest:windowPoint withEvent:theEvent];
+            if (clickedView) {
+                return clickedView;
+            }
+        }
+    }
+
+    return nil;
+}
+
+- (CALayer*) _layer
+{
+    return _layer;
+}
+
+- (void) _layoutSubviews
 {
     if ([self _hasResizeIndicator]) {
         const CGSize grabberSize = _grabber.frame.size;
@@ -159,45 +226,26 @@ NSMutableArray *_allScreens = nil;
     }
 }
 
-- (id)actionForLayer:(CALayer *)layer forKey:(NSString *)event
+- (void) _NSScreenDidChange
 {
-    return [NSNull null];
-}
-
-- (CGRect)applicationFrame
-{
-    const float statusBarHeight = [UIApplication sharedApplication].statusBarHidden? 0 : 20;
-    const CGSize size = [self bounds].size;
-    return CGRectMake(0,statusBarHeight,size.width,size.height-statusBarHeight);
-}
-
-- (CGRect)bounds
-{
-    return _layer.bounds;
-}
-
-- (CALayer *)_layer
-{
-    return _layer;
-}
-
-- (void)_UIKitViewFrameDidChange
-{
-    NSDictionary *userInfo = (self.currentMode)? @{ @"_previousMode": self.currentMode } : nil;
-    self.currentMode = [UIScreenMode screenModeWithNSView:_UIKitView];
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIScreenModeDidChangeNotification object:self userInfo:userInfo];
-}
-
-- (void)_NSScreenDidChange
-{
-    for (UIWindow *window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
+    for (UIWindow* window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
         if (window.screen == self) {
             [window _didMoveToScreenWithScale:[self scale]];
         }
     }
 }
 
-- (void)_setUIKitView:(id)theView
+- (UIPopoverController*) _popoverController
+{
+    return _popoverController;
+}
+
+- (void) _setPopoverController:(UIPopoverController*)controller
+{
+    _popoverController = controller;
+}
+
+- (void) _setUIKitView:(id)theView
 {
     if (_UIKitView != theView) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:_UIKitView];
@@ -218,29 +266,11 @@ NSMutableArray *_allScreens = nil;
     }
 }
 
-- (NSArray *)availableModes
+- (void) _UIKitViewFrameDidChange
 {
-    return (self.currentMode)? @[self.currentMode] : nil;
-}
-
-- (UIView *)_hitTest:(CGPoint)clickPoint event:(UIEvent *)theEvent
-{
-    for (UIWindow *window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
-        if (window.screen == self) {
-            CGPoint windowPoint = [window convertPoint:clickPoint fromWindow:nil];
-            UIView *clickedView = [window hitTest:windowPoint withEvent:theEvent];
-            if (clickedView) {
-                return clickedView;
-            }
-        }
-    }
-    
-    return nil;
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"<%@: %p; bounds = %@; mode = %@>", [self className], self, NSStringFromCGRect(self.bounds), self.currentMode];
+    NSDictionary* userInfo = (self.currentMode)? @{ @"_previousMode": self.currentMode } : nil;
+    self.currentMode = [UIScreenMode screenModeWithNSView:_UIKitView];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIScreenModeDidChangeNotification object:self userInfo:userInfo];
 }
 
 @end
