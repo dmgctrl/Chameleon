@@ -798,9 +798,6 @@ describe(@"UITextView", ^{
                         it(@"start should be < end", ^{
                             [[@([textView comparePosition:[entireTextRange start] toPosition:[entireTextRange end]]) should] equal:@(NSOrderedAscending)];
                         });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
-                        // This is not yet implemented in UIKit. It is written in response to ticket #1567. It tests an optional method in the UITextInput protocol
-                        // that the harness implements.
                         context(@"-positionWithinRange:farthestInDirection:", ^{
                             context(@"layout direction", ^{
                                 context(@"up", ^{
@@ -829,7 +826,6 @@ describe(@"UITextView", ^{
                                 });
                             });
                         });
-#endif
                     });
                 });
 
