@@ -259,6 +259,8 @@
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
+		3AA7B72B17C6B242000F51EB /* UITapGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA7B72A17C6B242000F51EB /* UITapGestureRecognizerSpec.m */; };
+		3AA7B72C17C6B242000F51EB /* UITapGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA7B72A17C6B242000F51EB /* UITapGestureRecognizerSpec.m */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
 		3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -801,6 +803,7 @@
 		3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIWebViewSpec.m; sourceTree = "<group>"; };
 		3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewControllerSpec.m; sourceTree = "<group>"; };
 		3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewControllerSpec.m; sourceTree = "<group>"; };
+		3AA7B72A17C6B242000F51EB /* UITapGestureRecognizerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITapGestureRecognizerSpec.m; sourceTree = "<group>"; };
 		3AC20B881795E6640070E759 /* UICollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionReusableView.h; sourceTree = "<group>"; };
 		3AC20B891795E6670070E759 /* UICollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableView.m; sourceTree = "<group>"; };
 		3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewPrintFormatter.h; sourceTree = "<group>"; };
@@ -1675,6 +1678,14 @@
 			name = UITableViewController;
 			sourceTree = "<group>";
 		};
+		3AA7B72817C6B1FD000F51EB /* UITapGestureRecognizer */ = {
+			isa = PBXGroup;
+			children = (
+				3AA7B72A17C6B242000F51EB /* UITapGestureRecognizerSpec.m */,
+			);
+			name = UITapGestureRecognizer;
+			sourceTree = "<group>";
+		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -1799,6 +1810,7 @@
 				3A1A396C17822D7700644CCB /* UITableView */,
 				3A1A397117834EA400644CCB /* UITableViewCell */,
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
+				3AA7B72817C6B1FD000F51EB /* UITapGestureRecognizer */,
 				3A518084177CDB3A00C9CF46 /* UITextField */,
 				3A1A39661781CB4600644CCB /* UITextView */,
 				3A1A397B1784719F00644CCB /* UIView */,
@@ -2557,6 +2569,7 @@
 				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3AA7B72C17C6B242000F51EB /* UITapGestureRecognizerSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2595,6 +2608,7 @@
 				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3AA7B72B17C6B242000F51EB /* UITapGestureRecognizerSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
