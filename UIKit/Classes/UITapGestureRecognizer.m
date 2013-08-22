@@ -27,9 +27,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITapGestureRecognizer.h"
-#import "UIGestureRecognizerSubclass.h"
-#import "UITouch.h"
+#import <UIKit/UITapGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UITouch.h>
 
 @implementation UITapGestureRecognizer
 
