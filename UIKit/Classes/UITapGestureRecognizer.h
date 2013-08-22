@@ -31,6 +31,8 @@
 
 @interface UITapGestureRecognizer : UIGestureRecognizer
 
+#pragma mark Configuring the Gesture  
+
 @property (nonatomic) NSUInteger numberOfTapsRequired;
 @property (nonatomic) NSUInteger numberOfTouchesRequired;
 
