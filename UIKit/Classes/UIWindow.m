@@ -99,88 +99,24 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
     NSUndoManager* _undoManager;
 }
 
-- (id)initWithFrame:(CGRect)theFrame
+
+#pragma mark Configuring Windows
+
+- (UIWindowLevel) windowLevel
 {
-    if ((self=[super initWithFrame:theFrame])) {
-        _undoManager = [[NSUndoManager alloc] init];
-        [self _makeHidden];	// do this first because before the screen is set, it will prevent any visibility notifications from being sent.
-        self.screen = [UIScreen mainScreen];
-        self.opaque = NO;
-    }
-    return self;
+    return self.layer.zPosition;
 }
 
-- (void)dealloc
+- (void) setWindowLevel:(UIWindowLevel)level
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[self _stopTrackingPotentiallyNewToolTip];
-	[self _hideCurrentToolTip];
-    [self _makeHidden];	// I don't really like this here, but the real UIKit seems to do something like this on window destruction as it sends a notification and we also need to remove it from the app's list of windows
-    
-    // since UIView's dealloc is called after this one, it's hard ot say what might happen in there due to all of the subview removal stuff
-    // so it's safer to make sure these things are nil now rather than potential garbage. I don't like how much work UIView's -dealloc is doing
-    // but at the moment I don't see a good way around it...
-    _screen = nil;
-    _undoManager = nil;
-    _rootViewController = nil;
-    
-}
-
-- (void)setRootViewController:(UIViewController *)rootViewController
-{
-	if (rootViewController != _rootViewController) {
-        [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        _rootViewController = rootViewController;
-        [self addSubview:[rootViewController view]];
-	}
-}
-
-- (BOOL) _acceptsFirstResponder
-{
-    return _firstResponder || _firstResponderWhenKeyLost;
-}
-
-- (UIResponder *)_firstResponder
-{
-    return _firstResponder;
-}
-
-- (void)_setFirstResponder:(UIResponder *)newFirstResponder
-{
-    _firstResponderWhenKeyLost = nil;
-    _firstResponder = newFirstResponder;
-}
-
-- (NSUndoManager *)undoManager
-{
-    return _undoManager;
-}
-
-- (UIView *)superview
-{
-    return nil;		// lies!
-}
-
-- (void)removeFromSuperview
-{
-    // does nothing
-}
-
-- (UIWindow *)window
-{
-    return self;
-}
-
-- (UIResponder *)nextResponder
-{
-    return [UIApplication sharedApplication];
+    self.layer.zPosition = level;
 }
 
 - (void)setScreen:(UIScreen *)theScreen
 {
     if (theScreen != _screen) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIScreenModeDidChangeNotification object:_screen];
-        
+
         const BOOL wasHidden = self.hidden;
         [self _makeHidden];
 
@@ -196,70 +132,27 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
     }
 }
 
-- (void)_screenModeChangedNotification:(NSNotification *)note
+- (void)setRootViewController:(UIViewController *)rootViewController
 {
-    UIScreenMode *previousMode = [[note userInfo] objectForKey:@"_previousMode"];
-    UIScreenMode *newMode = _screen.currentMode;
-
-    if (!CGSizeEqualToSize(previousMode.size,newMode.size)) {
-        [self _superviewSizeDidChangeFrom:previousMode.size to:newMode.size];
-    }
+	if (rootViewController != _rootViewController) {
+        [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        _rootViewController = rootViewController;
+        [self addSubview:[rootViewController view]];
+	}
 }
 
-- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow *)toWindow
-{
-    if (toWindow == self) {
-        return toConvert;
-    } else {
-        // Convert to screen coordinates
-        toConvert.x += self.frame.origin.x;
-        toConvert.y += self.frame.origin.y;
-        
-        if (toWindow) {
-            // Now convert the screen coords into the other screen's coordinate space
-            toConvert = [self.screen convertPoint:toConvert toScreen:toWindow.screen];
 
-            // And now convert it from the new screen's space into the window's space
-            toConvert.x -= toWindow.frame.origin.x;
-            toConvert.y -= toWindow.frame.origin.y;
-        }
-        
-        return toConvert;
-    }
+#pragma mark Making Windows Key
+
+- (BOOL)isKeyWindow
+{
+    return ([UIApplication sharedApplication].keyWindow == self);
 }
 
-- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow *)fromWindow
+- (void)makeKeyAndVisible
 {
-    if (fromWindow == self) {
-        return toConvert;
-    } else {
-        if (fromWindow) {
-            // Convert to screen coordinates
-            toConvert.x += fromWindow.frame.origin.x;
-            toConvert.y += fromWindow.frame.origin.y;
-            
-            // Change to this screen.
-            toConvert = [self.screen convertPoint:toConvert fromScreen:fromWindow.screen];
-        }
-        
-        // Convert to window coordinates
-        toConvert.x -= self.frame.origin.x;
-        toConvert.y -= self.frame.origin.y;
-
-        return toConvert;
-    }
-}
-
-- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow *)fromWindow
-{
-    CGPoint convertedOrigin = [self convertPoint:toConvert.origin fromWindow:fromWindow];
-    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
-}
-
-- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow *)toWindow
-{
-    CGPoint convertedOrigin = [self convertPoint:toConvert.origin toWindow:toWindow];
-    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
+    [self _makeVisible];
+    [self makeKeyWindow];
 }
 
 - (void)becomeKeyWindow
@@ -280,11 +173,6 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
     }
 }
 
-- (BOOL)isKeyWindow
-{
-    return ([UIApplication sharedApplication].keyWindow == self);
-}
-
 - (void)resignKeyWindow
 {
     id firstResponder = [self _firstResponder];
@@ -295,6 +183,240 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
     _firstResponderWhenKeyLost = firstResponder;
     [[UIApplication sharedApplication] _setKeyWindow:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidResignKeyNotification object:self];
+}
+
+
+#pragma mark Converting Coordinates
+
+- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow *)toWindow
+{
+    if (toWindow == self) {
+        return toConvert;
+    } else {
+        // Convert to screen coordinates
+        toConvert.x += self.frame.origin.x;
+        toConvert.y += self.frame.origin.y;
+
+        if (toWindow) {
+            // Now convert the screen coords into the other screen's coordinate space
+            toConvert = [self.screen convertPoint:toConvert toScreen:toWindow.screen];
+
+            // And now convert it from the new screen's space into the window's space
+            toConvert.x -= toWindow.frame.origin.x;
+            toConvert.y -= toWindow.frame.origin.y;
+        }
+
+        return toConvert;
+    }
+}
+
+- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow *)fromWindow
+{
+    if (fromWindow == self) {
+        return toConvert;
+    } else {
+        if (fromWindow) {
+            // Convert to screen coordinates
+            toConvert.x += fromWindow.frame.origin.x;
+            toConvert.y += fromWindow.frame.origin.y;
+
+            // Change to this screen.
+            toConvert = [self.screen convertPoint:toConvert fromScreen:fromWindow.screen];
+        }
+
+        // Convert to window coordinates
+        toConvert.x -= self.frame.origin.x;
+        toConvert.y -= self.frame.origin.y;
+
+        return toConvert;
+    }
+}
+
+- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow *)toWindow
+{
+    CGPoint convertedOrigin = [self convertPoint:toConvert.origin toWindow:toWindow];
+    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
+}
+
+- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow *)fromWindow
+{
+    CGPoint convertedOrigin = [self convertPoint:toConvert.origin fromWindow:fromWindow];
+    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
+}
+
+
+#pragma mark Sending Events
+
+- (void)sendEvent:(UIEvent *)event
+{
+    if (event.type == UIEventTypeTouches) {
+        NSSet *touches = [event touchesForWindow:self];
+        NSMutableSet *gestureRecognizers = [NSMutableSet setWithCapacity:0];
+
+        for (UITouch *touch in touches) {
+            [gestureRecognizers addObjectsFromArray:touch.gestureRecognizers];
+        }
+
+        for (UIGestureRecognizer *recognizer in gestureRecognizers) {
+            [recognizer _recognizeTouches:touches withEvent:event];
+        }
+
+        for (UITouch *touch in touches) {
+            UIView *view = touch.view;
+
+            const UITouchPhase phase = touch.phase;
+            const _UITouchGesture gesture = [touch _gesture];
+
+            if (phase == UITouchPhaseBegan) {
+                [view touchesBegan:touches withEvent:event];
+            } else if (phase == UITouchPhaseMoved) {
+                [view touchesMoved:touches withEvent:event];
+            } else if (phase == UITouchPhaseEnded) {
+                [view touchesEnded:touches withEvent:event];
+            } else if (phase == UITouchPhaseCancelled) {
+                [view touchesCancelled:touches withEvent:event];
+            } else if (phase == _UITouchPhaseDiscreteGesture && gesture == _UITouchDiscreteGestureMouseMove) {
+                if ([view hitTest:[touch locationInView:view] withEvent:event]) {
+                    [view mouseMoved:[touch _delta] withEvent:event];
+                }
+            } else if (phase == _UITouchPhaseDiscreteGesture && gesture == _UITouchDiscreteGestureRightClick) {
+                [view rightClick:touch withEvent:event];
+            } else if ((phase == _UITouchPhaseDiscreteGesture && gesture == _UITouchDiscreteGestureScrollWheel) ||
+                       (phase == _UITouchPhaseGestureChanged && gesture == _UITouchGesturePan)) {
+                [view scrollWheelMoved:[touch _delta] withEvent:event];
+            }
+
+            NSCursor *newCursor = [view mouseCursorForEvent:event] ?: [NSCursor arrowCursor];
+
+            if ([NSCursor currentCursor] != newCursor) {
+                [newCursor set];
+            }
+
+        }
+
+		if(touches.count < 1) {
+			[self _stopTrackingPotentiallyNewToolTip];
+			[self _hideCurrentToolTip];
+		}
+    } else {
+		[self _stopTrackingPotentiallyNewToolTip];
+		[self _hideCurrentToolTip];
+	}
+}
+
+
+#pragma mark UIView Overrides
+
+- (id)initWithFrame:(CGRect)theFrame
+{
+    if ((self=[super initWithFrame:theFrame])) {
+        _undoManager = [[NSUndoManager alloc] init];
+        [self _makeHidden];	// do this first because before the screen is set, it will prevent any visibility notifications from being sent.
+        self.screen = [UIScreen mainScreen];
+        self.opaque = NO;
+    }
+    return self;
+}
+
+- (void)setHidden:(BOOL)hide
+{
+    if (hide) {
+        [self _makeHidden];
+    } else {
+        [self _makeVisible];
+    }
+}
+
+- (UIView *)superview
+{
+    return nil;		// lies!
+}
+
+- (void)removeFromSuperview
+{
+    // does nothing
+}
+
+- (UIWindow *)window
+{
+    return self;
+}
+
+
+#pragma mark UIResponder Overrides
+
+- (UIResponder *)nextResponder
+{
+    return [UIApplication sharedApplication];
+}
+
+- (NSUndoManager *)undoManager
+{
+    return _undoManager;
+}
+
+- (void)mouseExitedView:(UIView *)exited enteredView:(UIView *)entered withEvent:(UIEvent *)event {
+	if(exited == nil || entered == nil) {
+		[self _stopTrackingPotentiallyNewToolTip];
+		[self _hideCurrentToolTip];
+	}
+
+	[super mouseExitedView:exited enteredView:entered withEvent:event];
+}
+
+
+#pragma mark NSObject Overrides
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[self _stopTrackingPotentiallyNewToolTip];
+	[self _hideCurrentToolTip];
+    [self _makeHidden];	// I don't really like this here, but the real UIKit seems to do something like this on window destruction as it sends a notification and we also need to remove it from the app's list of windows
+
+    // since UIView's dealloc is called after this one, it's hard ot say what might happen in there due to all of the subview removal stuff
+    // so it's safer to make sure these things are nil now rather than potential garbage. I don't like how much work UIView's -dealloc is doing
+    // but at the moment I don't see a good way around it...
+    _screen = nil;
+    _undoManager = nil;
+    _rootViewController = nil;
+
+}
+
+
+#pragma mark Private Methods
+
+- (BOOL) _acceptsFirstResponder
+{
+    return _firstResponder || _firstResponderWhenKeyLost;
+}
+
+- (UIResponder *)_firstResponder
+{
+    return _firstResponder;
+}
+
+- (void)_setFirstResponder:(UIResponder *)newFirstResponder
+{
+    _firstResponderWhenKeyLost = nil;
+    _firstResponder = newFirstResponder;
+}
+
+- (void)_hideCurrentToolTip {
+	if(self.currentToolTipView == nil) return;
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
+
+	[[NSHelpManager sharedHelpManager] removeContextHelpForObject:self.currentToolTipView];
+
+	// Post fake events to force the tooltip to hide. It doesn't fade away like standard tooltips do, but it's the only way I've found.
+	NSEvent	*newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
+	[NSApp postEvent:newEvent atStart:NO];
+
+	newEvent = [NSEvent mouseEventWithType:NSLeftMouseUp location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
+	[NSApp postEvent:newEvent atStart:NO];
+
+	self.currentToolTipView = nil;
 }
 
 - (void)_makeHidden
@@ -319,133 +441,35 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
     }
 }
 
-- (void)setHidden:(BOOL)hide
+- (void)_screenModeChangedNotification:(NSNotification *)note
 {
-    if (hide) {
-        [self _makeHidden];
-    } else {
-        [self _makeVisible];
+    UIScreenMode *previousMode = [[note userInfo] objectForKey:@"_previousMode"];
+    UIScreenMode *newMode = _screen.currentMode;
+
+    if (!CGSizeEqualToSize(previousMode.size,newMode.size)) {
+        [self _superviewSizeDidChangeFrom:previousMode.size to:newMode.size];
     }
-}
-
-- (void)makeKeyAndVisible
-{
-    [self _makeVisible];
-    [self makeKeyWindow];
-}
-
-- (void)setWindowLevel:(UIWindowLevel)level
-{
-    self.layer.zPosition = level;
-}
-
-- (UIWindowLevel)windowLevel
-{
-    return self.layer.zPosition;
-}
-
-- (void)sendEvent:(UIEvent *)event
-{
-    if (event.type == UIEventTypeTouches) {
-        NSSet *touches = [event touchesForWindow:self];
-        NSMutableSet *gestureRecognizers = [NSMutableSet setWithCapacity:0];
-
-        for (UITouch *touch in touches) {
-            [gestureRecognizers addObjectsFromArray:touch.gestureRecognizers];
-        }
-
-        for (UIGestureRecognizer *recognizer in gestureRecognizers) {
-            [recognizer _recognizeTouches:touches withEvent:event];
-        }
-
-        for (UITouch *touch in touches) {
-            UIView *view = touch.view;
-
-            const UITouchPhase phase = touch.phase;
-            const _UITouchGesture gesture = [touch _gesture];
-            
-            if (phase == UITouchPhaseBegan) {
-                [view touchesBegan:touches withEvent:event];
-            } else if (phase == UITouchPhaseMoved) {
-                [view touchesMoved:touches withEvent:event];
-            } else if (phase == UITouchPhaseEnded) {
-                [view touchesEnded:touches withEvent:event];
-            } else if (phase == UITouchPhaseCancelled) {
-                [view touchesCancelled:touches withEvent:event];
-            } else if (phase == _UITouchPhaseDiscreteGesture && gesture == _UITouchDiscreteGestureMouseMove) {
-                if ([view hitTest:[touch locationInView:view] withEvent:event]) {
-                    [view mouseMoved:[touch _delta] withEvent:event];
-                }
-            } else if (phase == _UITouchPhaseDiscreteGesture && gesture == _UITouchDiscreteGestureRightClick) {
-                [view rightClick:touch withEvent:event];
-            } else if ((phase == _UITouchPhaseDiscreteGesture && gesture == _UITouchDiscreteGestureScrollWheel) ||
-                       (phase == _UITouchPhaseGestureChanged && gesture == _UITouchGesturePan)) {
-                [view scrollWheelMoved:[touch _delta] withEvent:event];
-            }
-            
-            NSCursor *newCursor = [view mouseCursorForEvent:event] ?: [NSCursor arrowCursor];
-
-            if ([NSCursor currentCursor] != newCursor) {
-                [newCursor set];
-            }
-            
-        }
-		
-		if(touches.count < 1) {
-			[self _stopTrackingPotentiallyNewToolTip];
-			[self _hideCurrentToolTip];
-		}
-    } else {
-		[self _stopTrackingPotentiallyNewToolTip];
-		[self _hideCurrentToolTip];
-	}
-}
-
-- (void)mouseExitedView:(UIView *)exited enteredView:(UIView *)entered withEvent:(UIEvent *)event {	
-	if(exited == nil || entered == nil) {
-		[self _stopTrackingPotentiallyNewToolTip];
-		[self _hideCurrentToolTip];
-	}
-	
-	[super mouseExitedView:exited enteredView:entered withEvent:event];
 }
 
 - (void)_showToolTipForView:(UIView *)view {
 	if(view == nil) return;
-	
+
 	NSMutableAttributedString *attributedToolTip = [[NSMutableAttributedString alloc] initWithString:view.toolTip];
 	NSRange wholeStringRange = NSMakeRange(0, view.toolTip.length);
 	[attributedToolTip addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:11.0f] range:wholeStringRange];
-	
+
 	NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
 	[paragraphStyle setAlignment:NSLeftTextAlignment];
-	
+
 	[attributedToolTip addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:wholeStringRange];
-	
+
 	[[NSHelpManager sharedHelpManager] setContextHelp:attributedToolTip forObject:view];
 	[[NSHelpManager sharedHelpManager] showContextHelpForObject:view locationHint:[NSEvent mouseLocation]];
 	self.currentToolTipView = view;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_toolTipViewDidChangeSuperview:) name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
-	
-	self.toolTipViewToShow = nil;
-}
 
-- (void)_hideCurrentToolTip {	
-	if(self.currentToolTipView == nil) return;
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
-	
-	[[NSHelpManager sharedHelpManager] removeContextHelpForObject:self.currentToolTipView];
-	
-	// Post fake events to force the tooltip to hide. It doesn't fade away like standard tooltips do, but it's the only way I've found.
-	NSEvent	*newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
-	[NSApp postEvent:newEvent atStart:NO];
-	
-	newEvent = [NSEvent mouseEventWithType:NSLeftMouseUp location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
-	[NSApp postEvent:newEvent atStart:NO];
-	
-	self.currentToolTipView = nil;
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_toolTipViewDidChangeSuperview:) name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
+
+	self.toolTipViewToShow = nil;
 }
 
 - (void)_stopTrackingPotentiallyNewToolTip {
