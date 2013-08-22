@@ -27,22 +27,22 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
-#import "UIViewController+UIPrivate.h"
-#import "UIWindow+UIPrivate.h"
-#import "UIView+UIPrivate.h"
-#import "UIScreen+UIPrivate.h"
-#import "UIScreen+AppKit.h"
-#import "UIApplication+UIPrivate.h"
-#import "UIEvent.h"
-#import "UITouch+UIPrivate.h"
-#import "UIScreenMode.h"
-#import "UIResponder+AppKit.h"
-#import "UIView+AppKit.h"
-#import "UIKitView.h"
-#import "UIViewController.h"
-#import "UIGestureRecognizerSubclass.h"
-#import "UIGestureRecognizer+UIPrivate.h"
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIViewController+UIPrivate.h>
+#import <UIKit/UIWindow+UIPrivate.h>
+#import <UIKit/UIView+UIPrivate.h>
+#import <UIKit/UIScreen+UIPrivate.h>
+#import <UIKit/UIScreen+AppKit.h>
+#import <UIKit/UIApplication+UIPrivate.h>
+#import <UIKit/UIEvent.h>
+#import <UIKit/UITouch+UIPrivate.h>
+#import <UIKit/UIScreenMode.h>
+#import <UIKit/UIResponder+AppKit.h>
+#import <UIKit/UIView+AppKit.h>
+#import <UIKit/UIKitView.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UIGestureRecognizer+UIPrivate.h>
 #import <AppKit/NSCursor.h>
 #import <AppKit/NSHelpManager.h>
 #import <AppKit/NSEvent.h>
