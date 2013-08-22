@@ -29,30 +29,36 @@
 
 #import <UIKit/UIView.h>
 
+#pragma mark Constants
+
 typedef CGFloat UIWindowLevel;
 UIKIT_EXTERN const UIWindowLevel UIWindowLevelNormal;
-UIKIT_EXTERN const UIWindowLevel UIWindowLevelStatusBar;
 UIKIT_EXTERN const UIWindowLevel UIWindowLevelAlert;
+UIKIT_EXTERN const UIWindowLevel UIWindowLevelStatusBar;
 
-UIKIT_EXTERN NSString *const UIWindowDidBecomeVisibleNotification;
-UIKIT_EXTERN NSString *const UIWindowDidBecomeHiddenNotification;
-UIKIT_EXTERN NSString *const UIWindowDidBecomeKeyNotification;
-UIKIT_EXTERN NSString *const UIWindowDidResignKeyNotification;
-
-UIKIT_EXTERN NSString *const UIKeyboardWillShowNotification;
-UIKIT_EXTERN NSString *const UIKeyboardDidShowNotification;
-UIKIT_EXTERN NSString *const UIKeyboardWillHideNotification;
-UIKIT_EXTERN NSString *const UIKeyboardDidHideNotification;
-
-UIKIT_EXTERN NSString *const UIKeyboardFrameBeginUserInfoKey;
-UIKIT_EXTERN NSString *const UIKeyboardFrameEndUserInfoKey;
-UIKIT_EXTERN NSString *const UIKeyboardAnimationDurationUserInfoKey;
-UIKIT_EXTERN NSString *const UIKeyboardAnimationCurveUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardFrameBeginUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardFrameEndUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardAnimationDurationUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardAnimationCurveUserInfoKey;
 
 // deprecated
-UIKIT_EXTERN NSString *const UIKeyboardCenterBeginUserInfoKey;
-UIKIT_EXTERN NSString *const UIKeyboardCenterEndUserInfoKey;
-UIKIT_EXTERN NSString *const UIKeyboardBoundsUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardCenterBeginUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardCenterEndUserInfoKey;
+UIKIT_EXTERN NSString* const UIKeyboardBoundsUserInfoKey;
+
+
+#pragma mark Notifications
+
+UIKIT_EXTERN NSString* const UIWindowDidBecomeVisibleNotification;
+UIKIT_EXTERN NSString* const UIWindowDidBecomeHiddenNotification;
+UIKIT_EXTERN NSString* const UIWindowDidBecomeKeyNotification;
+UIKIT_EXTERN NSString* const UIWindowDidResignKeyNotification;
+UIKIT_EXTERN NSString* const UIKeyboardWillShowNotification;
+UIKIT_EXTERN NSString* const UIKeyboardDidShowNotification;
+UIKIT_EXTERN NSString* const UIKeyboardWillHideNotification;
+UIKIT_EXTERN NSString* const UIKeyboardDidHideNotification;
+UIKIT_EXTERN NSString* const UIKeyboardWillChangeFrameNotification;
+UIKIT_EXTERN NSString* const UIKeyboardDidChangeFrameNotification;
 
 
 @class UIScreen;
@@ -60,20 +66,33 @@ UIKIT_EXTERN NSString *const UIKeyboardBoundsUserInfoKey;
 
 @interface UIWindow : UIView 
 
-- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow *)toWindow;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow *)fromWindow;
-- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow *)fromWindow;
-- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow *)toWindow;
+#pragma mark Configuring Windows
 
-- (void)makeKeyWindow;
-- (void)makeKeyAndVisible;
-- (void)resignKeyWindow;
-- (void)becomeKeyWindow;
-- (void)sendEvent:(UIEvent *)event;
+@property (nonatomic, assign) UIWindowLevel windowLevel;
+@property (nonatomic, strong) UIScreen* screen;
+@property (nonatomic,strong) UIViewController* rootViewController;
+
+
+#pragma mark Making Windows Key
 
 @property (nonatomic, readonly, getter=isKeyWindow) BOOL keyWindow;
-@property (nonatomic, strong) UIScreen *screen;
-@property (nonatomic, assign) UIWindowLevel windowLevel;
-@property (nonatomic,strong) UIViewController *rootViewController;
+- (void) makeKeyAndVisible;
+- (void) becomeKeyWindow;
+- (void) makeKeyWindow;
+- (void) resignKeyWindow;
+
+
+#pragma mark Converting Coordinates
+
+- (CGPoint) convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow;
+- (CGPoint) convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow;
+- (CGRect) convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow;
+- (CGRect) convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow;
+
+
+#pragma mark Sending Events
+
+- (void) sendEvent:(UIEvent*)event;
+
 
 @end
