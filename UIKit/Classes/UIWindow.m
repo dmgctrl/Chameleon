@@ -51,19 +51,12 @@
 #import <AppKit/NSAttributedString.h>
 #import <QuartzCore/QuartzCore.h>
 
+
+#pragma mark Constants
+
 const UIWindowLevel UIWindowLevelNormal = 0;
 const UIWindowLevel UIWindowLevelStatusBar = 1000;
 const UIWindowLevel UIWindowLevelAlert = 2000;
-
-NSString *const UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotification";
-NSString *const UIWindowDidBecomeHiddenNotification = @"UIWindowDidBecomeHiddenNotification";
-NSString *const UIWindowDidBecomeKeyNotification = @"UIWindowDidBecomeKeyNotification";
-NSString *const UIWindowDidResignKeyNotification = @"UIWindowDidResignKeyNotification";
-
-NSString *const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
-NSString *const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
-NSString *const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
-NSString *const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
 
 NSString *const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
 NSString *const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
@@ -74,6 +67,20 @@ NSString *const UIKeyboardAnimationCurveUserInfoKey = @"UIKeyboardAnimationCurve
 NSString *const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserInfoKey";
 NSString *const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
 NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
+
+
+#pragma mark Notifications
+
+NSString *const UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotification";
+NSString *const UIWindowDidBecomeHiddenNotification = @"UIWindowDidBecomeHiddenNotification";
+NSString *const UIWindowDidBecomeKeyNotification = @"UIWindowDidBecomeKeyNotification";
+NSString *const UIWindowDidResignKeyNotification = @"UIWindowDidResignKeyNotification";
+NSString *const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
+NSString *const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
+NSString *const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
+NSString *const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
+NSString* const UIKeyboardWillChangeFrameNotification = @"UIKeyboardWillChangeFrameNotification";
+NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFrameNotification";
 
 @interface UIWindow ()
 - (void)_showToolTipForView:(UIView *)view;
