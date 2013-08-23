@@ -37,23 +37,21 @@
 
 @interface UIToolbarItem : NSObject
 
-- (id)initWithBarButtonItem:(UIBarButtonItem *)anItem;
-
-@property (nonatomic, readonly) UIView *view;
-@property (nonatomic, readonly) UIBarButtonItem *item;
+- (id) initWithBarButtonItem:(UIBarButtonItem*)anItem;
+@property (nonatomic, readonly) UIView* view;
+@property (nonatomic, readonly) UIBarButtonItem* item;
 @property (nonatomic, readonly) CGFloat width;
 
 @end
 
-@implementation UIToolbarItem 
 
-- (id)initWithBarButtonItem:(UIBarButtonItem *)anItem
+@implementation UIToolbarItem
+
+- (id) initWithBarButtonItem:(UIBarButtonItem*)anItem
 {
     if ((self=[super init])) {
         NSAssert((anItem != nil), @"the bar button item must not be nil");
-        
         _item = anItem;
-        
         if (!_item->_isSystemItem && _item.customView) {
             _view = _item.customView;
         } else if (!_item->_isSystemItem || (_item->_systemItem != UIBarButtonSystemItemFixedSpace && _item->_systemItem != UIBarButtonSystemItemFlexibleSpace)) {
@@ -81,6 +79,77 @@
     NSMutableArray *_toolbarItems;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+#pragma mark Configuring the Toolbar
+
+- (void)setBarStyle:(UIBarStyle)newStyle
+{
+    _barStyle = newStyle;
+
+    // this is for backward compatibility - UIBarStyleBlackTranslucent is deprecated
+    if (_barStyle == UIBarStyleBlackTranslucent) {
+        self.translucent = YES;
+    }
+}
+
+
+#pragma mark Configuring Toolbar Items
+
+- (void)setItems:(NSArray*)newItems animated:(BOOL)animated
+{
+    if (![self.items isEqualToArray:newItems]) {
+        // if animated, fade old item views out, otherwise just remove them
+        for (UIToolbarItem *toolbarItem in _toolbarItems) {
+            UIView* view = toolbarItem.view;
+            if (view) {
+                [UIView animateWithDuration:!animated ? 0.0 : 0.2
+                                 animations:^(void) {
+                                     view.alpha = 0;
+                                 }
+                                 completion:^(BOOL finished) {
+                                     [view removeFromSuperview];
+                                 }
+                 ];
+            }
+        }
+
+        [_toolbarItems removeAllObjects];
+
+        for (UIBarButtonItem *item in newItems) {
+            UIToolbarItem *toolbarItem = [[UIToolbarItem alloc] initWithBarButtonItem:item];
+            [_toolbarItems addObject:toolbarItem];
+
+            UIView* view = toolbarItem.view;
+            if (view) {
+                view.alpha = 0.0;
+                [self addSubview:view];
+                [UIView animateWithDuration:!animated ? 0.0 : 0.2
+                                 animations:^(void) {
+                                     view.alpha = 1.0;
+                                 }
+                 ];
+            }
+        }
+    }
+}
+
+- (void)setItems:(NSArray*)items
+{
+    [self setItems:items animated:NO];
+}
+
+- (NSArray*)items
+{
+    return [_toolbarItems valueForKey:@"item"];
+}
+
+
+#pragma mark Customizing Appearance
+
 - (UIImage*) backgroundImageForToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics
 {
 #warning implement -backgroundImageForToolbarPosition:barMetrics:
@@ -105,10 +174,33 @@
     UIKIT_STUB(@"-setShadowImage:forToolbarPosition:");
 }
 
+
+#pragma mark NSObject Overrides
+
 - (id)init
 {
     return [self initWithFrame:CGRectMake(0,0,320,32)];
 }
+
+- (NSString*)description
+{
+    NSString *barStyle = @"";
+    switch (self.barStyle) {
+        case UIBarStyleDefault:
+            barStyle = @"Default";
+            break;
+        case UIBarStyleBlack:
+            barStyle = @"Black";
+            break;
+        case UIBarStyleBlackTranslucent:
+            barStyle = @"Black Translucent (Deprecated)";
+            break;
+    }
+    return [NSString stringWithFormat:@"<%@: %p; barStyle = %@; tintColor = %@, isTranslucent = %@>", [self className], self, barStyle, ([self.tintColor description] ?: @"Default"), (self.translucent ? @"YES" : @"NO")];
+}
+
+
+#pragma mark UIView Overrides
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -121,62 +213,6 @@
     return self;
 }
 
-
-- (void)setBarStyle:(UIBarStyle)newStyle
-{
-    _barStyle = newStyle;
-
-    // this is for backward compatibility - UIBarStyleBlackTranslucent is deprecated 
-    if (_barStyle == UIBarStyleBlackTranslucent) {
-        self.translucent = YES;
-    }
-}
-
-/*
-- (void)_updateItemViews
-{
-    [_itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [_itemViews removeAllObjects];
-
-    NSUInteger numberOfFlexibleItems = 0;
-    
-    for (UIBarButtonItem *item in _items) {
-        if ((item->_isSystemItem) && (item->_systemItem == UIBarButtonSystemItemFlexibleSpace)) {
-            numberOfFlexibleItems++;
-        }
-    }
-
-    const CGSize size = self.bounds.size;
-    const CGFloat flexibleSpaceWidth = (numberOfFlexibleItems > 0)? MAX(0, size.width/numberOfFlexibleItems) : 0;
-    CGFloat left = 0;
-    
-    for (UIBarButtonItem *item in _items) {
-        UIView *view = item.customView;
-
-        if (!view) {
-            if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFlexibleSpace) {
-                left += flexibleSpaceWidth;
-            } else if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFixedSpace) {
-                left += item.width;
-            } else {
-                view = [[[UIToolbarButton alloc] initWithBarButtonItem:item] autorelease];
-            }
-        }
-        
-        if (view) {
-            CGRect frame = view.frame;
-            frame.origin.x = left;
-            frame.origin.y = (size.height / 2.f) - (frame.size.height / 2.f);
-            frame = CGRectStandardize(frame);
-            
-            view.frame = frame;
-            left += frame.size.width;
-            
-            [self addSubview:view];
-        }
-    }
-}
-*/
 
 - (void)layoutSubviews
 {
@@ -219,54 +255,6 @@
     }
 }
 
-- (void)setItems:(NSArray *)newItems animated:(BOOL)animated
-{
-    if (![self.items isEqualToArray:newItems]) {
-        // if animated, fade old item views out, otherwise just remove them
-        for (UIToolbarItem *toolbarItem in _toolbarItems) {
-            UIView* view = toolbarItem.view;
-            if (view) {
-                [UIView animateWithDuration:!animated ? 0.0 : 0.2
-                    animations:^(void) {
-                        view.alpha = 0;
-                    }
-                    completion:^(BOOL finished) {
-                        [view removeFromSuperview];
-                    }
-                ];
-            }
-        }
-        
-        [_toolbarItems removeAllObjects];
-        
-        for (UIBarButtonItem *item in newItems) {
-            UIToolbarItem *toolbarItem = [[UIToolbarItem alloc] initWithBarButtonItem:item];
-            [_toolbarItems addObject:toolbarItem];
-
-            UIView* view = toolbarItem.view;
-            if (view) {
-                view.alpha = 0.0;
-                [self addSubview:view];
-                [UIView animateWithDuration:!animated ? 0.0 : 0.2
-                    animations:^(void) {
-                        view.alpha = 1.0;
-                    }
-                ];
-            }
-        }
-    }
-}
-
-- (void)setItems:(NSArray *)items
-{
-    [self setItems:items animated:NO];
-}
-
-- (NSArray *)items
-{
-    return [_toolbarItems valueForKey:@"item"];
-}
-
 - (void)drawRect:(CGRect)rect
 {
     const CGRect bounds = self.bounds;
@@ -278,23 +266,6 @@
     
     [[UIColor blackColor] setFill];
     UIRectFill(CGRectMake(0,0,bounds.size.width,1));
-}
-
-- (NSString *)description
-{
-    NSString *barStyle = @"";
-    switch (self.barStyle) {
-        case UIBarStyleDefault:
-            barStyle = @"Default";
-            break;
-        case UIBarStyleBlack:
-            barStyle = @"Black";
-            break;
-        case UIBarStyleBlackTranslucent:
-            barStyle = @"Black Translucent (Deprecated)";
-            break;
-    }
-    return [NSString stringWithFormat:@"<%@: %p; barStyle = %@; tintColor = %@, isTranslucent = %@>", [self className], self, barStyle, ([self.tintColor description] ?: @"Default"), (self.translucent ? @"YES" : @"NO")];
 }
 
 @end
