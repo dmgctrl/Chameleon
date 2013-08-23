@@ -44,24 +44,7 @@
     NSInteger _selectedItemIndex;
 }
 
-- (id)initWithFrame:(CGRect)rect
-{
-    if ((self = [super initWithFrame:rect])) {
-        rect.size.height = TABBAR_HEIGHT; // tabbar is always fixed
-        _selectedItemIndex = -1;
-        UIImage *backgroundImage = [UIImage _popoverBackgroundImage];
-        UIImageView *backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
-        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        backgroundView.frame = rect;
-        [self addSubview:backgroundView];
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-    _delegate = nil;
-}
+#pragma mark Configuring Items
 
 - (UITabBarItem *)selectedItem
 {
@@ -79,6 +62,9 @@
 {
 }
 
+
+#pragma mark Customizing Tab Bars
+
 - (void)beginCustomizingItems:(NSArray *)items
 {
 }
@@ -91,6 +77,31 @@
 - (BOOL)isCustomizing
 {
     return NO;
+}
+
+
+#pragma mark UIView Overrides
+
+- (id)initWithFrame:(CGRect)rect
+{
+    if ((self = [super initWithFrame:rect])) {
+        rect.size.height = TABBAR_HEIGHT; // tabbar is always fixed
+        _selectedItemIndex = -1;
+        UIImage *backgroundImage = [UIImage _popoverBackgroundImage];
+        UIImageView *backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
+        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        backgroundView.frame = rect;
+        [self addSubview:backgroundView];
+    }
+    return self;
+}
+
+
+#pragma mark NSObject Overrides
+
+- (void)dealloc
+{
+    _delegate = nil;
 }
 
 - (NSString *)description
