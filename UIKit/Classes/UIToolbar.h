@@ -38,11 +38,21 @@ typedef enum {
 
 @interface UIToolbar : UIView
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+
+#pragma mark Configuring the Toolbar
 
 @property (nonatomic) UIBarStyle barStyle;
-@property (nonatomic, strong) UIColor *tintColor;
-@property (nonatomic, copy) NSArray *items;
 @property (nonatomic,assign,getter=isTranslucent) BOOL translucent;
+
+
+#pragma mark Configuring Toolbar Items
+
+@property (nonatomic, copy) NSArray *items;
+- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+
+
+#pragma mark Customizing Appearance
+
+@property (nonatomic, strong) UIColor *tintColor;
 
 @end
