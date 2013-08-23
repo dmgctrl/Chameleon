@@ -42,11 +42,11 @@
 @protocol UITabBarDelegate <NSObject>
 @optional
 
-- (void)tabBar:(UITabBar*)tabBar didSelectItem:(UITabBarItem*)item;
-- (void)tabBar:(UITabBar*)tabBar willBeginCustomizingItems:(NSArray*)items;
-- (void)tabBar:(UITabBar*)tabBar didBeginCustomizingItems:(NSArray*)items;
-- (void)tabBar:(UITabBar*)tabBar willEndCustomizingItems:(NSArray*)items changed:(BOOL)changed;
-- (void)tabBar:(UITabBar*)tabBar didEndCustomizingItems:(NSArray*)items changed:(BOOL)changed;
+- (void) tabBar:(UITabBar*)tabBar didSelectItem:(UITabBarItem*)item;
+- (void) tabBar:(UITabBar*)tabBar willBeginCustomizingItems:(NSArray*)items;
+- (void) tabBar:(UITabBar*)tabBar didBeginCustomizingItems:(NSArray*)items;
+- (void) tabBar:(UITabBar*)tabBar willEndCustomizingItems:(NSArray*)items changed:(BOOL)changed;
+- (void) tabBar:(UITabBar*)tabBar didEndCustomizingItems:(NSArray*)items changed:(BOOL)changed;
 
 @end
 
