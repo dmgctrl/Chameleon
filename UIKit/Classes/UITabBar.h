@@ -37,6 +37,7 @@
 
 @class UITabBar;
 @class UITabBarItem;
+@class UIImage;
 
 @protocol UITabBarDelegate <NSObject>
 @optional
@@ -54,15 +55,32 @@
 
 @interface UITabBar : UIView
 
-@property (nonatomic, assign) id<UITabBarDelegate>  delegate;
-@property (nonatomic, copy)   NSArray              *items;
-@property (nonatomic, assign) UITabBarItem         *selectedItem;
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+#pragma mark Getting and Setting Properties
 
-// stub
+@property(nonatomic, assign) id<UITabBarDelegate> delegate;
+
+
+#pragma mark Configuring Items
+
+@property (nonatomic, copy) NSArray* items;
+@property (nonatomic, assign) UITabBarItem* selectedItem;
+- (void) setItems:(NSArray*)items animated:(BOOL)animated;
+
+
+#pragma mark Customizing Tab Bars
+
 - (void)beginCustomizingItems:(NSArray *)items;
 - (BOOL)endCustomizingAnimated:(BOOL)animated;
 - (BOOL)isCustomizing;
+
+
+#pragma mark Customizing Appearance
+
+@property(nonatomic, retain) UIImage *backgroundImage;
+@property(nonatomic, retain) UIColor *selectedImageTintColor;
+@property(nonatomic, retain) UIImage *selectionIndicatorImage;
+@property(nonatomic, retain) UIImage *shadowImage;
+@property(nonatomic, retain) UIColor *tintColor;
 
 @end
