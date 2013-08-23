@@ -67,6 +67,8 @@
 
 - (void) beginCustomizingItems:(NSArray*)items
 {
+#warning implement -beginCustomizingItems:
+    UIKIT_STUB(@"-beginCustomizingItems:");
 }
 
 - (BOOL) endCustomizingAnimated:(BOOL)animated
