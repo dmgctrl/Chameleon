@@ -33,9 +33,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITabBar.h"
-#import "UIImageView.h"
-#import "UIImage+UIPrivate.h"
+#import <UIKit/UITabBar.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIImage+UIPrivate.h>
 #import <QuartzCore/QuartzCore.h>
 
 #define TABBAR_HEIGHT 60.0
