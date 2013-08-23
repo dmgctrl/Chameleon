@@ -79,7 +79,8 @@
 
 - (BOOL) isCustomizing
 {
-    return NO;
+# warning implement -isCustomizing
+    UIKIT_STUB_W_RETURN(@"-isCustomizing");
 }
 
 
