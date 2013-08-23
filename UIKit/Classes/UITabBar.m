@@ -46,7 +46,7 @@
 
 #pragma mark Configuring Items
 
-- (UITabBarItem*)selectedItem
+- (UITabBarItem*) selectedItem
 {
     if (_selectedItemIndex >= 0) {
         return [_items objectAtIndex:_selectedItemIndex];
@@ -54,27 +54,27 @@
     return nil;
 }
 
-- (void)setSelectedItem:(UITabBarItem*)selectedItem
+- (void) setSelectedItem:(UITabBarItem*)selectedItem
 {
 }
 
-- (void)setItems:(NSArray*)items animated:(BOOL)animated
+- (void) setItems:(NSArray*)items animated:(BOOL)animated
 {
 }
 
 
 #pragma mark Customizing Tab Bars
 
-- (void)beginCustomizingItems:(NSArray*)items
+- (void) beginCustomizingItems:(NSArray*)items
 {
 }
 
-- (BOOL)endCustomizingAnimated:(BOOL)animated
+- (BOOL) endCustomizingAnimated:(BOOL)animated
 {
     return YES;
 }
 
-- (BOOL)isCustomizing
+- (BOOL) isCustomizing
 {
     return NO;
 }
@@ -82,7 +82,7 @@
 
 #pragma mark UIView Overrides
 
-- (id)initWithFrame:(CGRect)rect
+- (id) initWithFrame:(CGRect)rect
 {
     if ((self = [super initWithFrame:rect])) {
         rect.size.height = TABBAR_HEIGHT; // tabbar is always fixed
@@ -99,12 +99,12 @@
 
 #pragma mark NSObject Overrides
 
-- (void)dealloc
+- (void) dealloc
 {
     _delegate = nil;
 }
 
-- (NSString*)description
+- (NSString*) description
 {
     return [NSString stringWithFormat:@"<%@: %p; selectedItem = %@; items = %@; delegate = %@>", [self className], self, self.selectedItem, self.items, self.delegate];
 }
