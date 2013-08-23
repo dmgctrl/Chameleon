@@ -29,6 +29,7 @@
 
 #import <UIKit/UIView.h>
 #import <UIKit/UIInterface.h>
+#import <UIKIt/UIBarButtonItem.h>
 
 typedef enum {
     UIToolbarPositionAny = 0,
@@ -42,17 +43,21 @@ typedef enum {
 #pragma mark Configuring the Toolbar
 
 @property (nonatomic) UIBarStyle barStyle;
-@property (nonatomic,assign,getter=isTranslucent) BOOL translucent;
+@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
 
 
 #pragma mark Configuring Toolbar Items
 
-@property (nonatomic, copy) NSArray *items;
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+@property (nonatomic, copy) NSArray* items;
+- (void) setItems:(NSArray*)items animated:(BOOL)animated;
 
 
 #pragma mark Customizing Appearance
 
-@property (nonatomic, strong) UIColor *tintColor;
+- (UIImage*) backgroundImageForToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics;
+- (void) setBackgroundImage:(UIImage*)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics;
+- (UIImage*) shadowImageForToolbarPosition:(UIToolbarPosition)topOrBottom;
+- (void) setShadowImage:(UIImage*)shadowImage forToolbarPosition:(UIToolbarPosition)topOrBottom;
+@property (nonatomic, strong) UIColor* tintColor;
 
 @end

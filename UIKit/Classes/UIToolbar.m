@@ -84,6 +84,30 @@
     NSMutableArray *_toolbarItems;
 }
 
+- (UIImage*) backgroundImageForToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics
+{
+#warning implement -backgroundImageForToolbarPosition:barMetrics:
+    UIKIT_STUB_W_RETURN(@"-backgroundImageForToolbarPosition:barMetrics:");
+}
+
+- (void) setBackgroundImage:(UIImage*)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics
+{
+#warning implement -setBackgroundImage:forToolbarPosition:barMetrics:
+    UIKIT_STUB(@"-setBackgroundImage:forToolbarPosition:barMetrics:");
+}
+
+- (UIImage*) shadowImageForToolbarPosition:(UIToolbarPosition)topOrBottom
+{
+#warning implement -shadowImageForToolbarPosition:
+    UIKIT_STUB_W_RETURN(@"-shadowImageForToolbarPosition:");
+}
+
+- (void) setShadowImage:(UIImage*)shadowImage forToolbarPosition:(UIToolbarPosition)topOrBottom
+{
+#warning implement -setShadowImage:forToolbarPosition:
+    UIKIT_STUB(@"-setShadowImage:forToolbarPosition:");
+}
+
 - (id)init
 {
     return [self initWithFrame:CGRectMake(0,0,320,32)];
