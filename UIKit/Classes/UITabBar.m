@@ -46,7 +46,7 @@
 
 #pragma mark Configuring Items
 
-- (UITabBarItem *)selectedItem
+- (UITabBarItem*)selectedItem
 {
     if (_selectedItemIndex >= 0) {
         return [_items objectAtIndex:_selectedItemIndex];
@@ -54,18 +54,18 @@
     return nil;
 }
 
-- (void)setSelectedItem:(UITabBarItem *)selectedItem
+- (void)setSelectedItem:(UITabBarItem*)selectedItem
 {
 }
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated
+- (void)setItems:(NSArray*)items animated:(BOOL)animated
 {
 }
 
 
 #pragma mark Customizing Tab Bars
 
-- (void)beginCustomizingItems:(NSArray *)items
+- (void)beginCustomizingItems:(NSArray*)items
 {
 }
 
@@ -87,8 +87,8 @@
     if ((self = [super initWithFrame:rect])) {
         rect.size.height = TABBAR_HEIGHT; // tabbar is always fixed
         _selectedItemIndex = -1;
-        UIImage *backgroundImage = [UIImage _popoverBackgroundImage];
-        UIImageView *backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
+        UIImage* backgroundImage = [UIImage _popoverBackgroundImage];
+        UIImageView* backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
         backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         backgroundView.frame = rect;
         [self addSubview:backgroundView];
@@ -104,7 +104,7 @@
     _delegate = nil;
 }
 
-- (NSString *)description
+- (NSString*)description
 {
     return [NSString stringWithFormat:@"<%@: %p; selectedItem = %@; items = %@; delegate = %@>", [self className], self, self.selectedItem, self.items, self.delegate];
 }
