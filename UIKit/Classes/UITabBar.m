@@ -73,7 +73,8 @@
 
 - (BOOL) endCustomizingAnimated:(BOOL)animated
 {
-    return YES;
+# warning implement -endCustomizingAnimated:
+    UIKIT_STUB_W_RETURN(@"-endCustomizingAnimated:");
 }
 
 - (BOOL) isCustomizing
