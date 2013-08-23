@@ -31,11 +31,15 @@
 #import <UIKit/UIInterface.h>
 #import <UIKIt/UIBarButtonItem.h>
 
+
+#pragma mark Constants
+
 typedef enum {
     UIToolbarPositionAny = 0,
     UIToolbarPositionBottom = 1,
     UIToolbarPositionTop = 2,
 } UIToolbarPosition;
+
 
 @interface UIToolbar : UIView
 
