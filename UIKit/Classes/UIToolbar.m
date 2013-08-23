@@ -27,15 +27,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIToolbar.h"
-#import "UIBarButtonItem.h"
-#import "UIBarButtonItem+UIPrivate.h"
-#import "UIToolbarButton.h"
-#import "UIColor.h"
-#import "UIGraphics.h"
-
-
-
+#import <UIKit/UIToolbar.h>
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UIBarButtonItem+UIPrivate.h>
+#import <UIKit/UIToolbarButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIGraphics.h>
 
 
 @interface UIToolbarItem : NSObject
