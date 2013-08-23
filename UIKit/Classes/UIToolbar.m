@@ -61,7 +61,7 @@
     return self;
 }
 
-- (CGFloat)width
+- (CGFloat) width
 {
     if (_view) {
         return _view.frame.size.width;
@@ -76,20 +76,15 @@
 
 
 @implementation UIToolbar {
-    NSMutableArray *_toolbarItems;
+    NSMutableArray* _toolbarItems;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////////////
 
 
 #pragma mark Configuring the Toolbar
 
-- (void)setBarStyle:(UIBarStyle)newStyle
+- (void) setBarStyle:(UIBarStyle)newStyle
 {
     _barStyle = newStyle;
-
     // this is for backward compatibility - UIBarStyleBlackTranslucent is deprecated
     if (_barStyle == UIBarStyleBlackTranslucent) {
         self.translucent = YES;
@@ -99,50 +94,51 @@
 
 #pragma mark Configuring Toolbar Items
 
-- (void)setItems:(NSArray*)newItems animated:(BOOL)animated
+- (void) setItems:(NSArray*)newItems animated:(BOOL)animated
 {
     if (![self.items isEqualToArray:newItems]) {
-        // if animated, fade old item views out, otherwise just remove them
-        for (UIToolbarItem *toolbarItem in _toolbarItems) {
+
+        for (UIToolbarItem* toolbarItem in _toolbarItems) {
             UIView* view = toolbarItem.view;
+
             if (view) {
                 [UIView animateWithDuration:!animated ? 0.0 : 0.2
-                                 animations:^(void) {
-                                     view.alpha = 0;
-                                 }
-                                 completion:^(BOOL finished) {
-                                     [view removeFromSuperview];
-                                 }
+                    animations:^(void) {
+                        view.alpha = 0;
+                    }
+                    completion:^(BOOL finished) {
+                        [view removeFromSuperview];
+                    }
                  ];
             }
         }
 
         [_toolbarItems removeAllObjects];
 
-        for (UIBarButtonItem *item in newItems) {
-            UIToolbarItem *toolbarItem = [[UIToolbarItem alloc] initWithBarButtonItem:item];
+        for (UIBarButtonItem* item in newItems) {
+            UIToolbarItem* toolbarItem = [[UIToolbarItem alloc] initWithBarButtonItem:item];
             [_toolbarItems addObject:toolbarItem];
-
             UIView* view = toolbarItem.view;
+
             if (view) {
                 view.alpha = 0.0;
                 [self addSubview:view];
                 [UIView animateWithDuration:!animated ? 0.0 : 0.2
-                                 animations:^(void) {
-                                     view.alpha = 1.0;
-                                 }
+                    animations:^(void) {
+                        view.alpha = 1.0;
+                    }
                  ];
             }
         }
     }
 }
 
-- (void)setItems:(NSArray*)items
+- (void) setItems:(NSArray*)items
 {
     [self setItems:items animated:NO];
 }
 
-- (NSArray*)items
+- (NSArray*) items
 {
     return [_toolbarItems valueForKey:@"item"];
 }
@@ -177,14 +173,14 @@
 
 #pragma mark NSObject Overrides
 
-- (id)init
+- (id) init
 {
     return [self initWithFrame:CGRectMake(0,0,320,32)];
 }
 
-- (NSString*)description
+- (NSString*) description
 {
-    NSString *barStyle = @"";
+    NSString* barStyle = @"";
     switch (self.barStyle) {
         case UIBarStyleDefault:
             barStyle = @"Default";
@@ -202,7 +198,7 @@
 
 #pragma mark UIView Overrides
 
-- (id)initWithFrame:(CGRect)frame
+- (id) initWithFrame:(CGRect)frame
 {
     if ((self=[super initWithFrame:frame])) {
         _toolbarItems = [[NSMutableArray alloc] init];
@@ -214,14 +210,13 @@
 }
 
 
-- (void)layoutSubviews
+- (void) layoutSubviews
 {
     [super layoutSubviews];
-    
     CGFloat itemWidth = 0;
     NSUInteger numberOfFlexibleItems = 0;
     
-    for (UIToolbarItem *toolbarItem in _toolbarItems) {
+    for (UIToolbarItem* toolbarItem in _toolbarItems) {
         const CGFloat width = toolbarItem.width;
         if (width >= 0) {
             itemWidth += width;
@@ -233,11 +228,10 @@
     const CGSize size = self.bounds.size;
     const CGFloat flexibleSpaceWidth = (numberOfFlexibleItems > 0)? ((size.width - itemWidth) / numberOfFlexibleItems) : 0;
     const CGFloat centerY = size.height / 2.f;
-
     CGFloat x = 0;
     
-    for (UIToolbarItem *toolbarItem in _toolbarItems) {
-        UIView *view = toolbarItem.view;
+    for (UIToolbarItem* toolbarItem in _toolbarItems) {
+        UIView* view = toolbarItem.view;
         const CGFloat width = toolbarItem.width;
         
         if (view) {
@@ -246,7 +240,6 @@
             frame.origin.y = floorf(centerY - (frame.size.height / 2.f));
             view.frame = frame;
         }
-
         if (width < 0) {
             x += flexibleSpaceWidth;
         } else {
@@ -255,15 +248,12 @@
     }
 }
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)rect
 {
     const CGRect bounds = self.bounds;
-    
-    UIColor *color = _tintColor ?: [UIColor colorWithRed:21/255.f green:21/255.f blue:25/255.f alpha:1];
-
+    UIColor* color = _tintColor ?: [UIColor colorWithRed:21/255.f green:21/255.f blue:25/255.f alpha:1];
     [color setFill];
     UIRectFill(bounds);
-    
     [[UIColor blackColor] setFill];
     UIRectFill(CGRectMake(0,0,bounds.size.width,1));
 }
