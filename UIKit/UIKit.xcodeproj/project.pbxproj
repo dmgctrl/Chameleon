@@ -265,6 +265,8 @@
 		3AC20B93179605A30070E759 /* UIViewPrintFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */; };
 		3AC20B96179606AD0070E759 /* UIPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B94179606A50070E759 /* UIPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B97179606AD0070E759 /* UIPrintFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B95179606A80070E759 /* UIPrintFormatter.m */; };
+		3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */; };
+		3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
 		66371E3913674EF1007B9873 /* <UIBarButtonSystemItem> add.png in Resources */ = {isa = PBXBuildFile; fileRef = 66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */; };
@@ -807,6 +809,7 @@
 		3AC20B911796059F0070E759 /* UIViewPrintFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewPrintFormatter.m; sourceTree = "<group>"; };
 		3AC20B94179606A50070E759 /* UIPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPrintFormatter.h; sourceTree = "<group>"; };
 		3AC20B95179606A80070E759 /* UIPrintFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPrintFormatter.m; sourceTree = "<group>"; };
+		3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISwipeGestureRecognizerSpec.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
 		66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIBarButtonSystemItem> add.png"; path = "Resources/<UIBarButtonSystemItem> add.png"; sourceTree = "<group>"; };
@@ -1675,6 +1678,14 @@
 			name = UITableViewController;
 			sourceTree = "<group>";
 		};
+		3AD9300117CBF8EC0060B655 /* UISwipeGestureRecognizer */ = {
+			isa = PBXGroup;
+			children = (
+				3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */,
+			);
+			name = UISwipeGestureRecognizer;
+			sourceTree = "<group>";
+		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -1796,6 +1807,7 @@
 				3A1A397617837C6D00644CCB /* UIScrollView */,
 				F97674921769431C0073489E /* UIStoryboard */,
 				F98A10AA1773754000BF8586 /* UIStringDrawing */,
+				3AD9300117CBF8EC0060B655 /* UISwipeGestureRecognizer */,
 				3A1A396C17822D7700644CCB /* UITableView */,
 				3A1A397117834EA400644CCB /* UITableViewCell */,
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
@@ -2557,6 +2569,7 @@
 				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2595,6 +2608,7 @@
 				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
