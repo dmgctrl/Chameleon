@@ -1,5 +1,5 @@
-#import "UIStoryboardSegue.h"
-#import "UIStoryboardSegue+UIPrivate.h"
+#import <UIKit/UIStoryboardSegue.h>
+#import <UIKit/UIStoryboardSegue+UIPrivate.h>
 
 
 @implementation UIStoryboardSegue
