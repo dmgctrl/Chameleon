@@ -10,9 +10,14 @@ describe(@"UISwipeGestureRecognizer", ^{
         });
 
         context(@"property", ^{
-            context(@"", ^{
-                it(@"should ", ^{
-
+            context(@"direction", ^{
+                it(@"should be right", ^{
+                    [[@([swipeGestureRecognizer direction]) should] equal:@(UISwipeGestureRecognizerDirectionRight)];
+                });
+            });
+            context(@"numberOfTouchesRequired", ^{
+                it(@"should be one", ^{
+                    [[@([swipeGestureRecognizer numberOfTouchesRequired]) should] equal:@(1)];
                 });
             });
         });
