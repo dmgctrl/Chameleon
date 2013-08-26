@@ -4,12 +4,7 @@
 
 @implementation UIStoryboardSegue
 
-+ (id) segueWithIdentifier:(NSString*)identifier source:(UIViewController*)source destination:(UIViewController*)destination performHandler:(dispatch_block_t)handler
-{
-    UIStoryboardSegue* segue = [[[self class] alloc] initWithIdentifier:identifier source:source destination:destination];
-    [segue setPerformHandler:handler];
-    return segue;
-}
+#pragma mark Initializing a Storyboard Segue
 
 - (id) initWithIdentifier:(NSString*)identifier source:(UIViewController*)source destination:(UIViewController*)destination
 {
@@ -21,6 +16,9 @@
     return self;
 }
 
+
+#pragma mark Performing the Segue
+
 - (void) perform
 {
     if (_performHandler) {
@@ -28,6 +26,16 @@
     } else {
         [NSException raise:NSInternalInconsistencyException format:@"Subclasses of UIStoryboardSegue must override -perform."];
     }
+}
+
+
+#pragma mark Creating a Custom Segue
+
++ (id) segueWithIdentifier:(NSString*)identifier source:(UIViewController*)source destination:(UIViewController*)destination performHandler:(dispatch_block_t)handler
+{
+    UIStoryboardSegue* segue = [[[self class] alloc] initWithIdentifier:identifier source:source destination:destination];
+    [segue setPerformHandler:handler];
+    return segue;
 }
 
 @end
