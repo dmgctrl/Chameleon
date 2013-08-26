@@ -37,6 +37,8 @@
 
 - (void) setViewControllers:(NSArray*)viewController animated:(BOOL)animated
 {
+#warning implement -setViewControllers:animated:
+    UIKIT_STUB(@"-setViewControllers:animated:");
 }
 
 
