@@ -10,9 +10,19 @@ describe(@"UIStoryboardSegue", ^{
         });
 
         context(@"property", ^{
-            context(@"", ^{
-                it(@"should ", ^{
-
+            context(@"sourceViewController", ^{
+                it(@"should not be", ^{
+                    [[[storyboardSegue sourceViewController] should] beNil];
+                });
+            });
+            context(@"destinationViewController", ^{
+                it(@"should not be", ^{
+                    [[[storyboardSegue destinationViewController] should] beNil];
+                });
+            });
+            context(@"identifier", ^{
+                it(@"should not be", ^{
+                    [[[storyboardSegue identifier] should] beNil];
                 });
             });
         });
