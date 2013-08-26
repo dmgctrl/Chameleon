@@ -29,25 +29,39 @@
 
 #import <UIKit/UIViewController.h>
 
+@class UITabBar;
 @class UITabBarController;
 @protocol UITabBarControllerDelegate <NSObject>
 
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed;
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController;
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController;
-- (void)tabBarController:(UITabBarController *)tabBarController willBeginCustomizingViewControllers:(NSArray *)viewControllers;
-- (void)tabBarController:(UITabBarController *)tabBarController willEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed;
+- (void) tabBarController:(UITabBarController*)tabBarController didEndCustomizingViewControllers:(NSArray*)viewControllers changed:(BOOL)changed;
+- (void) tabBarController:(UITabBarController*)tabBarController didSelectViewController:(UIViewController*)viewController;
+- (BOOL) tabBarController:(UITabBarController*)tabBarController shouldSelectViewController:(UIViewController*)viewController;
+- (void) tabBarController:(UITabBarController*)tabBarController willBeginCustomizingViewControllers:(NSArray*)viewControllers;
+- (void) tabBarController:(UITabBarController*)tabBarController willEndCustomizingViewControllers:(NSArray*)viewControllers changed:(BOOL)changed;
 
 @end
 
-@class UITabBar;
+
 @interface UITabBarController : UIViewController
 
-- (void)setViewControllers:(NSArray *)viewController animated:(BOOL)animated;
 
-@property (nonatomic, assign) UIViewController *selectedViewController;
-@property (nonatomic, copy)   NSArray *viewControllers;
+#pragma mark Accessing the Tab Bar Controller Properties
+
+@property (nonatomic, assign) id<UITabBarControllerDelegate> delegate;
+@property (nonatomic, readonly) UITabBar* tabBar;
+
+
+#pragma mark Managing the View Controllers
+
+@property (nonatomic, copy) NSArray* viewControllers;
+- (void) setViewControllers:(NSArray*)viewController animated:(BOOL)animated;
+@property (nonatomic, copy) NSArray* customizableViewControllers;
+@property(nonatomic, readonly) UINavigationController* moreNavigationController;
+
+
+#pragma mark Managing the Selected Tab
+
+@property (nonatomic, assign) UIViewController* selectedViewController;
 @property (nonatomic, assign) NSUInteger selectedIndex;
-@property (nonatomic, readonly) UITabBar *tabBar;
 
 @end
