@@ -32,20 +32,28 @@
 
 @implementation UITabBarController 
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+
+#pragma mark Managing the View Controllers
+
+- (void) setViewControllers:(NSArray*)viewController animated:(BOOL)animated
+{
+}
+
+
+#pragma mark UIViewController Overrides
+
+- (id) initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle
 {
     if ((self = [super initWithNibName:nibName bundle:nibBundle])) {
-        _tabBar = [(UITabBar *)[UITabBar alloc] initWithFrame:CGRectZero];
+        _tabBar = [(UITabBar*)[UITabBar alloc] initWithFrame:CGRectZero];
     }
     return self;
 }
 
 
-- (void)setViewControllers:(NSArray *)viewController animated:(BOOL)animated
-{
-}
+#pragma mark NSObject Overrides
 
-- (NSString *)description
+- (NSString*) description
 {
     return [NSString stringWithFormat:@"<%@: %p; selectedViewController = %@; viewControllers = %@; selectedIndex = %lu; tabBar = %@>", [self className], self, self.selectedViewController, self.viewControllers, self.selectedIndex, self.tabBar];
 }
