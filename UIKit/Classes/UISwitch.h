@@ -31,7 +31,7 @@
 
 @class UIImage;
 
-@interface UISwitch : UIControl
+@interface UISwitch : UIControl <NSCoding>
 
 #pragma mark Initializing the Switch Object
 
