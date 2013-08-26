@@ -28,9 +28,9 @@
  */
 
 #import <UIKit/UIViewController.h>
+#import <UIKit/UITabBar.h>
 
-@class UITabBar;
-@class UITabBarController;
+
 @protocol UITabBarControllerDelegate <NSObject>
 
 - (void) tabBarController:(UITabBarController*)tabBarController didEndCustomizingViewControllers:(NSArray*)viewControllers changed:(BOOL)changed;
@@ -42,7 +42,7 @@
 @end
 
 
-@interface UITabBarController : UIViewController
+@interface UITabBarController : UIViewController <NSCoding, UITabBarDelegate>
 
 
 #pragma mark Accessing the Tab Bar Controller Properties
