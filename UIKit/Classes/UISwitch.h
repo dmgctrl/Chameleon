@@ -29,17 +29,27 @@
 
 #import <UIKit/UIControl.h>
 
+@class UIImage;
+
 @interface UISwitch : UIControl
 
 #pragma mark Initializing the Switch Object
 
-- (id)initWithFrame:(CGRect)frame;
+- (id) initWithFrame:(CGRect)frame;
 
 
 #pragma mark Setting the Off/On State
 
-@property(nonatomic, getter=isOn) BOOL on;
-- (void)setOn:(BOOL)on animated:(BOOL)animated;
+- (void) setOn:(BOOL)on animated:(BOOL)animated;
+@property (nonatomic, getter=isOn) BOOL on;
 
+
+#pragma mark Customizing the Appearance of the Switch
+
+@property (nonatomic, retain) UIColor* onTintColor;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* thumbTintColor;
+@property (nonatomic, retain) UIImage* onImage;
+@property (nonatomic, retain) UIImage* offImage;
 
 @end
