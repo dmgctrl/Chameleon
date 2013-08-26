@@ -51,7 +51,7 @@
 }
 
 
-#pragma mark NSObject Overrides
+#pragma mark NSObject Protocol
 
 - (NSString*) description
 {
