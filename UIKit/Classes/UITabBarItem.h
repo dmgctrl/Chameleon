@@ -37,6 +37,9 @@
 
 @class UIImage;
 
+
+#pragma mark Constants
+
 typedef enum {
     UITabBarSystemItemMore,
     UITabBarSystemItemFavorites,
@@ -55,9 +58,29 @@ typedef enum {
 
 @interface UITabBarItem : UIBarItem 
 
-- (id)initWithTitle:(NSString *)title image:(UIImage *)image tag:(NSInteger)tag;
-- (id)initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag;
+
+#pragma mark Initializing an Item
+
+- (id) initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag;
+- (id) initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag;
+
+
+#pragma mark Getting and Setting Properties
 
 @property (nonatomic, copy) NSString *badgeValue;
+
+
+#pragma mark Managing the Finished Selected Image
+
+- (UIImage*) finishedSelectedImage;
+- (UIImage*) finishedUnselectedImage;
+- (void) setFinishedSelectedImage:(UIImage*)selectedImage withFinishedUnselectedImage:(UIImage*)unselectedImage;
+
+
+#pragma mark Customizing Appearance
+
+- (UIOffset) titlePositionAdjustment;
+- (void) setTitlePositionAdjustment:(UIOffset)adjustment;
+
 
 @end

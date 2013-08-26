@@ -38,6 +38,37 @@
 
 @implementation UITabBarItem 
 
+- (UIImage*) finishedSelectedImage
+{
+#warning implement -finishedSelectedImage
+    UIKIT_STUB_W_RETURN(@"-finishedSelectedImage");
+}
+
+- (UIImage*) finishedUnselectedImage
+{
+#warning implement -finishedUnselectedImage
+    UIKIT_STUB_W_RETURN(@"-finishedUnselectedImage");
+}
+
+- (void) setFinishedSelectedImage:(UIImage*)selectedImage withFinishedUnselectedImage:(UIImage*)unselectedImage
+{
+#warning implement -setFinishedSelectedImage:withFinishedUnselectedImage:
+    UIKIT_STUB(@"-setFinishedSelectedImage:withFinishedUnselectedImage:");
+}
+
+- (UIOffset) titlePositionAdjustment
+{
+#warning implement -titlePositionAdjustment
+    UIKIT_STUB(@"-titlePositionAdjustment");
+    return UIOffsetZero;
+}
+
+- (void) setTitlePositionAdjustment:(UIOffset)adjustment
+{
+#warning implement -setTitlePositionAdjustment:
+    UIKIT_STUB(@"-setTitlePositionAdjustment:");
+}
+
 - (id)initWithTitle:(NSString *)title image:(UIImage *)image tag:(NSInteger)tag
 {
     if ((self = [super init])) {
