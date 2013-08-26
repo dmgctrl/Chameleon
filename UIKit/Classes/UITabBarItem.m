@@ -86,7 +86,7 @@
 {
 #warning implement -titlePositionAdjustment
     UIKIT_STUB(@"-titlePositionAdjustment");
-    return UIOffsetZero;
+    return UIOffsetMake(CGFLOAT_MAX, CGFLOAT_MAX);
 }
 
 - (void) setTitlePositionAdjustment:(UIOffset)adjustment
