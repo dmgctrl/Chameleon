@@ -36,7 +36,30 @@
 #import <UIKit/UITabBarItem.h>
 #import <UIKit/UIImage.h>
 
-@implementation UITabBarItem 
+
+@implementation UITabBarItem
+
+
+#pragma mark Initializing an Item
+
+- (id) initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag
+{
+    if ((self = [super init])) {
+    }
+    return self;
+}
+
+- (id) initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag
+{
+    if ((self = [super init])) {
+        self.title = title;
+        self.image = image;
+    }
+    return self;
+}
+
+
+#pragma mark Managing the Finished Selected Image
 
 - (UIImage*) finishedSelectedImage
 {
@@ -56,6 +79,9 @@
     UIKIT_STUB(@"-setFinishedSelectedImage:withFinishedUnselectedImage:");
 }
 
+
+#pragma mark Customizing Appearance
+
 - (UIOffset) titlePositionAdjustment
 {
 #warning implement -titlePositionAdjustment
@@ -67,22 +93,6 @@
 {
 #warning implement -setTitlePositionAdjustment:
     UIKIT_STUB(@"-setTitlePositionAdjustment:");
-}
-
-- (id)initWithTitle:(NSString *)title image:(UIImage *)image tag:(NSInteger)tag
-{
-    if ((self = [super init])) {
-        self.title = title;
-        self.image = image;
-    }
-    return self;
-}
-
-- (id)initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag
-{
-    if ((self = [super init])) {
-    }
-    return self;
 }
 
 @end
