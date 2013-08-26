@@ -31,9 +31,15 @@
 
 @interface UISwitch : UIControl
 
+#pragma mark Initializing the Switch Object
+
 - (id)initWithFrame:(CGRect)frame;
-- (void)setOn:(BOOL)on animated:(BOOL)animated;
+
+
+#pragma mark Setting the Off/On State
 
 @property(nonatomic, getter=isOn) BOOL on;
+- (void)setOn:(BOOL)on animated:(BOOL)animated;
+
 
 @end
