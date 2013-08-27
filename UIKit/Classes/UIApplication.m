@@ -46,6 +46,8 @@
 #import <UIKit/UIWindow+UIPrivate.h>
 #import <Cocoa/Cocoa.h>
 
+#pragma mark Constants
+
 NSString* const UIApplicationWillChangeStatusBarOrientationNotification = @"UIApplicationWillChangeStatusBarOrientationNotification";
 NSString* const UIApplicationDidChangeStatusBarOrientationNotification = @"UIApplicationDidChangeStatusBarOrientationNotification";
 NSString* const UIApplicationWillEnterForegroundNotification = @"UIApplicationWillEnterForegroundNotification";
@@ -67,8 +69,10 @@ const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax;
 const NSTimeInterval UIMinimumKeepAliveTimeout = 0;
 static UIApplication* _theApplication = nil;
 
+
 @interface _UIApplicationDelegate : NSObject <NSApplicationDelegate>
 @end
+
 
 @implementation _UIApplicationDelegate
 
@@ -93,6 +97,7 @@ static UIApplication* _theApplication = nil;
 
 @end
 
+
 UIKIT_EXTERN int UIApplicationMain(int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName)
 {
     NSApplication* application = [NSApplication sharedApplication];
@@ -101,6 +106,7 @@ UIKIT_EXTERN int UIApplicationMain(int argc, char* argv[], NSString* principalCl
     [application setDelegate:nsappdelegate];
     Class principalClass = principalClassName ? NSClassFromString(principalClassName) : [UIApplication class];
     _theApplication = [[principalClass alloc] init];
+
     if (delegateClassName) {
         Class delegateClass = NSClassFromString(delegateClassName);
         if (delegateClass) {
@@ -125,6 +131,7 @@ static CGPoint ScrollDeltaFromNSEvent(NSEvent* theNSEvent)
     double dx, dy;
     CGEventRef cgEvent = [theNSEvent CGEvent];
     const int64_t isContinious = CGEventGetIntegerValueField(cgEvent, kCGScrollWheelEventIsContinuous);
+
     if (isContinious == 0) {
         CGEventSourceRef source = CGEventCreateSourceFromEvent(cgEvent);
         const double pixelsPerLine = CGEventSourceGetPixelsPerLine(source);
@@ -148,6 +155,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     return (touch.phase == UITouchPhaseBegan || touch.phase == UITouchPhaseMoved || touch.phase == UITouchPhaseStationary);
 }
 
+
 @implementation UIApplication {
     UIEvent* _currentEvent;
     NSMutableSet* _visibleWindows;
@@ -156,7 +164,6 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     NSDate* _backgroundTasksExpirationDate;
     NSMutableArray* _backgroundTasks;
 }
-
 
 #pragma mark Getting the Application Instance
 
@@ -199,10 +206,11 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (BOOL) sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*) event
+- (BOOL) sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)event
 {
     if (!target) {
         id responder = [_keyWindow _firstResponder] ?: sender;
+
         while (responder) {
             if ([responder respondsToSelector:action]) {
                 target = responder;
@@ -299,7 +307,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (BOOL) setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler
+- (BOOL) setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void(^)(void))keepAliveHandler
 {
 #warning implement -setKeepAliveTimeout:handler:
     UIKIT_STUB_W_RETURN(@"-setKeepAliveTimeout:handler:");
@@ -359,7 +367,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     UIKIT_STUB_W_RETURN(@"-scheduledLocalNotifications");
 }
 
-- (void) setScheduledLocalNotifications:(NSArray*) scheduledLocalNotifications
+- (void) setScheduledLocalNotifications:(NSArray*)scheduledLocalNotifications
 {
 #warning implement -setScheduledLocalNotifications:
     UIKIT_STUB(@"-setScheduledLocalNotifications:");
@@ -463,7 +471,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
 
 #pragma mark Setting the Icon of a Newsstand Application
 
-- (void) setNewsstandIconImage:(UIImage*) image
+- (void) setNewsstandIconImage:(UIImage*)image
 {
 #warning implement -setNewsstandIconImage:
     UIKIT_STUB(@"-setNewsstandIconImage:");
@@ -472,7 +480,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
 
 #pragma mark UIApplication+AppKit
 
-- (NSApplicationTerminateReply) terminateApplicationBeforeDate:(NSDate*) timeoutDate
+- (NSApplicationTerminateReply) terminateApplicationBeforeDate:(NSDate*)timeoutDate
 {
     [self _enterBackground];
     if ([_backgroundTasks count] == 0) {
@@ -480,6 +488,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
     _backgroundTasksExpirationDate = timeoutDate;
     void (^taskFinisher)(void) = ^{
+
         if ([_backgroundTasks count] > 0) {
             NSAlert* alert = [[NSAlert alloc] init];
             [alert setAlertStyle:NSInformationalAlertStyle];
@@ -549,7 +558,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
 
 #pragma mark private methods
 
-- (void) _applicationDidBecomeActive:(NSNotification*) note
+- (void) _applicationDidBecomeActive:(NSNotification*)note
 {
     if (self.applicationState == UIApplicationStateInactive) {
         _applicationState = UIApplicationStateActive;
@@ -560,7 +569,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _applicationWillResignActive:(NSNotification*) note
+- (void) _applicationWillResignActive:(NSNotification*)note
 {
     if (self.applicationState == UIApplicationStateActive) {
         if ([_delegate respondsToSelector:@selector(applicationWillResignActive:)]) {
@@ -571,7 +580,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _applicationWillTerminate:(NSNotification*) note
+- (void) _applicationWillTerminate:(NSNotification*)note
 {
     if ([_delegate respondsToSelector:@selector(applicationWillTerminate:)]) {
         [_delegate applicationWillTerminate:self];
@@ -599,12 +608,12 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _computerDidWakeUp:(NSNotification*) note
+- (void) _computerDidWakeUp:(NSNotification*)note
 {
     [self _enterForeground];
 }
 
-- (void) _computerWillSleep:(NSNotification*) note
+- (void) _computerWillSleep:(NSNotification*)note
 {
     if ([self _enterBackground]) {
         _backgroundTasksExpirationDate = [[NSDate alloc] initWithTimeIntervalSinceNow:29];
@@ -643,12 +652,12 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (BOOL) _firstResponderCanPerformAction:(SEL)action withSender:(id)sender fromScreen:(UIScreen*) theScreen
+- (BOOL) _firstResponderCanPerformAction:(SEL)action withSender:(id)sender fromScreen:(UIScreen*)theScreen
 {
     return [[self _firstResponderForScreen:theScreen] canPerformAction:action withSender:sender];
 }
 
-- (UIResponder*)  _firstResponderForScreen:(UIScreen*) screen
+- (UIResponder*)  _firstResponderForScreen:(UIScreen*)screen
 {
     if (_keyWindow.screen == screen) {
         return [_keyWindow _firstResponder];
@@ -657,7 +666,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _removeViewFromTouches:(UIView*) aView
+- (void) _removeViewFromTouches:(UIView*)aView
 {
     for (UITouch* touch in [_currentEvent allTouches]) {
         if (touch.view == aView) {
@@ -666,12 +675,12 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _runBackgroundTasks:(void (^)(void))run_tasks
+- (void) _runBackgroundTasks:(void(^)(void))run_tasks
 {
     run_tasks();
 }
 
-- (BOOL) _runRunLoopForBackgroundTasksBeforeDate:(NSDate*) date
+- (BOOL) _runRunLoopForBackgroundTasksBeforeDate:(NSDate*)date
 {
     if ([_backgroundTasks count] == 0) {
         return NO;
@@ -683,7 +692,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     return YES;
 }
 
-- (BOOL) _sendActionToFirstResponder:(SEL)action withSender:(id)sender fromScreen:(UIScreen*) theScreen
+- (BOOL) _sendActionToFirstResponder:(SEL)action withSender:(id)sender fromScreen:(UIScreen*)theScreen
 {
     UIResponder* responder = [self _firstResponderForScreen:theScreen];
     while (responder) {
@@ -700,7 +709,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     return NO;
 }
 
-- (BOOL) _sendGlobalKeyboardNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*) theScreen
+- (BOOL) _sendGlobalKeyboardNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*)theScreen
 {
     if ([self isIgnoringInteractionEvents]) {
         return YES;
@@ -714,13 +723,14 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     return NO;
 }
 
-- (BOOL) _sendKeyboardNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*) theScreen
+- (BOOL) _sendKeyboardNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*)theScreen
 {
     if ([self isIgnoringInteractionEvents]) {
         return YES;
     }
     if (![self _sendGlobalKeyboardNSEvent:theNSEvent fromScreen:theScreen]) {
         UIResponder* firstResponder = [self _firstResponderForScreen:theScreen];
+
         if (firstResponder) {
             UIKey* key = [[UIKey alloc] initWithNSEvent:theNSEvent];
             UIEvent* event = [[UIEvent alloc] initWithEventType:UIEventTypeKeyPress];
@@ -731,7 +741,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     return NO;
 }
 
-- (void) _sendMouseNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*) theScreen
+- (void) _sendMouseNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*)theScreen
 {
     UITouch* touch = [[_currentEvent allTouches] anyObject];
     [_currentEvent _setTimestamp:[theNSEvent timestamp]];
@@ -811,7 +821,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _setCurrentEventTouchedViewWithNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*) theScreen
+- (void) _setCurrentEventTouchedViewWithNSEvent:(NSEvent*) theNSEvent fromScreen:(UIScreen*)theScreen
 {
     const CGPoint screenLocation = [theNSEvent locationInScreen:theScreen];
     UITouch* touch = [[_currentEvent allTouches] anyObject];
@@ -823,7 +833,7 @@ static BOOL TouchIsActiveNonGesture(UITouch* touch)
     }
 }
 
-- (void) _setKeyWindow:(UIWindow*) newKeyWindow
+- (void) _setKeyWindow:(UIWindow*)newKeyWindow
 {
     _keyWindow = newKeyWindow;
 }
@@ -833,13 +843,13 @@ static BOOL TouchIsActive(UITouch* touch)
     return TouchIsActiveGesture(touch) || TouchIsActiveNonGesture(touch);
 }
 
-- (void) _windowDidBecomeHidden:(UIWindow*) theWindow
+- (void) _windowDidBecomeHidden:(UIWindow*)theWindow
 {
     if (theWindow == _keyWindow) [self _setKeyWindow:nil];
     [_visibleWindows removeObject:[NSValue valueWithNonretainedObject:theWindow]];
 }
 
-- (void) _windowDidBecomeVisible:(UIWindow*) theWindow
+- (void) _windowDidBecomeVisible:(UIWindow*)theWindow
 {
     [_visibleWindows addObject:[NSValue valueWithNonretainedObject:theWindow]];
 }
