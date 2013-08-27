@@ -5,7 +5,6 @@
 
 @interface UITableViewHeaderFooterView : UIView <NSCoding, UIAppearance, UIAppearanceContainer>
 
-
 #pragma mark Initializing the View
 
 - (instancetype) initWithReuseIdentifier:(NSString*)reuseIdentifier;
