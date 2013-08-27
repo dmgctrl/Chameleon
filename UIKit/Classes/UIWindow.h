@@ -29,18 +29,19 @@
 
 #import <UIKit/UIView.h>
 
+@class UIScreen;
+@class UIViewController;
+
 #pragma mark Constants
 
 typedef CGFloat UIWindowLevel;
 UIKIT_EXTERN const UIWindowLevel UIWindowLevelNormal;
 UIKIT_EXTERN const UIWindowLevel UIWindowLevelAlert;
 UIKIT_EXTERN const UIWindowLevel UIWindowLevelStatusBar;
-
 UIKIT_EXTERN NSString* const UIKeyboardFrameBeginUserInfoKey;
 UIKIT_EXTERN NSString* const UIKeyboardFrameEndUserInfoKey;
 UIKIT_EXTERN NSString* const UIKeyboardAnimationDurationUserInfoKey;
 UIKIT_EXTERN NSString* const UIKeyboardAnimationCurveUserInfoKey;
-
 // deprecated
 UIKIT_EXTERN NSString* const UIKeyboardCenterBeginUserInfoKey;
 UIKIT_EXTERN NSString* const UIKeyboardCenterEndUserInfoKey;
@@ -60,9 +61,6 @@ UIKIT_EXTERN NSString* const UIKeyboardDidHideNotification;
 UIKIT_EXTERN NSString* const UIKeyboardWillChangeFrameNotification;
 UIKIT_EXTERN NSString* const UIKeyboardDidChangeFrameNotification;
 
-
-@class UIScreen;
-@class UIViewController;
 
 @interface UIWindow : UIView 
 
