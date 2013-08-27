@@ -55,6 +55,7 @@ static NSPasteboardItem* PasteBoardItemWithDictionary(NSDictionary* item)
         id object = [item objectForKey:type];
 
         if ([object isKindOfClass:[NSData class]]) {
+
             if (UTTypeEqual((__bridge CFStringRef)type, kUTTypeGIF)) {
                 NSFileWrapper* fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents:object];
                 [fileWrapper setPreferredFilename:@"image.gif"];
@@ -72,6 +73,7 @@ static NSPasteboardItem* PasteBoardItemWithDictionary(NSDictionary* item)
     return pasteboardItem;
 }
 
+
 @implementation UIPasteboard {
     NSPasteboard* pasteboard;
 }
@@ -83,7 +85,6 @@ static NSPasteboardItem* PasteBoardItemWithDictionary(NSDictionary* item)
     }
     return self;
 }
-
 
 #pragma mark Getting and Removing Pasteboards
 
@@ -188,8 +189,10 @@ static NSPasteboardItem* PasteBoardItemWithDictionary(NSDictionary* item)
 - (NSArray*) items
 {
     NSMutableArray* items = [NSMutableArray arrayWithCapacity:0];
+
     for (NSPasteboardItem* item in [pasteboard pasteboardItems]) {
         NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithCapacity:0];
+
         for (NSString* type in [item types]) {
             id object = nil;
             if (UTTypeConformsTo((__bridge CFStringRef)type, kUTTypeURL)) {
@@ -292,7 +295,7 @@ static NSPasteboardItem* PasteBoardItemWithDictionary(NSDictionary* item)
     return FirstObjectOrNil([self URLs]);
 }
 
-- (void)setURL:(NSURL*) aURL
+- (void) setURL:(NSURL*)aURL
 {
     [self setURLs:@[aURL]];
 }
@@ -349,7 +352,5 @@ static NSPasteboardItem* PasteBoardItemWithDictionary(NSDictionary* item)
 {
     return [pasteboard readObjectsForClasses:types options:@{}];
 }
-
-
 
 @end
