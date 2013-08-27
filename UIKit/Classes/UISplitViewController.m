@@ -52,8 +52,8 @@ static const CGFloat SplitterPadding = 3;
 - (id) initWithFrame:(CGRect)frame
 {
     if ((self=[super initWithFrame:frame])) {
-        leftPanel = [(UIView*)[UIView alloc] initWithFrame:CGRectMake(0,0,320,frame.size.height)];
-        rightPanel = [(UIView*)[UIView alloc] initWithFrame:CGRectMake(321,0,MAX(0,frame.size.width-321),frame.size.height)];
+        leftPanel = [(UIView*)[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, frame.size.height)];
+        rightPanel = [(UIView*)[UIView alloc] initWithFrame:CGRectMake(321, 0, MAX(0, frame.size.width - 321), frame.size.height)];
         leftPanel.clipsToBounds = rightPanel.clipsToBounds = YES;
         leftPanel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         rightPanel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -86,8 +86,8 @@ static const CGFloat SplitterPadding = 3;
         const CGFloat height = self.bounds.size.height;
         leftFrame.origin = CGPointZero;
         leftFrame.size = CGSizeMake(newWidth, height);
-        rightFrame.origin = CGPointMake(newWidth+1,0);
-        rightFrame.size = CGSizeMake(MAX(self.bounds.size.width-newWidth-1,0), height);
+        rightFrame.origin = CGPointMake(newWidth + 1, 0);
+        rightFrame.size = CGSizeMake(MAX(self.bounds.size.width - newWidth - 1, 0), height);
         leftPanel.frame = leftFrame;
         rightPanel.frame = rightFrame;
     }
@@ -100,7 +100,7 @@ static const CGFloat SplitterPadding = 3;
 
 - (CGRect) splitterHitRect
 {
-    return CGRectMake(self.leftWidth-SplitterPadding,0,SplitterPadding+SplitterPadding+1,self.bounds.size.height);
+    return CGRectMake(self.leftWidth - SplitterPadding, 0, SplitterPadding + SplitterPadding + 1, self.bounds.size.height);
 }
 
 - (UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event
@@ -125,7 +125,7 @@ static const CGFloat SplitterPadding = 3;
     if (dragging) {
         CGFloat newWidth = [[touches anyObject] locationInView:self].x;
         newWidth = MAX(50, newWidth);
-        newWidth = MIN(self.bounds.size.width-50, newWidth);
+        newWidth = MIN(self.bounds.size.width - 50, newWidth);
         self.leftWidth = newWidth;
     }
 }
@@ -146,7 +146,7 @@ static const CGFloat SplitterPadding = 3;
     CGPoint point = [[[event allTouches] anyObject] locationInView:self];
     if (dragging && point.x < splitterRect.origin.x) {
         return [NSCursor resizeLeftCursor];
-    } else if (dragging && point.x > splitterRect.origin.x+splitterRect.size.width) {
+    } else if (dragging && point.x > splitterRect.origin.x + splitterRect.size.width) {
         return [NSCursor resizeRightCursor];
     } else if (dragging || CGRectContainsPoint(splitterRect, point)) {
         return [NSCursor resizeLeftRightCursor];
@@ -170,7 +170,7 @@ static const CGFloat SplitterPadding = 3;
 
 - (void) setViewControllers:(NSArray*)newControllers
 {
-    assert([newControllers count]==2);
+    assert([newControllers count] == 2);
 
     if (![newControllers isEqualToArray:_viewControllers]) {
         for (UIViewController* c in _viewControllers) {
@@ -221,7 +221,7 @@ static const CGFloat SplitterPadding = 3;
 
 - (void) loadView
 {
-    self.view = [(_UISplitViewControllerView*)[_UISplitViewControllerView alloc] initWithFrame:CGRectMake(0,0,1024,768)];
+    self.view = [(_UISplitViewControllerView*)[_UISplitViewControllerView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
