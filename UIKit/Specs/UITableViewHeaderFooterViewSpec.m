@@ -8,8 +8,8 @@ describe(@"UITableViewHeaderFooterView", ^{
         it(@"should be member of right class", ^{
             [[tableViewHeaderFooterView should] beKindOfClass:[UITableViewHeaderFooterView class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"contentView", ^{
                 it(@"should be", ^{
                     [[[tableViewHeaderFooterView contentView] should] beNonNil];
