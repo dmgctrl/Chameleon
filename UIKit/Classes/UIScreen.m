@@ -42,12 +42,14 @@
 #import <UIKit/UIView+UIPrivate.h>
 #import <UIKit/UIPopoverController.h>
 
+NSMutableArray* _allScreens = nil;
+
+#pragma mark Constants
 
 NSString* const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
 NSString* const UIScreenDidDisconnectNotification = @"UIScreenDidDisconnectNotification";
 NSString* const UIScreenModeDidChangeNotification = @"UIScreenModeDidChangeNotification";
 
-NSMutableArray* _allScreens = nil;
 
 @implementation UIScreen {
     UIImageView* _grabber;
@@ -66,11 +68,9 @@ NSMutableArray* _allScreens = nil;
 + (NSArray*) screens
 {
     NSMutableArray* screens = [NSMutableArray arrayWithCapacity:[_allScreens count]];
-
     for (NSValue* v in _allScreens) {
         [screens addObject:[v nonretainedObjectValue]];
     }
-
     return screens;
 }
 
@@ -86,7 +86,7 @@ NSMutableArray* _allScreens = nil;
 {
     const float statusBarHeight = [UIApplication sharedApplication].statusBarHidden? 0 : 20;
     const CGSize size = [self bounds].size;
-    return CGRectMake(0,statusBarHeight,size.width,size.height-statusBarHeight);
+    return CGRectMake(0, statusBarHeight, size.width, size.height - statusBarHeight);
 }
 
 - (CGFloat) scale
@@ -137,7 +137,7 @@ NSMutableArray* _allScreens = nil;
 {
     if ((self = [super init])) {
         _layer = [CALayer layer];
-        _layer.delegate = self;		// required to get the magic of the UIViewLayoutManager...
+        _layer.delegate = self;
         _layer.layoutManager = [_UIViewLayoutManager layoutManager];
 
         _grabber = [[UIImageView alloc] initWithImage:[UIImage _windowResizeGrabberImage]];
@@ -179,22 +179,21 @@ NSMutableArray* _allScreens = nil;
 
     if (_UIKitView && realWindow && contentView && ([realWindow styleMask] & NSResizableWindowMask) && [realWindow showsResizeIndicator] && !NSEqualSizes([realWindow minSize], [realWindow maxSize])) {
         const CGRect myBounds = NSRectToCGRect([_UIKitView bounds]);
-        const CGPoint myLowerRight = CGPointMake(CGRectGetMaxX(myBounds),CGRectGetMaxY(myBounds));
+        const CGPoint myLowerRight = CGPointMake(CGRectGetMaxX(myBounds), CGRectGetMaxY(myBounds));
         const CGRect contentViewBounds = NSRectToCGRect([contentView frame]);
-        const CGPoint contentViewLowerRight = CGPointMake(CGRectGetMaxX(contentViewBounds),0);
+        const CGPoint contentViewLowerRight = CGPointMake(CGRectGetMaxX(contentViewBounds), 0);
         const CGPoint convertedPoint = NSPointToCGPoint([_UIKitView convertPoint:NSPointFromCGPoint(myLowerRight) toView:contentView]);
-
         if (CGPointEqualToPoint(convertedPoint,contentViewLowerRight) && [realWindow showsResizeIndicator]) {
             return YES;
         }
     }
-
     return NO;
 }
 
 - (UIView*) _hitTest:(CGPoint)clickPoint event:(UIEvent*)theEvent
 {
     for (UIWindow* window in [[UIApplication sharedApplication].windows reverseObjectEnumerator]) {
+
         if (window.screen == self) {
             CGPoint windowPoint = [window convertPoint:clickPoint fromWindow:nil];
             UIView* clickedView = [window hitTest:windowPoint withEvent:theEvent];
@@ -203,7 +202,6 @@ NSMutableArray* _allScreens = nil;
             }
         }
     }
-
     return nil;
 }
 
@@ -218,7 +216,7 @@ NSMutableArray* _allScreens = nil;
         const CGSize grabberSize = _grabber.frame.size;
         const CGSize layerSize = _layer.bounds.size;
         CGRect grabberRect = _grabber.frame;
-        grabberRect.origin = CGPointMake(layerSize.width-grabberSize.width,layerSize.height-grabberSize.height);
+        grabberRect.origin = CGPointMake(layerSize.width - grabberSize.width, layerSize.height - grabberSize.height);
         _grabber.frame = grabberRect;
         _grabber.hidden = NO;
     } else if (!_grabber.hidden) {
