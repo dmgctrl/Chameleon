@@ -37,7 +37,6 @@
 
 @class UIImage;
 
-
 #pragma mark Constants
 
 typedef enum {
@@ -57,7 +56,6 @@ typedef enum {
 
 
 @interface UITabBarItem : UIBarItem 
-
 
 #pragma mark Initializing an Item
 
@@ -81,6 +79,5 @@ typedef enum {
 
 - (UIOffset) titlePositionAdjustment;
 - (void) setTitlePositionAdjustment:(UIOffset)adjustment;
-
 
 @end
