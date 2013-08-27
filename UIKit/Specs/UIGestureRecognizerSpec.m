@@ -8,8 +8,8 @@ describe(@"UIGestureRecognizer", ^{
         it(@"should be member of right class", ^{
             [[gestureRecognizer should] beKindOfClass:[UIGestureRecognizer class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"state", ^{
                 it(@"should be possible", ^{
                     [[@([gestureRecognizer state]) should] equal:@(UIGestureRecognizerStatePossible)];
@@ -51,6 +51,7 @@ describe(@"UIGestureRecognizer", ^{
                 });
             });
         });
+
         context(@"instance method", ^{
             context(@"numberOfTouches", ^{
                 context(@"should be 0", ^{
