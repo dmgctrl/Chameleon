@@ -51,18 +51,15 @@
 #import <AppKit/NSAttributedString.h>
 #import <QuartzCore/QuartzCore.h>
 
-
 #pragma mark Constants
 
 const UIWindowLevel UIWindowLevelNormal = 0;
 const UIWindowLevel UIWindowLevelStatusBar = 1000;
 const UIWindowLevel UIWindowLevelAlert = 2000;
-
 NSString* const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
 NSString* const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
 NSString* const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
 NSString* const UIKeyboardAnimationCurveUserInfoKey = @"UIKeyboardAnimationCurveUserInfoKey";
-
 // deprecated
 NSString* const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserInfoKey";
 NSString* const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
@@ -82,14 +79,16 @@ NSString* const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification"
 NSString* const UIKeyboardWillChangeFrameNotification = @"UIKeyboardWillChangeFrameNotification";
 NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFrameNotification";
 
+
 @interface UIWindow ()
+
 - (void) _showToolTipForView:(UIView*)view;
 - (void) _hideCurrentToolTip;
 - (void) _stopTrackingPotentiallyNewToolTip;
 - (void) _toolTipViewDidChangeSuperview:(NSNotification*)notification;
-
 @property (nonatomic, strong) UIView* currentToolTipView;
 @property (nonatomic, strong) UIView* toolTipViewToShow;
+
 @end
 
 
@@ -98,7 +97,6 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
     UIResponder* _firstResponderWhenKeyLost;
     NSUndoManager* _undoManager;
 }
-
 
 #pragma mark Configuring Windows
 
@@ -244,6 +242,7 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
         for (UIGestureRecognizer* recognizer in gestureRecognizers) {
             [recognizer _recognizeTouches:touches withEvent:event];
         }
+
         for (UITouch* touch in touches) {
             UIView* view = touch.view;
             const UITouchPhase phase = touch.phase;
@@ -274,7 +273,6 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
             }
 
         }
-
 		if(touches.count < 1) {
 			[self _stopTrackingPotentiallyNewToolTip];
 			[self _hideCurrentToolTip];
@@ -379,8 +377,9 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
 }
 
 - (void) _hideCurrentToolTip {
-	if(self.currentToolTipView == nil) return;
-
+	if(self.currentToolTipView == nil) {
+        return;
+    }
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
 	[[NSHelpManager sharedHelpManager] removeContextHelpForObject:self.currentToolTipView];
 	NSEvent	*newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
@@ -416,15 +415,15 @@ NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFram
 {
     UIScreenMode* previousMode = [[note userInfo] objectForKey:@"_previousMode"];
     UIScreenMode* newMode = _screen.currentMode;
-
     if (!CGSizeEqualToSize(previousMode.size,newMode.size)) {
         [self _superviewSizeDidChangeFrom:previousMode.size to:newMode.size];
     }
 }
 
 - (void) _showToolTipForView:(UIView*)view {
-	if(view == nil) return;
-    
+	if(view == nil){
+        return;
+    }
 	NSMutableAttributedString* attributedToolTip = [[NSMutableAttributedString alloc] initWithString:view.toolTip];
 	NSRange wholeStringRange = NSMakeRange(0, view.toolTip.length);
 	[attributedToolTip addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:11.0f] range:wholeStringRange];
