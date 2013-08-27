@@ -127,16 +127,10 @@ static NSArray* GestureRecognizersForView(UIView* view)
 - (CGPoint) _convertLocationPoint:(CGPoint)thePoint toView:(UIView*)inView
 {
     UIWindow* window = self.window;
-
-    // The stored location should always be in the coordinate space of the UIScreen that contains the touch's window.
-    // So first convert from the screen to the window:
     CGPoint point = [window convertPoint:thePoint fromWindow:nil];
-
-    // Then convert to the desired location (if any).
     if (inView) {
         point = [inView convertPoint:point fromView:window];
     }
-
     return point;
 }
 
@@ -159,13 +153,6 @@ static NSArray* GestureRecognizersForView(UIView* view)
 {
     NSMutableArray* remainingRecognizers = [_gestureRecognizers mutableCopy];
 
-    // if the view is being removed from this touch, we need to remove/cancel any gesture recognizers that belong to the view
-    // being removed. this kinda feels like the wrong place for this, but the touch itself has a list of potential gesture
-    // recognizers attached to it so an active touch only considers the recongizers that were present at the point the touch
-    // first touched the screen. it could easily have recognizers attached to it from superviews of the view being removed so
-    // we can't just cancel them all. the view itself could cancel its own recognizers, but then it needs a way to remove them
-    // from an active touch so in a sense we're right back where we started. so I figured we might as well just take care of it
-    // here and see what happens.
     for (UIGestureRecognizer* recognizer in _gestureRecognizers) {
         if (recognizer.view == _view) {
             if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
