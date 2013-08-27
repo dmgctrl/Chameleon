@@ -35,7 +35,6 @@
     BOOL _unhandledKeyPressEvent;
 }
 
-
 #pragma mark Getting the Touches for an Event
 
 - (NSSet*) allTouches
@@ -64,6 +63,7 @@
     }
     return touches;
 }
+
 
 #pragma mark Getting the Event Type
 
