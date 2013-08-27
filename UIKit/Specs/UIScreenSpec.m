@@ -8,8 +8,8 @@ describe(@"UIScreen", ^{
         it(@"should be member of right class", ^{
             [[screen should] beKindOfClass:[UIScreen class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"mirroredScreen", ^{
                 it(@"should not be", ^{
                     [[[screen mirroredScreen] should] beNil];
