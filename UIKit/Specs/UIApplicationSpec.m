@@ -8,8 +8,8 @@ describe(@"UIApplication", ^{
         it(@"should be member of right class", ^{
             [[application should] beKindOfClass:[UIApplication class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"delegate", ^{
                 it(@"should be responded to", ^{
                     [[@([application respondsToSelector:@selector(delegate)]) should] beYes];
@@ -99,6 +99,7 @@ describe(@"UIApplication", ^{
                 });
             });
         });
+
         context(@"instance method", ^{
             context(@"isIgnoringInteractionEvents", ^{
                 it(@"should be no", ^{
