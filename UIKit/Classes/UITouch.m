@@ -53,17 +53,17 @@ static NSArray* GestureRecognizersForView(UIView* view)
 
 #pragma mark Getting the Location of Touches
 
-- (CGPoint)locationInView:(UIView*)inView
+- (CGPoint) locationInView:(UIView*)inView
 {
     return [self _convertLocationPoint:_location toView:inView];
 }
 
-- (CGPoint)previousLocationInView:(UIView*)inView
+- (CGPoint) previousLocationInView:(UIView*)inView
 {
     return [self _convertLocationPoint:_previousLocation toView:inView];
 }
 
-- (UIWindow*)window
+- (UIWindow*) window
 {
     return _window;
 }
@@ -74,7 +74,7 @@ static NSArray* GestureRecognizersForView(UIView* view)
 
 #pragma mark NSObject Protocol
 
-- (NSString*)description
+- (NSString*) description
 {
     NSString* phase = @"";
     switch (self.phase) {
@@ -112,7 +112,7 @@ static NSArray* GestureRecognizersForView(UIView* view)
 
 #pragma mark NSObject Overrides
 
-- (id)init
+- (id) init
 {
     if ((self=[super init])) {
         _phase = UITouchPhaseCancelled;
@@ -124,7 +124,7 @@ static NSArray* GestureRecognizersForView(UIView* view)
 
 #pragma mark Private Methods
 
-- (CGPoint)_convertLocationPoint:(CGPoint)thePoint toView:(UIView*)inView
+- (CGPoint) _convertLocationPoint:(CGPoint)thePoint toView:(UIView*)inView
 {
     UIWindow* window = self.window;
 
@@ -140,22 +140,22 @@ static NSArray* GestureRecognizersForView(UIView* view)
     return point;
 }
 
-- (CGPoint)_delta
+- (CGPoint) _delta
 {
     return _delta;
 }
 
-- (_UITouchGesture)_gesture
+- (_UITouchGesture) _gesture
 {
     return _gesture;
 }
 
-- (CGFloat)_magnification
+- (CGFloat) _magnification
 {
     return _magnification;
 }
 
-- (void)_removeFromView
+- (void) _removeFromView
 {
     NSMutableArray* remainingRecognizers = [_gestureRecognizers mutableCopy];
 
@@ -174,18 +174,16 @@ static NSArray* GestureRecognizersForView(UIView* view)
             [remainingRecognizers removeObject:recognizer];
         }
     }
-
     _gestureRecognizers = [remainingRecognizers copy];
-
     _view = nil;
 }
 
-- (CGFloat)_rotation
+- (CGFloat) _rotation
 {
     return _rotation;
 }
 
-- (void)_setDiscreteGesture:(_UITouchGesture)gesture screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount delta:(CGPoint)delta timestamp:(NSTimeInterval)timestamp;
+- (void) _setDiscreteGesture:(_UITouchGesture)gesture screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount delta:(CGPoint)delta timestamp:(NSTimeInterval)timestamp;
 {
     _phase = _UITouchPhaseDiscreteGesture;
     _gesture = gesture;
@@ -197,7 +195,7 @@ static NSArray* GestureRecognizersForView(UIView* view)
     _magnification = 0;
 }
 
-- (void)_setPhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount timestamp:(NSTimeInterval)timestamp;
+- (void) _setPhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount timestamp:(NSTimeInterval)timestamp;
 {
     _phase = phase;
     _gesture = _UITouchGestureUnknown;
@@ -208,33 +206,29 @@ static NSArray* GestureRecognizersForView(UIView* view)
     _magnification = 0;
 }
 
-- (void)_setTouchedView:(UIView*)view
+- (void) _setTouchedView:(UIView*)view
 {
     if (_view != view) {
         _view = view;
     }
-
     if (_window != view.window) {
         _window = view.window;
     }
-
     _gestureRecognizers = [GestureRecognizersForView(_view) copy];
 }
 
-- (void)_setTouchPhaseCancelled
+- (void) _setTouchPhaseCancelled
 {
     _phase = UITouchPhaseCancelled;
 }
 
-- (void)_updateGesture:(_UITouchGesture)gesture screenLocation:(CGPoint)screenLocation delta:(CGPoint)delta rotation:(CGFloat)rotation magnification:(CGFloat)magnification timestamp:(NSTimeInterval)timestamp;
+- (void) _updateGesture:(_UITouchGesture)gesture screenLocation:(CGPoint)screenLocation delta:(CGPoint)delta rotation:(CGFloat)rotation magnification:(CGFloat)magnification timestamp:(NSTimeInterval)timestamp;
 {
     if (!CGPointEqualToPoint(screenLocation, _location)) {
         _previousLocation = _location;
         _location = screenLocation;
     }
-
     _phase = _UITouchPhaseGestureChanged;
-
     _gesture = gesture;
     _delta = delta;
     _rotation = rotation;
@@ -242,13 +236,12 @@ static NSArray* GestureRecognizersForView(UIView* view)
     _timestamp = timestamp;
 }
 
-- (void)_updatePhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation timestamp:(NSTimeInterval)timestamp;
+- (void) _updatePhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation timestamp:(NSTimeInterval)timestamp;
 {
     if (!CGPointEqualToPoint(screenLocation, _location)) {
         _previousLocation = _location;
         _location = screenLocation;
     }
-
     _phase = phase;
     _timestamp = timestamp;
 }
