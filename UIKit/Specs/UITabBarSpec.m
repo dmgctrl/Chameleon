@@ -8,8 +8,8 @@ describe(@"UITabBar", ^{
         it(@"should be member of right class", ^{
             [[tabBar should] beKindOfClass:[UITabBar class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"items", ^{
                 it(@"should be empty", ^{
                     [[@([[tabBar items]count]) should] equal:@(0)];
