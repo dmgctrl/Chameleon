@@ -8,6 +8,7 @@ describe(@"UIPasteboard", ^{
         it(@"should be member of UIPasteboard", ^{
             [[pasteboard should] beKindOfClass:[UIPasteboard class]];
         });
+
         context(@"property", ^{
             context(@"name", ^{
                 it(@"should be", ^{
@@ -75,6 +76,7 @@ describe(@"UIPasteboard", ^{
                 });
             });
         });
+
         context(@"instance method", ^{
             context(@"pasteboardTypes", ^{
                 it(@"should be correct", ^{
@@ -83,6 +85,7 @@ describe(@"UIPasteboard", ^{
             });
         });
     });
+    
     context(@"withUniqueName", ^{
         UIPasteboard* pasteboard = [UIPasteboard generalPasteboard];
         it(@"should exist", ^{
@@ -91,6 +94,7 @@ describe(@"UIPasteboard", ^{
         it(@"should be member of UIPasteboard", ^{
             [[pasteboard should] beKindOfClass:[UIPasteboard class]];
         });
+
         context(@"property", ^{
             context(@"name", ^{
                 it(@"should be correct", ^{
@@ -118,6 +122,7 @@ describe(@"UIPasteboard", ^{
                 });
             });
         });
+
         context(@"instance method", ^{
             context(@"pasteboardTypes", ^{
                 it(@"should be correct", ^{
