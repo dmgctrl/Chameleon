@@ -31,13 +31,18 @@
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIApplicationDelegate.h>
 
+@class UIWindow;
+@class UIApplication;
+@class UILocalNotification;
+@class UIImage;
+
 #pragma mark Constants
 
 typedef enum {
-    UIInterfaceOrientationPortrait           = UIDeviceOrientationPortrait,
+    UIInterfaceOrientationPortrait = UIDeviceOrientationPortrait,
     UIInterfaceOrientationPortraitUpsideDown = UIDeviceOrientationPortraitUpsideDown,
-    UIInterfaceOrientationLandscapeLeft      = UIDeviceOrientationLandscapeRight,
-    UIInterfaceOrientationLandscapeRight     = UIDeviceOrientationLandscapeLeft
+    UIInterfaceOrientationLandscapeLeft = UIDeviceOrientationLandscapeRight,
+    UIInterfaceOrientationLandscapeRight = UIDeviceOrientationLandscapeLeft
 } UIInterfaceOrientation;
 
 typedef enum {
@@ -45,14 +50,9 @@ typedef enum {
     UIInterfaceOrientationMaskLandscapeLeft = (1 << UIInterfaceOrientationLandscapeLeft),
     UIInterfaceOrientationMaskLandscapeRight = (1 << UIInterfaceOrientationLandscapeRight),
     UIInterfaceOrientationMaskPortraitUpsideDown = (1 << UIInterfaceOrientationPortraitUpsideDown),
-    UIInterfaceOrientationMaskLandscape =
-    (UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
-    UIInterfaceOrientationMaskAll =
-    (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
-     UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown),
-    UIInterfaceOrientationMaskAllButUpsideDown =
-    (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
-     UIInterfaceOrientationMaskLandscapeRight),
+    UIInterfaceOrientationMaskLandscape = (UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
+    UIInterfaceOrientationMaskAll = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown),
+    UIInterfaceOrientationMaskAllButUpsideDown = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
 } UIInterfaceOrientationMask;
 
 typedef enum {
@@ -77,10 +77,10 @@ NSString* const UIApplicationStatusBarOrientationUserInfoKey;
 NSString* const UIApplicationStatusBarFrameUserInfoKey;
 
 typedef enum {
-    UIRemoteNotificationTypeNone    = 0,
-    UIRemoteNotificationTypeBadge   = 1 << 0,
-    UIRemoteNotificationTypeSound   = 1 << 1,
-    UIRemoteNotificationTypeAlert   = 1 << 2,
+    UIRemoteNotificationTypeNone = 0,
+    UIRemoteNotificationTypeBadge = 1 << 0,
+    UIRemoteNotificationTypeSound = 1 << 1,
+    UIRemoteNotificationTypeAlert = 1 << 2,
     UIRemoteNotificationTypeNewsstandContentAvailability = 1 << 3
 } UIRemoteNotificationType;
 
@@ -147,13 +147,7 @@ UIKIT_EXTERN NSString* const UIApplicationLaunchOptionsLocationKey;
 (orientation) == UIInterfaceOrientationLandscapeRight)
 
 
-@class UIWindow;
-@class UIApplication;
-@class UILocalNotification;
-@class UIImage;
-
 @interface UIApplication : UIResponder
-
 
 #pragma mark Getting the Application Instance
 
@@ -207,9 +201,9 @@ UIKIT_EXTERN NSString* const UIApplicationLaunchOptionsLocationKey;
 
 @property (nonatomic, readonly) UIApplicationState applicationState;
 @property (nonatomic, readonly) NSTimeInterval backgroundTimeRemaining;
-- (UIBackgroundTaskIdentifier) beginBackgroundTaskWithExpirationHandler:(void (^)(void))handler;
+- (UIBackgroundTaskIdentifier) beginBackgroundTaskWithExpirationHandler:(void(^)(void))handler;
 - (void) endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
-- (BOOL) setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler;
+- (BOOL) setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void(^)(void))keepAliveHandler;
 - (void) clearKeepAliveTimeout;
 
 
@@ -266,7 +260,9 @@ UIKIT_EXTERN NSString* const UIApplicationLaunchOptionsLocationKey;
 
 
 @interface UIApplication(UIApplicationDeprecated)
+
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated __attribute__((deprecated)); // use -setStatusBarHidden:withAnimation:
+
 @end
 
 
