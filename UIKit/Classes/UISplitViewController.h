@@ -44,7 +44,7 @@
 
 #pragma mark Managing the Child View Controllers
 
-@property (nonatomic, copy) NSArray *viewControllers;
+@property (nonatomic, copy) NSArray* viewControllers;
 @property (nonatomic) BOOL presentsWithGesture;
 
 
