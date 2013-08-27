@@ -8,8 +8,8 @@ describe(@"UIToolbar", ^{
         it(@"should be member of right class", ^{
             [[toolbar should] beKindOfClass:[UIToolbar class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"barStyle", ^{
                 it(@"should be default", ^{
                     [[@([toolbar barStyle]) should] equal:@(UIBarStyleDefault)];
