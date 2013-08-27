@@ -29,7 +29,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class UIWindow;
+@class UIView;
+
 #pragma mark Constants
+
 typedef enum {
     UITouchPhaseBegan,
     UITouchPhaseMoved,
@@ -53,23 +57,26 @@ typedef enum {
     _UITouchDiscreteGestureMouseMove    // the mouse moved but wasn't in a gesture or the button was not being held down
 } _UITouchGesture;
 
-@class UIWindow;
-@class UIView;
 
-@interface UITouch : NSObject 
+@interface UITouch : NSObject
 
 #pragma mark Getting the Location of Touches
+
 - (CGPoint) locationInView:(UIView*)inView;
 - (CGPoint) previousLocationInView:(UIView*)inView;
 @property (nonatomic, readonly, strong) UIView* view;
 @property (nonatomic, readonly, strong) UIWindow* window;
 
+
 #pragma mark Getting Touch Attributes
+
 @property (nonatomic, readonly) NSUInteger tapCount;
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic, readonly) UITouchPhase phase;
 
+
 #pragma mark Getting a Touch Object’s Gesture Recognizers
-@property (nonatomic,readonly,copy) NSArray* gestureRecognizers;
+
+@property (nonatomic, readonly, copy) NSArray* gestureRecognizers;
 
 @end
