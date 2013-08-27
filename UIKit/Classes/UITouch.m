@@ -32,16 +32,13 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <Cocoa/Cocoa.h>
 
-
-static NSArray *GestureRecognizersForView(UIView *view)
+static NSArray* GestureRecognizersForView(UIView* view)
 {
-    NSMutableArray *recognizers = [[NSMutableArray alloc] initWithCapacity:0];
-    
+    NSMutableArray* recognizers = [[NSMutableArray alloc] initWithCapacity:0];
     while (view) {
         [recognizers addObjectsFromArray:view.gestureRecognizers];
         view = [view superview];
     }
-    
     return recognizers;
 }
 
@@ -53,8 +50,6 @@ static NSArray *GestureRecognizersForView(UIView *view)
     CGPoint _location;
     CGPoint _previousLocation;
 }
-@synthesize view = _view;
-@synthesize window = _window;
 
 #pragma mark Getting the Location of Touches
 
@@ -63,22 +58,25 @@ static NSArray *GestureRecognizersForView(UIView *view)
     return [self _convertLocationPoint:_location toView:inView];
 }
 
-- (CGPoint)previousLocationInView:(UIView *)inView
+- (CGPoint)previousLocationInView:(UIView*)inView
 {
     return [self _convertLocationPoint:_previousLocation toView:inView];
 }
 
-- (UIWindow *)window
+- (UIWindow*)window
 {
     return _window;
 }
 
+@synthesize view = _view;
+@synthesize window = _window;
+
 
 #pragma mark NSObject Protocol
 
-- (NSString *)description
+- (NSString*)description
 {
-    NSString *phase = @"";
+    NSString* phase = @"";
     switch (self.phase) {
         case UITouchPhaseBegan:
             phase = @"Began";
@@ -126,9 +124,9 @@ static NSArray *GestureRecognizersForView(UIView *view)
 
 #pragma mark Private Methods
 
-- (CGPoint)_convertLocationPoint:(CGPoint)thePoint toView:(UIView *)inView
+- (CGPoint)_convertLocationPoint:(CGPoint)thePoint toView:(UIView*)inView
 {
-    UIWindow *window = self.window;
+    UIWindow* window = self.window;
 
     // The stored location should always be in the coordinate space of the UIScreen that contains the touch's window.
     // So first convert from the screen to the window:
@@ -159,7 +157,7 @@ static NSArray *GestureRecognizersForView(UIView *view)
 
 - (void)_removeFromView
 {
-    NSMutableArray *remainingRecognizers = [_gestureRecognizers mutableCopy];
+    NSMutableArray* remainingRecognizers = [_gestureRecognizers mutableCopy];
 
     // if the view is being removed from this touch, we need to remove/cancel any gesture recognizers that belong to the view
     // being removed. this kinda feels like the wrong place for this, but the touch itself has a list of potential gesture
@@ -168,7 +166,7 @@ static NSArray *GestureRecognizersForView(UIView *view)
     // we can't just cancel them all. the view itself could cancel its own recognizers, but then it needs a way to remove them
     // from an active touch so in a sense we're right back where we started. so I figured we might as well just take care of it
     // here and see what happens.
-    for (UIGestureRecognizer *recognizer in _gestureRecognizers) {
+    for (UIGestureRecognizer* recognizer in _gestureRecognizers) {
         if (recognizer.view == _view) {
             if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
                 recognizer.state = UIGestureRecognizerStateCancelled;
@@ -210,7 +208,7 @@ static NSArray *GestureRecognizersForView(UIView *view)
     _magnification = 0;
 }
 
-- (void)_setTouchedView:(UIView *)view
+- (void)_setTouchedView:(UIView*)view
 {
     if (_view != view) {
         _view = view;
