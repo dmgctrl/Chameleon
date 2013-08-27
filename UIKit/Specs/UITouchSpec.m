@@ -8,6 +8,7 @@ describe(@"UITouch", ^{
         it(@"should be the right class", ^{
             [[touch should] beMemberOfClass:[UITouch class]];
         });
+
         context(@"property", ^{
             context(@"view", ^{
                 it(@"should not be", ^{
