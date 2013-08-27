@@ -8,8 +8,8 @@ describe(@"UIWindow", ^{
         it(@"should be member of right class", ^{
             [[window should] beKindOfClass:[UIWindow class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"windowLevel", ^{
                 it(@"should be Normal", ^{
                     [[@([window windowLevel]) should] equal:@(UIWindowLevelNormal)];
