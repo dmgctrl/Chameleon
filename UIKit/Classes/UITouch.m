@@ -27,9 +27,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITouch+UIPrivate.h"
-#import "UIWindow.h"
-#import "UIGestureRecognizerSubclass.h"
+#import <UIKit/UITouch+UIPrivate.h>
+#import <UIKit/UIWindow.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
 #import <Cocoa/Cocoa.h>
 
 
