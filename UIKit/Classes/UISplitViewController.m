@@ -44,7 +44,7 @@ static const CGFloat SplitterPadding = 3;
     UIView *rightPanel;
 }
 @property (nonatomic, assign) CGFloat leftWidth;
-- (void)addViewControllers:(NSArray *)viewControllers;
+- (void) addViewControllers:(NSArray *)viewControllers;
 @end
 
 @implementation _UISplitViewControllerView
@@ -178,13 +178,40 @@ static const CGFloat SplitterPadding = 3;
     } _delegateHas;
 }
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+#pragma mark Managing the Child View Controllers
+
+- (void) setViewControllers:(NSArray *)newControllers
 {
-    if ((self=[super initWithNibName:nibName bundle:nibBundle])) {
+    assert([newControllers count]==2);
+
+    if (![newControllers isEqualToArray:_viewControllers]) {
+        for (UIViewController *c in _viewControllers) {
+            [c _setParentViewController:nil];
+        }
+        for (UIViewController *c in newControllers) {
+            [c _setParentViewController:self];
+        }
+
+        if ([self isViewLoaded]) {
+            [(_UISplitViewControllerView *)self.view addViewControllers:_viewControllers];
+            for (UIViewController *c in newControllers) {
+                [c viewWillAppear:NO];
+            }
+            for (UIViewController *c in _viewControllers) {
+                if ([c isViewLoaded]) {
+                    [c.view removeFromSuperview];
+                }
+            }
+            for (UIViewController *c in newControllers) {
+                [c viewDidAppear:NO];
+            }
+        }
+        _viewControllers = [newControllers copy];
     }
-    return self;
 }
 
+
+#pragma mark Accessing the Delegate Object
 
 - (void)setDelegate:(id <UISplitViewControllerDelegate>)newDelegate
 {
@@ -194,46 +221,20 @@ static const CGFloat SplitterPadding = 3;
     _delegateHas.willShowViewController = [_delegate respondsToSelector:@selector(splitViewController:willShowViewController:invalidatingBarButtonItem:)];
 }
 
+
+#pragma mark UIViewController Overrides
+
+- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+{
+    if ((self=[super initWithNibName:nibName bundle:nibBundle])) {
+    }
+    return self;
+}
+
 - (void)loadView
 {
     self.view = [(_UISplitViewControllerView *)[_UISplitViewControllerView alloc] initWithFrame:CGRectMake(0,0,1024,768)];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-}
-
-- (void)setViewControllers:(NSArray *)newControllers
-{
-    assert([newControllers count]==2);
-    
-    if (![newControllers isEqualToArray:_viewControllers]) {
-        for (UIViewController *c in _viewControllers) {
-            [c _setParentViewController:nil];
-        }
-
-        for (UIViewController *c in newControllers) {
-            [c _setParentViewController:self];
-        }
-        
-        if ([self isViewLoaded]) {
-
-            [(_UISplitViewControllerView *)self.view addViewControllers:_viewControllers];
-
-            for (UIViewController *c in newControllers) {
-                [c viewWillAppear:NO];
-            }
-            
-            for (UIViewController *c in _viewControllers) {
-                if ([c isViewLoaded]) {
-                    [c.view removeFromSuperview];
-                }
-            }
-
-            for (UIViewController *c in newControllers) {
-                [c viewDidAppear:NO];
-            }
-        }
-
-        _viewControllers = [newControllers copy];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
