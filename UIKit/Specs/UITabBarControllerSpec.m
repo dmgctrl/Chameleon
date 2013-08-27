@@ -8,8 +8,8 @@ describe(@"UITabBarController", ^{
         it(@"should be member of right class", ^{
             [[tabBarController should] beKindOfClass:[UITabBarController class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"tabBar", ^{
                 it(@"should be", ^{
                     [[[tabBarController tabBar] should] beNonNil];
