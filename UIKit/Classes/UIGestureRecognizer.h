@@ -30,6 +30,11 @@
 #import <Foundation/Foundation.h>
 
 @class UIView;
+@class UIGestureRecognizer;
+@class UITouch;
+@class UIEvent;
+
+#pragma mark Constants
 
 typedef enum {
     UIGestureRecognizerStatePossible,
@@ -41,19 +46,18 @@ typedef enum {
     UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded
 } UIGestureRecognizerState;
 
-@class UIGestureRecognizer;
-@class UITouch;
-@class UIEvent;
 
 @protocol UIGestureRecognizerDelegate <NSObject>
+
 @optional
 - (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer;
 - (BOOL) gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch;
 - (BOOL) gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer;
+
 @end
 
-@interface UIGestureRecognizer : NSObject
 
+@interface UIGestureRecognizer : NSObject
 
 #pragma mark Initializing a Gesture Recognizer
 
