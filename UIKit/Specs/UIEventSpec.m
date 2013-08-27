@@ -8,6 +8,7 @@ describe(@"UIEvent", ^{
         it(@"should be member of right class", ^{
             [[event should] beKindOfClass:[UIEvent class]];
         });
+
         context(@"property", ^{
             context(@"timestamp", ^{
                 it(@"should equal 0", ^{
@@ -25,6 +26,7 @@ describe(@"UIEvent", ^{
                 });
             });
         });
+
         context(@"instance method", ^{
             context(@"allTouches", ^{
                 it(@"", ^{
