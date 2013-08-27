@@ -91,7 +91,6 @@
 
 - (CGPoint) locationInView:(UIView*)view
 {
-
     CGFloat x = 0;
     CGFloat y = 0;
     CGFloat k = 0;
@@ -102,7 +101,6 @@
         y += p.y;
         k++;
     }
-
     if (k > 0) {
         return CGPointMake(x/k, y/k);
     } else {
@@ -146,6 +144,7 @@
         }
     }
     NSAssert2((transition != NULL), @"invalid state transition from %d to %d", _state, state);
+
     if (transition) {
         _state = transition->toState;
         if (transition->shouldNotify) {
@@ -278,35 +277,27 @@
                 case UITouchPhaseBegan:
                     [self touchesBegan:touches withEvent:event];
                     break;
-
                 case UITouchPhaseMoved:
                     [self touchesMoved:touches withEvent:event];
                     break;
-
                 case UITouchPhaseEnded:
                     [self touchesEnded:touches withEvent:event];
                     break;
-
                 case UITouchPhaseCancelled:
                     [self touchesCancelled:touches withEvent:event];
                     break;
-
                 case _UITouchPhaseGestureBegan:
                     [self _gesturesBegan:touches withEvent:event];
                     break;
-
                 case _UITouchPhaseGestureChanged:
                     [self _gesturesMoved:touches withEvent:event];
                     break;
-
                 case _UITouchPhaseGestureEnded:
                     [self _gesturesEnded:touches withEvent:event];
                     break;
-
                 case _UITouchPhaseDiscreteGesture:
                     [self _discreteGestures:touches withEvent:event];
                     break;
-
                 default:
                     break;
             }
