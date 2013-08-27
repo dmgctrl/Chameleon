@@ -30,6 +30,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKitDefines.h>
 
+@class UIScreenMode;
+@class CADisplayLink;
+
 #pragma mark Constants
 
 typedef enum {
@@ -46,8 +49,6 @@ UIKIT_EXTERN NSString* const UIScreenDidDisconnectNotification;
 UIKIT_EXTERN NSString* const UIScreenModeDidChangeNotification;
 UIKIT_EXTERN NSString* const UIScreenBrightnessDidChangeNotification;
 
-@class UIScreenMode;
-@class CADisplayLink;
 
 @interface UIScreen : NSObject
 
