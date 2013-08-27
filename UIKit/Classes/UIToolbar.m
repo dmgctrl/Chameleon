@@ -112,7 +112,6 @@
                  ];
             }
         }
-
         [_toolbarItems removeAllObjects];
 
         for (UIBarButtonItem* item in newItems) {

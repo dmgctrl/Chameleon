@@ -31,7 +31,6 @@
 #import <UIKit/UIInterface.h>
 #import <UIKIt/UIBarButtonItem.h>
 
-
 #pragma mark Constants
 
 typedef enum {
@@ -42,7 +41,6 @@ typedef enum {
 
 
 @interface UIToolbar : UIView
-
 
 #pragma mark Configuring the Toolbar
 
