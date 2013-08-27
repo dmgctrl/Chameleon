@@ -10,9 +10,14 @@ describe(@"UISplitViewController", ^{
         });
 
         context(@"property", ^{
-            context(@"", ^{
-                it(@"should ", ^{
-
+            context(@"viewControllers", ^{
+                it(@"should be empty", ^{
+                    [[@([[splitViewController viewControllers] count]) should] equal:@(0)];
+                });
+            });
+            context(@"presentsWithGesture", ^{
+                it(@"should be yes", ^{
+                    [[@([splitViewController presentsWithGesture]) should] beYes];
                 });
             });
         });
