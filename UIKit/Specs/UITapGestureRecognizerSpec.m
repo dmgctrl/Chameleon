@@ -8,8 +8,8 @@ describe(@"UITapGestureRecognizer", ^{
         it(@"should be member of right class", ^{
             [[tapGestureRecognizer should] beKindOfClass:[UITapGestureRecognizer class]];
         });
-        context(@"property", ^{
 
+        context(@"property", ^{
             context(@"numberOfTapsRequired", ^{
                 it(@"should ", ^{
                     [[@([tapGestureRecognizer numberOfTapsRequired]) should] equal:@(1)];
