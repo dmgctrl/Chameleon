@@ -89,7 +89,7 @@
 - (id) initWithFrame:(CGRect)rect
 {
     if ((self = [super initWithFrame:rect])) {
-        rect.size.height = TABBAR_HEIGHT; // tabbar is always fixed
+        rect.size.height = TABBAR_HEIGHT;
         _selectedItemIndex = -1;
         UIImage* backgroundImage = [UIImage _popoverBackgroundImage];
         UIImageView* backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
