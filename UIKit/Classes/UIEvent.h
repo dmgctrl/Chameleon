@@ -29,6 +29,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class UITouch;
+@class UIWindow;
+@class UIView;
+@class UIGestureRecognizer;
+
+#pragma mark Constants
+
 typedef enum {
     UIEventTypeTouches,
     UIEventTypeMotion,
@@ -50,13 +57,8 @@ typedef enum {
     UIEventSubtypeRemoteControlEndSeekingForward    = 109,
 } UIEventSubtype;
 
-@class UITouch;
-@class UIWindow;
-@class UIView;
-@class UIGestureRecognizer;
 
-@interface UIEvent : NSObject 
-
+@interface UIEvent : NSObject
 
 #pragma mark Getting the Touches for an Event
 
