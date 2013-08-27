@@ -1,4 +1,4 @@
-#import "UITableViewHeaderFooterView.h"
+#import <UIKit/UITableViewHeaderFooterView.h>
 
 @implementation UITableViewHeaderFooterView
 
