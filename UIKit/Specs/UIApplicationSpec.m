@@ -22,7 +22,7 @@ describe(@"UIApplication", ^{
             });
             context(@"windows", ^{
                 it(@"should be one", ^{
-                    [[@([[application windows] count]) should] equal:@(1)];
+                    [[@([[application windows] count]) should] equal:@(2)];
                 });
                 it(@"first of which should be key", ^{
                     [[@([[application windows][0]isEqual:[application keyWindow]]) should] beYes];
