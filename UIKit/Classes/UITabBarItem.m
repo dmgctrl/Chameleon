@@ -33,12 +33,22 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITabBarItem.h"
-#import "UIImage.h"
+#import <UIKit/UITabBarItem.h>
+#import <UIKit/UIImage.h>
 
-@implementation UITabBarItem 
 
-- (id)initWithTitle:(NSString *)title image:(UIImage *)image tag:(NSInteger)tag
+@implementation UITabBarItem
+
+#pragma mark Initializing an Item
+
+- (id) initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag
+{
+    if ((self = [super init])) {
+    }
+    return self;
+}
+
+- (id) initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag
 {
     if ((self = [super init])) {
         self.title = title;
@@ -47,11 +57,41 @@
     return self;
 }
 
-- (id)initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag
+
+#pragma mark Managing the Finished Selected Image
+
+- (UIImage*) finishedSelectedImage
 {
-    if ((self = [super init])) {
-    }
-    return self;
+#warning implement -finishedSelectedImage
+    UIKIT_STUB_W_RETURN(@"-finishedSelectedImage");
+}
+
+- (UIImage*) finishedUnselectedImage
+{
+#warning implement -finishedUnselectedImage
+    UIKIT_STUB_W_RETURN(@"-finishedUnselectedImage");
+}
+
+- (void) setFinishedSelectedImage:(UIImage*)selectedImage withFinishedUnselectedImage:(UIImage*)unselectedImage
+{
+#warning implement -setFinishedSelectedImage:withFinishedUnselectedImage:
+    UIKIT_STUB(@"-setFinishedSelectedImage:withFinishedUnselectedImage:");
+}
+
+
+#pragma mark Customizing Appearance
+
+- (UIOffset) titlePositionAdjustment
+{
+#warning implement -titlePositionAdjustment
+    UIKIT_STUB(@"-titlePositionAdjustment");
+    return UIOffsetMake(CGFLOAT_MAX, CGFLOAT_MAX);
+}
+
+- (void) setTitlePositionAdjustment:(UIOffset)adjustment
+{
+#warning implement -setTitlePositionAdjustment:
+    UIKIT_STUB(@"-setTitlePositionAdjustment:");
 }
 
 @end

@@ -283,6 +283,8 @@
 		3AC20B97179606AD0070E759 /* UIPrintFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B95179606A80070E759 /* UIPrintFormatter.m */; };
 		3AD92FF017CBA9230060B655 /* UITabBarControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FEF17CBA9230060B655 /* UITabBarControllerSpec.m */; };
 		3AD92FF117CBA9230060B655 /* UITabBarControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FEF17CBA9230060B655 /* UITabBarControllerSpec.m */; };
+		3AD92FFA17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */; };
+		3AD92FFB17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
 		66371E3913674EF1007B9873 /* <UIBarButtonSystemItem> add.png in Resources */ = {isa = PBXBuildFile; fileRef = 66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */; };
@@ -842,6 +844,7 @@
 		3AC20B94179606A50070E759 /* UIPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPrintFormatter.h; sourceTree = "<group>"; };
 		3AC20B95179606A80070E759 /* UIPrintFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPrintFormatter.m; sourceTree = "<group>"; };
 		3AD92FEF17CBA9230060B655 /* UITabBarControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarControllerSpec.m; sourceTree = "<group>"; };
+		3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarItemSpec.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
 		66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIBarButtonSystemItem> add.png"; path = "Resources/<UIBarButtonSystemItem> add.png"; sourceTree = "<group>"; };
@@ -1751,14 +1754,6 @@
 			name = UITableViewController;
 			sourceTree = "<group>";
 		};
-		3AD92FED17CBA8B90060B655 /* UITabBarController */ = {
-			isa = PBXGroup;
-			children = (
-				3AD92FEF17CBA9230060B655 /* UITabBarControllerSpec.m */,
-			);
-			name = UITabBarController;
-			sourceTree = "<group>";
-		};
 		3A9BDA9B17C3C4D4006C3FAC /* UIGestureRecognizer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1805,6 +1800,22 @@
 				3AA7B72A17C6B242000F51EB /* UITapGestureRecognizerSpec.m */,
 			);
 			name = UITapGestureRecognizer;
+			sourceTree = "<group>";
+		};
+		3AD92FED17CBA8B90060B655 /* UITabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				3AD92FEF17CBA9230060B655 /* UITabBarControllerSpec.m */,
+			);
+			name = UITabBarController;
+			sourceTree = "<group>";
+		};
+		3AD92FF717CBCE2E0060B655 /* UITabBarItem */ = {
+			isa = PBXGroup;
+			children = (
+				3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */,
+			);
+			name = UITabBarItem;
 			sourceTree = "<group>";
 		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
@@ -1936,6 +1947,7 @@
 				3A31163417C8198B00273687 /* UITabBar */,
 				3AD92FED17CBA8B90060B655 /* UITabBarController */,
 				3A1A396C17822D7700644CCB /* UITableView */,
+				3AD92FF717CBCE2E0060B655 /* UITabBarItem */,
 				3A1A397117834EA400644CCB /* UITableViewCell */,
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
 				3AA7B72817C6B1FD000F51EB /* UITapGestureRecognizer */,
@@ -2706,6 +2718,7 @@
 				3A31163317C7E14600273687 /* UITableViewHeaderFooterViewSpec.m in Sources */,
 				3A31163817C819C200273687 /* UITabBarSpec.m in Sources */,
 				3AD92FF117CBA9230060B655 /* UITabBarControllerSpec.m in Sources */,
+				3AD92FFB17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */,
 				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */,
@@ -2756,6 +2769,7 @@
 				3A31163217C7E14600273687 /* UITableViewHeaderFooterViewSpec.m in Sources */,
 				3A31163717C819C200273687 /* UITabBarSpec.m in Sources */,
 				3AD92FF017CBA9230060B655 /* UITabBarControllerSpec.m in Sources */,
+				3AD92FFA17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */,
 				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
