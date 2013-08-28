@@ -61,6 +61,11 @@ typedef enum {
     UIBarButtonItemStyleDone,
 } UIBarButtonItemStyle;
 
+typedef enum {
+    UIBarMetricsDefault,
+    UIBarMetricsLandscapePhone,
+} UIBarMetrics;
+
 @class  UIImage;
 @class UIView;
 
