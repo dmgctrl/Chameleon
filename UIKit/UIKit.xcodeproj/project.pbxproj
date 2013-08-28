@@ -254,6 +254,8 @@
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
 		3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
 		3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
+		3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60402517BC10EF007EE590 /* UITouchSpec.m */; };
+		3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60402517BC10EF007EE590 /* UITouchSpec.m */; };
 		3A6B0B7717957E06006F61FD /* UIControlSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B0B7517957E06006F61FD /* UIControlSpec.m */; };
 		3A7E65AD1784C7AE00218CD7 /* UICollectionViewCellSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */; };
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
@@ -794,6 +796,7 @@
 		3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCell.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
 		3A5A60521799A34600E633C9 /* UIResponderSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponderSpec.m; sourceTree = "<group>"; };
+		3A60402517BC10EF007EE590 /* UITouchSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITouchSpec.m; sourceTree = "<group>"; };
 		3A6B0B7517957E06006F61FD /* UIControlSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIControlSpec.m; sourceTree = "<group>"; };
 		3A7E65AB1784C7AE00218CD7 /* UICollectionViewCellSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCellSpec.m; sourceTree = "<group>"; };
 		3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableViewSpec.m; sourceTree = "<group>"; };
@@ -1619,6 +1622,14 @@
 			name = UIResponder;
 			sourceTree = "<group>";
 		};
+		3A60402317BC10AC007EE590 /* UITouch */ = {
+			isa = PBXGroup;
+			children = (
+				3A60402517BC10EF007EE590 /* UITouchSpec.m */,
+			);
+			name = UITouch;
+			sourceTree = "<group>";
+		};
 		3A6B0B7317957D92006F61FD /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1801,6 +1812,7 @@
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
 				3A518084177CDB3A00C9CF46 /* UITextField */,
 				3A1A39661781CB4600644CCB /* UITextView */,
+				3A60402317BC10AC007EE590 /* UITouch */,
 				3A1A397B1784719F00644CCB /* UIView */,
 				3A7E65D3178602E700218CD7 /* UIViewController */,
 				3A7E65C91785CAD500218CD7 /* UIWebView */,
@@ -2557,6 +2569,7 @@
 				F94CAD7B179998B900A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2595,6 +2608,7 @@
 				F94CAD791799983100A560E8 /* UICollectionViewSpec.m in Sources */,
 				F94CAD7C1799998C00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
+				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
