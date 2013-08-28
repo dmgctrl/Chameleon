@@ -32,22 +32,63 @@
 @class UIImage;
 @class UIColor;
 
-@interface UIPasteboard : NSObject 
+@interface UIPasteboard : NSObject
 
-+ (UIPasteboard *)generalPasteboard;
+#pragma mark Getting and Removing Pasteboards
 
-@property (nonatomic,copy) NSURL *URL;
-@property (nonatomic,copy) NSArray *URLs;
-@property (nonatomic,copy) NSString *string;
-@property (nonatomic,copy) NSArray *strings;
-@property (nonatomic, copy) UIImage *image;
-@property (nonatomic, copy) NSArray *images;
-@property (nonatomic, copy) UIColor *color;
-@property (nonatomic, copy) NSArray *colors;
-@property (nonatomic, copy) NSArray *items;
++ (UIPasteboard*) generalPasteboard;
++ (UIPasteboard*) pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create;
++ (UIPasteboard*) pasteboardWithUniqueName;
++ (void) removePasteboardWithName:(NSString*)pasteboardName;
 
-- (void)addItems:(NSArray *)items;
-- (void)setData:(NSData *)data forPasteboardType:(NSString *)pasteboardType;
-- (void)setValue:(id)value forPasteboardType:(NSString *)pasteboardType;
+
+#pragma mark Getting and Setting Pasteboard Attributes
+
+@property (readonly, nonatomic) NSString* name;
+@property (getter=isPersistent, nonatomic) BOOL persistent;
+@property (readonly, nonatomic) NSInteger changeCount;
+
+
+#pragma mark Determining Types of Single Pasteboard Items
+
+- (NSArray*) pasteboardTypes;
+- (BOOL) containsPasteboardTypes:(NSArray*)pasteboardTypes;
+
+
+#pragma mark Getting and Setting Single Pasteboard Items
+
+- (NSData*) dataForPasteboardType:(NSString*)pasteboardType;
+- (id) valueForPasteboardType:(NSString*)pasteboardType;
+- (void) setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType;
+- (void) setValue:(id)value forPasteboardType:(NSString*)pasteboardType;
+
+
+#pragma mark Determining the Types of Multiple Pasteboard Items
+
+@property (readonly, nonatomic) NSInteger numberOfItems;
+- (NSArray*) pasteboardTypesForItemSet:(NSIndexSet*)itemSet;
+- (NSIndexSet*) itemSetWithPasteboardTypes:(NSArray*)pasteboardTypes;
+- (BOOL) containsPasteboardTypes:(NSArray*)pasteboardTypes inItemSet:(NSIndexSet*)itemSet;
+
+
+#pragma mark Getting and Setting Multiple Pasteboard Items
+
+@property (nonatomic, copy) NSArray* items;
+- (NSArray*) dataForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet;
+- (NSArray*) valuesForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet;
+- (void) addItems:(NSArray*)items;
+
+
+#pragma mark Getting and Setting Pasteboard Items of Standard Data Types
+
+@property (nonatomic, copy) NSString* string;
+@property (nonatomic, copy) NSArray* strings;
+@property (nonatomic, copy) UIImage* image;
+@property (nonatomic, copy) NSArray* images;
+@property (nonatomic, copy) NSURL* URL;
+@property (nonatomic, copy) NSArray* URLs;
+@property (nonatomic, copy) UIColor* color;
+@property (nonatomic, copy) NSArray* colors;
+
 
 @end
