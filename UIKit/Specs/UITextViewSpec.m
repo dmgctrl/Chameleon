@@ -893,6 +893,66 @@ describe(@"UITextView", ^{
             });
         });
 
+        context(@"marked text", ^{
+            NSString* newText = @"taco";
+            context(@"not set", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                context(@"range", ^{
+                    it(@"should be nil", ^{
+                        [[[markedTextView markedTextRange] should] beNil];
+                    });
+                });
+                context(@"style", ^{
+                    it(@"should be nil", ^{
+                        [[[markedTextView markedTextStyle] should] beNil];
+                    });
+                });
+            });
+            context(@"set once", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
+                UITextRange* markedTextRange = [markedTextView markedTextRange];
+                NSDictionary* selectedTextStyleDict = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"UITextInputTextBackgroundColorKey",
+                                                       [UIColor blackColor], @"UITextInputTextColorKey",
+                                                       [markedTextView font], @"UITextInputTextFontKey",
+                                                       nil];
+                it(@"should insert", ^{
+                    [[[markedTextView text] should] equal:newText];
+                });
+                it(@"style should be correct", ^{
+                    [[markedTextView markedTextStyle] isEqualToDictionary:selectedTextStyleDict];
+                });
+                it(@"should have correct start", ^{
+                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:[markedTextView beginningOfDocument]]) should] equal:@(NSOrderedSame)];
+                });
+                it(@"should have correct end", ^{
+                    [[@([markedTextView comparePosition:[markedTextRange end] toPosition:[markedTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
+                });
+            });
+            context(@"set once then unmarked", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
+                [markedTextView unmarkText];
+                it(@"should have no range", ^{
+                    [[[markedTextView markedTextRange] should] beNil];
+                });
+            });
+            context(@"set twice", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setMarkedText:@"0123456789" selectedRange:NSMakeRange(0, 0)];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 0)];
+                it(@"have second marked text inserted", ^{
+                    [[[markedTextView text] should] equal:[text stringByAppendingString:newText]];
+                });
+            });
+        });
+
         context(@"Selection", ^{
             NSString* selectionText = @"The quick brown fox /n/njumped over the lazy dog.";
             context(@"entire document", ^{
