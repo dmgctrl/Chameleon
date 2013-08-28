@@ -46,6 +46,58 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     UIButton* _thumbView;
 }
 
+- (void) setValue:(float)value animated:(BOOL)animated
+{
+#warning implement -setValue:animated:
+    UIKIT_STUB(@"-setValue:animated:");
+}
+
+- (UIImage*) minimumTrackImageForState:(UIControlState)state
+{
+#warning implement -minimumTrackImageForState:
+    UIKIT_STUB_W_RETURN(@"-minimumTrackImageForState:");
+}
+
+- (UIImage*) maximumTrackImageForState:(UIControlState)state
+{
+#warning implement -maximumTrackImageForState:
+    UIKIT_STUB_W_RETURN(@"-maximumTrackImageForState:");
+}
+
+- (UIImage*) thumbImageForState:(UIControlState)state
+{
+#warning implement -thumbImageForState:
+    UIKIT_STUB_W_RETURN(@"-thumbImageForState:");
+}
+
+- (CGRect) maximumValueImageRectForBounds:(CGRect)bounds
+{
+#warning implement -maximumValueImageRectForBounds:
+    UIKIT_STUB(@"-maximumValueImageRectForBounds:");
+    return CGRectZero;
+}
+
+- (CGRect) minimumValueImageRectForBounds:(CGRect)bounds
+{
+#warning implement -minimumValueImageRectForBounds:
+    UIKIT_STUB(@"-minimumValueImageRectForBounds:");
+    return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge);
+}
+
+- (CGRect) trackRectForBounds:(CGRect)bounds
+{
+#warning implement -trackRectForBounds:
+    UIKIT_STUB(@"-trackRectForBounds:");
+return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge);
+}
+
+- (CGRect) thumbRectForBounds:(CGRect)bounds trackRect:(CGRect)rect value:(float)value
+{
+#warning implement -thumbRectForBounds:trackRect:value:
+    UIKIT_STUB(@"-thumbRectForBounds:trackRect:value:");
+    return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge);
+}
+
 - (void) _commonInitForUISlider
 {
     _continuous = YES;
