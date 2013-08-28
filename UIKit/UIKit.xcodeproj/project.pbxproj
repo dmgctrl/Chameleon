@@ -289,6 +289,8 @@
 		3AD9300017CBE8CC0060B655 /* UISwitchSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */; };
 		3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */; };
 		3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */; };
+		3AD9300917CC04160060B655 /* UIStoryboardSegueSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300817CC04160060B655 /* UIStoryboardSegueSpec.m */; };
+		3AD9300A17CC04160060B655 /* UIStoryboardSegueSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300817CC04160060B655 /* UIStoryboardSegueSpec.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
 		66371E3913674EF1007B9873 /* <UIBarButtonSystemItem> add.png in Resources */ = {isa = PBXBuildFile; fileRef = 66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */; };
@@ -851,6 +853,7 @@
 		3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarItemSpec.m; sourceTree = "<group>"; };
 		3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISwitchSpec.m; sourceTree = "<group>"; };
 		3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISwipeGestureRecognizerSpec.m; sourceTree = "<group>"; };
+		3AD9300817CC04160060B655 /* UIStoryboardSegueSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardSegueSpec.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
 		66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIBarButtonSystemItem> add.png"; path = "Resources/<UIBarButtonSystemItem> add.png"; sourceTree = "<group>"; };
@@ -1760,21 +1763,6 @@
 			name = UITableViewController;
 			sourceTree = "<group>";
 		};
-		3AD92FFC17CBE8A20060B655 /* UISwitch */ = {
-			isa = PBXGroup;
-			children = (
-				3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */,
-			);
-			name = UISwitch;
-		};
-		3AD9300117CBF8EC0060B655 /* UISwipeGestureRecognizer */ = {
-			isa = PBXGroup;
-			children = (
-				3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */,
-			);
-			name = UISwipeGestureRecognizer;
-			sourceTree = "<group>";
-		};
 		3A9BDA9B17C3C4D4006C3FAC /* UIGestureRecognizer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1837,6 +1825,30 @@
 				3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */,
 			);
 			name = UITabBarItem;
+			sourceTree = "<group>";
+		};
+		3AD92FFC17CBE8A20060B655 /* UISwitch */ = {
+			isa = PBXGroup;
+			children = (
+				3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */,
+			);
+			name = UISwitch;
+			sourceTree = "<group>";
+		};
+		3AD9300117CBF8EC0060B655 /* UISwipeGestureRecognizer */ = {
+			isa = PBXGroup;
+			children = (
+				3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */,
+			);
+			name = UISwipeGestureRecognizer;
+			sourceTree = "<group>";
+		};
+		3AD9300617CC03D90060B655 /* UIStoryboardSegue */ = {
+			isa = PBXGroup;
+			children = (
+				3AD9300817CC04160060B655 /* UIStoryboardSegueSpec.m */,
+			);
+			name = UIStoryboardSegue;
 			sourceTree = "<group>";
 		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
@@ -1964,6 +1976,7 @@
 				3AA7B71217C565A8000F51EB /* UIScreen */,
 				3A1A397617837C6D00644CCB /* UIScrollView */,
 				F97674921769431C0073489E /* UIStoryboard */,
+				3AD9300617CC03D90060B655 /* UIStoryboardSegue */,
 				F98A10AA1773754000BF8586 /* UIStringDrawing */,
 				3A31163417C8198B00273687 /* UITabBar */,
 				3AD92FED17CBA8B90060B655 /* UITabBarController */,
@@ -2744,6 +2757,7 @@
 				3AD92FFB17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */,
 				3AD9300017CBE8CC0060B655 /* UISwitchSpec.m in Sources */,
 				3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
+				3AD9300A17CC04160060B655 /* UIStoryboardSegueSpec.m in Sources */,
 				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */,
@@ -2797,6 +2811,7 @@
 				3AD92FFA17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */,
 				3AD92FFF17CBE8CC0060B655 /* UISwitchSpec.m in Sources */,
 				3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
+				3AD9300917CC04160060B655 /* UIStoryboardSegueSpec.m in Sources */,
 				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
