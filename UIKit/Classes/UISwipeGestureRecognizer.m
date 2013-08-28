@@ -27,12 +27,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UISwipeGestureRecognizer.h"
-#import "UIGestureRecognizerSubclass.h"
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 @implementation UISwipeGestureRecognizer 
 
-- (id)initWithTarget:(id)target action:(SEL)action
+- (id) initWithTarget:(id)target action:(SEL)action
 {
     if ((self=[super initWithTarget:target action:action])) {
         _direction = UISwipeGestureRecognizerDirectionRight;

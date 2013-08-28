@@ -287,6 +287,8 @@
 		3AD92FFB17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */; };
 		3AD92FFF17CBE8CC0060B655 /* UISwitchSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */; };
 		3AD9300017CBE8CC0060B655 /* UISwitchSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */; };
+		3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */; };
+		3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
 		66371E3913674EF1007B9873 /* <UIBarButtonSystemItem> add.png in Resources */ = {isa = PBXBuildFile; fileRef = 66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */; };
@@ -848,6 +850,7 @@
 		3AD92FEF17CBA9230060B655 /* UITabBarControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarControllerSpec.m; sourceTree = "<group>"; };
 		3AD92FF917CBCE6D0060B655 /* UITabBarItemSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarItemSpec.m; sourceTree = "<group>"; };
 		3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISwitchSpec.m; sourceTree = "<group>"; };
+		3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISwipeGestureRecognizerSpec.m; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
 		66371E3813674EF1007B9873 /* <UIBarButtonSystemItem> add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "<UIBarButtonSystemItem> add.png"; path = "Resources/<UIBarButtonSystemItem> add.png"; sourceTree = "<group>"; };
@@ -1763,6 +1766,13 @@
 				3AD92FFE17CBE8CC0060B655 /* UISwitchSpec.m */,
 			);
 			name = UISwitch;
+		};
+		3AD9300117CBF8EC0060B655 /* UISwipeGestureRecognizer */ = {
+			isa = PBXGroup;
+			children = (
+				3AD9300317CBF9320060B655 /* UISwipeGestureRecognizerSpec.m */,
+			);
+			name = UISwipeGestureRecognizer;
 			sourceTree = "<group>";
 		};
 		3A9BDA9B17C3C4D4006C3FAC /* UIGestureRecognizer */ = {
@@ -1958,6 +1968,7 @@
 				3A31163417C8198B00273687 /* UITabBar */,
 				3AD92FED17CBA8B90060B655 /* UITabBarController */,
 				3AD92FFC17CBE8A20060B655 /* UISwitch */,
+				3AD9300117CBF8EC0060B655 /* UISwipeGestureRecognizer */,
 				3A1A396C17822D7700644CCB /* UITableView */,
 				3AD92FF717CBCE2E0060B655 /* UITabBarItem */,
 				3A1A397117834EA400644CCB /* UITableViewCell */,
@@ -2732,6 +2743,7 @@
 				3AD92FF117CBA9230060B655 /* UITabBarControllerSpec.m in Sources */,
 				3AD92FFB17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */,
 				3AD9300017CBE8CC0060B655 /* UISwitchSpec.m in Sources */,
+				3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
 				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */,
@@ -2784,6 +2796,7 @@
 				3AD92FF017CBA9230060B655 /* UITabBarControllerSpec.m in Sources */,
 				3AD92FFA17CBCE6D0060B655 /* UITabBarItemSpec.m in Sources */,
 				3AD92FFF17CBE8CC0060B655 /* UISwitchSpec.m in Sources */,
+				3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
 				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
