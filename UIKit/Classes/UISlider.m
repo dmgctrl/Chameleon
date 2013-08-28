@@ -27,12 +27,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UISlider.h"
-#import "UIImage+UIPrivate.h"
-#import "UIButton.h"
-#import "UIColor.h"
-#import "UITouch.h"
-#import "UIImageView.h"
+#import <UIKit/UISlider.h>
+#import <UIKit/UIImage+UIPrivate.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIImageView.h>
 #import <QuartzCore/QuartzCore.h>
 
 static NSString* const kUIValueKey = @"UIValue";
