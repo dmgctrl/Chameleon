@@ -263,8 +263,8 @@
 		3A7E65B21784CF3F00218CD7 /* UICollectionReusableViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65B01784CF3F00218CD7 /* UICollectionReusableViewSpec.m */; };
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
+		3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */ = {isa = PBXBuildFile; };
 		3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */; };
-		3A9BDA9F17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDA9D17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m */; };
 		3AA7B71617C565CF000F51EB /* UIScreenSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA7B71417C565CF000F51EB /* UIScreenSpec.m */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
@@ -377,6 +377,11 @@
 		F93D770517953F930073B778 /* _UITextInteractionAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770317953F930073B778 /* _UITextInteractionAssistant.h */; };
 		F93D770617953F930073B778 /* _UITextInteractionAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = F93D770417953F930073B778 /* _UITextInteractionAssistant.m */; };
 		F93D770817954E3A0073B778 /* NSParagraphStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = F93D770717954E3A0073B778 /* NSParagraphStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F940058317CE6E0A00D77814 /* UIPasteboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */; };
+		F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F940058417CE6E4200D77814 /* UIGestureRecognizerSpec.m */; };
+		F940058617CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F940058417CE6E4200D77814 /* UIGestureRecognizerSpec.m */; };
+		F940058717CE6E5700D77814 /* UIEventSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */; };
+		F940058817CE6E5800D77814 /* UIEventSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */; };
 		F947AF14176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */; };
 		F947AF15176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */; };
 		F947AF18176F5E060057FC9A /* UIStoryboardPushSegue.h in Headers */ = {isa = PBXBuildFile; fileRef = F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */; };
@@ -810,8 +815,8 @@
 		3A7E65CB1785CB0600218CD7 /* UIWebViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIWebViewSpec.m; sourceTree = "<group>"; };
 		3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewControllerSpec.m; sourceTree = "<group>"; };
 		3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewControllerSpec.m; sourceTree = "<group>"; };
-		3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPasteboardSpec.m; sourceTree = "<group>"; };
 		3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIEventSpec.m; sourceTree = "<group>"; };
+		3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPasteboardSpec.m; sourceTree = "<group>"; };
 		3AA7B71417C565CF000F51EB /* UIScreenSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScreenSpec.m; sourceTree = "<group>"; };
 		3AC20B881795E6640070E759 /* UICollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionReusableView.h; sourceTree = "<group>"; };
 		3AC20B891795E6670070E759 /* UICollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableView.m; sourceTree = "<group>"; };
@@ -923,6 +928,7 @@
 		F93D770317953F930073B778 /* _UITextInteractionAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _UITextInteractionAssistant.h; sourceTree = "<group>"; };
 		F93D770417953F930073B778 /* _UITextInteractionAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _UITextInteractionAssistant.m; sourceTree = "<group>"; };
 		F93D770717954E3A0073B778 /* NSParagraphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSParagraphStyle.h; sourceTree = "<group>"; };
+		F940058417CE6E4200D77814 /* UIGestureRecognizerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGestureRecognizerSpec.m; sourceTree = "<group>"; };
 		F947AF12176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegueTemplate.h; sourceTree = "<group>"; };
 		F947AF13176F5BB70057FC9A /* UIStoryboardPushSegueTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStoryboardPushSegueTemplate.m; sourceTree = "<group>"; };
 		F947AF16176F5E060057FC9A /* UIStoryboardPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStoryboardPushSegue.h; sourceTree = "<group>"; };
@@ -1703,19 +1709,13 @@
 			name = UITableViewController;
 			sourceTree = "<group>";
 		};
-		3AA3E18C17BE801F00F4365B /* UIPasteboard */ = {
-			isa = PBXGroup;
-			children = (
-				3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */,
-			);
-			name = UIPasteboard;
-		};
 		3A9BDA9B17C3C4D4006C3FAC /* UIGestureRecognizer */ = {
 			isa = PBXGroup;
 			children = (
-				3A9BDA9D17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m */,
+				F940058417CE6E4200D77814 /* UIGestureRecognizerSpec.m */,
 			);
 			name = UIGestureRecognizer;
+			sourceTree = "<group>";
 		};
 		3A9BDAA017C40898006C3FAC /* UIEvent */ = {
 			isa = PBXGroup;
@@ -1723,6 +1723,15 @@
 				3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */,
 			);
 			name = UIEvent;
+			sourceTree = "<group>";
+		};
+		3AA3E18C17BE801F00F4365B /* UIPasteboard */ = {
+			isa = PBXGroup;
+			children = (
+				3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */,
+			);
+			name = UIPasteboard;
+			sourceTree = "<group>";
 		};
 		3AA7B71217C565A8000F51EB /* UIScreen */ = {
 			isa = PBXGroup;
@@ -2621,11 +2630,12 @@
 				F94CAD7D179999BD00A560E8 /* UIViewSpec.m in Sources */,
 				3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */,
 				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
-				3AA3E18F17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
-				3A9BDA9F17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */,
-				3A9BDAA417C4090F006C3FAC /* UIEventSpec.m in Sources */,
+				3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */,
 				3AA7B71617C565CF000F51EB /* UIScreenSpec.m in Sources */,
+				F940058317CE6E0A00D77814 /* UIPasteboardSpec.m in Sources */,
+				F940058617CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
+				F940058817CE6E5800D77814 /* UIEventSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2667,9 +2677,8 @@
 				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				3A490C6517C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
-				3A9BDA9E17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */,
-				3A9BDAA317C4090F006C3FAC /* UIEventSpec.m in Sources */,
-				3AA7B71517C565CF000F51EB /* UIScreenSpec.m in Sources */,
+				F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
+				F940058717CE6E5700D77814 /* UIEventSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
