@@ -37,7 +37,7 @@
 
 @class UIImage;
 
-@interface UISlider : UIControl
+@interface UISlider : UIControl <NSCoding>
 
 #pragma mark Accessing the Slider’s Value
 
