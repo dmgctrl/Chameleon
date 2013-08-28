@@ -245,6 +245,8 @@
 		3A31162E17C7B7FD00273687 /* UIToolbarSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A31162C17C7B7FD00273687 /* UIToolbarSpec.m */; };
 		3A31163217C7E14600273687 /* UITableViewHeaderFooterViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A31163117C7E14600273687 /* UITableViewHeaderFooterViewSpec.m */; };
 		3A31163317C7E14600273687 /* UITableViewHeaderFooterViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A31163117C7E14600273687 /* UITableViewHeaderFooterViewSpec.m */; };
+		3A31163717C819C200273687 /* UITabBarSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A31163617C819C200273687 /* UITabBarSpec.m */; };
+		3A31163817C819C200273687 /* UITabBarSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A31163617C819C200273687 /* UITabBarSpec.m */; };
 		3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A490C6417C29DBC008A2399 /* UIApplicationSpec.m */; };
 		3A4A915417958BEC00A196E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A4A915317958BEC00A196E1 /* MainMenu.xib */; };
 		3A4A915B17959D3200A196E1 /* UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A915917959D3200A196E1 /* UICollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -805,6 +807,7 @@
 		3A1D44E4177A3460004DE61D /* UIButtonSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButtonSpec.m; sourceTree = "<group>"; };
 		3A31162C17C7B7FD00273687 /* UIToolbarSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIToolbarSpec.m; sourceTree = "<group>"; };
 		3A31163117C7E14600273687 /* UITableViewHeaderFooterViewSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewHeaderFooterViewSpec.m; sourceTree = "<group>"; };
+		3A31163617C819C200273687 /* UITabBarSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarSpec.m; sourceTree = "<group>"; };
 		3A490C6417C29DBC008A2399 /* UIApplicationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIApplicationSpec.m; sourceTree = "<group>"; };
 		3A4A915317958BEC00A196E1 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		3A4A915917959D3200A196E1 /* UICollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionView.h; sourceTree = "<group>"; };
@@ -1649,6 +1652,14 @@
 			name = UITableViewHeaderFooterView;
 			sourceTree = "<group>";
 		};
+		3A31163417C8198B00273687 /* UITabBar */ = {
+			isa = PBXGroup;
+			children = (
+				3A31163617C819C200273687 /* UITabBarSpec.m */,
+			);
+			name = UITabBar;
+			sourceTree = "<group>";
+		};
 		3A490C6217C29D98008A2399 /* UIApplication */ = {
 			isa = PBXGroup;
 			children = (
@@ -1911,6 +1922,7 @@
 				3A1A397617837C6D00644CCB /* UIScrollView */,
 				F97674921769431C0073489E /* UIStoryboard */,
 				F98A10AA1773754000BF8586 /* UIStringDrawing */,
+				3A31163417C8198B00273687 /* UITabBar */,
 				3A1A396C17822D7700644CCB /* UITableView */,
 				3A1A397117834EA400644CCB /* UITableViewCell */,
 				3A7E65D817863BB600218CD7 /* UITableViewController */,
@@ -2680,6 +2692,7 @@
 				3AA7B72C17C6B242000F51EB /* UITapGestureRecognizerSpec.m in Sources */,
 				3A31162E17C7B7FD00273687 /* UIToolbarSpec.m in Sources */,
 				3A31163317C7E14600273687 /* UITableViewHeaderFooterViewSpec.m in Sources */,
+				3A31163817C819C200273687 /* UITabBarSpec.m in Sources */,
 				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */,
@@ -2728,6 +2741,7 @@
 				3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */,
 				3AA7B72B17C6B242000F51EB /* UITapGestureRecognizerSpec.m in Sources */,
 				3A31163217C7E14600273687 /* UITableViewHeaderFooterViewSpec.m in Sources */,
+				3A31163717C819C200273687 /* UITabBarSpec.m in Sources */,
 				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
