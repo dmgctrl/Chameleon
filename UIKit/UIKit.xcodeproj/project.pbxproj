@@ -258,6 +258,8 @@
 		3A4A91671795CC8C00A196E1 /* UICollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4A91681795CC8C00A196E1 /* UICollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */; };
 		3A518088177CDBB200C9CF46 /* UITextFieldSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */; };
+		3A5A4DB417CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A4DB317CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m */; };
+		3A5A4DB517CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A4DB317CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m */; };
 		3A5A60531799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
 		3A5A60541799A34600E633C9 /* UIResponderSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A60521799A34600E633C9 /* UIResponderSpec.m */; };
 		3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60402517BC10EF007EE590 /* UITouchSpec.m */; };
@@ -829,6 +831,7 @@
 		3A4A91651795CC8B00A196E1 /* UICollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewCell.h; sourceTree = "<group>"; };
 		3A4A91661795CC8B00A196E1 /* UICollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewCell.m; sourceTree = "<group>"; };
 		3A518086177CDBB200C9CF46 /* UITextFieldSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldSpec.m; sourceTree = "<group>"; };
+		3A5A4DB317CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISplitViewControllerSpecViewController.m; sourceTree = "<group>"; };
 		3A5A60521799A34600E633C9 /* UIResponderSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponderSpec.m; sourceTree = "<group>"; };
 		3A60402517BC10EF007EE590 /* UITouchSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITouchSpec.m; sourceTree = "<group>"; };
 		3A6B0B7517957E06006F61FD /* UIControlSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIControlSpec.m; sourceTree = "<group>"; };
@@ -1691,6 +1694,14 @@
 			name = UITextField;
 			sourceTree = "<group>";
 		};
+		3A5A4DB117CD27DF0003B0C1 /* UISplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3A5A4DB317CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m */,
+			);
+			name = UISplitViewController;
+			sourceTree = "<group>";
+		};
 		3A5A60501799A30100E633C9 /* UIResponder */ = {
 			isa = PBXGroup;
 			children = (
@@ -1975,6 +1986,7 @@
 				3A5A60501799A30100E633C9 /* UIResponder */,
 				3AA7B71217C565A8000F51EB /* UIScreen */,
 				3A1A397617837C6D00644CCB /* UIScrollView */,
+				3A5A4DB117CD27DF0003B0C1 /* UISplitViewController */,
 				F97674921769431C0073489E /* UIStoryboard */,
 				3AD9300617CC03D90060B655 /* UIStoryboardSegue */,
 				F98A10AA1773754000BF8586 /* UIStringDrawing */,
@@ -2758,6 +2770,7 @@
 				3AD9300017CBE8CC0060B655 /* UISwitchSpec.m in Sources */,
 				3AD9300517CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
 				3AD9300A17CC04160060B655 /* UIStoryboardSegueSpec.m in Sources */,
+				3A5A4DB517CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m in Sources */,
 				3A60402717BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9F17C3C5D1006C3FAC /* (null) in Sources */,
@@ -2812,6 +2825,7 @@
 				3AD92FFF17CBE8CC0060B655 /* UISwitchSpec.m in Sources */,
 				3AD9300417CBF9320060B655 /* UISwipeGestureRecognizerSpec.m in Sources */,
 				3AD9300917CC04160060B655 /* UIStoryboardSegueSpec.m in Sources */,
+				3A5A4DB417CD281B0003B0C1 /* UISplitViewControllerSpecViewController.m in Sources */,
 				3A60402617BC10EF007EE590 /* UITouchSpec.m in Sources */,
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				F940058517CE6E4200D77814 /* UIGestureRecognizerSpec.m in Sources */,
