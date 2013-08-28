@@ -1041,6 +1041,85 @@ describe(@"UITextView", ^{
                 });
             });
         });
+
+        context(@"Key Input", ^{
+            context(@"-insertText", ^{
+                NSString* moreText = @"Hey!";
+                context(@"from end", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView endOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView insertText:moreText];
+                    it(@"should append", ^{
+                        [[[textView text] should] equal:[text stringByAppendingString:moreText]];
+                    });
+                });
+                context(@"overwriting", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView insertText:moreText];
+                    it(@"should replace text", ^{
+                        [[[textView text] should] equal:moreText];
+                    });
+                });
+                context(@"at beginning", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView beginningOfDocument]]];
+                    [textView insertText:moreText];
+                    it(@"should prepend", ^{
+                        [[[textView text] should] equal:[moreText stringByAppendingString:text]];
+                    });
+                });
+            });
+
+            context(@"-delete backward", ^{
+                context(@"from end", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView endOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView deleteBackward];
+                    it(@"should be same less last glyph", ^{
+                        [[[textView text] should] equal:[text substringToIndex:[text length] - 1]];
+                    });
+                });
+                context(@"overwriting", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView deleteBackward];
+                    it(@"should replace text", ^{
+                        [[[textView text] should] equal:@""];
+                    });
+                });
+                context(@"at beginning", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView beginningOfDocument]]];
+                    [textView deleteBackward];
+                    it(@"should do nothing", ^{
+                        [[[textView text] should] equal:text];
+                    });
+                });
+            });
+
+            context(@"-hasText", ^{
+                context(@"for an empty view", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    it(@"should be no", ^{
+                        [[@([textView hasText]) should] beNo];
+                    });
+                });
+                context(@"with text", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    it(@"should be yes", ^{
+                        [[@([textView hasText]) should] beYes];
+                    });
+                });
+            });
+        });
     });
 });
 SPEC_END
