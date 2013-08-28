@@ -264,8 +264,8 @@
 		3A7E65BC1784EF9600218CD7 /* UIImageViewSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65BA1784EF9600218CD7 /* UIImageViewSpec.m */; };
 		3A7E65DC17863C0A00218CD7 /* UITableViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */; };
 		3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */; };
-		3A9BDA9E17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDA9D17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m */; };
 		3A9BDA9F17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDA9D17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m */; };
+		3A9BDAA317C4090F006C3FAC /* UIEventSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */; };
 		3AC20B8A1795E66C0070E759 /* UICollectionReusableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B881795E6640070E759 /* UICollectionReusableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AC20B8B1795E66C0070E759 /* UICollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC20B891795E6670070E759 /* UICollectionReusableView.m */; };
 		3AC20B92179605A30070E759 /* UIViewPrintFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -811,7 +811,7 @@
 		3A7E65D51786031400218CD7 /* UIViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewControllerSpec.m; sourceTree = "<group>"; };
 		3A7E65DA17863C0A00218CD7 /* UITableViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITableViewControllerSpec.m; sourceTree = "<group>"; };
 		3AA3E18D17BE80D000F4365B /* UIPasteboardSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPasteboardSpec.m; sourceTree = "<group>"; };
-		3A9BDA9D17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGestureRecognizerSpec.m; sourceTree = "<group>"; };
+		3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIEventSpec.m; sourceTree = "<group>"; };
 		3AC20B881795E6640070E759 /* UICollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionReusableView.h; sourceTree = "<group>"; };
 		3AC20B891795E6670070E759 /* UICollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionReusableView.m; sourceTree = "<group>"; };
 		3AC20B901796059D0070E759 /* UIViewPrintFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewPrintFormatter.h; sourceTree = "<group>"; };
@@ -1715,6 +1715,13 @@
 				3A9BDA9D17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m */,
 			);
 			name = UIGestureRecognizer;
+		};
+		3A9BDAA017C40898006C3FAC /* UIEvent */ = {
+			isa = PBXGroup;
+			children = (
+				3A9BDAA217C4090F006C3FAC /* UIEventSpec.m */,
+			);
+			name = UIEvent;
 			sourceTree = "<group>";
 		};
 		F91AA507176E5A8B001B6D5F /* Storyboard Support */ = {
@@ -1831,6 +1838,7 @@
 				3A1A39811784AD6200644CCB /* UICollectionView */,
 				3A7E65A91784C78100218CD7 /* UICollectionViewCell */,
 				3A6B0B7317957D92006F61FD /* UIControl */,
+				3A9BDAA017C40898006C3FAC /* UIEvent */,
 				F9B3C1F6177119B800C92009 /* UIFont */,
 				3A9BDA9B17C3C4D4006C3FAC /* UIGestureRecognizer */,
 				F9FFDDE315C5A8C5000EDAA0 /* UIImage */,
@@ -2607,6 +2615,7 @@
 				3AA3E18F17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				3A490C6617C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9F17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */,
+				3A9BDAA417C4090F006C3FAC /* UIEventSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2649,6 +2658,7 @@
 				3AA3E18E17BE80D000F4365B /* UIPasteboardSpec.m in Sources */,
 				3A490C6517C29DBC008A2399 /* UIApplicationSpec.m in Sources */,
 				3A9BDA9E17C3C5D1006C3FAC /* UIGestureRecognizerSpec.m in Sources */,
+				3A9BDAA317C4090F006C3FAC /* UIEventSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
