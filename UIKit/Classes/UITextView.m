@@ -865,18 +865,19 @@ static void _commonInitForUITextView(UITextView* self)
 - (UITextRange*) markedTextRange
 {
 #warning Implement -markedTextRange
-    return nil;
+    UIKIT_STUB_W_RETURN(@"-markedTextRange");
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
 #warning Implement -setMarkedText:selectedRange:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-setMarkedText:selectedRange:");
 }
 
 - (void) unmarkText
 {
 #warning Implement -unmarkText
+    UIKIT_STUB(@"-unmarkText");
 }
 
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition
@@ -963,52 +964,52 @@ static void _commonInitForUITextView(UITextView* self)
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -positionWithinRange:farthestInDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    UIKIT_STUB_W_RETURN(@"-positionWithinRange:farthestInDirection:");
 }
 
 - (UITextRange*) characterRangeByExtendingPosition:(_UITextViewPosition*)position inDirection:(UITextLayoutDirection)direction
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
 #warning Implement -characterRangeByExtendingPosition:inDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    UIKIT_STUB_W_RETURN(@"-characterRangeByExtendingPosition:inDirection:");
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(_UITextViewPosition*)position inDirection:(UITextStorageDirection)direction
 {
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
 #warning Implement -baseWritingDirectionForPosition:inDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return UITextWritingDirectionNatural;
+    UIKIT_STUB(@"-baseWritingDirectionForPosition:inDirection:");
+    return -NSIntegerMax;
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
 {
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
 #warning Implement -setBaseWritingDirection:forRange:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"-setBaseWritingDirection:forRange:");
 }
 
 - (CGRect) firstRectForRange:(_UITextViewRange*)range
 {
-#warning Implement -firstRectForRange:
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
+#warning Implement -firstRectForRange:
+    UIKIT_STUB(@"-firstRectForRange:");
     return CGRectZero;
 }
 
 - (CGRect) caretRectForPosition:(_UITextViewPosition*)position
 {
-#warning Implement -caretRectForPosition:
     NSAssert(!position || [position isKindOfClass:[_UITextViewPosition class]], @"???");
+#warning Implement -caretRectForPosition:
+    UIKIT_STUB(@"-caretRectForPosition:");
     return CGRectZero;
 }
 
 - (NSArray*) selectionRectsForRange:(_UITextViewRange*)range
 {
-#warning Implement -selectionRectsForRange:
     NSAssert(!range || [range isKindOfClass:[_UITextViewRange class]], @"???");
-    return nil;
+#warning Implement -selectionRectsForRange:
+    UIKIT_STUB_W_RETURN(@"-selectionRectsForRange:");
 }
 
 - (UITextPosition*) closestPositionToPoint:(CGPoint)point
