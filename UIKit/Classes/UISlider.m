@@ -35,6 +35,8 @@
 #import <UIKit/UIImageView.h>
 #import <QuartzCore/QuartzCore.h>
 
+#pragma mark Constants
+
 static NSString* const kUIValueKey = @"UIValue";
 static NSString* const kUIMinValueKey = @"UIMinValue";
 static NSString* const kUIMaxValueKey = @"UIMaxValue";
@@ -46,16 +48,30 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     UIButton* _thumbView;
 }
 
+
+#pragma mark Accessing the Slider’s Value
+
 - (void) setValue:(float)value animated:(BOOL)animated
 {
 #warning implement -setValue:animated:
     UIKIT_STUB(@"-setValue:animated:");
 }
 
+#pragma markChanging the Slider’s Appearance
+
 - (UIImage*) minimumTrackImageForState:(UIControlState)state
 {
 #warning implement -minimumTrackImageForState:
     UIKIT_STUB_W_RETURN(@"-minimumTrackImageForState:");
+}
+
+- (void) setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state
+{
+    CGRect minimumTrackRect = _minimumTrackView.frame;
+    minimumTrackRect.size.height = MIN(9, image.size.height);
+    minimumTrackRect.origin.y = floor(0.5*(23 - minimumTrackRect.size.height));
+    _minimumTrackView.frame = minimumTrackRect;
+    _minimumTrackView.image = image;
 }
 
 - (UIImage*) maximumTrackImageForState:(UIControlState)state
@@ -64,11 +80,33 @@ static NSString* const kUIMaxValueKey = @"UIMaxValue";
     UIKIT_STUB_W_RETURN(@"-maximumTrackImageForState:");
 }
 
+- (void) setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state
+{
+    CGRect maximumTrackRect = _maximumTrackView.frame;
+    maximumTrackRect.size.height = MIN(9, image.size.height);
+    maximumTrackRect.origin.y = floor(0.5*(23 - maximumTrackRect.size.height));
+    _maximumTrackView.frame = maximumTrackRect;
+    _maximumTrackView.image = image;
+}
+
 - (UIImage*) thumbImageForState:(UIControlState)state
 {
 #warning implement -thumbImageForState:
     UIKIT_STUB_W_RETURN(@"-thumbImageForState:");
 }
+
+- (void) setThumbImage:(UIImage*)image forState:(UIControlState)state
+{
+    CGRect thumbRect = _thumbView.frame;
+    thumbRect.size.width = MIN(23, image.size.width);
+    thumbRect.size.height = MIN(23, image.size.height);
+    thumbRect.origin.y = floor(0.5*(23 - thumbRect.size.height));
+    _thumbView.frame = thumbRect;
+    [_thumbView setBackgroundImage:image forState:state];
+}
+
+
+#pragma mark Overrides for Subclasses
 
 - (CGRect) maximumValueImageRectForBounds:(CGRect)bounds
 {
@@ -98,6 +136,9 @@ return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge
     return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge);
 }
 
+
+#pragma mark Private Methods
+
 - (void) _commonInitForUISlider
 {
     _continuous = YES;
@@ -106,15 +147,15 @@ return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge
     _value = 0.5;
     CALayer* layer = self.layer;
     layer.backgroundColor = [[UIColor clearColor] CGColor];
-    
+
     _minimumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMinimumTrackImage]];
     _minimumTrackView.frame = CGRectMake(3, 7, 18, 9);
     [self addSubview:_minimumTrackView];
-    
+
     _maximumTrackView = [[UIImageView alloc] initWithImage:[UIImage _sliderMaximumTrackImage]];
     _maximumTrackView.frame = CGRectMake(0, 7, 18, 9);
     [self addSubview:_maximumTrackView];
-    
+
     _thumbView = [UIButton buttonWithType:UIButtonTypeCustom];
     _thumbView.userInteractionEnabled = NO;
     [_thumbView setBackgroundImage:[UIImage _sliderThumbImage] forState:UIControlStateNormal];
@@ -122,13 +163,8 @@ return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge
     [self addSubview:_thumbView];
 }
 
-- (id) initWithFrame:(CGRect)frame
-{
-    if (nil != (self = [super initWithFrame:frame])) {
-        [self _commonInitForUISlider];
-	}
-    return self;
-}
+
+#pragma mark NSCoding Protocol
 
 - (id) initWithCoder:(NSCoder*)coder
 {
@@ -147,54 +183,48 @@ return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge
     return self;
 }
 
-- (void) setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state
+
+#pragma mark NSObject Protocol
+
+- (NSString*) description
 {
-    CGRect minimumTrackRect = _minimumTrackView.frame;
-    minimumTrackRect.size.height = MIN(9, image.size.height);
-    minimumTrackRect.origin.y = floor(0.5*(23 - minimumTrackRect.size.height));
-    _minimumTrackView.frame = minimumTrackRect;
-    _minimumTrackView.image = image;
+    return [NSString stringWithFormat:@"<%@: %p; frame = (%.0f %.0f; %.0f %.0f); opaque = %@; layer = %@; value = %f>", [self className], self, self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, (self.opaque ? @"YES" : @"NO"), self.layer, self.value];
 }
 
-- (void) setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state
-{
-    CGRect maximumTrackRect = _maximumTrackView.frame;
-    maximumTrackRect.size.height = MIN(9, image.size.height);
-    maximumTrackRect.origin.y = floor(0.5*(23 - maximumTrackRect.size.height));
-    _maximumTrackView.frame = maximumTrackRect;
-    _maximumTrackView.image = image;
-}
 
-- (void) setThumbImage:(UIImage*)image forState:(UIControlState)state
+#pragma mark UIView Overrides
+
+- (id) initWithFrame:(CGRect)frame
 {
-    CGRect thumbRect = _thumbView.frame;
-    thumbRect.size.width = MIN(23, image.size.width);
-    thumbRect.size.height = MIN(23, image.size.height);
-    thumbRect.origin.y = floor(0.5*(23 - thumbRect.size.height));
-    _thumbView.frame = thumbRect;
-    [_thumbView setBackgroundImage:image forState:state];
+    if (nil != (self = [super initWithFrame:frame])) {
+        [self _commonInitForUISlider];
+	}
+    return self;
 }
 
 - (void) layoutSubviews
 {
     [super layoutSubviews];
-    
+
     CGRect thumbRect = _thumbView.frame;
     CGFloat percentage = (_value - _minimumValue) / (_maximumValue - _minimumValue);
     CGFloat offset = thumbRect.size.width / 2.0;
     CGFloat maxX = self.bounds.size.width - (offset * 2.0);
     thumbRect.origin.x = MIN(maxX, MAX(0, percentage * maxX));
     _thumbView.frame = thumbRect;
-    
+
     CGRect minimumTrackRect = _minimumTrackView.frame;
     minimumTrackRect.size.width = MAX(offset, MIN(self.bounds.size.width * percentage, self.bounds.size.width - offset));
     _minimumTrackView.frame = minimumTrackRect;
-    
+
     CGRect maximumTrackRect = _maximumTrackView.frame;
     maximumTrackRect.origin.x = minimumTrackRect.size.width;
     maximumTrackRect.size.width = MAX(1, self.bounds.size.width - maximumTrackRect.origin.x) - 3;
     _maximumTrackView.frame = maximumTrackRect;
 }
+
+
+#pragma mark UIResponder Overrides
 
 - (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
@@ -232,11 +262,6 @@ return CGRectMake(CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge
 	[super touchesEnded:touches withEvent:event];
 	
     _thumbView.highlighted = NO;
-}
-
-- (NSString*) description
-{
-    return [NSString stringWithFormat:@"<%@: %p; frame = (%.0f %.0f; %.0f %.0f); opaque = %@; layer = %@; value = %f>", [self className], self, self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, (self.opaque ? @"YES" : @"NO"), self.layer, self.value];
 }
 
 @end
