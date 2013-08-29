@@ -41,3 +41,12 @@
 #endif
 
 #define UIKIT_HIDDEN __attribute__((visibility("hidden")))
+
+#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
+#define UIKIT_STUB(sel) [self doesNotRecognizeSelector:NSSelectorFromString(sel)];
+#define UIKIT_STUB_W_RETURN(sel) UIKIT_STUB(sel); return 0;
+#else
+#define UIKIT_STUB(sel)
+#define UIKIT_STUB_W_RETURN(sel) return 0;
+#endif
+

@@ -37,15 +37,48 @@
 
 @class UIImage;
 
-@interface UISlider : UIControl
+@interface UISlider : UIControl <NSCoding>
+
+#pragma mark Accessing the Slider’s Value
 
 @property (nonatomic) float value;
+- (void) setValue:(float)value animated:(BOOL)animated;
+
+
+#pragma mark Changing the Slider’s Appearance
+
 @property (nonatomic) float minimumValue;
 @property (nonatomic) float maximumValue;
+
+
+#pragma mark Modifying the Slider’s Behavior
+
 @property (nonatomic, getter=isContinuous) BOOL continuous;
 
+
+#pragma mark Changing the Slider’s Appearance
+
+@property (nonatomic, retain) UIImage* minimumValueImage;
+@property (nonatomic, retain) UIImage* maximumValueImage;
+@property (nonatomic, retain) UIColor* minimumTrackTintColor;
+@property (nonatomic, readonly) UIImage* currentMinimumTrackImage;
+- (UIImage*) minimumTrackImageForState:(UIControlState)state;
 - (void) setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state;
+@property (nonatomic, retain) UIColor* maximumTrackTintColor;
+@property (nonatomic, readonly) UIImage* currentMaximumTrackImage;
+- (UIImage*) maximumTrackImageForState:(UIControlState)state;
 - (void) setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state;
+@property (nonatomic, retain) UIColor* thumbTintColor;
+@property (nonatomic, readonly) UIImage* currentThumbImage;
+- (UIImage*) thumbImageForState:(UIControlState)state;
 - (void) setThumbImage:(UIImage*)image forState:(UIControlState)state;
+
+
+#pragma mark Overrides for Subclasses
+
+- (CGRect) maximumValueImageRectForBounds:(CGRect)bounds;
+- (CGRect) minimumValueImageRectForBounds:(CGRect)bounds;
+- (CGRect) trackRectForBounds:(CGRect)bounds;
+- (CGRect) thumbRectForBounds:(CGRect)bounds trackRect:(CGRect)rect value:(float)value;
 
 @end

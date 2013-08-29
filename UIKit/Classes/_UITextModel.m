@@ -115,7 +115,7 @@
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
 #warning Implement -setMarkedText:selectedRange:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"setMarkedText:selectedRange:");
 }
 
 - (void) unmarkText
@@ -155,46 +155,45 @@
 - (NSInteger) positionWithinRange:(NSRange)range farthestInDirection:(UITextLayoutDirection)direction
 {
 #warning Implement -positionWithinRange:farthestInDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return 0;
+    UIKIT_STUB_W_RETURN(@"positionWithinRange:farthestInDirection:");
 }
 
 - (NSInteger) positionWithinRange:(NSRange)range atCharacterOffset:(NSInteger)offset
 {
 #warning Implement -positionWithinRange:farthestInDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return 0;
+    UIKIT_STUB_W_RETURN(@"positionWithinRange:atCharacterOffset:");
 }
 
 - (UITextWritingDirection) baseWritingDirectionForPosition:(NSInteger)position inDirection:(UITextStorageDirection)direction
 {
 #warning Implement -baseWritingDirectionForPosition:inDirection:
-    [self doesNotRecognizeSelector:_cmd];
-    return UITextWritingDirectionNatural;
+    UIKIT_STUB_W_RETURN(@"baseWritingDirectionForPosition:inDirection:");
 }
 
 - (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(NSRange)range
 {
 #warning Implement -setBaseWritingDirection:forRange:
-    [self doesNotRecognizeSelector:_cmd];
+    UIKIT_STUB(@"setBaseWritingDirection:forRange:");
 }
 
 - (CGRect) firstRectForRange:(NSRange)range
 {
 #warning Implement -firstRectForRange:
-    return CGRectZero;
+    UIKIT_STUB(@"firstRectForRange:");
+    return (CGRect){};
 }
 
 - (CGRect) caretRectForPosition:(NSInteger)position
 {
 #warning Implement -caretRectForPosition:
-    return CGRectZero;
+    UIKIT_STUB(@"caretRectForPosition:");
+    return (CGRect){};
 }
 
 - (NSArray*) selectionRectsForRange:(NSRange)range
 {
 #warning Implement -selectionRectsForRange:
-    return nil;
+    UIKIT_STUB_W_RETURN(@"selectionRectsForRange:");
 }
 
 - (void) replaceRange:(NSRange)range withText:(NSString*)text

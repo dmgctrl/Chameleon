@@ -27,11 +27,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITapGestureRecognizer.h"
-#import "UIGestureRecognizerSubclass.h"
-#import "UITouch.h"
+#import <UIKit/UITapGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UITouch.h>
 
 @implementation UITapGestureRecognizer
+
+#pragma mark UIGestureRecognizer Overrides
 
 - (id) initWithTarget:(id)target action:(SEL)action
 {
@@ -60,9 +62,9 @@
     }
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent*)event
+- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [touches anyObject];
+    UITouch* touch = [touches anyObject];
     if (touch.tapCount >= self.numberOfTapsRequired) {
         if (self.state == UIGestureRecognizerStatePossible) {
             self.state = UIGestureRecognizerStateBegan;
@@ -72,21 +74,21 @@
     }
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent*)event
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateCancelled;
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent*)event
+- (void) touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateEnded;
     }
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent*)event
+- (void) touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
 {
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateCancelled;

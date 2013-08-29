@@ -27,23 +27,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
-#import "UIViewController+UIPrivate.h"
-#import "UIWindow+UIPrivate.h"
-#import "UIView+UIPrivate.h"
-#import "UIScreen+UIPrivate.h"
-#import "UIScreen+AppKit.h"
-#import "UIApplication+UIPrivate.h"
-#import "UIEvent.h"
-#import "UITouch+UIPrivate.h"
-#import "UIScreenMode.h"
-#import "UIResponder+AppKit.h"
-#import "UIView+AppKit.h"
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIViewController+UIPrivate.h>
+#import <UIKit/UIWindow+UIPrivate.h>
+#import <UIKit/UIView+UIPrivate.h>
+#import <UIKit/UIScreen+UIPrivate.h>
+#import <UIKit/UIScreen+AppKit.h>
+#import <UIKit/UIApplication+UIPrivate.h>
+#import <UIKit/UIEvent.h>
+#import <UIKit/UITouch+UIPrivate.h>
+#import <UIKit/UIScreenMode.h>
+#import <UIKit/UIResponder+AppKit.h>
+#import <UIKit/UIView+AppKit.h>
+#import <UIKit/UIKitView.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UIGestureRecognizer+UIPrivate.h>
 #import <UIKit/UITextInput.h>
-#import "UIKitView.h"
-#import "UIViewController.h"
-#import "UIGestureRecognizerSubclass.h"
-#import "UIGestureRecognizer+UIPrivate.h"
 #import <AppKit/NSCursor.h>
 #import <AppKit/NSHelpManager.h>
 #import <AppKit/NSEvent.h>
@@ -52,42 +52,48 @@
 #import <AppKit/NSAttributedString.h>
 #import <QuartzCore/QuartzCore.h>
 
+#pragma mark Constants
+
 const UIWindowLevel UIWindowLevelNormal = 0;
 const UIWindowLevel UIWindowLevelStatusBar = 1000;
 const UIWindowLevel UIWindowLevelAlert = 2000;
-
-NSString *const UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotification";
-NSString *const UIWindowDidBecomeHiddenNotification = @"UIWindowDidBecomeHiddenNotification";
-NSString *const UIWindowDidBecomeKeyNotification = @"UIWindowDidBecomeKeyNotification";
-NSString *const UIWindowDidResignKeyNotification = @"UIWindowDidResignKeyNotification";
-
-NSString *const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
-NSString *const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
-NSString *const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
-NSString *const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
-
-NSString *const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
-NSString *const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
-NSString *const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
-NSString *const UIKeyboardAnimationCurveUserInfoKey = @"UIKeyboardAnimationCurveUserInfoKey";
-
+NSString* const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
+NSString* const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
+NSString* const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
+NSString* const UIKeyboardAnimationCurveUserInfoKey = @"UIKeyboardAnimationCurveUserInfoKey";
 // deprecated
-NSString *const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserInfoKey";
-NSString *const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
-NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
+NSString* const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserInfoKey";
+NSString* const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
+NSString* const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
+
+
+#pragma mark Notifications
+
+NSString* const UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotification";
+NSString* const UIWindowDidBecomeHiddenNotification = @"UIWindowDidBecomeHiddenNotification";
+NSString* const UIWindowDidBecomeKeyNotification = @"UIWindowDidBecomeKeyNotification";
+NSString* const UIWindowDidResignKeyNotification = @"UIWindowDidResignKeyNotification";
+NSString* const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
+NSString* const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
+NSString* const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
+NSString* const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
+NSString* const UIKeyboardWillChangeFrameNotification = @"UIKeyboardWillChangeFrameNotification";
+NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFrameNotification";
+
 
 @interface UIKitView ()
 - (void) _setTextInput:(id)textInput;
 @end
 
 @interface UIWindow ()
-- (void)_showToolTipForView:(UIView *)view;
-- (void)_hideCurrentToolTip;
-- (void)_stopTrackingPotentiallyNewToolTip;
-- (void)_toolTipViewDidChangeSuperview:(NSNotification *)notification;
 
-@property (nonatomic, strong) UIView *currentToolTipView;
-@property (nonatomic, strong) UIView *toolTipViewToShow;
+- (void) _showToolTipForView:(UIView*)view;
+- (void) _hideCurrentToolTip;
+- (void) _stopTrackingPotentiallyNewToolTip;
+- (void) _toolTipViewDidChangeSuperview:(NSNotification*)notification;
+@property (nonatomic, strong) UIView* currentToolTipView;
+@property (nonatomic, strong) UIView* toolTipViewToShow;
+
 @end
 
 
@@ -96,17 +102,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     NSUndoManager* _undoManager;
 }
 
-- (id)initWithFrame:(CGRect)theFrame
-{
-    if ((self=[super initWithFrame:theFrame])) {
-        [self _makeHidden];	// do this first because before the screen is set, it will prevent any visibility notifications from being sent.
-        self.screen = [UIScreen mainScreen];
-        self.opaque = NO;
-    }
-    return self;
-}
-
-- (void)dealloc
+- (void) dealloc
 {
     [[self _firstResponder] resignFirstResponder];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -115,7 +111,36 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     [self _makeHidden];	// I don't really like this here, but the real UIKit seems to do something like this on window destruction as it sends a notification and we also need to remove it from the app's list of windows
 }
 
-- (void)setRootViewController:(UIViewController *)rootViewController
+
+#pragma mark Configuring Windows
+
+- (UIWindowLevel) windowLevel
+{
+    return self.layer.zPosition;
+}
+
+- (void) setWindowLevel:(UIWindowLevel)level
+{
+    self.layer.zPosition = level;
+}
+
+- (void) setScreen:(UIScreen*)theScreen
+{
+    if (theScreen != _screen) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIScreenModeDidChangeNotification object:_screen];
+        const BOOL wasHidden = self.hidden;
+        [self _makeHidden];
+        [self.layer removeFromSuperlayer];
+        _screen = theScreen;
+        [[_screen _layer] addSublayer:self.layer];
+        if (!wasHidden) {
+            [self _makeVisible];
+        }
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenModeChangedNotification:) name:UIScreenModeDidChangeNotification object:_screen];
+    }
+}
+
+- (void) setRootViewController:(UIViewController*)rootViewController
 {
 	if (rootViewController != _rootViewController) {
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -124,149 +149,21 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 	}
 }
 
-- (BOOL) _acceptsFirstResponder
+
+#pragma mark Making Windows Key
+
+- (BOOL) isKeyWindow
 {
-    return _firstResponder != nil;
+    return ([UIApplication sharedApplication].keyWindow == self);
 }
 
-- (UIResponder *)_firstResponder
+- (void) makeKeyAndVisible
 {
-    return _firstResponder;
+    [self _makeVisible];
+    [self makeKeyWindow];
 }
 
-- (void) _setFirstResponder:(UIResponder*)firstResponder
-{
-    if (_firstResponder != firstResponder) {
-        _firstResponder = firstResponder;
-        
-        UIKitView* uikitView = [[self screen] UIKitView];
-
-        if (firstResponder) {
-            NSWindow* window = [uikitView window];
-            if (uikitView != [window firstResponder]) {
-                [window makeFirstResponder:uikitView];
-            }
-        }
-
-        [uikitView _setTextInput:[firstResponder conformsToProtocol:@protocol(UITextInput)] ? firstResponder : nil];
-    }
-}
-
-- (NSUndoManager*) undoManager
-{
-    if (!_undoManager) {
-        _undoManager = [[NSUndoManager alloc] init];
-    }
-    return _undoManager;
-}
-
-- (UIView *)superview
-{
-    return nil;		// lies!
-}
-
-- (void)removeFromSuperview
-{
-    // does nothing
-}
-
-- (UIWindow *)window
-{
-    return self;
-}
-
-- (UIResponder *)nextResponder
-{
-    return [UIApplication sharedApplication];
-}
-
-- (void)setScreen:(UIScreen *)theScreen
-{
-    if (theScreen != _screen) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIScreenModeDidChangeNotification object:_screen];
-        
-        const BOOL wasHidden = self.hidden;
-        [self _makeHidden];
-
-        [self.layer removeFromSuperlayer];
-        _screen = theScreen;
-        [[_screen _layer] addSublayer:self.layer];
-
-        if (!wasHidden) {
-            [self _makeVisible];
-        }
-
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenModeChangedNotification:) name:UIScreenModeDidChangeNotification object:_screen];
-    }
-}
-
-- (void)_screenModeChangedNotification:(NSNotification *)note
-{
-    UIScreenMode *previousMode = [[note userInfo] objectForKey:@"_previousMode"];
-    UIScreenMode *newMode = _screen.currentMode;
-
-    if (!CGSizeEqualToSize(previousMode.size,newMode.size)) {
-        [self _superviewSizeDidChangeFrom:previousMode.size to:newMode.size];
-    }
-}
-
-- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow *)toWindow
-{
-    if (toWindow == self) {
-        return toConvert;
-    } else {
-        // Convert to screen coordinates
-        toConvert.x += self.frame.origin.x;
-        toConvert.y += self.frame.origin.y;
-        
-        if (toWindow) {
-            // Now convert the screen coords into the other screen's coordinate space
-            toConvert = [self.screen convertPoint:toConvert toScreen:toWindow.screen];
-
-            // And now convert it from the new screen's space into the window's space
-            toConvert.x -= toWindow.frame.origin.x;
-            toConvert.y -= toWindow.frame.origin.y;
-        }
-        
-        return toConvert;
-    }
-}
-
-- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow *)fromWindow
-{
-    if (fromWindow == self) {
-        return toConvert;
-    } else {
-        if (fromWindow) {
-            // Convert to screen coordinates
-            toConvert.x += fromWindow.frame.origin.x;
-            toConvert.y += fromWindow.frame.origin.y;
-            
-            // Change to this screen.
-            toConvert = [self.screen convertPoint:toConvert fromScreen:fromWindow.screen];
-        }
-        
-        // Convert to window coordinates
-        toConvert.x -= self.frame.origin.x;
-        toConvert.y -= self.frame.origin.y;
-
-        return toConvert;
-    }
-}
-
-- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow *)fromWindow
-{
-    CGPoint convertedOrigin = [self convertPoint:toConvert.origin fromWindow:fromWindow];
-    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
-}
-
-- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow *)toWindow
-{
-    CGPoint convertedOrigin = [self convertPoint:toConvert.origin toWindow:toWindow];
-    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
-}
-
-- (void)becomeKeyWindow
+- (void) becomeKeyWindow
 {
     UIKitView* uikitView = [[self screen] UIKitView];
     if ([[uikitView window] makeFirstResponder:uikitView]) {
@@ -277,7 +174,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     }
 }
 
-- (void)makeKeyWindow
+- (void) makeKeyWindow
 {
     if (!self.isKeyWindow) {
         [[UIApplication sharedApplication].keyWindow resignKeyWindow];
@@ -286,12 +183,7 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     }
 }
 
-- (BOOL)isKeyWindow
-{
-    return ([UIApplication sharedApplication].keyWindow == self);
-}
-
-- (void)resignKeyWindow
+- (void) resignKeyWindow
 {
     id firstResponder = [self _firstResponder];
     if ([firstResponder respondsToSelector:@selector(windowDidResignKey)]) {
@@ -301,73 +193,75 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidResignKeyNotification object:self];
 }
 
-- (void)_makeHidden
-{
-    if (!self.hidden) {
-        [super setHidden:YES];
-        if (self.screen) {
-            [[UIApplication sharedApplication] _windowDidBecomeHidden:self];
-            [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidBecomeHiddenNotification object:self];
-        }
-    }
-}
 
-- (void)_makeVisible
-{
-    if (self.hidden) {
-        [super setHidden:NO];
-        if (self.screen) {
-            [[UIApplication sharedApplication] _windowDidBecomeVisible:self];
-            [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidBecomeVisibleNotification object:self];
-        }
-    }
-}
+#pragma mark Converting Coordinates
 
-- (void)setHidden:(BOOL)hide
+- (CGPoint) convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow
 {
-    if (hide) {
-        [self _makeHidden];
+    if (toWindow == self) {
+        return toConvert;
     } else {
-        [self _makeVisible];
+        toConvert.x += self.frame.origin.x;
+        toConvert.y += self.frame.origin.y;
+
+        if (toWindow) {
+            toConvert = [self.screen convertPoint:toConvert toScreen:toWindow.screen];
+            toConvert.x -= toWindow.frame.origin.x;
+            toConvert.y -= toWindow.frame.origin.y;
+        }
+        return toConvert;
     }
 }
 
-- (void)makeKeyAndVisible
+- (CGPoint) convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow
 {
-    [self _makeVisible];
-    [self makeKeyWindow];
+    if (fromWindow == self) {
+        return toConvert;
+    } else {
+        
+        if (fromWindow) {
+            toConvert.x += fromWindow.frame.origin.x;
+            toConvert.y += fromWindow.frame.origin.y;
+            toConvert = [self.screen convertPoint:toConvert fromScreen:fromWindow.screen];
+        }
+        toConvert.x -= self.frame.origin.x;
+        toConvert.y -= self.frame.origin.y;
+        return toConvert;
+    }
 }
 
-- (void)setWindowLevel:(UIWindowLevel)level
+- (CGRect) convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow
 {
-    self.layer.zPosition = level;
+    CGPoint convertedOrigin = [self convertPoint:toConvert.origin toWindow:toWindow];
+    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
 }
 
-- (UIWindowLevel)windowLevel
+- (CGRect) convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow
 {
-    return self.layer.zPosition;
+    CGPoint convertedOrigin = [self convertPoint:toConvert.origin fromWindow:fromWindow];
+    return CGRectMake(convertedOrigin.x, convertedOrigin.y, toConvert.size.width, toConvert.size.height);
 }
 
-- (void)sendEvent:(UIEvent *)event
+
+#pragma mark Sending Events
+
+- (void) sendEvent:(UIEvent*)event
 {
     if (event.type == UIEventTypeTouches) {
-        NSSet *touches = [event touchesForWindow:self];
-        NSMutableSet *gestureRecognizers = [NSMutableSet setWithCapacity:0];
-
-        for (UITouch *touch in touches) {
+        NSSet* touches = [event touchesForWindow:self];
+        NSMutableSet* gestureRecognizers = [NSMutableSet setWithCapacity:0];
+        for (UITouch* touch in touches) {
             [gestureRecognizers addObjectsFromArray:touch.gestureRecognizers];
         }
-
-        for (UIGestureRecognizer *recognizer in gestureRecognizers) {
+        for (UIGestureRecognizer* recognizer in gestureRecognizers) {
             [recognizer _recognizeTouches:touches withEvent:event];
         }
 
-        for (UITouch *touch in touches) {
-            UIView *view = touch.view;
-
+        for (UITouch* touch in touches) {
+            UIView* view = touch.view;
             const UITouchPhase phase = touch.phase;
             const _UITouchGesture gesture = [touch _gesture];
-            
+
             if (phase == UITouchPhaseBegan) {
                 [view touchesBegan:touches withEvent:event];
             } else if (phase == UITouchPhaseMoved) {
@@ -386,15 +280,13 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
                        (phase == _UITouchPhaseGestureChanged && gesture == _UITouchGesturePan)) {
                 [view scrollWheelMoved:[touch _delta] withEvent:event];
             }
-            
-            NSCursor *newCursor = [view mouseCursorForEvent:event] ?: [NSCursor arrowCursor];
+            NSCursor* newCursor = [view mouseCursorForEvent:event] ?: [NSCursor arrowCursor];
 
             if ([NSCursor currentCursor] != newCursor) {
                 [newCursor set];
             }
-            
+
         }
-		
 		if(touches.count < 1) {
 			[self _stopTrackingPotentiallyNewToolTip];
 			[self _hideCurrentToolTip];
@@ -405,59 +297,166 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
 	}
 }
 
-- (void)mouseExitedView:(UIView *)exited enteredView:(UIView *)entered withEvent:(UIEvent *)event {	
+
+#pragma mark UIView Overrides
+
+- (id) initWithFrame:(CGRect)theFrame
+{
+    if ((self=[super initWithFrame:theFrame])) {
+        [self _makeHidden];
+        self.screen = [UIScreen mainScreen];
+        self.opaque = NO;
+    }
+    return self;
+}
+
+- (void) setHidden:(BOOL)hide
+{
+    if (hide) {
+        [self _makeHidden];
+    } else {
+        [self _makeVisible];
+    }
+}
+
+- (UIView*) superview
+{
+    return nil;
+}
+
+- (void) removeFromSuperview
+{
+    // does nothing
+}
+
+- (UIWindow*) window
+{
+    return self;
+}
+
+
+#pragma mark UIResponder Overrides
+
+- (UIResponder*) nextResponder
+{
+    return [UIApplication sharedApplication];
+}
+
+- (NSUndoManager*) undoManager
+{
+    if (!_undoManager) {
+        _undoManager = [[NSUndoManager alloc] init];
+    }
+    return _undoManager;
+}
+
+- (void) mouseExitedView:(UIView*)exited enteredView:(UIView*)entered withEvent:(UIEvent*)event {
 	if(exited == nil || entered == nil) {
 		[self _stopTrackingPotentiallyNewToolTip];
 		[self _hideCurrentToolTip];
 	}
-	
 	[super mouseExitedView:exited enteredView:entered withEvent:event];
 }
 
-- (void)_showToolTipForView:(UIView *)view {
-	if(view == nil) return;
-	
-	NSMutableAttributedString *attributedToolTip = [[NSMutableAttributedString alloc] initWithString:view.toolTip];
-	NSRange wholeStringRange = NSMakeRange(0, view.toolTip.length);
-	[attributedToolTip addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:11.0f] range:wholeStringRange];
-	
-	NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-	[paragraphStyle setAlignment:NSLeftTextAlignment];
-	
-	[attributedToolTip addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:wholeStringRange];
-	
-	[[NSHelpManager sharedHelpManager] setContextHelp:attributedToolTip forObject:view];
-	[[NSHelpManager sharedHelpManager] showContextHelpForObject:view locationHint:[NSEvent mouseLocation]];
-	self.currentToolTipView = view;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_toolTipViewDidChangeSuperview:) name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
-	
-	self.toolTipViewToShow = nil;
+
+#pragma mark Private Methods
+
+- (BOOL) _acceptsFirstResponder
+{
+    return _firstResponder != nil;
 }
 
-- (void)_hideCurrentToolTip {	
-	if(self.currentToolTipView == nil) return;
-	
+- (UIResponder*) _firstResponder
+{
+    return _firstResponder;
+}
+
+- (void) _setFirstResponder:(UIResponder*)firstResponder
+{
+    if (_firstResponder != firstResponder) {
+        _firstResponder = firstResponder;
+        
+        UIKitView* uikitView = [[self screen] UIKitView];
+        
+        if (firstResponder) {
+            NSWindow* window = [uikitView window];
+            if (uikitView != [window firstResponder]) {
+                [window makeFirstResponder:uikitView];
+            }
+        }
+        
+        [uikitView _setTextInput:[firstResponder conformsToProtocol:@protocol(UITextInput)] ? firstResponder : nil];
+    }
+}
+
+
+- (void) _hideCurrentToolTip {
+	if(self.currentToolTipView == nil) {
+        return;
+    }
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
-	
 	[[NSHelpManager sharedHelpManager] removeContextHelpForObject:self.currentToolTipView];
-	
-	// Post fake events to force the tooltip to hide. It doesn't fade away like standard tooltips do, but it's the only way I've found.
 	NSEvent	*newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
 	[NSApp postEvent:newEvent atStart:NO];
-	
 	newEvent = [NSEvent mouseEventWithType:NSLeftMouseUp location:[NSEvent mouseLocation] modifierFlags:0 timestamp:0 windowNumber:[[self.screen.UIKitView window] windowNumber] context:[[self.screen.UIKitView window] graphicsContext] eventNumber:0 clickCount:1 pressure:0];
 	[NSApp postEvent:newEvent atStart:NO];
-	
 	self.currentToolTipView = nil;
 }
 
-- (void)_stopTrackingPotentiallyNewToolTip {
+- (void) _makeHidden
+{
+    if (!self.hidden) {
+        [super setHidden:YES];
+        if (self.screen) {
+            [[UIApplication sharedApplication] _windowDidBecomeHidden:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidBecomeHiddenNotification object:self];
+        }
+    }
+}
+
+- (void) _makeVisible
+{
+    if (self.hidden) {
+        [super setHidden:NO];
+        if (self.screen) {
+            [[UIApplication sharedApplication] _windowDidBecomeVisible:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIWindowDidBecomeVisibleNotification object:self];
+        }
+    }
+}
+
+- (void) _screenModeChangedNotification:(NSNotification*)note
+{
+    UIScreenMode* previousMode = [[note userInfo] objectForKey:@"_previousMode"];
+    UIScreenMode* newMode = _screen.currentMode;
+    if (!CGSizeEqualToSize(previousMode.size,newMode.size)) {
+        [self _superviewSizeDidChangeFrom:previousMode.size to:newMode.size];
+    }
+}
+
+- (void) _showToolTipForView:(UIView*)view {
+	if(view == nil){
+        return;
+    }
+	NSMutableAttributedString* attributedToolTip = [[NSMutableAttributedString alloc] initWithString:view.toolTip];
+	NSRange wholeStringRange = NSMakeRange(0, view.toolTip.length);
+	[attributedToolTip addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:11.0f] range:wholeStringRange];
+	NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+	[paragraphStyle setAlignment:NSLeftTextAlignment];
+	[attributedToolTip addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:wholeStringRange];
+	[[NSHelpManager sharedHelpManager] setContextHelp:attributedToolTip forObject:view];
+	[[NSHelpManager sharedHelpManager] showContextHelpForObject:view locationHint:[NSEvent mouseLocation]];
+	self.currentToolTipView = view;
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_toolTipViewDidChangeSuperview:) name:UIViewDidMoveToSuperviewNotification object:self.currentToolTipView];
+	self.toolTipViewToShow = nil;
+}
+
+- (void) _stopTrackingPotentiallyNewToolTip {
 	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showToolTipForView:) object:self.toolTipViewToShow];
 	self.toolTipViewToShow = nil;
 }
 
-- (void)_toolTipViewDidChangeSuperview:(NSNotification *)notification {
+- (void) _toolTipViewDidChangeSuperview:(NSNotification*)notification {
 	if(self.currentToolTipView.window.screen.UIKitView.superview == nil || self.currentToolTipView.superview == nil) {
 		[self _hideCurrentToolTip];
 	}

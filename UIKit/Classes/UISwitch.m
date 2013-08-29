@@ -27,26 +27,30 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UISwitch.h"
+#import <UIKit/UISwitch.h>
 
 @implementation UISwitch
 
-- (id)initWithFrame:(CGRect)frame
+#pragma mark Initializing the Switch Object
+
+- (id) initWithFrame:(CGRect)frame
 {
     if ((self=[super initWithFrame:frame])) {
-        // UIView's initWithFrame: calls setFrame:, so we'll enforce UISwitch's size invariant down there (see below)
     }
     return self;
 }
 
-- (void)setOn:(BOOL)on animated:(BOOL)animated
-{
-    _on = on;
-}
 
-- (void)setOn:(BOOL)on
+#pragma mark Setting the Off/On State
+
+- (void) setOn:(BOOL)on
 {
     [self setOn:on animated:NO];
+}
+
+- (void) setOn:(BOOL)on animated:(BOOL)animated
+{
+    _on = on;
 }
 
 @end

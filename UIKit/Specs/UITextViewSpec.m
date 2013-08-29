@@ -319,117 +319,115 @@ describe(@"UITextView", ^{
             });
             
             context(@"Comparisons", ^{
-                context(@"positions", ^{
-                    UITextPosition* beginningOfDocumentOffsetBySmallOffset = [textView positionFromPosition:beginningOfDocument offset:smallOffset];
-                    UITextPosition* endOfDocumentOffsetBySmallOffset = [textView positionFromPosition:endOfDocument offset:-smallOffset];
-                    context(@"beginning of document", ^{
-                        context(@"when compared to end", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
-                            });
-                        });
-                        context(@"when compared to beginning", ^{
-                            it(@"should be =", ^{
-                                [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
-                            });
-                        });
-                        context(@"when compared to small offset after beginning", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
-                            });
-                        });
-                        context(@"when compared to small offset before end", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocument toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
-                            });
+                UITextPosition* beginningOfDocumentOffsetBySmallOffset = [textView positionFromPosition:beginningOfDocument offset:smallOffset];
+                UITextPosition* endOfDocumentOffsetBySmallOffset = [textView positionFromPosition:endOfDocument offset:-smallOffset];
+                context(@"beginning of document", ^{
+                    context(@"when compared to end", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:beginningOfDocument toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
                         });
                     });
-
-                    context(@"end of document", ^{
-                        context(@"when compared to beginning", ^{
-                            it(@"should be >", ^{
-                                [[@([textView comparePosition:endOfDocument toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
-                            });
-                        });
-                        context(@"when compared to end", ^{
-                            it(@"should be =", ^{
-                                [[@([textView comparePosition:endOfDocument toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
-                            });
-                        });
-                        context(@"when compared to small offset after beginning", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
-                            });
-                        });
-                        context(@"when compared to small offset before end", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocument toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
-                            });
+                    context(@"when compared to beginning", ^{
+                        it(@"should be =", ^{
+                            [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
                         });
                     });
-
-                    context(@"small offset after beginning", ^{
-                        context(@"when compared to beginning", ^{
-                            it(@"should be >", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
-                            });
-                        });
-                        context(@"when compared to end", ^{
-                            it(@"should be =", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
-                            });
-                        });
-                        context(@"when compared to small offset after beginning", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
-                            });
-                        });
-                        context(@"when compared to small offset before end", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
-                            });
+                    context(@"when compared to small offset after beginning", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:beginningOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
                         });
                     });
-
-                    context(@"small offset before end", ^{
-                        context(@"when compared to beginning", ^{
-                            it(@"should be >", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
-                            });
-                        });
-                        context(@"when compared to end", ^{
-                            it(@"should be =", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
-                            });
-                        });
-                        context(@"when compared to small offset after beginning", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
-                            });
-                        });
-                        context(@"when compared to small offset before end", ^{
-                            it(@"should be <", ^{
-                                [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
-                            });
+                    context(@"when compared to small offset before end", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:beginningOfDocument toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
                         });
                     });
+                });
 
-                    context(@"with direction to without", ^{
-                        UITextPosition* beginningOfDocument = [loremTextView beginningOfDocument];
-                        UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:mediumOffset];
-                        context(@"right", ^{
-                            UITextPosition* positionOneToRight = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:unitOffset];
-                            UITextPosition* positionPlusOne = [loremTextView positionFromPosition:position offset:unitOffset];
-                            it(@"should be same", ^{
-                                [[@([loremTextView comparePosition:positionOneToRight toPosition:positionPlusOne]) should] equal:@(NSOrderedSame)];
-                            });
+                context(@"end of document", ^{
+                    context(@"when compared to beginning", ^{
+                        it(@"should be >", ^{
+                            [[@([textView comparePosition:endOfDocument toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
                         });
-                        context(@"left", ^{
-                            UITextPosition* positionOneToLeft = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionLeft offset:unitOffset];
-                            UITextPosition* positionMinusOne = [loremTextView positionFromPosition:position offset:-unitOffset];
-                            it(@"should be same", ^{
-                                [[@([loremTextView comparePosition:positionOneToLeft toPosition:positionMinusOne]) should] equal:@(NSOrderedSame)];
-                            });
+                    });
+                    context(@"when compared to end", ^{
+                        it(@"should be =", ^{
+                            [[@([textView comparePosition:endOfDocument toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"when compared to small offset after beginning", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:endOfDocument toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
+                        });
+                    });
+                    context(@"when compared to small offset before end", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:endOfDocument toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
+                        });
+                    });
+                });
+
+                context(@"small offset after beginning", ^{
+                    context(@"when compared to beginning", ^{
+                        it(@"should be >", ^{
+                            [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
+                        });
+                    });
+                    context(@"when compared to end", ^{
+                        it(@"should be =", ^{
+                            [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
+                        });
+                    });
+                    context(@"when compared to small offset after beginning", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"when compared to small offset before end", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:beginningOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedAscending)];
+                        });
+                    });
+                });
+
+                context(@"small offset before end", ^{
+                    context(@"when compared to beginning", ^{
+                        it(@"should be >", ^{
+                            [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:beginningOfDocument]) should] equal:@(NSOrderedDescending)];
+                        });
+                    });
+                    context(@"when compared to end", ^{
+                        it(@"should be =", ^{
+                            [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocument]) should] equal:@(NSOrderedAscending)];
+                        });
+                    });
+                    context(@"when compared to small offset after beginning", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:beginningOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedDescending)];
+                        });
+                    });
+                    context(@"when compared to small offset before end", ^{
+                        it(@"should be <", ^{
+                            [[@([textView comparePosition:endOfDocumentOffsetBySmallOffset toPosition:endOfDocumentOffsetBySmallOffset]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                });
+
+                context(@"with direction to without", ^{
+                    UITextPosition* beginningOfDocument = [loremTextView beginningOfDocument];
+                    UITextPosition* position = [loremTextView positionFromPosition:beginningOfDocument offset:mediumOffset];
+                    context(@"right", ^{
+                        UITextPosition* positionOneToRight = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionRight offset:unitOffset];
+                        UITextPosition* positionPlusOne = [loremTextView positionFromPosition:position offset:unitOffset];
+                        it(@"should be same", ^{
+                            [[@([loremTextView comparePosition:positionOneToRight toPosition:positionPlusOne]) should] equal:@(NSOrderedSame)];
+                        });
+                    });
+                    context(@"left", ^{
+                        UITextPosition* positionOneToLeft = [loremTextView positionFromPosition:position inDirection:UITextLayoutDirectionLeft offset:unitOffset];
+                        UITextPosition* positionMinusOne = [loremTextView positionFromPosition:position offset:-unitOffset];
+                        it(@"should be same", ^{
+                            [[@([loremTextView comparePosition:positionOneToLeft toPosition:positionMinusOne]) should] equal:@(NSOrderedSame)];
                         });
                     });
                 });
@@ -579,13 +577,19 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE) //remove once characterRangeByExtendingPostion:inDirection implemented for UIKit
+
                 context(@"characterRangeByExtendingPostion:inDirection", ^{
                     context(@"for composed character in middle", ^{
                         UITextPosition* position = [composedTextView positionFromPosition:beginningOfDocument offset:3];
                         UITextPosition* postPosition = [composedTextView positionFromPosition:beginningOfDocument offset:4];
                         context(@"right", ^{
                             UITextRange* rangeExtendedRight = [composedTextView characterRangeByExtendingPosition:position inDirection:UITextLayoutDirectionRight];
+                            it(@"should be", ^{
+                                [[rangeExtendedRight should] beNonNil];
+                            });
+                            it(@"should be of correct class", ^{
+                                [[rangeExtendedRight should] beKindOfClass:[UITextRange class]];
+                            });
                             context(@"start", ^{
                                 it(@"should = position", ^{
                                     [[@([composedTextView comparePosition:[rangeExtendedRight start] toPosition:position]) should] equal:@(NSOrderedSame)];
@@ -748,7 +752,6 @@ describe(@"UITextView", ^{
                         });
                     });
                 });
-#endif
             });
         });
 
@@ -795,13 +798,16 @@ describe(@"UITextView", ^{
                         it(@"start should be < end", ^{
                             [[@([textView comparePosition:[entireTextRange start] toPosition:[entireTextRange end]]) should] equal:@(NSOrderedAscending)];
                         });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
-                        // This is not yet implemented in UIKit. It is written in response to ticket #1567. It tests an optional method in the UITextInput protocol
-                        // that the harness implements.
                         context(@"-positionWithinRange:farthestInDirection:", ^{
                             context(@"layout direction", ^{
                                 context(@"up", ^{
                                     UITextPosition* terminus = [textView positionWithinRange:entireTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should be", ^{
+                                        [[terminus should] beNonNil];
+                                    });
+                                    it(@"should yield instance of correct class", ^{
+                                        [[terminus should] beKindOfClass:[UITextPosition class]];
+                                    });
                                     it(@"should equal end of document", ^{
                                         [[@([textView comparePosition:terminus toPosition:endOfDocument]) should] equal:@(NSOrderedSame)];
                                     });
@@ -826,7 +832,6 @@ describe(@"UITextView", ^{
                                 });
                             });
                         });
-#endif
                     });
                 });
 
@@ -848,13 +853,17 @@ describe(@"UITextView", ^{
                         it(@"start should = end", ^{
                             [[@([textView comparePosition:[zeroTextRange start] toPosition:[zeroTextRange end]]) should] equal:@(NSOrderedSame)];
                         });
-#if (TARGET_IPHONE_SIMULATOR || TARGET_IPHONE_DEVICE)
-                        // This is not yet implemented in UIKit. It is written in response to ticket #1569. It tests an optional method in the UITextInput protocol
-                        // that the harness implements.
+
                         context(@"-positionWithinRange:farthestInDirection:", ^{
                             context(@"layout direction", ^{
                                 context(@"up", ^{
                                     UITextPosition* terminus = [textView positionWithinRange:zeroTextRange farthestInDirection:UITextLayoutDirectionUp];
+                                    it(@"should be", ^{
+                                        [[terminus should] beNonNil];
+                                    });
+                                    it(@"should yield instance of correct class", ^{
+                                        [[terminus should] beKindOfClass:[UITextPosition class]];
+                                    });
                                     it(@"should equal end of document", ^{
                                         [[@([textView comparePosition:terminus toPosition:beginningOfDocument]) should] equal:@(NSOrderedSame)];
                                     });
@@ -879,8 +888,67 @@ describe(@"UITextView", ^{
                                 });
                             });
                         });
-#endif
                     });
+                });
+            });
+        });
+
+        context(@"marked text", ^{
+            NSString* newText = @"taco";
+            context(@"not set", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                context(@"range", ^{
+                    it(@"should be nil", ^{
+                        [[[markedTextView markedTextRange] should] beNil];
+                    });
+                });
+                context(@"style", ^{
+                    it(@"should be nil", ^{
+                        [[[markedTextView markedTextStyle] should] beNil];
+                    });
+                });
+            });
+            context(@"set once", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
+                UITextRange* markedTextRange = [markedTextView markedTextRange];
+                NSDictionary* selectedTextStyleDict = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"UITextInputTextBackgroundColorKey",
+                                                       [UIColor blackColor], @"UITextInputTextColorKey",
+                                                       [markedTextView font], @"UITextInputTextFontKey",
+                                                       nil];
+                it(@"should insert", ^{
+                    [[[markedTextView text] should] equal:newText];
+                });
+                it(@"style should be correct", ^{
+                    [[markedTextView markedTextStyle] isEqualToDictionary:selectedTextStyleDict];
+                });
+                it(@"should have correct start", ^{
+                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:[markedTextView beginningOfDocument]]) should] equal:@(NSOrderedSame)];
+                });
+                it(@"should have correct end", ^{
+                    [[@([markedTextView comparePosition:[markedTextRange end] toPosition:[markedTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
+                });
+            });
+            context(@"set once then unmarked", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
+                [markedTextView unmarkText];
+                it(@"should have no range", ^{
+                    [[[markedTextView markedTextRange] should] beNil];
+                });
+            });
+            context(@"set twice", ^{
+                UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                [markedTextView setText:text];
+                [markedTextView setMarkedText:@"0123456789" selectedRange:NSMakeRange(0, 0)];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 0)];
+                it(@"have second marked text inserted", ^{
+                    [[[markedTextView text] should] equal:[text stringByAppendingString:newText]];
                 });
             });
         });
@@ -974,6 +1042,85 @@ describe(@"UITextView", ^{
                 });
             });
 #endif
+        });
+
+        context(@"Key Input", ^{
+            context(@"-insertText", ^{
+                NSString* moreText = @"Hey!";
+                context(@"from end", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView endOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView insertText:moreText];
+                    it(@"should append", ^{
+                        [[[textView text] should] equal:[text stringByAppendingString:moreText]];
+                    });
+                });
+                context(@"overwriting", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView insertText:moreText];
+                    it(@"should replace text", ^{
+                        [[[textView text] should] equal:moreText];
+                    });
+                });
+                context(@"at beginning", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView beginningOfDocument]]];
+                    [textView insertText:moreText];
+                    it(@"should prepend", ^{
+                        [[[textView text] should] equal:[moreText stringByAppendingString:text]];
+                    });
+                });
+            });
+
+            context(@"-delete backward", ^{
+                context(@"from end", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView endOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView deleteBackward];
+                    it(@"should be same less last glyph", ^{
+                        [[[textView text] should] equal:[text substringToIndex:[text length] - 1]];
+                    });
+                });
+                context(@"overwriting", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView endOfDocument]]];
+                    [textView deleteBackward];
+                    it(@"should replace text", ^{
+                        [[[textView text] should] equal:@""];
+                    });
+                });
+                context(@"at beginning", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    [textView setSelectedTextRange:[textView textRangeFromPosition:[textView beginningOfDocument] toPosition:[textView beginningOfDocument]]];
+                    [textView deleteBackward];
+                    it(@"should do nothing", ^{
+                        [[[textView text] should] equal:text];
+                    });
+                });
+            });
+
+            context(@"-hasText", ^{
+                context(@"for an empty view", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    it(@"should be no", ^{
+                        [[@([textView hasText]) should] beNo];
+                    });
+                });
+                context(@"with text", ^{
+                    UITextView* textView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
+                    [textView setText:text];
+                    it(@"should be yes", ^{
+                        [[@([textView hasText]) should] beYes];
+                    });
+                });
+            });
         });
     });
 });

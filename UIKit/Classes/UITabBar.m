@@ -33,9 +33,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITabBar.h"
-#import "UIImageView.h"
-#import "UIImage+UIPrivate.h"
+#import <UIKit/UITabBar.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIImage+UIPrivate.h>
 #import <QuartzCore/QuartzCore.h>
 
 #define TABBAR_HEIGHT 60.0
@@ -44,26 +44,9 @@
     NSInteger _selectedItemIndex;
 }
 
-- (id)initWithFrame:(CGRect)rect
-{
-    if ((self = [super initWithFrame:rect])) {
-        rect.size.height = TABBAR_HEIGHT; // tabbar is always fixed
-        _selectedItemIndex = -1;
-        UIImage *backgroundImage = [UIImage _popoverBackgroundImage];
-        UIImageView *backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
-        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        backgroundView.frame = rect;
-        [self addSubview:backgroundView];
-    }
-    return self;
-}
+#pragma mark Configuring Items
 
-- (void)dealloc
-{
-    _delegate = nil;
-}
-
-- (UITabBarItem *)selectedItem
+- (UITabBarItem*) selectedItem
 {
     if (_selectedItemIndex >= 0) {
         return [_items objectAtIndex:_selectedItemIndex];
@@ -71,29 +54,61 @@
     return nil;
 }
 
-- (void)setSelectedItem:(UITabBarItem *)selectedItem
+- (void) setSelectedItem:(UITabBarItem*)selectedItem
 {
 }
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated
+- (void) setItems:(NSArray*)items animated:(BOOL)animated
 {
 }
 
-- (void)beginCustomizingItems:(NSArray *)items
+
+#pragma mark Customizing Tab Bars
+
+- (void) beginCustomizingItems:(NSArray*)items
 {
+#warning implement -beginCustomizingItems:
+    UIKIT_STUB(@"-beginCustomizingItems:");
 }
 
-- (BOOL)endCustomizingAnimated:(BOOL)animated
+- (BOOL) endCustomizingAnimated:(BOOL)animated
 {
-    return YES;
+# warning implement -endCustomizingAnimated:
+    UIKIT_STUB_W_RETURN(@"-endCustomizingAnimated:");
 }
 
-- (BOOL)isCustomizing
+- (BOOL) isCustomizing
 {
-    return NO;
+# warning implement -isCustomizing
+    UIKIT_STUB_W_RETURN(@"-isCustomizing");
 }
 
-- (NSString *)description
+
+#pragma mark UIView Overrides
+
+- (id) initWithFrame:(CGRect)rect
+{
+    if ((self = [super initWithFrame:rect])) {
+        rect.size.height = TABBAR_HEIGHT;
+        _selectedItemIndex = -1;
+        UIImage* backgroundImage = [UIImage _popoverBackgroundImage];
+        UIImageView* backgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
+        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        backgroundView.frame = rect;
+        [self addSubview:backgroundView];
+    }
+    return self;
+}
+
+
+#pragma mark NSObject Overrides
+
+- (void) dealloc
+{
+    _delegate = nil;
+}
+
+- (NSString*) description
 {
     return [NSString stringWithFormat:@"<%@: %p; selectedItem = %@; items = %@; delegate = %@>", [self className], self, self.selectedItem, self.items, self.delegate];
 }
