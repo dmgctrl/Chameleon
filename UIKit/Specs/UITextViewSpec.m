@@ -941,6 +941,9 @@ describe(@"UITextView", ^{
                 it(@"should have no range", ^{
                     [[[markedTextView markedTextRange] should] beNil];
                 });
+                it(@"should insert", ^{
+                    [[[markedTextView text] should] equal:newText];
+                });
             });
             context(@"set twice", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
