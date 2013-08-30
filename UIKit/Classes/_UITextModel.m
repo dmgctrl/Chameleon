@@ -14,7 +14,6 @@
         bool textInputPrepareAttributedTextForInsertion : 1;
     } _delegateHas;
 }
-@synthesize markedTextStyle;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager
 {
@@ -104,23 +103,6 @@
 - (NSInteger) endOfDocument
 {
     return [[self _textStorage] length];
-}
-
-- (NSRange) markedTextRange
-{
-#warning Implement -markedTextRange
-    return (NSRange){};
-}
-
-- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
-{
-#warning Implement -setMarkedText:selectedRange:
-    UIKIT_STUB(@"setMarkedText:selectedRange:");
-}
-
-- (void) unmarkText
-{
-#warning Implement -unmarkText
 }
 
 - (NSInteger) positionFromPosition:(NSInteger)position offset:(NSInteger)offset

@@ -89,17 +89,17 @@
 
 - (UITextRange*) markedTextRange
 {
-    return [_UITextViewRange rangeWithNSRange:[_model markedTextRange]];
+    return [_UITextViewRange rangeWithNSRange:[_interactionController markedTextRange]];
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
-    [_model setMarkedText:markedText selectedRange:selectedRange];
+    [_interactionController setMarkedText:markedText selectedRange:selectedRange];
 }
 
 - (void) unmarkText
 {
-    [_model unmarkText];
+    [_interactionController unmarkText];
 }
 
 - (UITextRange*) textRangeFromPosition:(_UITextViewPosition*)fromPosition toPosition:(_UITextViewPosition*)toPosition

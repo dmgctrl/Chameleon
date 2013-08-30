@@ -41,6 +41,9 @@
 //    NSSelectionGranularity _selectionGranularity;
 }
 
+@synthesize markedTextStyle;
+
+
 - (instancetype) initWithView:(UIResponder<UITextInput>*)view model:(_UITextModel*)model
 {
     NSAssert(nil != view, @"???");
@@ -145,6 +148,26 @@
         [[gestureRecognizer view] removeGestureRecognizer:gestureRecognizer];
     }
     [_gestureRecognizers removeAllObjects];
+}
+
+
+#pragma mark Marked Text
+
+- (NSRange) markedTextRange
+{
+#warning Implement -markedTextRange
+    return (NSRange){};
+}
+
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
+{
+#warning Implement -setMarkedText:selectedRange:
+    UIKIT_STUB(@"setMarkedText:selectedRange:");
+}
+
+- (void) unmarkText
+{
+#warning Implement -unmarkText
 }
 
 

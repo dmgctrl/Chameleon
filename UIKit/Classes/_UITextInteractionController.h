@@ -28,6 +28,11 @@ UIKIT_HIDDEN
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic) NSInteger insertionPoint;
 
+@property (nonatomic, copy) NSDictionary* markedTextStyle;
+- (NSRange) markedTextRange;
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange;
+- (void) unmarkText;
+
 - (UITapGestureRecognizer*) addOneFingerTapRecognizerToView:(UIView*)view;
 - (UITapGestureRecognizer*) addOneFingerDoubleTapRecognizerToView:(UIView*)view;
 - (UIPanGestureRecognizer*) addSelectionPanGestureRecognizerToView:(UIView*)view;
