@@ -24,6 +24,7 @@ UIKIT_HIDDEN
 - (NSString*) textInRange:(NSRange)range;
 - (void) replaceRange:(NSRange)range withText:(NSString*)text;
 
+@property (nonatomic, strong) NSString* markedText;
 @property (nonatomic, copy) NSDictionary* markedTextStyle;
 - (NSRange) markedTextRange;
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange;
