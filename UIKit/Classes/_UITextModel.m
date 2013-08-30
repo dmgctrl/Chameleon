@@ -15,7 +15,6 @@
     } _delegateHas;
 }
 @synthesize markedTextStyle;
-@synthesize markedText = markedText_;
 
 - (instancetype) initWithLayoutManager:(NSLayoutManager*)layoutManager
 {
