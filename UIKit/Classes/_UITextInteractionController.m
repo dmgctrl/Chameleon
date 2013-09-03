@@ -164,6 +164,9 @@
         [_model replaceRange:_markedTextRange withText:markedText];
         _markedTextRange = NSMakeRange(oldRangeLocation, [markedText length]);
     }
+NSUInteger selectedTextLocation = MIN(selectedRange.location, [markedText length]);
+NSUInteger selectedTextLength = MIN(selectedRange.length, [markedText length] - selectedTextLocation);
+[self setSelectedRange:NSMakeRange(selectedTextLocation + [self insertionPoint] - [markedText length], selectedTextLength)];
 }
 
 - (void) unmarkText
