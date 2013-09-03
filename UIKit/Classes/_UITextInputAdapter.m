@@ -89,7 +89,11 @@
 
 - (UITextRange*) markedTextRange
 {
-    return [_UITextViewRange rangeWithNSRange:[_interactionController markedTextRange]];
+    NSRange tempRange = [_interactionController markedTextRange];
+    if (0 == tempRange.length) {
+        return nil;
+    }
+    return [_UITextViewRange rangeWithNSRange:tempRange];
 }
 
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
