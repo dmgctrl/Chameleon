@@ -29,7 +29,7 @@ UIKIT_HIDDEN
 @property (nonatomic) NSInteger insertionPoint;
 
 @property (nonatomic, copy) NSDictionary* markedTextStyle;
-- (NSRange) markedTextRange;
+@property (nonatomic, readonly) NSRange markedTextRange;
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange;
 - (void) unmarkText;
 

@@ -42,7 +42,7 @@
 }
 
 @synthesize markedTextStyle;
-
+@synthesize markedTextRange = _markedTextRange;
 
 - (instancetype) initWithView:(UIResponder<UITextInput>*)view model:(_UITextModel*)model
 {
@@ -153,21 +153,22 @@
 
 #pragma mark Marked Text
 
-- (NSRange) markedTextRange
-{
-#warning Implement -markedTextRange
-    return (NSRange){};
-}
-
 - (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
 {
-#warning Implement -setMarkedText:selectedRange:
-    UIKIT_STUB(@"setMarkedText:selectedRange:");
+    if (0 == _markedTextRange.length){
+        NSUInteger oldRangeLocation = [self selectedRange].location;
+        [self insertText:markedText];
+        _markedTextRange = NSMakeRange(oldRangeLocation, [markedText length]);
+    } else {
+        NSUInteger oldRangeLocation = _markedTextRange.location;
+        [_model replaceRange:_markedTextRange withText:markedText];
+        _markedTextRange = NSMakeRange(oldRangeLocation, [markedText length]);
+    }
 }
 
 - (void) unmarkText
 {
-#warning Implement -unmarkText
+    _markedTextRange = NSMakeRange(0, 0);
 }
 
 
