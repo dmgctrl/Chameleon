@@ -912,7 +912,8 @@ describe(@"UITextView", ^{
             context(@"set once", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
-                [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
+                [markedTextView setSelectedRange:NSMakeRange([text length], 0)];
+                UITextPosition* originalEndOfDocument = [markedTextView endOfDocument];
                 [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
                 UITextRange* markedTextRange = [markedTextView markedTextRange];
                 NSDictionary* selectedTextStyleDict = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"UITextInputTextBackgroundColorKey",
@@ -920,19 +921,19 @@ describe(@"UITextView", ^{
                                                        [markedTextView font], @"UITextInputTextFontKey",
                                                        nil];
                 it(@"should insert", ^{
-                    [[[markedTextView text] should] equal:newText];
+                    [[[markedTextView text] should] equal:[text stringByAppendingString:newText]];
                 });
                 it(@"style should be correct", ^{
                     [[markedTextView markedTextStyle] isEqualToDictionary:selectedTextStyleDict];
                 });
                 it(@"should have correct start", ^{
-                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:[markedTextView beginningOfDocument]]) should] equal:@(NSOrderedSame)];
+                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:originalEndOfDocument]) should] equal:@(NSOrderedSame)];
                 });
                 it(@"should have correct end", ^{
                     [[@([markedTextView comparePosition:[markedTextRange end] toPosition:[markedTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
                 });
             });
-            context(@"set once then unmarked", ^{
+            context(@"set once then unmark", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
                 [markedTextView setSelectedTextRange:[markedTextView textRangeFromPosition:[markedTextView beginningOfDocument] toPosition:[markedTextView endOfDocument]]];
@@ -948,6 +949,7 @@ describe(@"UITextView", ^{
             context(@"set twice", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
+                [markedTextView setSelectedRange:NSMakeRange([text length], 0)];
                 [markedTextView setMarkedText:@"0123456789" selectedRange:NSMakeRange(0, 0)];
                 [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 0)];
                 it(@"have second marked text inserted", ^{
@@ -955,7 +957,6 @@ describe(@"UITextView", ^{
                 });
             });
         });
-
         context(@"Selection", ^{
             NSString* selectionText = @"The quick brown fox /n/njumped over the lazy dog.";
             context(@"entire document", ^{
