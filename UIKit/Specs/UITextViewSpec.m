@@ -912,25 +912,28 @@ describe(@"UITextView", ^{
             context(@"set once", ^{
                 UITextView* markedTextView = [[UITextView alloc] initWithFrame:(CGRect){ .size = { 100, 100 } }];
                 [markedTextView setText:text];
-                [markedTextView setSelectedRange:NSMakeRange([text length], 0)];
-                UITextPosition* originalEndOfDocument = [markedTextView endOfDocument];
-                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, 1)];
+                NSUInteger halfTextLength = textLength / 2;
+                [markedTextView setSelectedRange:NSMakeRange(halfTextLength, 1)];
+                [markedTextView setMarkedText:newText selectedRange:NSMakeRange(0, [newText length] + 5)];
                 UITextRange* markedTextRange = [markedTextView markedTextRange];
                 NSDictionary* selectedTextStyleDict = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"UITextInputTextBackgroundColorKey",
                                                        [UIColor blackColor], @"UITextInputTextColorKey",
                                                        [markedTextView font], @"UITextInputTextFontKey",
                                                        nil];
                 it(@"should insert", ^{
-                    [[[markedTextView text] should] equal:[text stringByAppendingString:newText]];
+                    [[[markedTextView text] should] equal:[text stringByReplacingCharactersInRange:NSMakeRange(halfTextLength, 1) withString:newText]];
                 });
                 it(@"style should be correct", ^{
                     [[markedTextView markedTextStyle] isEqualToDictionary:selectedTextStyleDict];
                 });
                 it(@"should have correct start", ^{
-                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:originalEndOfDocument]) should] equal:@(NSOrderedSame)];
+                    [[@([markedTextView comparePosition:[markedTextRange start] toPosition:[markedTextView positionFromPosition:[markedTextView beginningOfDocument] offset:halfTextLength]]) should] equal:@(NSOrderedSame)];
                 });
                 it(@"should have correct end", ^{
-                    [[@([markedTextView comparePosition:[markedTextRange end] toPosition:[markedTextView endOfDocument]]) should] equal:@(NSOrderedSame)];
+                    [[@([markedTextView comparePosition:[markedTextRange end] toPosition:[markedTextView positionFromPosition:[markedTextView beginningOfDocument] offset:halfTextLength + [newText length]]]) should] equal:@(NSOrderedSame)];
+                });
+                it(@"should have correct selected range", ^{
+                    [[@(NSEqualRanges([markedTextView selectedRange], NSMakeRange(halfTextLength, [newText length]))) should] beYes];
                 });
             });
             context(@"set once then unmark", ^{
