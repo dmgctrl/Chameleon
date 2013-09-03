@@ -50,6 +50,9 @@ static NSArray* GestureRecognizersForView(UIView* view)
     CGPoint _location;
     CGPoint _previousLocation;
 }
+@synthesize view = _view;
+@synthesize window = _window;
+
 
 #pragma mark Getting the Location of Touches
 
@@ -62,14 +65,6 @@ static NSArray* GestureRecognizersForView(UIView* view)
 {
     return [self _convertLocationPoint:_previousLocation toView:inView];
 }
-
-- (UIWindow*) window
-{
-    return _window;
-}
-
-@synthesize view = _view;
-@synthesize window = _window;
 
 
 #pragma mark NSObject Protocol
@@ -213,7 +208,10 @@ static NSArray* GestureRecognizersForView(UIView* view)
 {
     if (!CGPointEqualToPoint(screenLocation, _location)) {
         _previousLocation = _location;
-        _location = screenLocation;
+        _location = (CGPoint){
+            screenLocation.x + delta.x,
+            screenLocation.y + delta.y
+        };
     }
     _phase = _UITouchPhaseGestureChanged;
     _gesture = gesture;

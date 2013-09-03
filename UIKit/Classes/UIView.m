@@ -1133,7 +1133,9 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 - (CGPoint) convertPoint:(CGPoint)toConvert toView:(UIView*)toView
 {
     assert(!toView || toView.window == self.window);
-    if (toView) {
+    if (self == toView) {
+        return toConvert;
+    } else if (toView) {
         return [self.layer convertPoint:toConvert toLayer:toView.layer];
     } else {
         return [self.layer convertPoint:toConvert toLayer:self.window.layer];

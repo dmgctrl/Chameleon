@@ -83,6 +83,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     NSTimer *_scrollTimer;
     NSTimeInterval _scrollAnimationTime;
     
+    CGPoint _dragReferencePoint;
     BOOL _dragging;
     BOOL _decelerating;
     
@@ -684,16 +685,19 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     // don't use paging mode in Twitterrific at the moment, I'm not suffeciently motivated to worry about it. :)
     
     if (gesture == _panGestureRecognizer) {
-#if 0 // Disabled: Handled below.
         if (_panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
             [self _beginDragging];
+            _dragReferencePoint = [_panGestureRecognizer translationInView:self];
         } else if (_panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
-            [self _dragBy:[_panGestureRecognizer translationInView:self]];
-            [_panGestureRecognizer setTranslation:CGPointZero inView:self];
+            CGPoint translatedPoint = [_panGestureRecognizer translationInView:self];
+            CGPoint delta = {
+                .x = translatedPoint.x - _dragReferencePoint.x,
+                .y = translatedPoint.y - _dragReferencePoint.y
+            };
+            [self _dragBy:delta];
         } else if (_panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
             [self _endDraggingWithDecelerationVelocity:[_panGestureRecognizer velocityInView:self]];
         }
-#endif
     } else if (gesture == _scrollWheelGestureRecognizer) {
         if (_scrollWheelGestureRecognizer.state == UIGestureRecognizerStateRecognized) {
             const CGPoint delta = [_scrollWheelGestureRecognizer translationInView:self];
