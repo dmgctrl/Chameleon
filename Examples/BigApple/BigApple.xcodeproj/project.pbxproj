@@ -138,9 +138,9 @@
 			isa = PBXGroup;
 			children = (
 				147D65B0133917A30065FE3B /* UIKit.framework */,
-				F92AB8E717693DDF0090CE21 /* UIKit Specs (OSX).octest */,
 				F92AB8E917693DDF0090CE21 /* TestHarness.app */,
 				F92AB8EB17693DDF0090CE21 /* UIKit Specs (iOS).octest */,
+				F92AB8E717693DDF0090CE21 /* UIKit Specs (OSX).octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -235,6 +235,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BigApple" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -364,6 +366,7 @@
 				GCC_PREFIX_HEADER = BigApple_Prefix.pch;
 				INFOPLIST_FILE = "BigApple-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = BigApple;
 			};
 			name = Debug;
@@ -383,6 +386,7 @@
 				GCC_PREFIX_HEADER = BigApple_Prefix.pch;
 				INFOPLIST_FILE = "BigApple-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = BigApple;
 			};
 			name = Release;
