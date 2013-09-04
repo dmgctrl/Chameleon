@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
@@ -27,31 +28,34 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import <QuartzCore/CALayer.h>
+//
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIViewAnimationGroup.h>
+#import <UIKit/UIViewBlockAnimationDelegate.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIAppearanceInstance.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIGeometry.h>
+#import <UIKit/UIColorRep.h>
+//
 #import "UIView+UIPrivate.h"
 #import "UIViewController+UIPrivate.h"
 #import "UIView+AppKit.h"
-#import "UIWindow.h"
-#import "UIGraphics.h"
-#import "UIColor.h"
-#import "UIViewLayoutManager.h"
-#import "UIViewAnimationGroup.h"
-#import "UIViewBlockAnimationDelegate.h"
-#import "UIViewController.h"
-#import "UIAppearanceInstance.h"
 #import "UIApplication+UIPrivate.h"
 #import "UIGestureRecognizer+UIPrivate.h"
-#import "UIScreen.h"
-#import "UIGeometry.h"
 #import "UIColor+UIPrivate.h"
-#import "UIColorRep.h"
-#import <QuartzCore/CALayer.h>
+#import "_UIViewLayoutManager.h"
 
 @class NSWindow;
 
-NSString *const UIViewFrameDidChangeNotification = @"UIViewFrameDidChangeNotification";
-NSString *const UIViewBoundsDidChangeNotification = @"UIViewBoundsDidChangeNotification";
-NSString *const UIViewDidMoveToSuperviewNotification = @"UIViewDidMoveToSuperviewNotification";
-NSString *const UIViewHiddenDidChangeNotification = @"UIViewHiddenDidChangeNotification";
+NSString* const UIViewFrameDidChangeNotification = @"UIViewFrameDidChangeNotification";
+NSString* const UIViewBoundsDidChangeNotification = @"UIViewBoundsDidChangeNotification";
+NSString* const UIViewDidMoveToSuperviewNotification = @"UIViewDidMoveToSuperviewNotification";
+NSString* const UIViewHiddenDidChangeNotification = @"UIViewHiddenDidChangeNotification";
 
 static NSString* const kUIAlphaKey = @"UIAlpha";
 static NSString* const kUIAutoresizeSubviewsKey = @"UIAutoresizeSubviews";
@@ -70,7 +74,7 @@ static NSString* const kUITagKey = @"UITag";
 static NSString* const kUIUserInteractionDisabledKey = @"UIUserInteractionDisabled";
 static NSString* const kUISubviewsKey = @"UISubviews";
 
-static NSMutableArray *_animationGroups;
+static NSMutableArray* _animationGroups;
 static BOOL _animationsEnabled = YES;
 
 typedef void DrawRectMethod(id, SEL, CGRect);
@@ -79,9 +83,9 @@ typedef void DisplayLayerMethod(id, SEL, CALayer*);
 @implementation UIView {
     BOOL _needsDidAppearOrDisappear;
 
-    NSMutableSet *_subviews;
-    UIViewController *_viewController;
-    NSMutableSet *_gestureRecognizers;
+    NSMutableSet* _subviews;
+    UIViewController* _viewController;
+    NSMutableSet* _gestureRecognizers;
     DrawRectMethod* ourDrawRect_;
     
     struct {
@@ -100,7 +104,7 @@ static SEL displayLayerSelector;
 static DrawRectMethod* defaultImplementationOfDrawRect;
 static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
 
-+ (void)initialize
++ (void) initialize
 {
     if (self == [UIView class]) {
         _animationGroups = [[NSMutableArray alloc] init];
@@ -111,15 +115,22 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-+ (Class)layerClass
+- (void) dealloc
 {
-    return [CALayer class];
+    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    _layer.layoutManager = nil;
+    _layer.delegate = nil;
+    [_layer removeFromSuperlayer];
+    _layer = nil;
 }
+
+
+#pragma mark Initialization
 
 - (void) _commonInitForUIView
 {
     _flags.overridesDisplayLayer = (defaultImplementationOfDisplayLayer != (DisplayLayerMethod*)[[self class] instanceMethodForSelector:displayLayerSelector]);
-
+    
     DrawRectMethod* ourDrawRect = (DrawRectMethod*)[[self class] instanceMethodForSelector:drawRectSelector];
     if (ourDrawRect != defaultImplementationOfDrawRect) {
         ourDrawRect_ = ourDrawRect;
@@ -134,7 +145,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     
     _layer = [[[[self class] layerClass] alloc] init];
     _layer.delegate = self;
-    _layer.layoutManager = [UIViewLayoutManager layoutManager];
+    _layer.layoutManager = [_UIViewLayoutManager layoutManager];
     _flags.layerHasContentScale = [_layer respondsToSelector:@selector(setContentsScale:)];
     
     self.alpha = 1;
@@ -142,29 +153,17 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     [self setNeedsDisplay];
 }
 
-- (void) dealloc
+- (id) init
 {
-    [[_subviews allObjects] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    _layer.layoutManager = nil;
-    _layer.delegate = nil;
-    [_layer removeFromSuperlayer];
-    _layer = nil;
+    return [self initWithFrame:CGRectZero];
 }
 
-
-- (id)init
-{
-    if (nil != (self = [self initWithFrame:CGRectZero])) {
-        /**/
-    }
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)theFrame
+- (id) initWithFrame:(CGRect)theFrame
 {
     if (nil != (self = [super init])) {
         [self _commonInitForUIView];
         self.frame = theFrame;
+        [self setNeedsDisplay];
     }
     return self;
 }
@@ -221,49 +220,183 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
         for (UIView* subview in [coder decodeObjectForKey:kUISubviewsKey]) {
             [self addSubview:subview];
         }
+        [self setNeedsDisplay];
     }
     return self;
 }
 
-- (void) encodeWithCoder:(NSCoder*)coder
+
+#pragma mark Configuring a View’s Visual Appearance
+
+- (void) setBackgroundColor:(UIColor*)backgroundColor
 {
-    [self doesNotRecognizeSelector:_cmd];
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
+        
+        self.opaque = [_backgroundColor _isOpaque];
+        
+        if (!ourDrawRect_) {
+            _layer.backgroundColor = [backgroundColor CGColor];
+        }
+    }
 }
 
-- (void)_setViewController:(UIViewController *)theViewController
+- (BOOL) isHidden
 {
-    _viewController = theViewController;
+    return _layer.hidden;
 }
 
-- (UIViewController *)_viewController
+- (void) setHidden:(BOOL)hidden
 {
-    return _viewController;
+    if (hidden != _layer.hidden) {
+        _layer.hidden = hidden;
+        [[NSNotificationCenter defaultCenter] postNotificationName:UIViewHiddenDidChangeNotification object:self];
+    }
 }
 
-- (UIWindow *)window
+- (CGFloat) alpha
 {
-    return _superview.window;
+    return _layer.opacity;
 }
 
-- (UIResponder *)nextResponder
+- (void) setAlpha:(CGFloat)alpha
 {
-    return (UIResponder *)[self _viewController] ?: (UIResponder *)_superview;
+    if (alpha != _layer.opacity) {
+        _layer.opacity = alpha;
+    }
 }
 
-- (id)_appearanceContainer
+- (BOOL) isOpaque
 {
-    return self.superview;
+    return _layer.opaque;
 }
 
-- (NSArray *)subviews
+- (void) setOpaque:(BOOL)opaque
 {
-    NSArray *sublayers = _layer.sublayers;
+    if (opaque != _layer.opaque) {
+        _layer.opaque = opaque;
+    }
+}
+
+- (BOOL) clipsToBounds
+{
+    return _layer.masksToBounds;
+}
+
+- (void) setClipsToBounds:(BOOL)clipsToBounds
+{
+    if (clipsToBounds != _layer.masksToBounds) {
+        _layer.masksToBounds = clipsToBounds;
+    }
+}
+
+- (BOOL) clearsContextBeforeDrawing
+{
+    return _flags.clearsContextBeforeDrawing;
+}
+
+- (void) setClearsContextBeforeDrawing:(BOOL)clearsContextBeforeDrawing
+{
+    _flags.clearsContextBeforeDrawing = clearsContextBeforeDrawing;
+}
+
++ (Class) layerClass
+{
+    return [CALayer class];
+}
+
+
+#pragma mark Configuring the Event-Related Behavior
+
+- (BOOL) isUserInteractionEnabled
+{
+    return _flags.userInteractionEnabled;
+}
+
+- (void) setUserInteractionEnabled:(BOOL)userInteractionEnabled
+{
+    _flags.userInteractionEnabled = userInteractionEnabled;
+}
+
+- (BOOL) isMultipleTouchEnabled
+{
+    return _flags.multipleTouchEnabled;
+}
+
+- (void) setMultipleTouchEnabled:(BOOL)multipleTouchEnabled
+{
+    _flags.multipleTouchEnabled = multipleTouchEnabled;
+}
+
+
+#pragma mark Configuring the Bounds and Frame Rectangles
+
+- (CGRect) frame
+{
+    return _layer.frame;
+}
+
+- (void) setFrame:(CGRect)frame
+{
+    if (!CGRectEqualToRect(frame, _layer.frame)) {
+        CGRect oldBounds = _layer.bounds;
+        _layer.frame = frame;
+        [self _boundsDidChangeFrom:oldBounds to:_layer.bounds];
+        [[NSNotificationCenter defaultCenter] postNotificationName:UIViewFrameDidChangeNotification object:self];
+    }
+}
+
+- (CGRect) bounds
+{
+    return _layer.bounds;
+}
+
+- (void) setBounds:(CGRect)bounds
+{
+    if (!CGRectEqualToRect(bounds, _layer.bounds)) {
+        CGRect oldBounds = _layer.bounds;
+        _layer.bounds = bounds;
+        [self _boundsDidChangeFrom:oldBounds to:bounds];
+        [[NSNotificationCenter defaultCenter] postNotificationName:UIViewBoundsDidChangeNotification object:self];
+    }
+}
+
+- (CGPoint) center
+{
+    return _layer.position;
+}
+
+- (void) setCenter:(CGPoint)center
+{
+    if (!CGPointEqualToPoint(center, _layer.position)) {
+        _layer.position = center;
+    }
+}
+
+- (CGAffineTransform) transform
+{
+    return _layer.affineTransform;
+}
+
+- (void) setTransform:(CGAffineTransform)transform
+{
+    if (!CGAffineTransformEqualToTransform(transform, _layer.affineTransform)) {
+        _layer.affineTransform = transform;
+    }
+}
+
+
+#pragma mark Managing the View Hierarchy
+
+- (NSArray*) subviews
+{
+    NSArray* sublayers = _layer.sublayers;
     NSMutableArray *subviews = [NSMutableArray arrayWithCapacity:[sublayers count]];
 
     // This builds the results from the layer instead of just using _subviews because I want the results to match
     // the order that CALayer has them. It's unclear in the docs if the returned order from this method is guarenteed or not,
     // however several other aspects of the system (namely the hit testing) depends on this order being correct.
-    for (CALayer *layer in sublayers) {
+    for (CALayer*layer in sublayers) {
         id potentialView = [layer delegate];
         if ([_subviews containsObject:potentialView]) {
             [subviews addObject:potentialView];
@@ -273,78 +406,34 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return subviews;
 }
 
-- (void)_willMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
+- (UIWindow*) window
 {
-    if (fromWindow != toWindow) {
-        
-        // need to manage the responder chain. apparently UIKit (at least by version 4.2) seems to make sure that if a view was first responder
-        // and it or it's parent views are disconnected from their window, the first responder gets reset to nil. Honestly, I don't think this
-        // was always true - but it's certainly a much better and less-crashy design. Hopefully this check here replicates the behavior properly.
-        if (!toWindow && [self isFirstResponder]) {
-            [self resignFirstResponder];
-        }
-        
-        [_viewController viewWillMoveToWindow:toWindow];
-        [self _setAppearanceNeedsUpdate];
-        [self willMoveToWindow:toWindow];
-
-        for (UIView *subview in self.subviews) {
-            [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
-        }
-    }
+    return _superview.window;
 }
 
-- (void) _didMoveToScreenWithScale:(CGFloat)scale
-{
-    if (ourDrawRect_ && self.contentScaleFactor != scale) {
-        self.contentScaleFactor = scale;
-    } else {
-        [self setNeedsDisplay];
-    }
-    for (UIView *subview in self.subviews) {
-        [subview _didMoveToScreenWithScale:scale];
-    }
-}
-
-- (void)_didMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
-{
-    if (fromWindow != toWindow) {
-        [_viewController viewDidMoveToWindow:toWindow];
-        [self didMoveToWindow];
-		
-        for (UIView *subview in self.subviews) {
-            [subview _didMoveFromWindow:fromWindow toWindow:toWindow];
-        }
-    }
-}
-
-- (void)addSubview:(UIView *)subview
+- (void) addSubview:(UIView*)subview
 {
     NSAssert((!subview || [subview isKindOfClass:[UIView class]]), @"the subview must be a UIView");
-
+    
     if (subview && subview.superview != self) {
-        UIWindow *oldWindow = subview.window;
-        UIWindow *newWindow = self.window;
-
+        UIWindow* oldWindow = subview.window;
+        UIWindow* newWindow = self.window;
+        
         if (newWindow) {
             [subview _willMoveFromWindow:oldWindow toWindow:newWindow];
         }
         [subview willMoveToSuperview:self];
-
-        {
-            
-            if (subview.superview) {
-                [subview.layer removeFromSuperlayer];
-                [subview.superview->_subviews removeObject:subview];
-            }
-            
-            [subview willChangeValueForKey:@"superview"];
-            [_subviews addObject:subview];
-            subview->_superview = self;
-            [_layer addSublayer:subview.layer];
-            [subview didChangeValueForKey:@"superview"];
-            
+        
+        if (subview.superview) {
+            [subview.layer removeFromSuperlayer];
+            [subview.superview->_subviews removeObject:subview];
         }
+        
+        [subview willChangeValueForKey:@"superview"];
+        [_subviews addObject:subview];
+        subview->_superview = self;
+        [_layer addSublayer:subview.layer];
+        [subview didChangeValueForKey:@"superview"];
         
         if (oldWindow.screen != newWindow.screen) {
             [subview _didMoveToScreenWithScale:[[newWindow screen] scale]];
@@ -353,7 +442,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
         if (newWindow) {
             [subview _didMoveFromWindow:oldWindow toWindow:newWindow];
         }
-
+        
         [subview didMoveToSuperview];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewDidMoveToSuperviewNotification object:subview];
@@ -362,45 +451,27 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-- (void)insertSubview:(UIView *)subview atIndex:(NSInteger)index
-{
-    [self addSubview:subview];
-    [_layer insertSublayer:subview.layer atIndex:index];
-}
-
-- (void)insertSubview:(UIView *)subview belowSubview:(UIView *)below
-{
-    [self addSubview:subview];
-    [_layer insertSublayer:subview.layer below:below.layer];
-}
-
-- (void)insertSubview:(UIView *)subview aboveSubview:(UIView *)above
-{
-    [self addSubview:subview];
-    [_layer insertSublayer:subview.layer above:above.layer];
-}
-
-- (void)bringSubviewToFront:(UIView *)subview
+- (void) bringSubviewToFront:(UIView*)subview
 {
     if (subview.superview == self) {
         [_layer insertSublayer:subview.layer above:[[_layer sublayers] lastObject]];
     }
 }
 
-- (void)sendSubviewToBack:(UIView *)subview
+- (void) sendSubviewToBack:(UIView*)subview
 {
     if (subview.superview == self) {
         [_layer insertSublayer:subview.layer atIndex:0];
     }
 }
 
-- (void)removeFromSuperview
+- (void) removeFromSuperview
 {
     if (_superview) {
         
         [[UIApplication sharedApplication] _removeViewFromTouches:self];
         
-        UIWindow *oldWindow = self.window;
+        UIWindow* oldWindow = self.window;
         
         [_superview willRemoveSubview:self];
         if (oldWindow) {
@@ -423,101 +494,34 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-- (void)didAddSubview:(UIView *)subview
+- (void) insertSubview:(UIView*)subview atIndex:(NSInteger)index
 {
+    [self addSubview:subview];
+    [_layer insertSublayer:subview.layer atIndex:index];
 }
 
-- (void)didMoveToSuperview
+- (void) insertSubview:(UIView*)subview aboveSubview:(UIView*)above
 {
+    [self addSubview:subview];
+    [_layer insertSublayer:subview.layer above:above.layer];
 }
 
-- (void)didMoveToWindow
+- (void) insertSubview:(UIView*)subview belowSubview:(UIView*)below
 {
+    [self addSubview:subview];
+    [_layer insertSublayer:subview.layer below:below.layer];
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
+- (void) exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2
 {
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-}
-
-- (void)willRemoveSubview:(UIView *)subview
-{
-}
-
-- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView *)fromView
-{
-    assert(!fromView || fromView.window == self.window);
-    if (fromView) {
-        return [fromView.layer convertPoint:toConvert toLayer:self.layer];
-    } else {
-        return [self.window.layer convertPoint:toConvert toLayer:self.layer];
-    }
-}
-
-- (CGPoint)convertPoint:(CGPoint)toConvert toView:(UIView *)toView
-{
-    assert(!toView || toView.window == self.window);
-    if (toView) {
-        return [self.layer convertPoint:toConvert toLayer:toView.layer];
-    } else {
-        return [self.layer convertPoint:toConvert toLayer:self.window.layer];
-    }
-}
-
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView *)fromView
-{
-    CGRect newRect = {
-        .origin = [self convertPoint:toConvert.origin fromView:fromView],
-        .size = toConvert.size
-    };
-    return newRect;
-}
-
-- (CGRect)convertRect:(CGRect)toConvert toView:(UIView *)toView
-{
-    CGRect newRect = {
-        .origin = [self convertPoint:toConvert.origin toView:toView],
-        .size = toConvert.size
-    };
-    return newRect;
-}
-
-- (void)sizeToFit
-{
-    CGRect frame = self.frame;
-    frame.size = [self sizeThatFits:frame.size];
-    self.frame = frame;
-}
-
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    return size;
-}
-
-- (UIView *)viewWithTag:(NSInteger)tagToFind
-{
-    UIView *foundView = nil;
-    
-    if (self.tag == tagToFind) {
-        foundView = self;
-    } else {
-        for (UIView *view in [self.subviews reverseObjectEnumerator]) {
-            foundView = [view viewWithTag:tagToFind];
-            if (foundView)
-                break;
-        }
-    }
-    
-    return foundView;
-}
-
-- (BOOL)isDescendantOfView:(UIView *)view
+- (BOOL) isDescendantOfView:(UIView*)view
 {
     if (view) {
-        UIView *testView = self;
+        UIView* testView = self;
         while (testView) {
             if (testView == view) {
                 return YES;
@@ -529,217 +533,8 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     return NO;
 }
 
-- (void)setNeedsDisplay
-{
-    [_layer setNeedsDisplay];
-}
 
-- (void)setNeedsDisplayInRect:(CGRect)invalidRect
-{
-    [_layer setNeedsDisplayInRect:invalidRect];
-}
-
-- (void)drawRect:(CGRect)rect
-{
-}
-
-- (void)displayLayer:(CALayer *)theLayer
-{
-    // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
-    // specified in the UIView's subview. This nicely prevents a ton of useless memory usage and likley improves performance a lot on iPhone.
-    // It took great pains to discover this trick and I think I'm doing this right. By having this method empty here, it means that it overrides
-    // the layer's normal display method and instead does nothing which results in the layer not making a backing store and wasting memory.
-    
-    // Here's how CALayer appears to work:
-    // 1- something call's the layer's -display method.
-    // 2- arrive in CALayer's display: method.
-    // 2a-  if delegate implements displayLayer:, call that.
-    // 2b-  if delegate doesn't implement displayLayer:, CALayer creates a buffer and a context and passes that to drawInContext:
-    // 3- arrive in CALayer's drawInContext: method.
-    // 3a-  if delegate implements drawLayer:inContext:, call that and pass it the context.
-    // 3b-  otherwise, does nothing
-    
-    // So, what this all means is that to avoid causing the CALayer to create a context and use up memory, our delegate has to lie to CALayer
-    // about if it implements displayLayer: or not. If we say it does, we short circuit the layer's buffer creation process (since it assumes
-    // we are going to be setting it's contents property ourselves). So, that's what we do in the override of respondsToSelector: below.
-    
-    // backgroundColor is influenced by all this as well. If drawRect: is defined, we draw it directly in the context so that blending is all
-    // pretty and stuff. If it isn't, though, we still want to support it. What the real UIKit does is it sets the layer's backgroundColor
-    // iff drawRect: isn't specified. Otherwise it manages it itself. Again, this is for performance reasons. Rather than having to store a
-    // whole bitmap the size of view just to hold the backgroundColor, this allows a lot of views to simply act as containers and not waste
-    // a bunch of unnecessary memory in those cases - but you can still use background colors because CALayer manages that effeciently.
-    
-    // note that the last time I checked this, the layer's background color was being set immediately on call to -setBackgroundColor:
-    // when there was no -drawRect: implementation, but I needed to change this to work around issues with pattern image colors in HiDPI.
-    _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
-}
-
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
-    // For notes about why this is done, see displayLayer: above.
-    if (aSelector == @selector(drawLayer:inContext:)) {
-        return nil != ourDrawRect_;
-    } else if (aSelector == @selector(displayLayer:)) { 
-        return _flags.overridesDisplayLayer || nil == ourDrawRect_;
-    } else {
-        return [super respondsToSelector:aSelector];
-    }
-}
-
-- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
-{
-    // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.
-    // See the discussion in drawLayer: above.
-    assert(ourDrawRect_);
-
-    const CGRect bounds = CGContextGetClipBoundingBox(ctx);
-
-    UIGraphicsPushContext(ctx);
-    CGContextSaveGState(ctx);
-    
-    if (_backgroundColor) {
-        [_backgroundColor setFill];
-        CGContextFillRect(ctx,bounds);
-    } else if (_flags.clearsContextBeforeDrawing) {
-        CGContextClearRect(ctx, bounds);
-    }
-
-    /*
-     NOTE: This kind of logic would seem to be ideal and result in the best font rendering when possible. The downside here is that
-     the rendering is then inconsistent throughout the app depending on how certain views are constructed or configured.
-     I'm not sure what to do about this. It appears to be impossible to subpixel render text drawn into a transparent layer because
-     of course there are no pixels behind the text to use when doing the subpixel blending. If it is turned on in that case, it looks
-     bad depending on what is ultimately composited behind it. Turning it off everywhere makes everything "equally bad," in a sense,
-     but at least stuff doesn't jump out as obviously different. However this doesn't look very nice on OSX. iOS appears to not use
-     any subpixel smoothing anywhere but doesn't seem to look bad when using it. There are many possibilities for why. Some I can
-     think of are they are setting some kind of graphics context mode I just haven't found yet, the rendering engines are
-     fundamentally different, the fonts themselves are actually different, the DPI of the devices, voodoo, or the loch ness monster.
-     */
-
-    /*
-     UPDATE: I've since flattened some of the main views in Twitterrific/Ostrich and so now I'd like to have subpixel turned on for
-     the Mac, so I'm putting this code back in here. It tries to be smart about when to do it (because if it's on when it shouldn't
-     be the results look very bad). As the note above said, this can and does result in some inconsistency with the rendering in
-     the app depending on how things are done. Typical UIKit code is going to be lots of layers and thus text will mostly look bad
-     with straight ports but at this point I really can't come up with a much better solution so it'll have to do.
-     */
-    
-    const BOOL shouldSmoothFonts = (_backgroundColor && (CGColorGetAlpha(_backgroundColor.CGColor) == 1)) || self.opaque;
-    CGContextSetShouldSmoothFonts(ctx, shouldSmoothFonts);
-    CGContextSetShouldSubpixelPositionFonts(ctx, YES);
-    CGContextSetShouldSubpixelQuantizeFonts(ctx, YES);
-    
-    [[UIColor blackColor] set];
-    ourDrawRect_(self, drawRectSelector, bounds);
-
-    CGContextRestoreGState(ctx);
-    UIGraphicsPopContext();
-}
-
-- (id)actionForLayer:(CALayer *)theLayer forKey:(NSString *)event
-{
-    if (_animationsEnabled && [_animationGroups lastObject] && theLayer == _layer) {
-        return [[_animationGroups lastObject] actionForView:self forKey:event] ?: (id)[NSNull null];
-    } else {
-        return [NSNull null];
-    }
-}
-
-- (BOOL) layer:(CALayer*)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
-{
-    [self setNeedsDisplay];
-    return YES;
-}
-
-- (void)_superviewSizeDidChangeFrom:(CGSize)oldSize to:(CGSize)newSize
-{
-    if (_autoresizingMask != UIViewAutoresizingNone) {
-        CGRect frame = self.frame;
-        const CGSize delta = CGSizeMake(newSize.width-oldSize.width, newSize.height-oldSize.height);
-        
-#define hasAutoresizingFor(x) ((_autoresizingMask & (x)) == (x))
-        
-        /*
-         
-         top + bottom + height      => y = floor(y + (y / HEIGHT * delta)); height = floor(height + (height / HEIGHT * delta))
-         top + height               => t = y + height; y = floor(y + (y / t * delta); height = floor(height + (height / t * delta);
-         bottom + height            => height = floor(height + (height / (HEIGHT - y) * delta))
-         top + bottom               => y = floor(y + (delta / 2))
-         height                     => height = floor(height + delta)
-         top                        => y = floor(y + delta)
-         bottom                     => y = floor(y)
-
-         */
-
-        if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin)) {
-            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
-            frame.size.height = floorf(frame.size.height + (frame.size.height / oldSize.height * delta.height));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight)) {
-            const CGFloat t = frame.origin.y + frame.size.height;
-            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / t * delta.height));
-            frame.size.height = floorf(frame.size.height + (frame.size.height / t * delta.height));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight)) {
-            frame.size.height = floorf(frame.size.height + (frame.size.height / (oldSize.height - frame.origin.y) * delta.height));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin)) {
-            frame.origin.y = floorf(frame.origin.y + (delta.height / 2.f));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleHeight)) {
-            frame.size.height = floorf(frame.size.height + delta.height);
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin)) {
-            frame.origin.y = floorf(frame.origin.y + delta.height);
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin)) {
-            frame.origin.y = floorf(frame.origin.y);
-        }
-
-        if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin)) {
-            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / oldSize.width * delta.width));
-            frame.size.width = floorf(frame.size.width + (frame.size.width / oldSize.width * delta.width));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth)) {
-            const CGFloat t = frame.origin.x + frame.size.width;
-            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / t * delta.width));
-            frame.size.width = floorf(frame.size.width + (frame.size.width / t * delta.width));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth)) {
-            frame.size.width = floorf(frame.size.width + (frame.size.width / (oldSize.width - frame.origin.x) * delta.width));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin)) {
-            frame.origin.x = floorf(frame.origin.x + (delta.width / 2.f));
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleWidth)) {
-            frame.size.width = floorf(frame.size.width + delta.width);
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin)) {
-            frame.origin.x = floorf(frame.origin.x + delta.width);
-        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin)) {
-            frame.origin.x = floorf(frame.origin.x);
-        }
-
-        self.frame = frame;
-    }
-}
-
-- (void)_boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
-{
-    if (!CGRectEqualToRect(oldBounds, newBounds)) {
-        // setNeedsLayout doesn't seem like it should be necessary, however there was a rendering bug in a table in Flamingo that
-        // went away when this was placed here. There must be some strange ordering issue with how that layout manager stuff works.
-        // I never quite narrowed it down. This was an easy fix, if perhaps not ideal.
-        [self setNeedsLayout];
-
-        if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
-            if (_flags.autoresizesSubviews) {
-                for (UIView *subview in _subviews) {
-                    [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
-                }
-            }
-        }
-    }
-}
-
-- (BOOL) clearsContextBeforeDrawing
-{
-    return _flags.clearsContextBeforeDrawing;
-}
-
-- (void) setClearsContextBeforeDrawing:(BOOL)clearsContextBeforeDrawing
-{
-    _flags.clearsContextBeforeDrawing = clearsContextBeforeDrawing;
-}
+#pragma mark Configuring the Resizing Behavior
 
 - (BOOL) autoresizesSubviews
 {
@@ -751,147 +546,323 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     _flags.autoresizesSubviews = autoresizesSubviews;
 }
 
-- (BOOL) isUserInteractionEnabled
+- (void) setContentMode:(UIViewContentMode)mode
 {
-    return _flags.userInteractionEnabled;
-}
+    if (mode != _contentMode) {
+        _contentMode = mode;
 
-- (void) setUserInteractionEnabled:(BOOL)userInteractionEnabled
-{
-    _flags.userInteractionEnabled = userInteractionEnabled;
-}
-
-- (BOOL) isMultipleTouchEnabled
-{
-    return _flags.multipleTouchEnabled;
-}
-
-- (void) setMultipleTouchEnabled:(BOOL)multipleTouchEnabled
-{
-    _flags.multipleTouchEnabled = multipleTouchEnabled;
-}
-
-+ (NSSet *)keyPathsForValuesAffectingFrame
-{
-    return [NSSet setWithObject:@"center"];
-}
-
-- (CGRect)frame
-{
-    return _layer.frame;
-}
-
-- (void)setFrame:(CGRect)newFrame
-{
-    if (!CGRectEqualToRect(newFrame,_layer.frame)) {
-        CGRect oldBounds = _layer.bounds;
-        _layer.frame = newFrame;
-        [self _boundsDidChangeFrom:oldBounds to:_layer.bounds];
-        [[NSNotificationCenter defaultCenter] postNotificationName:UIViewFrameDidChangeNotification object:self];
-    }
-}
-
-- (CGRect)bounds
-{
-    return _layer.bounds;
-}
-
-- (void)setBounds:(CGRect)newBounds
-{
-    if (!CGRectEqualToRect(newBounds, _layer.bounds)) {
-        CGRect oldBounds = _layer.bounds;
-        _layer.bounds = newBounds;
-        [self _boundsDidChangeFrom:oldBounds to:newBounds];
-        [[NSNotificationCenter defaultCenter] postNotificationName:UIViewBoundsDidChangeNotification object:self];
-    }
-}
-
-- (CGPoint)center
-{
-    return _layer.position;
-}
-
-- (void)setCenter:(CGPoint)newCenter
-{
-    if (!CGPointEqualToPoint(newCenter,_layer.position)) {
-        _layer.position = newCenter;
-    }
-}
-
-- (CGAffineTransform)transform
-{
-    return _layer.affineTransform;
-}
-
-- (void)setTransform:(CGAffineTransform)transform
-{
-    if (!CGAffineTransformEqualToTransform(transform,_layer.affineTransform)) {
-        _layer.affineTransform = transform;
-    }
-}
-
-- (CGFloat)alpha
-{
-    return _layer.opacity;
-}
-
-- (void)setAlpha:(CGFloat)newAlpha
-{
-    if (newAlpha != _layer.opacity) {
-        _layer.opacity = newAlpha;
-    }
-}
-
-- (BOOL)isOpaque
-{
-    return _layer.opaque;
-}
-
-- (void)setOpaque:(BOOL)newO
-{
-    if (newO != _layer.opaque) {
-        _layer.opaque = newO;
-    }
-}
-
-- (void)setBackgroundColor:(UIColor *)newColor
-{
-    if (_backgroundColor != newColor) {
-        _backgroundColor = newColor;
-
-        self.opaque = [_backgroundColor _isOpaque];
-        
-        if (!ourDrawRect_) {
-            _layer.backgroundColor = [newColor CGColor];
+        BOOL needsDisplayOnBoundsChange = NO;
+        switch(_contentMode) {
+            case UIViewContentModeScaleToFill:
+                _layer.contentsGravity = kCAGravityResize;
+                break;
+                
+            case UIViewContentModeScaleAspectFit:
+                _layer.contentsGravity = kCAGravityResizeAspect;
+                break;
+                
+            case UIViewContentModeScaleAspectFill:
+                _layer.contentsGravity = kCAGravityResizeAspectFill;
+                break;
+                
+            case UIViewContentModeRedraw:
+                needsDisplayOnBoundsChange = YES;
+                break;
+                
+            case UIViewContentModeCenter:
+                _layer.contentsGravity = kCAGravityCenter;
+                break;
+                
+            case UIViewContentModeTop:
+                _layer.contentsGravity = kCAGravityTop;
+                break;
+                
+            case UIViewContentModeBottom:
+                _layer.contentsGravity = kCAGravityBottom;
+                break;
+                
+            case UIViewContentModeLeft:
+                _layer.contentsGravity = kCAGravityLeft;
+                break;
+                
+            case UIViewContentModeRight:
+                _layer.contentsGravity = kCAGravityRight;
+                break;
+                
+            case UIViewContentModeTopLeft:
+                _layer.contentsGravity = kCAGravityTopLeft;
+                break;
+                
+            case UIViewContentModeTopRight:
+                _layer.contentsGravity = kCAGravityTopRight;
+                break;
+                
+            case UIViewContentModeBottomLeft:
+                _layer.contentsGravity = kCAGravityBottomLeft;
+                break;
+                
+            case UIViewContentModeBottomRight:
+                _layer.contentsGravity = kCAGravityBottomRight;
+                break;
         }
+        [_layer setNeedsDisplayOnBoundsChange:needsDisplayOnBoundsChange];
     }
 }
 
-- (BOOL)clipsToBounds
+- (CGSize) sizeThatFits:(CGSize)size
 {
-    return _layer.masksToBounds;
+    return [self bounds].size;;
 }
 
-- (void)setClipsToBounds:(BOOL)clips
+- (void) sizeToFit
 {
-    if (clips != _layer.masksToBounds) {
-        _layer.masksToBounds = clips;
-    }
+    CGRect frame = [self frame];
+    [self setFrame:(CGRect){
+        .origin = frame.origin,
+        .size = [self sizeThatFits:(CGSize){ CGFLOAT_MAX, CGFLOAT_MAX }]
+    }];
 }
 
-- (void)setContentStretch:(CGRect)rect
+- (CGRect) contentStretch
+{
+    return _layer.contentsCenter;
+}
+
+- (void) setContentStretch:(CGRect)rect
 {
     if (!CGRectEqualToRect(rect,_layer.contentsCenter)) {
         _layer.contentsCenter = rect;
     }
 }
 
-- (CGRect)contentStretch
+
+#pragma mark Laying out Subviews
+
+- (void) layoutSubviews
 {
-    return _layer.contentsCenter;
+    // Intentionally Empty
 }
 
-- (void)setContentScaleFactor:(CGFloat)scale
+- (void) setNeedsLayout
+{
+    [_layer setNeedsLayout];
+}
+
+- (void) layoutIfNeeded
+{
+    [_layer layoutIfNeeded];
+}
+
+
+#pragma mark Opting in to Constraint-Based Layout
+
++ (BOOL) requiresConstraintBasedLayout
+{
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
+
+- (BOOL) translatesAutoresizingMaskIntoConstraints
+{
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
+- (void) setTranslatesAutoresizingMaskIntoConstraints:(BOOL)flag;
+{
+    #warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark Managing Constraints
+- (NSArray*) constraints
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return [NSArray array];
+}
+
+- (void) addConstraint:(NSLayoutConstraint*)constraint
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) addConstraints:(NSArray*)constraints
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) removeConstraint:(NSLayoutConstraint*)constraint
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) removeConstraints:(NSArray*)constraints
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Measuring in Constraint-Based Layout
+
+- (CGSize) systemLayoutSizeFittingSize:(CGSize)targetSize
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return CGSizeZero;
+}
+
+- (CGSize) intrinsicContentSize
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return CGSizeZero;
+}
+
+- (void) invalidateIntrinsicContentSize
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (UILayoutPriority) contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return 0;
+}
+
+- (void) setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (UILayoutPriority) contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return 0;
+}
+
+- (void) setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark Aligning Views with Constraint-Based Layout
+- (CGRect) alignmentRectForFrame:(CGRect)frame
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return CGRectNull;
+}
+
+- (CGRect) frameForAlignmentRect:(CGRect)alignmentRect
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return CGRectNull;
+}
+
+- (UIEdgeInsets) alignmentRectInsets
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return UIEdgeInsetsZero;
+}
+
+- (UIView*) viewForBaselineLayout
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+
+#pragma mark Triggering Constraint-Based Layout
+
+- (BOOL) needsUpdateConstraints
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
+- (void) setNeedsUpdateConstraints
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) updateConstraints
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) updateConstraintsIfNeeded
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Debugging Constraint-Based Layout
+
+- (NSArray*) constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return [NSArray array];
+}
+
+- (BOOL) hasAmbiguousLayout
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
+- (void) exerciseAmbiguityInLayout
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Drawing and Updating the View
+
+- (void) drawRect:(CGRect)rect
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) setNeedsDisplay
+{
+    [_layer setNeedsDisplay];
+}
+
+- (void) setNeedsDisplayInRect:(CGRect)invalidRect
+{
+    [_layer setNeedsDisplayInRect:invalidRect];
+}
+
+- (CGFloat) contentScaleFactor
+{
+    return _flags.layerHasContentScale ? [_layer contentsScale] : 1;
+}
+
+- (void) setContentScaleFactor:(CGFloat)scale
 {
     if (scale <= 0 && ourDrawRect_) {
         scale = [UIScreen mainScreen].scale;
@@ -905,139 +876,26 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-- (CGFloat)contentScaleFactor
+
+#pragma mark Formatting Printed View Content
+
+- (UIViewPrintFormatter*) viewPrintFormatter
 {
-    return _flags.layerHasContentScale ? [_layer contentsScale] : 1;
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)setHidden:(BOOL)h
+- (void) drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter
 {
-    if (h != _layer.hidden) {
-        _layer.hidden = h;
-        [[NSNotificationCenter defaultCenter] postNotificationName:UIViewHiddenDidChangeNotification object:self];
-    }
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
-- (BOOL)isHidden
-{
-    return _layer.hidden;
-}
 
-- (void)setNeedsLayout
-{
-    [_layer setNeedsLayout];
-}
+#pragma mark Managing Gesture Recognizers
 
-- (void)layoutIfNeeded
-{
-    [_layer layoutIfNeeded];
-}
-
-- (void)layoutSubviews
-{
-}
-
-- (void)_layoutSubviews
-{
-    [self _updateAppearanceIfNeeded];
-    [[self _viewController] viewWillLayoutSubviews];
-    [self layoutSubviews];
-    [[self _viewController] viewDidLayoutSubviews];
-}
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
-    return CGRectContainsPoint(self.bounds, point);
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    if (self.hidden || !self.userInteractionEnabled || self.alpha < 0.01 || ![self pointInside:point withEvent:event]) {
-        return nil;
-    } else {
-        for (UIView *subview in [self.subviews reverseObjectEnumerator]) {
-            UIView *hitView = [subview hitTest:[subview convertPoint:point fromView:self] withEvent:event];
-            if (hitView) {
-                return hitView;
-            }
-        }
-        return self;
-    }
-}
-
-- (void)setContentMode:(UIViewContentMode)mode
-{
-    if (mode != _contentMode) {
-        _contentMode = mode;
-        switch(_contentMode) {
-            case UIViewContentModeScaleToFill:
-                _layer.contentsGravity = kCAGravityResize;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeScaleAspectFit:
-                _layer.contentsGravity = kCAGravityResizeAspect;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeScaleAspectFill:
-                _layer.contentsGravity = kCAGravityResizeAspectFill;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeRedraw:
-                _layer.needsDisplayOnBoundsChange = YES;
-                break;
-                
-            case UIViewContentModeCenter:
-                _layer.contentsGravity = kCAGravityCenter;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeTop:
-                _layer.contentsGravity = kCAGravityTop;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeBottom:
-                _layer.contentsGravity = kCAGravityBottom;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeLeft:
-                _layer.contentsGravity = kCAGravityLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeRight:
-                _layer.contentsGravity = kCAGravityRight;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeTopLeft:
-                _layer.contentsGravity = kCAGravityTopLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeTopRight:
-                _layer.contentsGravity = kCAGravityTopRight;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeBottomLeft:
-                _layer.contentsGravity = kCAGravityBottomLeft;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-
-            case UIViewContentModeBottomRight:
-                _layer.contentsGravity = kCAGravityBottomRight;
-                _layer.needsDisplayOnBoundsChange = NO;
-                break;
-        }
-    }
-}
-
-- (void)addGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+- (void) addGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
 {
     if (![_gestureRecognizers containsObject:gestureRecognizer]) {
         [gestureRecognizer.view removeGestureRecognizer:gestureRecognizer];
@@ -1046,7 +904,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-- (void)removeGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+- (void) removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
 {
     if ([_gestureRecognizers containsObject:gestureRecognizer]) {
         [gestureRecognizer _setView:nil];
@@ -1054,23 +912,33 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-- (void)setGestureRecognizers:(NSArray *)newRecognizers
-{
-    for (UIGestureRecognizer *gesture in [_gestureRecognizers allObjects]) {
-        [self removeGestureRecognizer:gesture];
-    }
-
-    for (UIGestureRecognizer *gesture in newRecognizers) {
-        [self addGestureRecognizer:gesture];
-    }	
-}
-
-- (NSArray *)gestureRecognizers
+- (NSArray*) gestureRecognizers
 {
     return [_gestureRecognizers allObjects];
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
+- (void) setGestureRecognizers:(NSArray*)newRecognizers
+{
+    for (UIGestureRecognizer *gesture in [_gestureRecognizers allObjects]) {
+        [self removeGestureRecognizer:gesture];
+    }
+    
+    for (UIGestureRecognizer *gesture in newRecognizers) {
+        [self addGestureRecognizer:gesture];
+    }
+}
+
+- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
+
+#pragma mark Animating Views with Blocks
+
++ (void) animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
 {
     const BOOL ignoreInteractionEvents = !((options & UIViewAnimationOptionAllowUserInteraction) == UIViewAnimationOptionAllowUserInteraction);
     const BOOL repeatAnimation = ((options & UIViewAnimationOptionRepeat) == UIViewAnimationOptionRepeat);
@@ -1115,7 +983,7 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
++ (void) animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
 {
     [self animateWithDuration:duration
                         delay:0
@@ -1124,25 +992,32 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
                    completion:completion];
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations
++ (void) animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations
 {
     [self animateWithDuration:duration animations:animations completion:NULL];
 }
 
-+ (void)transitionWithView:(UIView *)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completio
++ (void) transitionWithView:(UIView*)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completio
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
-+ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion
++ (void) transitionFromView:(UIView*)fromView toView:(UIView*)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion
 {
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
-+ (void)beginAnimations:(NSString *)animationID context:(void *)context
+
+#pragma mark Animating Views
+
++ (void) beginAnimations:(NSString*)animationID context:(void*)context
 {
     [_animationGroups addObject:[UIViewAnimationGroup animationGroupWithName:animationID context:context]];
 }
 
-+ (void)commitAnimations
++ (void) commitAnimations
 {
     if ([_animationGroups count] > 0) {
         [[_animationGroups lastObject] commit];
@@ -1150,69 +1025,462 @@ static DisplayLayerMethod* defaultImplementationOfDisplayLayer;
     }
 }
 
-+ (void)setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState
++ (void) setAnimationStartDate:(NSDate*)startTime
 {
-    [[_animationGroups lastObject] setAnimationBeginsFromCurrentState:beginFromCurrentState];
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
 }
 
-+ (void)setAnimationCurve:(UIViewAnimationCurve)curve
-{
-    [(UIViewAnimationGroup *)[_animationGroups lastObject] setAnimationCurve:curve];
-}
-
-+ (void)setAnimationDelay:(NSTimeInterval)delay
-{
-    [[_animationGroups lastObject] setAnimationDelay:delay];
-}
-
-+ (void)setAnimationDelegate:(id)delegate
-{
-    [[_animationGroups lastObject] setAnimationDelegate:delegate];
-}
-
-+ (void)setAnimationDidStopSelector:(SEL)selector
-{
-    [[_animationGroups lastObject] setAnimationDidStopSelector:selector];
-}
-
-+ (void)setAnimationDuration:(NSTimeInterval)duration
-{
-    [[_animationGroups lastObject] setAnimationDuration:duration];
-}
-
-+ (void)setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses
-{
-    [[_animationGroups lastObject] setAnimationRepeatAutoreverses:repeatAutoreverses];
-}
-
-+ (void)setAnimationRepeatCount:(float)repeatCount
-{
-    [[_animationGroups lastObject] setAnimationRepeatCount:repeatCount];
-}
-
-+ (void)setAnimationWillStartSelector:(SEL)selector
-{
-    [[_animationGroups lastObject] setAnimationWillStartSelector:selector];
-}
-
-+ (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView *)view cache:(BOOL)cache
-{
-    [[_animationGroups lastObject] setAnimationTransition:transition forView:view cache:cache];
-}
-
-+ (BOOL)areAnimationsEnabled
-{
-    return _animationsEnabled;
-}
-
-+ (void)setAnimationsEnabled:(BOOL)enabled
++ (void) setAnimationsEnabled:(BOOL)enabled
 {
     _animationsEnabled = enabled;
 }
 
-- (NSString *)description
++ (void) setAnimationDelegate:(id)delegate
+{
+    [[_animationGroups lastObject] setAnimationDelegate:delegate];
+}
+
++ (void) setAnimationWillStartSelector:(SEL)selector
+{
+    [[_animationGroups lastObject] setAnimationWillStartSelector:selector];
+}
+
++ (void) setAnimationDidStopSelector:(SEL)selector
+{
+    [[_animationGroups lastObject] setAnimationDidStopSelector:selector];
+}
+
++ (void) setAnimationDuration:(NSTimeInterval)duration
+{
+    [[_animationGroups lastObject] setAnimationDuration:duration];
+}
+
++ (void) setAnimationDelay:(NSTimeInterval)delay
+{
+    [[_animationGroups lastObject] setAnimationDelay:delay];
+}
+
++ (void) setAnimationCurve:(UIViewAnimationCurve)curve
+{
+    [(UIViewAnimationGroup*)[_animationGroups lastObject] setAnimationCurve:curve];
+}
+
++ (void) setAnimationRepeatCount:(float)repeatCount
+{
+    [[_animationGroups lastObject] setAnimationRepeatCount:repeatCount];
+}
+
++ (void) setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses
+{
+    [[_animationGroups lastObject] setAnimationRepeatAutoreverses:repeatAutoreverses];
+}
+
++ (void) setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState
+{
+    [[_animationGroups lastObject] setAnimationBeginsFromCurrentState:beginFromCurrentState];
+}
+
++ (void) setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView*)view cache:(BOOL)cache
+{
+    [[_animationGroups lastObject] setAnimationTransition:transition forView:view cache:cache];
+}
+
++ (BOOL) areAnimationsEnabled
+{
+    return _animationsEnabled;
+}
+
+
+#pragma mark Preserving and Restoring State
+
+- (void) encodeRestorableStateWithCoder:(NSCoder*)coder
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) decodeRestorableStateWithCoder:(NSCoder*)coder
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Identifying the View at Runtime
+
+- (UIView*) viewWithTag:(NSInteger)tagToFind
+{
+    UIView* foundView = nil;
+    
+    if (self.tag == tagToFind) {
+        foundView = self;
+    } else {
+        for (UIView* view in [self.subviews reverseObjectEnumerator]) {
+            foundView = [view viewWithTag:tagToFind];
+            if (foundView) {
+                break;
+            }
+        }
+    }
+    
+    return foundView;
+}
+
+
+#pragma mark Converting Between View Coordinate Systems
+
+- (CGPoint) convertPoint:(CGPoint)toConvert toView:(UIView*)toView
+{
+    assert(!toView || toView.window == self.window);
+    if (self == toView) {
+        return toConvert;
+    } else if (toView) {
+        return [self.layer convertPoint:toConvert toLayer:toView.layer];
+    } else {
+        return [self.layer convertPoint:toConvert toLayer:self.window.layer];
+    }
+}
+
+- (CGPoint) convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView
+{
+    assert(!fromView || fromView.window == self.window);
+    if (fromView) {
+        return [fromView.layer convertPoint:toConvert toLayer:self.layer];
+    } else {
+        return [self.window.layer convertPoint:toConvert toLayer:self.layer];
+    }
+}
+
+- (CGRect) convertRect:(CGRect)toConvert toView:(UIView*)toView
+{
+    CGRect newRect = {
+        .origin = [self convertPoint:toConvert.origin toView:toView],
+        .size = toConvert.size
+    };
+    return newRect;
+}
+
+- (CGRect) convertRect:(CGRect)toConvert fromView:(UIView*)fromView
+{
+    CGRect newRect = {
+        .origin = [self convertPoint:toConvert.origin fromView:fromView],
+        .size = toConvert.size
+    };
+    return newRect;
+}
+
+#pragma mark Hit Testing in a View
+
+- (UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event
+{
+    if (self.hidden || !self.userInteractionEnabled || self.alpha < 0.01 || ![self pointInside:point withEvent:event]) {
+        return nil;
+    } else {
+        for (UIView *subview in [self.subviews reverseObjectEnumerator]) {
+            UIView *hitView = [subview hitTest:[subview convertPoint:point fromView:self] withEvent:event];
+            if (hitView) {
+                return hitView;
+            }
+        }
+        return self;
+    }
+}
+
+- (BOOL) pointInside:(CGPoint)point withEvent:(UIEvent*)event
+{
+    return CGRectContainsPoint(self.bounds, point);
+}
+
+
+#pragma mark Ending a View Editing Session
+
+- (BOOL) endEditing:(BOOL)force
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
+
+#pragma mark Observing View-Related Changes
+
+- (void) didAddSubview:(UIView*)subview
+{
+    // Intentionally Empty
+}
+
+- (void) willRemoveSubview:(UIView*)subview
+{
+    // Intentionally Empty
+}
+
+- (void) willMoveToSuperview:(UIView*)newSuperview
+{
+    // Intentionally Empty
+}
+
+- (void) didMoveToSuperview
+{
+    // Intentionally Empty
+}
+
+- (void) willMoveToWindow:(UIWindow*)newWindow
+{
+    // Intentionally Empty
+}
+
+- (void) didMoveToWindow
+{
+    // Intentionally Empty
+}
+
+
+#pragma Overridden UIResponder Methods
+
+- (UIResponder*) nextResponder
+{
+    return (UIResponder*)[self _viewController] ?: (UIResponder*)_superview;
+}
+
+
+#pragma mark CALayer Delegate
+
+- (void) displayLayer:(CALayer*)theLayer
+{
+}
+
+- (void) drawLayer:(CALayer*)layer inContext:(CGContextRef)c
+{
+    // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.
+    // See the discussion in drawLayer: above.
+    NSAssert(ourDrawRect_, @"???");
+    
+    const CGRect bounds = CGContextGetClipBoundingBox(c);
+    
+    UIGraphicsPushContext(c);
+    CGContextSaveGState(c);
+    
+    if (_backgroundColor) {
+        [_backgroundColor setFill];
+        CGContextFillRect(c, bounds);
+    } else if (_flags.clearsContextBeforeDrawing) {
+        CGContextClearRect(c, bounds);
+    }
+    
+    const BOOL shouldSmoothFonts = (_backgroundColor && (CGColorGetAlpha(_backgroundColor.CGColor) == 1)) || self.opaque;
+    CGContextSetShouldSmoothFonts(c, shouldSmoothFonts);
+    CGContextSetShouldSubpixelPositionFonts(c, YES);
+    CGContextSetShouldSubpixelQuantizeFonts(c, YES);
+    
+    [[UIColor blackColor] set];
+    ourDrawRect_(self, drawRectSelector, bounds);
+    
+    CGContextRestoreGState(c);
+    UIGraphicsPopContext();
+}
+
+- (void) layoutSublayersOfLayer:(CALayer*)layer
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (id) actionForLayer:(CALayer*)theLayer forKey:(NSString*)event
+{
+    if (_animationsEnabled && [_animationGroups lastObject] && theLayer == _layer) {
+        return [[_animationGroups lastObject] actionForView:self forKey:event] ?: (id)[NSNull null];
+    } else {
+        return [NSNull null];
+    }
+}
+
+
+#pragma mark NSObject Protocol
+
+- (BOOL) respondsToSelector:(SEL)aSelector
+{
+    // For notes about why this is done, see displayLayer: above.
+    if (aSelector == @selector(drawLayer:inContext:)) {
+        return nil != ourDrawRect_;
+    } else if (aSelector == @selector(displayLayer:)) {
+        return _flags.overridesDisplayLayer || nil == ourDrawRect_;
+    } else {
+        return [super respondsToSelector:aSelector];
+    }
+}
+
+#pragma mark NSCoding Protocol
+
+- (void) encodeWithCoder:(NSCoder*)coder
+{
+#warning Stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark NSLayerDelegateContentsScaleUpdating Protocol Reference
+
+- (BOOL) layer:(CALayer*)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
+{
+    _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
+    [self setNeedsDisplay];
+    return YES;
+}
+
+
+#pragma mark Misc.
+
++ (NSSet*) keyPathsForValuesAffectingFrame
+{
+    return [NSSet setWithObject:@"center"];
+}
+
+- (NSString*) description
 {
     return [NSString stringWithFormat:@"<%@: %p; frame = %@; hidden = %@; layer = %@>", [self className], self, NSStringFromCGRect(self.frame), (self.hidden ? @"YES" : @"NO"), self.layer];
+}
+
+#pragma mark private methods
+
+- (void) _willMoveFromWindow:(UIWindow*)fromWindow toWindow:(UIWindow*)toWindow
+{
+    if (fromWindow != toWindow) {
+        if ([self isFirstResponder]) {
+            [self resignFirstResponder];
+        }
+        
+        [_viewController _viewWillMoveToWindow:toWindow];
+        [self _setAppearanceNeedsUpdate];
+        [self willMoveToWindow:toWindow];
+
+        for (UIView*subview in self.subviews) {
+            [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
+        }
+    }
+}
+
+- (void) _didMoveFromWindow:(UIWindow*)fromWindow toWindow:(UIWindow*)toWindow
+{
+    if (fromWindow != toWindow) {
+        [_viewController _viewDidMoveToWindow:toWindow];
+        [self didMoveToWindow];
+		
+        for (UIView *subview in self.subviews) {
+            [subview _didMoveFromWindow:fromWindow toWindow:toWindow];
+        }
+    }
+}
+
+- (void) _didMoveToScreenWithScale:(CGFloat)scale
+{
+    if (ourDrawRect_ && self.contentScaleFactor != scale) {
+        self.contentScaleFactor = scale;
+    } else {
+        [self setNeedsDisplay];
+    }
+    for (UIView *subview in self.subviews) {
+        [subview _didMoveToScreenWithScale:scale];
+    }
+}
+
+- (void) _setViewController:(UIViewController*)theViewController
+{
+    _viewController = theViewController;
+}
+
+- (UIViewController*) _viewController
+{
+    return _viewController;
+}
+
+- (id) _appearanceContainer
+{
+    return self.superview;
+}
+
+- (void) _superviewSizeDidChangeFrom:(CGSize)oldSize to:(CGSize)newSize
+{
+    if (_autoresizingMask != UIViewAutoresizingNone) {
+        CGRect frame = self.frame;
+        const CGSize delta = CGSizeMake(newSize.width-oldSize.width, newSize.height-oldSize.height);
+        
+#define hasAutoresizingFor(x) ((_autoresizingMask & (x)) == (x))
+        
+        /*
+         
+         top + bottom + height      => y = floor(y + (y / HEIGHT * delta)); height = floor(height + (height / HEIGHT * delta))
+         top + height               => t = y + height; y = floor(y + (y / t * delta); height = floor(height + (height / t * delta);
+         bottom + height            => height = floor(height + (height / (HEIGHT - y) * delta))
+         top + bottom               => y = floor(y + (delta / 2))
+         height                     => height = floor(height + delta)
+         top                        => y = floor(y + delta)
+         bottom                     => y = floor(y)
+         
+         */
+        
+        if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin)) {
+            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
+            frame.size.height = floorf(frame.size.height + (frame.size.height / oldSize.height * delta.height));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight)) {
+            const CGFloat t = frame.origin.y + frame.size.height;
+            frame.origin.y = floorf(frame.origin.y + (frame.origin.y / t * delta.height));
+            frame.size.height = floorf(frame.size.height + (frame.size.height / t * delta.height));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight)) {
+            frame.size.height = floorf(frame.size.height + (frame.size.height / (oldSize.height - frame.origin.y) * delta.height));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin)) {
+            frame.origin.y = floorf(frame.origin.y + (delta.height / 2.f));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleHeight)) {
+            frame.size.height = floorf(frame.size.height + delta.height);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin)) {
+            frame.origin.y = floorf(frame.origin.y + delta.height);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin)) {
+            frame.origin.y = floorf(frame.origin.y);
+        }
+        
+        if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin)) {
+            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / oldSize.width * delta.width));
+            frame.size.width = floorf(frame.size.width + (frame.size.width / oldSize.width * delta.width));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth)) {
+            const CGFloat t = frame.origin.x + frame.size.width;
+            frame.origin.x = floorf(frame.origin.x + (frame.origin.x / t * delta.width));
+            frame.size.width = floorf(frame.size.width + (frame.size.width / t * delta.width));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth)) {
+            frame.size.width = floorf(frame.size.width + (frame.size.width / (oldSize.width - frame.origin.x) * delta.width));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin)) {
+            frame.origin.x = floorf(frame.origin.x + (delta.width / 2.f));
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleWidth)) {
+            frame.size.width = floorf(frame.size.width + delta.width);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleLeftMargin)) {
+            frame.origin.x = floorf(frame.origin.x + delta.width);
+        } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin)) {
+            frame.origin.x = floorf(frame.origin.x);
+        }
+        
+        self.frame = frame;
+    }
+}
+
+- (void) _boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
+{
+    if (CGRectEqualToRect(oldBounds, newBounds)) {
+        return;
+    }
+    if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
+        if (_flags.autoresizesSubviews) {
+            for (UIView* subview in _subviews) {
+                [subview _superviewSizeDidChangeFrom:oldBounds.size to:newBounds.size];
+            }
+        }
+    }
+}
+
+- (void) _layoutSubviews
+{
+    [self _updateAppearanceIfNeeded];
+    [[self _viewController] viewWillLayoutSubviews];
+    [self layoutSubviews];
+    [[self _viewController] viewDidLayoutSubviews];
 }
 
 @end

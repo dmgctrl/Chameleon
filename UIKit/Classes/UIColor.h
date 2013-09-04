@@ -30,43 +30,59 @@
 #import <Foundation/Foundation.h>
 
 @class UIImage;
+@class CIColor;
 
 @interface UIColor : NSObject <NSCoding>
 
-+ (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithCGColor:(CGColorRef)ref;
-+ (UIColor *)colorWithPatternImage:(UIImage *)patternImage;
+#pragma mark Creating a UIColor Object from Component Values
++ (UIColor*) colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
++ (UIColor*) colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
++ (UIColor*) colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
++ (UIColor*) colorWithCGColor:(CGColorRef)ref;
++ (UIColor*) colorWithPatternImage:(UIImage*)patternImage;
++ (UIColor*) colorWithCIColor:(CIColor*)ciColor;
+- (UIColor*) colorWithAlphaComponent:(CGFloat)alpha;
 
-+ (UIColor *)blackColor;
-+ (UIColor *)darkGrayColor;
-+ (UIColor *)lightGrayColor;
-+ (UIColor *)whiteColor;
-+ (UIColor *)grayColor;
-+ (UIColor *)redColor;
-+ (UIColor *)greenColor;
-+ (UIColor *)blueColor;
-+ (UIColor *)cyanColor;
-+ (UIColor *)yellowColor;
-+ (UIColor *)magentaColor;
-+ (UIColor *)orangeColor;
-+ (UIColor *)purpleColor;
-+ (UIColor *)brownColor;
-+ (UIColor *)clearColor;
+#pragma mark Initializing a UIColor Object
+- (instancetype) initWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
+- (instancetype) initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
+- (instancetype) initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+- (instancetype) initWithCGColor:(CGColorRef)ref;
+- (instancetype) initWithPatternImage:(UIImage*)patternImage;
+- (instancetype) initWithCIColor:(CIColor*)ciColor;
 
-- (id)initWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
-- (id)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
-- (id)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-- (id)initWithCGColor:(CGColorRef)ref;
-- (id)initWithPatternImage:(UIImage *)patternImage;
+#pragma mark Creating a UIColor with Preset Component Values
++ (UIColor*) blackColor;
++ (UIColor*) darkGrayColor;
++ (UIColor*) lightGrayColor;
++ (UIColor*) whiteColor;
++ (UIColor*) grayColor;
++ (UIColor*) redColor;
++ (UIColor*) greenColor;
++ (UIColor*) blueColor;
++ (UIColor*) cyanColor;
++ (UIColor*) yellowColor;
++ (UIColor*) magentaColor;
++ (UIColor*) orangeColor;
++ (UIColor*) purpleColor;
++ (UIColor*) brownColor;
++ (UIColor*) clearColor;
 
-- (UIColor *)colorWithAlphaComponent:(CGFloat)alpha;
+#pragma mark System Colors
++ (UIColor*) lightTextColor;
++ (UIColor*) darkTextColor;
++ (UIColor*) groupTableViewBackgroundColor;
++ (UIColor*) viewFlipsideBackgroundColor;
++ (UIColor*) scrollViewTexturedBackgroundColor;
++ (UIColor*) underPageBackgroundColor;
 
-- (void)set;
-- (void)setFill;
-- (void)setStroke;
-
+#pragma mark Retrieving Color Information
 @property (nonatomic, readonly) CGColorRef CGColor;
+@property (nonatomic, readonly) CIColor* CIColor;
+
+#pragma mark Drawing Operations
+- (void) set;
+- (void) setFill;
+- (void) setStroke;
 
 @end

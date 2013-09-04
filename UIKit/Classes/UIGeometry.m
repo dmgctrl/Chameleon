@@ -99,6 +99,21 @@ NSString *NSStringFromUIOffset(UIOffset offset)
     return NSPointToCGPoint([self pointValue]);
 }
 
++ (NSValue*) valueWithCGAffineTransform:(CGAffineTransform)matrix
+{
+    return [NSValue valueWithBytes:&matrix objCType:@encode(CGAffineTransform)];
+}
+
+- (CGAffineTransform) CGAffineTransformValue
+{
+    if (strcmp([self objCType], @encode(CGAffineTransform)) == 0) {
+        CGAffineTransform matrix;
+        [self getValue:&matrix];
+        return matrix;
+    }
+    return CGAffineTransformIdentity;
+}
+
 + (NSValue *)valueWithCGRect:(CGRect)rect
 {
     return [NSValue valueWithRect:NSRectFromCGRect(rect)];

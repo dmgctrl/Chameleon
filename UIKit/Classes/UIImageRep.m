@@ -218,42 +218,49 @@ static CGImageSourceRef CreateCGImageSourceWithFile(NSString *imagePath)
     return size;
 }
 
-- (CGImageRef)CGImage
+- (CGImageRef) CGImage
 {
-    // lazy load if we only have an image source
     if (!_image && _imageSource) {
         _image = CGImageSourceCreateImageAtIndex(_imageSource, _imageSourceIndex, NULL);
-        CFRelease(_imageSource);
-        _imageSource = NULL;
+        CFRelease(_imageSource), _imageSource = NULL;
     }
-    
     return _image;
 }
 
-- (void)drawInRect:(CGRect)rect fromRect:(CGRect)fromRect
+- (void) drawInRect:(CGRect)rect fromRect:(CGRect)fromRect
 {
-    CGImageRef image = CGImageRetain(self.CGImage);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
-    CGContextTranslateCTM(ctx, rect.origin.x, rect.origin.y+rect.size.height);
-    CGContextScaleCTM(ctx, 1, -1);
-    rect.origin = CGPointZero;
     
-    if (CGRectIsNull(fromRect)) {
-        CGContextDrawImage(ctx, rect, image);
-    } else {
-        fromRect.origin.x *= _scale;
-        fromRect.origin.y *= _scale;
-        fromRect.size.width *= _scale;
-        fromRect.size.height *= _scale;
+    CGContextTranslateCTM(ctx, rect.origin.x, rect.origin.y + rect.size.height);
+    CGContextScaleCTM(ctx, 1.0f, -1.0f);
 
-        CGImageRef tempImage = CGImageCreateWithImageInRect(image, fromRect);
-        CGContextDrawImage(ctx, rect, tempImage);
-        CGImageRelease(tempImage);
+    CGRect rectToFill = (CGRect){ .size = rect.size };
+    CGFloat scale = [self scale];
+    CGImageRef image = [self CGImage];
+    if (image) {
+        if (!CGRectIsNull(fromRect)) {
+            CGRect scaledRect = {
+                .origin = {
+                    .x = fromRect.origin.x * scale,
+                    .y = fromRect.origin.y * scale,
+                },
+                .size = {
+                    .width = fromRect.size.width * scale,
+                    .height = fromRect.size.height * scale,
+                }
+            };
+            CGImageRef croppedImage = CGImageCreateWithImageInRect(image, scaledRect);
+            if (croppedImage) {
+                CGContextDrawImage(ctx, rectToFill, croppedImage);
+                CGImageRelease(croppedImage);
+            }
+        } else {
+            CGContextDrawImage(ctx, rectToFill, image);
+        }
     }
     
     CGContextRestoreGState(ctx);
-    CGImageRelease(image);
 }
 
 @end

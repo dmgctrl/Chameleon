@@ -27,73 +27,60 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl+UIPrivate.h"
-#import "UIEvent.h"
-#import "UITouch.h"
-#import "UIApplication.h"
-#import "UIControlAction.h"
+#import <UIKit/UIControl+UIPrivate.h>
+#import <UIKit/UIEvent.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIControlAction.h>
+
+static NSString* const kUIDisabledKey = @"UIDisabled";
+static NSString* const kUIContentHorizontalAlignmentKey = @"UIContentHorizontalAlignment";
+static NSString* const kUIContentVerticalAlignmentKey = @"UIContentVerticalAlignment";
 
 @implementation UIControl {
     NSMutableArray* _registeredActions;
 }
 
-- (void) _commonInitForUIControl
+#pragma mark Preparing and Sending Action Messages
+
+- (void) sendAction:(SEL)action to:(id)target forEvent:(UIEvent*)event
 {
-    _registeredActions = [[NSMutableArray alloc] init];
-    self.enabled = YES;
-    self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    [[UIApplication sharedApplication] sendAction:action to:target from:self forEvent:event];
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (void) sendActionsForControlEvents:(UIControlEvents)controlEvents
 {
-    if ((self=[super initWithFrame:frame])) {
-        [self _commonInitForUIControl];
-    }
-    return self;
+    [self _sendActionsForControlEvents:controlEvents withEvent:nil];
 }
 
-- (id)initWithCoder:(NSCoder*)coder
+- (void) addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
 {
-    if ((self=[super initWithCoder:coder])) {
-        [self _commonInitForUIControl];
-    }
-    return self;
-}
-
-
-- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
-{
-    UIControlAction *controlAction = [[UIControlAction alloc] init];
+    UIControlAction* controlAction = [[UIControlAction alloc] init];
     controlAction.target = target;
     controlAction.action = action;
     controlAction.controlEvents = controlEvents;
     [_registeredActions addObject:controlAction];
 }
 
-- (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
+- (void) removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
 {
-    NSMutableArray *discard = [[NSMutableArray alloc] init];
-    
-    for (UIControlAction *controlAction in _registeredActions) {
+    NSMutableArray* discard = [[NSMutableArray alloc] init];
+    for (UIControlAction* controlAction in _registeredActions) {
         if (controlAction.target == target && (action == NULL || controlAction.controlEvents == controlEvents)) {
             [discard addObject:controlAction];
         }
     }
-    
     [_registeredActions removeObjectsInArray:discard];
 }
 
-- (NSArray *)actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent
+- (NSArray*) actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent
 {
-    NSMutableArray *actions = [[NSMutableArray alloc] init];
-    
-    for (UIControlAction *controlAction in _registeredActions) {
+    NSMutableArray* actions = [[NSMutableArray alloc] init];
+    for (UIControlAction* controlAction in _registeredActions) {
         if ((target == nil || controlAction.target == target) && (controlAction.controlEvents & controlEvent) ) {
             [actions addObject:NSStringFromSelector(controlAction.action)];
         }
     }
-    
     if ([actions count] == 0) {
         return nil;
     } else {
@@ -101,143 +88,33 @@
     }
 }
 
-- (NSSet *)allTargets
+- (NSSet*) allTargets
 {
     return [NSSet setWithArray:[_registeredActions valueForKey:@"target"]];
 }
 
-- (UIControlEvents)allControlEvents
+- (UIControlEvents) allControlEvents
 {
     UIControlEvents allEvents = 0;
-    
-    for (UIControlAction *controlAction in _registeredActions) {
+    for (UIControlAction* controlAction in _registeredActions) {
         allEvents |= controlAction.controlEvents;
     }
-    
     return allEvents;
 }
 
-- (void)_sendActionsForControlEvents:(UIControlEvents)controlEvents withEvent:(UIEvent *)event
+
+#pragma mark Setting and Getting Control Attributes
+
+- (UIControlState) state
 {
-    for (UIControlAction *controlAction in _registeredActions) {
-        if (controlAction.controlEvents & controlEvents) {
-            [self sendAction:controlAction.action to:controlAction.target forEvent:event];
-        }
-    }
+    UIControlState state = UIControlStateNormal;
+    if (_highlighted)	state |= UIControlStateHighlighted;
+    if (!_enabled)		state |= UIControlStateDisabled;
+    if (_selected)		state |= UIControlStateSelected;
+    return state;
 }
 
-- (void)sendActionsForControlEvents:(UIControlEvents)controlEvents
-{
-    [self _sendActionsForControlEvents:controlEvents withEvent:nil];
-}
-
-- (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
-{
-    [[UIApplication sharedApplication] sendAction:action to:target from:self forEvent:event];
-}
-
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    return YES;
-}
-
-- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    return YES;
-}
-
-- (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
-{
-}
-
-- (void)cancelTrackingWithEvent:(UIEvent *)event
-{
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch = [touches anyObject];
-    _touchInside = YES;
-    _tracking = [self beginTrackingWithTouch:touch withEvent:event];
-
-    self.highlighted = YES;
-
-    if (_tracking) {
-        UIControlEvents currentEvents = UIControlEventTouchDown;
-
-        if (touch.tapCount > 1) {
-            currentEvents |= UIControlEventTouchDownRepeat;
-        }
-
-        [self _sendActionsForControlEvents:currentEvents withEvent:event];
-    }
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch = [touches anyObject];
-    const BOOL wasTouchInside = _touchInside;
-    _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
-
-    self.highlighted = _touchInside;
-
-    if (_tracking) {
-        _tracking = [self continueTrackingWithTouch:touch withEvent:event];
-        if (_tracking) {
-            UIControlEvents currentEvents = ((_touchInside)? UIControlEventTouchDragInside : UIControlEventTouchDragOutside);
-
-            if (!wasTouchInside && _touchInside) {
-                currentEvents |= UIControlEventTouchDragEnter;
-            } else if (wasTouchInside && !_touchInside) {
-                currentEvents |= UIControlEventTouchDragExit;
-            }
-
-            [self _sendActionsForControlEvents:currentEvents withEvent:event];
-        }
-    }
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch = [touches anyObject];
-    _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
-
-    self.highlighted = NO;
-
-    if (_tracking) {
-        [self endTrackingWithTouch:touch withEvent:event];
-        [self _sendActionsForControlEvents:((_touchInside)? UIControlEventTouchUpInside : UIControlEventTouchUpOutside) withEvent:event];
-    }
-
-    _tracking = NO;
-    _touchInside = NO;
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    self.highlighted = NO;
-
-    if (_tracking) {
-        [self cancelTrackingWithEvent:event];
-        [self _sendActionsForControlEvents:UIControlEventTouchCancel withEvent:event];
-    }
-
-    _touchInside = NO;
-    _tracking = NO;
-}
-
-- (void)_stateWillChange
-{
-	
-}
-
-- (void)_stateDidChange
-{
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
-}
-
-- (void)setEnabled:(BOOL)newEnabled
+- (void) setEnabled:(BOOL)newEnabled
 {
     if (newEnabled != _enabled) {
 		[self _stateWillChange];
@@ -247,16 +124,7 @@
     }
 }
 
-- (void)setHighlighted:(BOOL)newHighlighted
-{
-    if (newHighlighted != _highlighted) {
-		[self _stateWillChange];
-        _highlighted = newHighlighted;
-        [self _stateDidChange];
-    }
-}
-
-- (void)setSelected:(BOOL)newSelected
+- (void) setSelected:(BOOL)newSelected
 {
     if (newSelected != _selected) {
 		[self _stateWillChange];
@@ -265,15 +133,169 @@
     }
 }
 
-- (UIControlState)state
+- (void) setHighlighted:(BOOL)newHighlighted
 {
-    UIControlState state = UIControlStateNormal;
-    
-    if (_highlighted)	state |= UIControlStateHighlighted;
-    if (!_enabled)		state |= UIControlStateDisabled;
-    if (_selected)		state |= UIControlStateSelected;
+    if (newHighlighted != _highlighted) {
+		[self _stateWillChange];
+        _highlighted = newHighlighted;
+        [self _stateDidChange];
+    }
+}
 
-    return state;
+
+#pragma mark Tracking Touches and Redrawing Controls
+
+- (BOOL) beginTrackingWithTouch:(UITouch*)touch withEvent:(UIEvent*)event
+{
+    return YES;
+}
+
+- (BOOL) continueTrackingWithTouch:(UITouch*)touch withEvent:(UIEvent*)event
+{
+    return YES;
+}
+
+- (void) endTrackingWithTouch:(UITouch*)touch withEvent:(UIEvent*)event
+{
+}
+
+- (void) cancelTrackingWithEvent:(UIEvent*)event
+{
+}
+
+
+#pragma mark UIView Protocol
+
+- (id) initWithFrame:(CGRect)frame
+{
+    if (nil != (self = [super initWithFrame:frame])) {
+        [self _commonInitForUIControl];
+    }
+    return self;
+}
+
+
+#pragma mark NSCoder Protocol
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super initWithCoder:coder])) {
+        [self _commonInitForUIControl];
+        if ([coder containsValueForKey:kUIDisabledKey]) {
+            [self setEnabled:![coder decodeBoolForKey:kUIDisabledKey]];
+        }
+    }
+    return self;
+}
+
+
+#pragma mark UIAppearance Protocol
+
++ (id) appearance
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+    return @"";
+}
+
++ (id) appearanceWhenContainedIn:(Class <UIAppearanceContainer>)ContainerClass, ... NS_REQUIRES_NIL_TERMINATION
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+    return @"";
+}
+
+
+#pragma mark UIResponder Overrides
+
+- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+    _touchInside = YES;
+    _tracking = [self beginTrackingWithTouch:touch withEvent:event];
+    self.highlighted = YES;
+    if (_tracking) {
+        UIControlEvents currentEvents = UIControlEventTouchDown;
+        if (touch.tapCount > 1) {
+            currentEvents |= UIControlEventTouchDownRepeat;
+        }
+        [self _sendActionsForControlEvents:currentEvents withEvent:event];
+    }
+}
+
+- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+    const BOOL wasTouchInside = _touchInside;
+    _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
+    self.highlighted = _touchInside;
+    if (_tracking) {
+        _tracking = [self continueTrackingWithTouch:touch withEvent:event];
+        if (_tracking) {
+            UIControlEvents currentEvents = ((_touchInside)? UIControlEventTouchDragInside : UIControlEventTouchDragOutside);
+            if (!wasTouchInside && _touchInside) {
+                currentEvents |= UIControlEventTouchDragEnter;
+            } else if (wasTouchInside && !_touchInside) {
+                currentEvents |= UIControlEventTouchDragExit;
+            }
+            [self _sendActionsForControlEvents:currentEvents withEvent:event];
+        }
+    }
+}
+
+- (void) touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+    _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
+    self.highlighted = NO;
+    if (_tracking) {
+        [self endTrackingWithTouch:touch withEvent:event];
+        [self _sendActionsForControlEvents:((_touchInside)? UIControlEventTouchUpInside : UIControlEventTouchUpOutside) withEvent:event];
+    }
+    _tracking = NO;
+    _touchInside = NO;
+}
+
+- (void) touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    self.highlighted = NO;
+    if (_tracking) {
+        [self cancelTrackingWithEvent:event];
+        [self _sendActionsForControlEvents:UIControlEventTouchCancel withEvent:event];
+    }
+    _touchInside = NO;
+    _tracking = NO;
+}
+
+
+#pragma mark Private Methods
+
+- (void) _commonInitForUIControl
+{
+    _registeredActions = [[NSMutableArray alloc] init];
+    self.enabled = YES;
+    self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+}
+
+
+- (void) _sendActionsForControlEvents:(UIControlEvents)controlEvents withEvent:(UIEvent*)event
+{
+    for (UIControlAction* controlAction in _registeredActions) {
+        if (controlAction.controlEvents & controlEvents) {
+            [self sendAction:controlAction.action to:controlAction.target forEvent:event];
+        }
+    }
+}
+
+- (void) _stateWillChange
+{
+}
+
+- (void) _stateDidChange
+{
+    [self setNeedsDisplay];
+    [self setNeedsLayout];
 }
 
 @end

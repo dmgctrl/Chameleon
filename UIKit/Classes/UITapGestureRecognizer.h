@@ -27,9 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIGestureRecognizer.h"
+#import <UIKit/UIGestureRecognizer.h>
 
 @interface UITapGestureRecognizer : UIGestureRecognizer
+
+#pragma mark Configuring the Gesture  
 
 @property (nonatomic) NSUInteger numberOfTapsRequired;
 @property (nonatomic) NSUInteger numberOfTouchesRequired;

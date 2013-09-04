@@ -29,26 +29,43 @@
 
 #import <Foundation/Foundation.h>
 
+@class UIFontDescriptor;
+
 @interface UIFont : NSObject
 
-+ (UIFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize;
-+ (NSArray *)familyNames;
-+ (NSArray *)fontNamesForFamilyName:(NSString *)familyName;
+#pragma mark Creating Arbitrary Fonts
++ (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)fontSize;
+- (UIFont*) fontWithSize:(CGFloat)fontSize;
 
-+ (UIFont *)systemFontOfSize:(CGFloat)fontSize;
-+ (UIFont *)boldSystemFontOfSize:(CGFloat)fontSize;
-+ (UIFont *)italicSystemFontOfSize:(CGFloat)fontSize;
+#pragma mark Creating System Fonts
++ (UIFont*) systemFontOfSize:(CGFloat)fontSize;
++ (UIFont*) boldSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont*) italicSystemFontOfSize:(CGFloat)fontSize;
 
-- (UIFont *)fontWithSize:(CGFloat)fontSize;
+#pragma mark Getting the Available Font Names
++ (NSArray*) familyNames;
++ (NSArray*) fontNamesForFamilyName:(NSString*)familyName;
 
-@property (nonatomic, readonly, strong) NSString *fontName;
+#pragma mark Getting Font Name Attributes
+@property (nonatomic, readonly, retain) NSString* familyName;
+@property (nonatomic, readonly, retain) NSString* fontName;
 
+#pragma mark Getting Font Metrics
+@property (nonatomic, readonly) CGFloat pointSize;
 @property (nonatomic, readonly) CGFloat ascender;
 @property (nonatomic, readonly) CGFloat descender;
-@property (nonatomic, readonly) CGFloat lineHeight;
-@property (nonatomic, readonly) CGFloat pointSize;
-@property (nonatomic, readonly) CGFloat xHeight;
 @property (nonatomic, readonly) CGFloat capHeight;
-@property (nonatomic, readonly, strong) NSString *familyName;
+@property (nonatomic, readonly) CGFloat xHeight;
+@property (nonatomic, readonly) CGFloat lineHeight;
+
+#pragma mark Getting System Font Information
++ (CGFloat)labelFontSize;
++ (CGFloat)buttonFontSize;
++ (CGFloat)smallSystemFontSize;
++ (CGFloat)systemFontSize;
+
+#pragma mark Getting Font Descriptors
+- (UIFontDescriptor*) fontDescriptor;
++ (UIFont*) fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)pointSize;
 
 @end

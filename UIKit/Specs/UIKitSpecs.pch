@@ -5,6 +5,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import <QuartzCore/QuartzCore.h>
     #import <Kiwi/Kiwi.h>
     #import "NSBundle+TestUtilities.h"
 #endif

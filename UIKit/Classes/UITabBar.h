@@ -33,35 +33,52 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
+#import <UIKit/UIView.h>
 
-@class UITabBar, UITabBarItem;
+@class UITabBar;
+@class UITabBarItem;
+@class UIImage;
 
 @protocol UITabBarDelegate <NSObject>
 @optional
 
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
-
-// stub
-- (void)tabBar:(UITabBar *)tabBar willBeginCustomizingItems:(NSArray *)items;                     // called before customize sheet is shown. items is current item list
-- (void)tabBar:(UITabBar *)tabBar didBeginCustomizingItems:(NSArray *)items;                      // called after customize sheet is shown. items is current item list
-- (void)tabBar:(UITabBar *)tabBar willEndCustomizingItems:(NSArray *)items changed:(BOOL)changed; // called before customize sheet is hidden. items is new item list
-- (void)tabBar:(UITabBar *)tabBar didEndCustomizingItems:(NSArray *)items changed:(BOOL)changed;  // called after customize sheet is hidden. items is new item list
+- (void) tabBar:(UITabBar*)tabBar didSelectItem:(UITabBarItem*)item;
+- (void) tabBar:(UITabBar*)tabBar willBeginCustomizingItems:(NSArray*)items;
+- (void) tabBar:(UITabBar*)tabBar didBeginCustomizingItems:(NSArray*)items;
+- (void) tabBar:(UITabBar*)tabBar willEndCustomizingItems:(NSArray*)items changed:(BOOL)changed;
+- (void) tabBar:(UITabBar*)tabBar didEndCustomizingItems:(NSArray*)items changed:(BOOL)changed;
 
 @end
 
 
 @interface UITabBar : UIView
 
-@property (nonatomic, assign) id<UITabBarDelegate>  delegate;
-@property (nonatomic, copy)   NSArray              *items;
-@property (nonatomic, assign) UITabBarItem         *selectedItem;
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+#pragma mark Getting and Setting Properties
 
-// stub
-- (void)beginCustomizingItems:(NSArray *)items;
-- (BOOL)endCustomizingAnimated:(BOOL)animated;
-- (BOOL)isCustomizing;
+@property (nonatomic, assign) id<UITabBarDelegate> delegate;
+
+
+#pragma mark Configuring Items
+
+@property (nonatomic, copy) NSArray* items;
+@property (nonatomic, assign) UITabBarItem* selectedItem;
+- (void) setItems:(NSArray*)items animated:(BOOL)animated;
+
+
+#pragma mark Customizing Tab Bars
+
+- (void) beginCustomizingItems:(NSArray*)items;
+- (BOOL) endCustomizingAnimated:(BOOL)animated;
+- (BOOL) isCustomizing;
+
+
+#pragma mark Customizing Appearance
+
+@property (nonatomic, retain) UIImage* backgroundImage;
+@property (nonatomic, retain) UIColor* selectedImageTintColor;
+@property (nonatomic, retain) UIImage* selectionIndicatorImage;
+@property (nonatomic, retain) UIImage* shadowImage;
+@property (nonatomic, retain) UIColor* tintColor;
 
 @end

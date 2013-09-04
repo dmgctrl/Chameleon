@@ -27,8 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIColor.h"
-#import "UIFont.h"
+#import <UIKit/UIColor.h>
+#import <UIKit/UIFont.h>
 
 
 typedef enum {
@@ -41,12 +41,4 @@ typedef enum {
 
 @interface UIColor (UIColorSystemColors)
 + (UIColor *)groupTableViewBackgroundColor;
-@end
-
-
-@interface UIFont (UIFontSystemFonts)
-+ (CGFloat)systemFontSize;
-+ (CGFloat)smallSystemFontSize;
-+ (CGFloat)labelFontSize;
-+ (CGFloat)buttonFontSize;
 @end

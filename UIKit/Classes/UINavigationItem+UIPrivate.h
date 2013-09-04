@@ -33,9 +33,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UINavigationItem.h"
-
-@class UINavigationBar;
+#import "UINavigationBar.h"
 
 @interface UINavigationItem (UIPrivate)
 - (void)_setNavigationBar:(UINavigationBar *)navigationBar;

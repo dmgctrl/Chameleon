@@ -27,24 +27,32 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
+#import <UIKit/UIView.h>
 
-@class UIImage, CAKeyframeAnimation;
+@class UIImage;
 
 @interface UIImageView : UIView <NSCoding>
 
-- (id)initWithImage:(UIImage *)theImage;
-- (void)startAnimating;
-- (void)stopAnimating;
-- (BOOL)isAnimating;
+#pragma mark Initializing a UIImageView Object
+- (instancetype) initWithImage:(UIImage*)image;
+- (instancetype) initWithImage:(UIImage*)image highlightedImage:(UIImage*)highlightedImage;
 
-@property (nonatomic, strong) UIImage *highlightedImage;
-@property (nonatomic, getter=isHighlighted) BOOL highlighted;
+#pragma mark Image Data
+@property (nonatomic, retain) UIImage* image;
+@property (nonatomic, retain) UIImage* highlightedImage;
 
-@property (nonatomic, strong) UIImage *image;
-@property (nonatomic, copy) NSArray *animationImages;
-@property (nonatomic, copy) NSArray *highlightedAnimationImages;
+#pragma mark Animating Images
+@property (nonatomic, copy) NSArray* animationImages;
+@property (nonatomic, copy) NSArray* highlightedAnimationImages;
 @property (nonatomic) NSTimeInterval animationDuration;
 @property (nonatomic) NSInteger animationRepeatCount;
+
+- (void) startAnimating;
+- (void) stopAnimating;
+- (BOOL) isAnimating;
+
+#pragma mark Setting and Getting Attributes
+@property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (nonatomic, getter=isHighlighted) BOOL highlighted;
 
 @end

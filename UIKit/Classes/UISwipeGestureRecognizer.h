@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIGestureRecognizer.h"
+#import <UIKit/UIGestureRecognizer.h>
 
 typedef enum {
     UISwipeGestureRecognizerDirectionRight = 1 << 0,
@@ -37,6 +37,9 @@ typedef enum {
 } UISwipeGestureRecognizerDirection;
 
 @interface UISwipeGestureRecognizer : UIGestureRecognizer 
+
+
+#pragma mark Configuring the Gesture
 
 @property (nonatomic) UISwipeGestureRecognizerDirection direction;
 @property (nonatomic) NSUInteger numberOfTouchesRequired;

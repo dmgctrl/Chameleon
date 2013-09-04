@@ -38,7 +38,9 @@
 #import "UIPopoverView.h"
 #import "UIPopoverNSWindow.h"
 #import "UIPopoverOverlayNSView.h"
+#import "UIPopoverNSView.h"
 #import "UIImage+UIPrivate.h"
+#import "NSEvent+UIKit.h"
 
 
 @implementation UIPopoverController {
@@ -50,6 +52,7 @@
     UIPopoverTheme _theme;
     /**/
     CGRect _desktopScreenRect;
+    UIPopoverNSView* _popoverContainerView;
     UIPopoverArrowDirection _arrowDirections;
 
     struct {
@@ -151,25 +154,32 @@
         [[hostingView UIScreen] _setPopoverController:self];
         [[hostingView UIWindow] addSubview:_popoverView];
         [[hostingView UIWindow] setHidden:NO];
-        if (shouldMakeKey) {
-            [[hostingView UIWindow] makeKeyAndVisible];
-        }
 
         // this prevents a visible flash from sometimes occuring due to the fact that the window is created and added as a child before it has the
         // proper origin set. this means it it ends up flashing at the bottom left corner of the screen sometimes before it
         // gets down farther in this method where the actual origin is calculated and set. since the window is transparent, simply setting the UIView
         // hidden gets around the problem since you then can't see any of the actual content that's in the window :)
         _popoverView.hidden = YES;
+        _popoverContainerView.hidden = YES;
 
         // now finally make the actual popover window itself and attach it to the overlay window
         _popoverWindow = [[UIPopoverNSWindow alloc] initWithContentRect:[hostingView bounds] styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:YES];
         [_popoverWindow setPopoverController:self];
         [_popoverWindow setOpaque:NO];
+        [_popoverWindow setHasShadow:YES];
         [_popoverWindow setBackgroundColor:[NSColor clearColor]];
-        [_popoverWindow setContentView:hostingView];
+        
+        _popoverContainerView = [[UIPopoverNSView alloc] initWithFrame:overlayContentRect];
+        _popoverContainerView.hidden = YES;
+        [_popoverContainerView addSubview:hostingView];
+        [_popoverWindow setContentView:_popoverContainerView];
+        //[_popoverWindow setContentView:hostingView];
         [viewNSWindow addChildWindow:_popoverWindow ordered:NSWindowAbove];
-        [_popoverWindow makeFirstResponder:hostingView];
 
+        if (shouldMakeKey) {
+            [[hostingView UIWindow] makeKeyAndVisible];
+            [_popoverWindow makeFirstResponder:hostingView];
+        }
     }
     
     // cancel current touches (if any) to prevent the main window from losing track of events (such as if the user was holding down the mouse
@@ -270,7 +280,7 @@
 
 - (void) _sendLeftMouseDownWithEvent:(NSEvent *)theNSEvent
 {
-    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    CGPoint screenLocation = [theNSEvent locationInScreen:[_presentingWindow screen]];
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
         _isTouchValid = YES;
@@ -296,7 +306,7 @@
 
 - (void) _sendRightMouseDownWithEvent:(NSEvent *)theNSEvent
 {
-    CGPoint screenLocation = ScreenLocationFromNSEvent([_presentingWindow screen], theNSEvent);
+    CGPoint screenLocation = [theNSEvent locationInScreen:[_presentingWindow screen]];
     if ([self _isPassthroughViewAtLocation:screenLocation]) {
         [[UIApplication sharedApplication] _sendMouseNSEvent:theNSEvent fromScreen:_presentingWindow.screen];
         _isTouchValid = YES;
@@ -408,22 +418,23 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
     const BOOL allowLeftQuad    = (_arrowDirections & UIPopoverArrowDirectionRight) && lq.width > 0 && lq.height > 0 && allowLeftOrRight;
     const BOOL allowRightQuad   = (_arrowDirections & UIPopoverArrowDirectionLeft)  && rq.width > 0 && rq.height > 0 && allowLeftOrRight;
     
+    _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionRight;
     if (allowBottomQuad && SizeIsLessThanOrEqualSize(popoverSize, bq)) {
         pointTo.y = _desktopScreenRect.origin.y;
         origin.y = _desktopScreenRect.origin.y - popoverSize.height + kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionUp;
+        _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionUp;
     } else if (allowRightQuad && SizeIsLessThanOrEqualSize(popoverSize, rq)) {
         pointTo.x = _desktopScreenRect.origin.x + _desktopScreenRect.size.width;
         origin.x = pointTo.x - kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionLeft;
+        _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionLeft;
     } else if (allowLeftQuad && SizeIsLessThanOrEqualSize(popoverSize, lq)) {
         pointTo.x = _desktopScreenRect.origin.x;
         origin.x = _desktopScreenRect.origin.x - popoverSize.width + kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionRight;
+        _popoverContainerView.arrowDirection =  _popoverArrowDirection = UIPopoverArrowDirectionRight;
     } else if (allowTopQuad && SizeIsLessThanOrEqualSize(popoverSize, tq)) {
         pointTo.y = _desktopScreenRect.origin.y + _desktopScreenRect.size.height;
         origin.y = pointTo.y - kArrowPadding;
-        _popoverArrowDirection = UIPopoverArrowDirectionDown;
+        _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionDown;
     } else {
         CGFloat maxArea = -1;
         CGFloat popoverWidthDelta = -1;
@@ -443,7 +454,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
                     popoverWidthDelta = popoverWidth - quadWidth;
                 }
                 origin.x = pointTo.x - kArrowPadding;
-                _popoverArrowDirection = UIPopoverArrowDirectionLeft;
+                _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionLeft;
             }
         }
         if (allowLeftQuad) {
@@ -459,7 +470,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
                     popoverWidthDelta = popoverWidth - quadWidth;
                 }
                 origin.x = pointTo.x - popoverSize.width + kArrowPadding;
-                _popoverArrowDirection = UIPopoverArrowDirectionRight;
+                _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionRight;
             }
         }
         if (allowTopQuad) {
@@ -469,7 +480,7 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
             popoverSize.width -= popoverWidthDelta;
         }
         if (-1 == maxArea) {
-            _popoverArrowDirection = UIPopoverArrowDirectionUnknown;
+            _popoverContainerView.arrowDirection = _popoverArrowDirection = UIPopoverArrowDirectionRight;
         }
     }
     
@@ -498,8 +509,8 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         _popoverView.frame = popoverFrame;
         _popoverView.hidden = NO;
         
-        UIKitView* hostingView = [_popoverWindow contentView];
-        [hostingView setFrame:(CGRect){ .size = popoverSize }];    
+        UIKitView* hostingView = [[[_popoverWindow contentView] subviews] objectAtIndex:0];
+        [hostingView setFrame:(CGRect){ .size = popoverSize }];
         [_popoverWindow setFrame:windowRect display:NO animate:NO];
         
         _popoverContentSize = _contentViewController.view.bounds.size;
@@ -514,6 +525,8 @@ static inline CGPoint CGPointOffset(CGPoint p, CGFloat xOffset, CGFloat yOffset)
         CGPoint viewPointTo = [_popoverView convertPoint:windowPointTo fromView:nil];
         [_popoverView pointTo:viewPointTo inView:_popoverView];
     }
+    
+    _popoverContainerView.hidden = NO;
 }
 
 - (void) observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context

@@ -28,6 +28,8 @@
  */
 
 #import "UIFont.h"
+#import "UIFont+UIPrivate.h"
+#import "UIFontDescriptor.h"
 #import <Cocoa/Cocoa.h>
 
 static NSString *UIFontSystemFontName = nil;
@@ -38,62 +40,124 @@ static NSString* const kUIFontNameKey = @"UIFontName";
 static NSString* const kUIFontPointSizeKey = @"UIFontPointSize";
 static NSString* const kUIFontTraitsKey = @"UIFontTraits";
 static NSString* const kUISystemFontKey = @"UISystemFont";
+static NSString* const kUIFontDescriptorKey = @"UIFontDescriptor";
 
 
 @implementation UIFont {
     CTFontRef _font;
+    UIFontDescriptor* _fontDescriptor;
 }
 
-+ (void)setSystemFontName:(NSString *)aName
++ (CGFloat) systemFontSize
 {
-    UIFontSystemFontName = [aName copy];
+    return [NSFont systemFontSize];
 }
 
-+ (void)setBoldSystemFontName:(NSString *)aName
++ (CGFloat) smallSystemFontSize
 {
-    UIFontBoldSystemFontName = [aName copy];
+    return [NSFont smallSystemFontSize];
 }
 
-+ (void)setItalicSystemFontName:(NSString *)aName
++ (CGFloat) labelFontSize
 {
-    UIFontItalicSystemFontName = [aName copy];
+    return [NSFont labelFontSize];
 }
 
-+ (UIFont *)_fontWithCTFont:(CTFontRef)aFont
++ (CGFloat) buttonFontSize
 {
-    UIFont *theFont = [[UIFont alloc] init];
-    theFont->_font = CFRetain(aFont);
-    return theFont;
+    return [NSFont systemFontSizeForControlSize:NSRegularControlSize];
 }
 
-+ (UIFont *)fontWithNSFont:(NSFont *)aFont
++ (void) setSystemFontName:(NSString*)name
 {
-    if (aFont) {
-        CTFontRef newFont = CTFontCreateWithName((__bridge CFStringRef)[aFont fontName], [aFont pointSize], NULL);
-        if (newFont) {
-            UIFont *theFont = [self _fontWithCTFont:newFont];
-            CFRelease(newFont);
-            return theFont;
+    UIFontSystemFontName = [name copy];
+}
+
++ (void) setBoldSystemFontName:(NSString*)name
+{
+    UIFontBoldSystemFontName = [name copy];
+}
+
++ (void) setItalicSystemFontName:(NSString*)name
+{
+    UIFontItalicSystemFontName = [name copy];
+}
+
++ (UIFont*) fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)pointSize
+{
+    return [[UIFont alloc] initWithFontDescriptor:descriptor size:pointSize];
+}
+
++ (UIFont*) fontWithName:(NSString*)fontName size:(CGFloat)pointSize
+{
+    return [UIFont fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:fontName size:pointSize] size:pointSize];
+}
+
++ (UIFont*) fontWithCTFont:(CTFontRef)ctfont
+{
+    NSAssert(nil != ctfont, @"???");
+    static NSCache* cache;
+    UIFont* font = [cache objectForKey:(__bridge id)ctfont];
+    if (!font) {
+        if (!cache) {
+            cache = [[NSCache alloc] init];
         }
+        font = [[UIFont alloc] initWithCTFont:ctfont];
+        [cache setObject:font forKey:(__bridge id)ctfont];
     }
-    return nil;
+    return font;
 }
 
-+ (UIFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize
+- (void) dealloc
 {
-    return [self fontWithNSFont:[NSFont fontWithName:fontName size:fontSize]];
+    if (_font) {
+        CFRelease(_font), _font = nil;
+    }
 }
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
-        NSString* fontName = [coder decodeObjectForKey:kUIFontNameKey];
-        CGFloat fontPointSize = [coder decodeFloatForKey:kUIFontPointSizeKey];
-        
-        _font = CTFontCreateWithName((__bridge CFStringRef)fontName, fontPointSize, NULL);
-        if (!_font) {
+        NSFont* font = nil;
+        if ([coder containsValueForKey:kUIFontDescriptorKey]) {
+            _fontDescriptor = [coder decodeObjectForKey:kUIFontDescriptorKey];
+            font = [NSFont fontWithDescriptor:[NSFontDescriptor fontDescriptorWithFontAttributes:[_fontDescriptor fontAttributes]] size:[_fontDescriptor pointSize]];
+        } else {
+            NSString* name = [coder decodeObjectForKey:kUIFontNameKey];
+            CGFloat size = [coder decodeFloatForKey:kUIFontPointSizeKey];
+            font = [NSFont fontWithName:name size:size];
+        }
+        if (!font) {
             return nil;
         }
+        _font = (__bridge_retained CTFontRef)font;
+        if (!_fontDescriptor) {
+            _fontDescriptor = [[UIFontDescriptor alloc] initWithFontAttributes:[[font fontDescriptor] fontAttributes]];
+        }
+    }
+    return self;
+}
+
+- (instancetype) initWithFontDescriptor:(UIFontDescriptor*)fontDescriptor size:(CGFloat)size
+{
+    NSAssert(nil != fontDescriptor, @"???");
+    NSFont* font = [NSFont fontWithDescriptor:[NSFontDescriptor fontDescriptorWithFontAttributes:[fontDescriptor fontAttributes]] size:size];
+    if (!font) {
+        return nil;
+    }
+
+    if (nil != (self = [self init])) {
+        _font = (__bridge_retained CTFontRef)font;
+        _fontDescriptor = fontDescriptor;
+    }
+    return self;
+}
+
+- (instancetype) initWithCTFont:(CTFontRef)font
+{
+    NSAssert(nil != font, @"???");
+    if (nil != (self = [super init])) {
+        _font = CFRetain(font);
     }
     return self;
 }
@@ -103,7 +167,7 @@ static NSString* const kUISystemFontKey = @"UISystemFont";
     [self doesNotRecognizeSelector:_cmd];
 }
 
-static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFStringRef nameAttr)
+static NSArray* _getFontCollectionNames(CTFontCollectionRef collection, CFStringRef nameAttr)
 {
     NSMutableSet *names = [NSMutableSet set];
     if (collection) {
@@ -126,7 +190,7 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
     return [names allObjects];
 }
 
-+ (NSArray *)familyNames
++ (NSArray*) familyNames
 {
     CTFontCollectionRef collection = CTFontCollectionCreateFromAvailableFonts(NULL);
     NSArray* names = _getFontCollectionNames(collection, kCTFontFamilyNameAttribute);
@@ -136,9 +200,9 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
     return names;
 }
 
-+ (NSArray *)fontNamesForFamilyName:(NSString *)familyName
++ (NSArray*) fontNamesForFamilyName:(NSString*)familyName
 {
-    NSArray *names = nil;
+    NSArray* names = nil;
     CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((__bridge CFDictionaryRef)@{
         (NSString*)kCTFontFamilyNameAttribute: familyName,
     });
@@ -157,92 +221,93 @@ static NSArray *_getFontCollectionNames(CTFontCollectionRef collection, CFString
     return names;
 }
 
-+ (UIFont *)systemFontOfSize:(CGFloat)fontSize
++ (UIFont*) systemFontOfSize:(CGFloat)fontSize
 {
-    NSFont *systemFont = UIFontSystemFontName? [NSFont fontWithName:UIFontSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    NSFont* systemFont = UIFontSystemFontName? [NSFont fontWithName:UIFontSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
-+ (UIFont *)boldSystemFontOfSize:(CGFloat)fontSize
++ (UIFont*) boldSystemFontOfSize:(CGFloat)fontSize
 {
-    NSFont *systemFont = UIFontBoldSystemFontName? [NSFont fontWithName:UIFontBoldSystemFontName size:fontSize] : [NSFont boldSystemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
+    NSFont* systemFont = UIFontBoldSystemFontName? [NSFont fontWithName:UIFontBoldSystemFontName size:fontSize] : [NSFont boldSystemFontOfSize:fontSize];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
-+ (UIFont *)italicSystemFontOfSize:(CGFloat)fontSize {
-    NSFont *systemFont = UIFontItalicSystemFontName? [NSFont fontWithName:UIFontItalicSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
-    return [self fontWithNSFont:systemFont];
++ (UIFont*) italicSystemFontOfSize:(CGFloat)fontSize {
+    NSFont* systemFont = UIFontItalicSystemFontName? [NSFont fontWithName:UIFontItalicSystemFontName size:fontSize] : [NSFont systemFontOfSize:fontSize];
+    return [self fontWithCTFont:(__bridge CTFontRef)systemFont];
 }
 
-- (void)dealloc
+- (NSString*) fontName
 {
-    if (_font) CFRelease(_font);
+    return (__bridge_transfer NSString*)CTFontCopyFullName(_font);
 }
 
-- (NSString *)fontName
-{
-    return (NSString *)CFBridgingRelease(CTFontCopyFullName(_font));
-}
-
-- (CGFloat)ascender
+- (CGFloat) ascender
 {
     return CTFontGetAscent(_font);
 }
 
-- (CGFloat)descender
+- (CGFloat) descender
 {
     return -CTFontGetDescent(_font);
 }
 
-- (CGFloat)pointSize
+- (CGFloat) pointSize
 {
     return CTFontGetSize(_font);
 }
 
-- (CGFloat)xHeight
+- (CGFloat) xHeight
 {
     return CTFontGetXHeight(_font);
 }
 
-- (CGFloat)capHeight
+- (CGFloat) capHeight
 {
     return CTFontGetCapHeight(_font);
 }
 
-- (CGFloat)lineHeight
+- (CGFloat) lineHeight
 {
-    // this seems to compute heights that are very close to what I'm seeing on iOS for fonts at
-    // the same point sizes. however there's still subtle differences between fonts on the two
-    // platforms (iOS and Mac) and I don't know if it's ever going to be possible to make things
-    // return exactly the same values in all cases.
-    return ceilf(self.ascender) - floorf(self.descender) + ceilf(CTFontGetLeading(_font));
+    return roundf(CTFontGetSize(_font) * 1.1478f + 0.8607f);
 }
 
-- (NSString *)familyName
+- (NSString*) familyName
 {
-    return (NSString *)CFBridgingRelease(CTFontCopyFamilyName(_font));
+    return (__bridge_transfer NSString*)CTFontCopyFamilyName(_font);
 }
 
-- (UIFont *)fontWithSize:(CGFloat)fontSize
+- (UIFont*) fontWithSize:(CGFloat)fontSize
 {
-    CTFontRef newFont = CTFontCreateCopyWithAttributes(_font, fontSize, NULL, NULL);
-    if (newFont) {
-        UIFont *theFont = [isa _fontWithCTFont:newFont];
-        CFRelease(newFont);
-        return theFont;
-    } else {
-        return nil;
-    }
+    return [UIFont fontWithDescriptor:[self fontDescriptor] size:fontSize];
 }
 
-- (NSFont *)NSFont
+- (UIFontDescriptor*) fontDescriptor
 {
-    return [NSFont fontWithName:self.fontName size:self.pointSize];
+    return _fontDescriptor;
 }
 
-- (CTFontRef) _CTFont
+- (NSString*) description
 {
-    return _font;
+    return [NSString stringWithFormat:@"<%@: %p> font-family: \"%@\"; font-size: %fpx", NSStringFromClass([self class]), self, [self familyName], [self pointSize]];
+}
+
+- (NSFont*) NSFont
+{
+    return (__bridge NSFont*)_font;
+}
+
+#pragma mark CoreText Compatibility
+
+- (CTFontRef) ctFontRef
+{
+    return [(__bridge id)_font ctFontRef];
+}
+
+- (id) forwardingTargetForSelector:(SEL)aSelector
+{
+    return (__bridge id)_font;
 }
 
 @end

@@ -55,7 +55,6 @@ typedef enum {
     unsigned short _keyCode;
     NSString *_characters;
     NSString *_charactersWithModifiers;
-    NSUInteger _modifierFlags;
     BOOL _repeat;
 }
 
@@ -63,6 +62,7 @@ typedef enum {
 @property (nonatomic, readonly) unsigned short keyCode;
 @property (nonatomic, readonly) NSString *characters;
 @property (nonatomic, readonly) NSString *charactersWithModifiers;
+@property (nonatomic, readonly) NSUInteger modifierFlags;
 @property (nonatomic, readonly, getter=isRepeat) BOOL repeat;
 @property (nonatomic, readonly, getter=isCapslockEnabled) BOOL capslockEnabled;
 @property (nonatomic, readonly, getter=isShiftKeyPressed) BOOL shiftKeyPressed;

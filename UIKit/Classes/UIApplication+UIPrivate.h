@@ -29,9 +29,10 @@
 
 #import "UIApplication.h"
 
-@class UIWindow, UIScreen, NSEvent, UIPopoverController;
-
-extern CGPoint ScreenLocationFromNSEvent(UIScreen *theScreen, NSEvent *theNSEvent);
+@class UIWindow;
+@class UIScreen;
+@class NSEvent;
+@class UIPopoverController;
 
 @interface UIApplication (UIPrivate)
 - (void)_setKeyWindow:(UIWindow *)newKeyWindow;

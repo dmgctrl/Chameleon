@@ -33,10 +33,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITableView.h"
+#import <UIKit/UITableView.h>
 
-@class UISearchBar, UITableView, UIViewController, UIPopoverController;
-@protocol UITableViewDataSource, UITableViewDelegate, UISearchDisplayDelegate;
+@class UISearchBar;
+@protocol UISearchDisplayDelegate;
 
 @interface UISearchDisplayController : NSObject 
 

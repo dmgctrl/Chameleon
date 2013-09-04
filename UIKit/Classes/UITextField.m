@@ -28,19 +28,30 @@
  */
 
 #import "UITextField.h"
-#import "UITextLayer.h"
 #import "UIColor.h"
 #import "UIFont.h"
-#import "UIImage+UIPrivate.h"
 #import "UIBezierPath.h"
 #import "UIGraphics.h"
-
+#import "UILabel.h"
+#import "UITapGestureRecognizer.h"
+#import <UIKit/NSTextStorage.h>
+#import <UIKit/NSTextContainer.h>
+#import <UIKit/NSLayoutManager.h>
+/**/
+#import "_UITextStorage.h"
+#import "_UITextInteractionController.h"
+#import "_UITextFieldEditor.h"
+#import "_UITextModel.h"
+#import "_UITextInputAdapter.h"
+/**/
 #import "UIImage.h"
+#import "UIImage+UIPrivate.h"
 #import <AppKit/NSCursor.h>
 
-NSString *const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
-NSString *const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
-NSString *const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
+
+NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
+NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
+NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
 
 
 static NSString* const kUIPlaceholderKey = @"UIPlaceholder";
@@ -61,50 +72,59 @@ static NSString* const kUIKeyboardTypeKey = @"UIKeyboardType";
 static NSString* const kUIReturnKeyTypeKey = @"UIReturnKeyType";
 static NSString* const kUIEnablesReturnKeyAutomaticallyKey = @"UIEnablesReturnKeyAutomatically";
 static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
+static NSString* const kUIAttributedPlaceholderKey = @"UIAttributedPlaceholder";
+static NSString* const kUIAttributedTextKey = @"UIAttributedText";
 
-
-@interface UIControl () <UITextLayerContainerViewProtocol>
-@end
-
-@interface UITextField () <UITextLayerTextDelegate>
-@end
 
 @interface NSObject (UITextFieldDelegate)
-- (BOOL)textField:(UITextField *)textField doCommandBySelector:(SEL)selector;
+- (BOOL) textField:(UITextField*)textField doCommandBySelector:(SEL)selector;
 @end
 
+
 @implementation UITextField {
-    UITextLayer *_textLayer;
-	UITextLayer *_placeholderTextLayer;
-    NSString *_placeholder;
+    NSTextStorage* _textStorage;
+    NSTextContainer* _textContainer;
+    NSLayoutManager* _layoutManager;
+    
+    NSMutableDictionary* _defaultTextAttributes;
+    
+    UILabel* _placeholderTextLabel;
+    UILabel* _textLabel;
+    _UITextFieldEditor* _textFieldEditor;
+    
+    _UITextInteractionController* _interactionController;
+    _UITextModel* _model;
+    _UITextInputAdapter* _inputAdapter;
     
     struct {
-        BOOL shouldBeginEditing : 1;
-        BOOL didBeginEditing : 1;
-        BOOL shouldEndEditing : 1;
-        BOOL didEndEditing : 1;
-        BOOL shouldChangeCharacters : 1;
-        BOOL shouldClear : 1;
-        BOOL shouldReturn : 1;
-		BOOL doCommandBySelector : 1;
-    } _delegateHas;	
-}
+        bool shouldBeginEditing : 1;
+        bool didBeginEditing : 1;
+        bool shouldEndEditing : 1;
+        bool didEndEditing : 1;
+        bool shouldChangeCharacters : 1;
+        bool shouldClear : 1;
+        bool shouldReturn : 1;
+        bool doCommandBySelector : 1;
+    } _delegateHas;
 
-- (void)dealloc
-{
-	[_placeholderTextLayer removeFromSuperlayer];
-    [_textLayer removeFromSuperlayer];
+    struct {
+        bool selectionWillChange : 1;
+        bool selectionDidChange : 1;
+        bool textWillChange : 1;
+        bool textDidChange : 1;
+    } _inputDelegateHas;
+    
+    struct {
+        bool didBeginEditing : 1;
+        bool hasText : 1;
+    } _flags;
 }
+@synthesize inputDelegate = _inputDelegate;
+@synthesize markedTextStyle;
+@synthesize tokenizer;
 
-- (void) _commonInitForUITextField
+static void _commonInitForUITextField(UITextField* self)
 {
-    _placeholderTextLayer = [[UITextLayer alloc] initWithContainer:self isField:NO];
-    _placeholderTextLayer.textColor = [UIColor colorWithWhite:0.6f alpha:1.0f];
-    [self.layer addSublayer:_placeholderTextLayer];
-    
-    _textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
-    [self.layer addSublayer:_textLayer];
-    
     self.textAlignment = UITextAlignmentLeft;
     self.font = [UIFont systemFontOfSize:17];
     self.borderStyle = UITextBorderStyleNone;
@@ -113,12 +133,32 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     self.leftViewMode = UITextFieldViewModeNever;
     self.rightViewMode = UITextFieldViewModeNever;
     self.opaque = NO;
+    
+    self->_textContainer = [[NSTextContainer alloc] initWithContainerSize:(CGSize){ [self bounds].size.width, CGFLOAT_MAX }];
+    [self->_textContainer setWidthTracksTextView:YES];
+    self->_textStorage = [[_UITextStorage alloc] init];
+    self->_layoutManager = [[NSLayoutManager alloc] init];
+    [self->_layoutManager addTextContainer:self->_textContainer];
+    [self->_textStorage addLayoutManager:self->_layoutManager];
+    
+    self->_model = [[_UITextModel alloc] initWithLayoutManager:self->_layoutManager];
+    
+    self->_interactionController = [[_UITextInteractionController alloc] initWithView:self model:self->_model];
+    [self->_interactionController addOneFingerTapRecognizerToView:self];
+    [self->_interactionController addOneFingerDoubleTapRecognizerToView:self];
+    
+    self->_inputAdapter = [[_UITextInputAdapter alloc] initWithInputModel:self->_model interactionController:self->_interactionController];
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (void) dealloc
+{
+    [_interactionController removeGestureRecognizersFromView:self];
+}
+
+- (id) initWithFrame:(CGRect)frame
 {
     if (nil != (self = [super initWithFrame:frame])) {
-        [self _commonInitForUITextField];
+        _commonInitForUITextField(self);
     }
     return self;
 }
@@ -126,15 +166,21 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 - (id) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
-        [self _commonInitForUITextField];
-        if ([coder containsValueForKey:kUIPlaceholderKey]) {
+        _commonInitForUITextField(self);
+        if ([coder containsValueForKey:kUIAttributedPlaceholderKey]) {
+            self.attributedPlaceholder = [coder decodeObjectForKey:kUIAttributedPlaceholderKey];
+        } else if ([coder containsValueForKey:kUIPlaceholderKey]) {
             self.placeholder = [coder decodeObjectForKey:kUIPlaceholderKey];
         }
+        
+        if ([coder containsValueForKey:kUIAttributedTextKey]) {
+            self.attributedText = [coder decodeObjectForKey:kUIAttributedTextKey];
+        } else if ([coder containsValueForKey:kUITextKey]) {
+            self.text = [coder decodeObjectForKey:kUITextKey];
+        }
+        
         if ([coder containsValueForKey:kUITextAlignmentKey]) {
             self.textAlignment = [coder decodeIntegerForKey:kUITextAlignmentKey];
-        }
-        if ([coder containsValueForKey:kUITextKey]) {
-            self.text = [coder decodeObjectForKey:kUITextKey];
         }
         if ([coder containsValueForKey:kUITextFieldBackgroundKey]) {
             self.background = [coder decodeObjectForKey:kUITextFieldBackgroundKey];
@@ -190,109 +236,221 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (BOOL)_isLeftViewVisible
+
+#pragma mark Layout
+
+- (BOOL) _isLeftViewVisible
 {
-    return _leftView && (_leftViewMode == UITextFieldViewModeAlways
-                         || (_editing && _leftViewMode == UITextFieldViewModeWhileEditing)
-                         || (!_editing && _leftViewMode == UITextFieldViewModeUnlessEditing));
+    return _leftView && (
+        _leftViewMode == UITextFieldViewModeAlways
+    || (_editing && _leftViewMode == UITextFieldViewModeWhileEditing)
+    || (!_editing && _leftViewMode == UITextFieldViewModeUnlessEditing)
+    );
 }
 
-- (BOOL)_isRightViewVisible
+- (BOOL) _isRightViewVisible
 {
-    return _rightView && (_rightViewMode == UITextFieldViewModeAlways
-                         || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
-                         || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing));
+    return _rightView && (
+        _rightViewMode == UITextFieldViewModeAlways
+     || (_editing && _rightViewMode == UITextFieldViewModeWhileEditing)
+     || (!_editing && _rightViewMode == UITextFieldViewModeUnlessEditing)
+    );
 }
 
-- (void)layoutSubviews
+- (void) layoutSubviews
 {
     [super layoutSubviews];
     const CGRect bounds = self.bounds;
-    _textLayer.frame = [self textRectForBounds:bounds];
-	_placeholderTextLayer.frame = [self textRectForBounds:bounds];
-
+    
     if ([self _isLeftViewVisible]) {
         _leftView.hidden = NO;
         _leftView.frame = [self leftViewRectForBounds:bounds];
     } else {
         _leftView.hidden = YES;
     }
-
+    
     if ([self _isRightViewVisible]) {
         _rightView.hidden = NO;
         _rightView.frame = [self rightViewRectForBounds:bounds];
     } else {
         _rightView.hidden = YES;
     }
-}
-
-- (void)setDelegate:(id<UITextFieldDelegate>)theDelegate
-{
-    if (theDelegate != _delegate) {
-        _delegate = theDelegate;
-        _delegateHas.shouldBeginEditing = [_delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)];
-        _delegateHas.didBeginEditing = [_delegate respondsToSelector:@selector(textFieldDidBeginEditing:)];
-        _delegateHas.shouldEndEditing = [_delegate respondsToSelector:@selector(textFieldShouldEndEditing:)];
-        _delegateHas.didEndEditing = [_delegate respondsToSelector:@selector(textFieldDidEndEditing:)];
-        _delegateHas.shouldChangeCharacters = [_delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)];
-        _delegateHas.shouldClear = [_delegate respondsToSelector:@selector(textFieldShouldClear:)];
-        _delegateHas.shouldReturn = [_delegate respondsToSelector:@selector(textFieldShouldReturn:)];
-		_delegateHas.doCommandBySelector = [_delegate respondsToSelector:@selector(textField:doCommandBySelector:)];
+    
+    if (_textLabel || _placeholderTextLabel) {
+        CGRect textRect = [self textRectForBounds:bounds];
+        [_textLabel setFrame:textRect];
+        [_placeholderTextLabel setFrame:textRect];
     }
 }
 
-- (void)setPlaceholder:(NSString *)thePlaceholder
+
+#pragma mark Properties
+
+- (void) setAttributedPlaceholder:(NSAttributedString*)attributedPlaceholder
 {
-    _placeholderTextLayer.text = thePlaceholder;
+    if (attributedPlaceholder) {
+        _attributedPlaceholder = [self _adjustAttributesForPlaceholder:attributedPlaceholder];
+        if (!_placeholderTextLabel) {
+            _placeholderTextLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+            [_placeholderTextLabel setBackgroundColor:nil];
+            [_placeholderTextLabel setOpaque:NO];
+        }
+        [_placeholderTextLabel setAttributedText:_attributedPlaceholder];
+        if (![_placeholderTextLabel superview]) {
+            if (![self isEditing] && ![[self text] length]) {
+                [self addSubview:_placeholderTextLabel];
+            }
+        }
+    } else {
+        _attributedPlaceholder = nil;
+        [_placeholderTextLabel removeFromSuperview], _placeholderTextLabel = nil;
+    }
 }
 
-- (NSString *)placeholder {
-	return _placeholderTextLayer.text;
+- (NSAttributedString*) attributedText
+{
+    return [[NSAttributedString alloc] initWithAttributedString:_textStorage];
 }
 
-- (void)setBorderStyle:(UITextBorderStyle)style
+- (void) setAttributedText:(NSAttributedString*)attributedText
 {
-    if (style != _borderStyle) {
-        _borderStyle = style;
+    if (attributedText) {
+        [_textStorage replaceCharactersInRange:(NSRange){ 0, [_textStorage length] } withAttributedString:attributedText];
+        UITextPosition* endOfDocument = [_inputAdapter endOfDocument];
+        [_inputAdapter setSelectedTextRange:[_inputAdapter textRangeFromPosition:endOfDocument toPosition:endOfDocument]];
+
+        _flags.hasText = [_textStorage length] > 0;
+        if ([self hasText]) {
+            [_placeholderTextLabel removeFromSuperview];
+        }
+        if (!_textLabel) {
+            _textLabel = [[UILabel alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+            [_textLabel setBackgroundColor:nil];
+            [_textLabel setOpaque:NO];
+        }
+        [_textLabel setAttributedText:attributedText];
+        if (![_textLabel superview]) {
+            if (![self isEditing] && [self hasText]) {
+                [self addSubview:_textLabel];
+            }
+        }
+    } else {
+        [_textStorage deleteCharactersInRange:(NSRange){ 0, [_textStorage length]}];
+        [_textLabel removeFromSuperview], _textLabel = nil;
+    }
+}
+
+- (UITextAutocapitalizationType) autocapitalizationType
+{
+    return UITextAutocapitalizationTypeNone;
+}
+
+- (void) setAutocapitalizationType:(UITextAutocapitalizationType)type
+{
+}
+
+- (UITextAutocorrectionType) autocorrectionType
+{
+    return UITextAutocorrectionTypeDefault;
+}
+
+- (void) setAutocorrectionType:(UITextAutocorrectionType)type
+{
+}
+
+- (void) setBackground:(UIImage*)background
+{
+    if (background != _background) {
+        _background = background;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setBackground:(UIImage *)aBackground
+- (void) setBorderStyle:(UITextBorderStyle)borderStyle
 {
-    if (aBackground != _background) {
-        _background = aBackground;
+    if (borderStyle != _borderStyle) {
+        _borderStyle = borderStyle;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setDisabledBackground:(UIImage *)aBackground
+- (NSDictionary*) defaultTextAttributes
 {
-    if (aBackground != _disabledBackground) {
-        _disabledBackground = aBackground;
+    static NSDictionary* sharedDefaultTextAttributes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setTighteningFactorForTruncation:0.0f];
+        [paragraphStyle setAlignment:(NSTextAlignment)_textAlignment];
+        
+        sharedDefaultTextAttributes = @{
+            UITextAttributeFont: [UIFont systemFontOfSize:17.0f],
+            UITextAttributeTextColor: [UIColor colorWithWhite:0.0f alpha:1.0f],
+            NSKernAttributeName: @(0.0f),
+            NSLigatureAttributeName: @(0.0f),
+            NSParagraphStyleAttributeName: paragraphStyle,
+        };
+    });
+    if (_defaultTextAttributes) {
+        return [_defaultTextAttributes copy];
+    } else {
+        return sharedDefaultTextAttributes;
+    }
+}
+
+- (void) setDefaultTextAttributes:(NSDictionary*)defaultTextAttributes
+{
+    _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:defaultTextAttributes];
+    [_textStorage setAttributes:defaultTextAttributes range:(NSRange){ 0, [_textStorage length] }];
+}
+
+- (void) setDelegate:(id<UITextFieldDelegate>)delegate
+{
+    if (delegate != _delegate) {
+        _delegate = delegate;
+        _delegateHas.shouldBeginEditing = [delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)];
+        _delegateHas.didBeginEditing = [delegate respondsToSelector:@selector(textFieldDidBeginEditing:)];
+        _delegateHas.shouldEndEditing = [delegate respondsToSelector:@selector(textFieldShouldEndEditing:)];
+        _delegateHas.didEndEditing = [delegate respondsToSelector:@selector(textFieldDidEndEditing:)];
+        _delegateHas.shouldChangeCharacters = [delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)];
+        _delegateHas.shouldClear = [delegate respondsToSelector:@selector(textFieldShouldClear:)];
+        _delegateHas.shouldReturn = [delegate respondsToSelector:@selector(textFieldShouldReturn:)];
+        _delegateHas.doCommandBySelector = [delegate respondsToSelector:@selector(textField:doCommandBySelector:)];
+    }
+}
+
+- (void) setDisabledBackground:(UIImage*)disabledBackground
+{
+    if (disabledBackground != _disabledBackground) {
+        _disabledBackground = disabledBackground;
         [self setNeedsDisplay];
     }
 }
 
-- (void)setLeftView:(UIView *)leftView
+- (BOOL) enablesReturnKeyAutomatically
 {
-    if (leftView != _leftView) {
-        [_leftView removeFromSuperview];
-        _leftView = leftView;
-        [self addSubview:_leftView];
-    }
+    return YES;
 }
 
-- (void)setRightView:(UIView *)rightView
+- (void) setEnablesReturnKeyAutomatically:(BOOL)enabled
 {
-    if (rightView != _rightView) {
-        [_rightView removeFromSuperview];
-        _rightView = rightView;
-        [self addSubview:_rightView];
-    }
 }
 
-- (void)setFrame:(CGRect)frame
+- (void) setFont:(UIFont*)font
+{
+    NSAssert(nil != font, @"???");
+    _font = font;
+    [_placeholderTextLabel setFont:font];
+    [_textLabel setFont:font];
+    
+    [_textStorage addAttribute:UITextAttributeFont value:font range:(NSRange){ 0, [_textStorage length] }];
+    if (!_defaultTextAttributes) {
+        _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
+    }
+    [_defaultTextAttributes setObject:font forKey:UITextAttributeFont];
+}
+
+- (void) setFrame:(CGRect)frame
 {
     if (!CGRectEqualToRect(frame,self.frame)) {
         [super setFrame:frame];
@@ -300,30 +458,152 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     }
 }
 
-
-- (CGRect)borderRectForBounds:(CGRect)bounds
+- (void) setInputDelegate:(id<UITextInputDelegate>)inputDelegate
 {
-	CGRect borderRect = bounds;
-	
-	if(self.borderStyle == UITextBorderStyleRoundedRect) {
-		UIImage *image = [UIImage _textFieldRoundedRectBackground];
-		borderRect = CGRectMake(4.0f, self.bounds.size.height/2 - image.size.height/2, self.bounds.size.width - 8.0f, image.size.height);
-	}
-	
-    return CGRectIntegral(borderRect);
+    if (!inputDelegate || ([self isFirstResponder] && (_inputDelegate != inputDelegate))) {
+        _inputDelegate = inputDelegate;
+        _inputDelegateHas.selectionDidChange = [inputDelegate respondsToSelector:@selector(selectionDidChange:)];
+        _inputDelegateHas.selectionWillChange = [inputDelegate respondsToSelector:@selector(selectionWillChange:)];
+        _inputDelegateHas.textDidChange = [inputDelegate respondsToSelector:@selector(textDidChange:)];
+        _inputDelegateHas.textWillChange = [inputDelegate respondsToSelector:@selector(textWillChange:)];
+    }
 }
 
-- (CGRect)clearButtonRectForBounds:(CGRect)bounds
+- (UIKeyboardAppearance) keyboardAppearance
+{
+    return UIKeyboardAppearanceDefault;
+}
+
+- (void) setKeyboardAppearance:(UIKeyboardAppearance)type
+{
+}
+
+- (UIKeyboardType) keyboardType
+{
+    return UIKeyboardTypeDefault;
+}
+
+- (void) setKeyboardType:(UIKeyboardType)type
+{
+}
+
+- (void) setLeftView:(UIView*)leftView
+{
+    if (leftView != _leftView) {
+        if (_leftView) {
+            [_leftView removeFromSuperview];
+        }
+        _leftView = leftView;
+        if (leftView) {
+            [self addSubview:leftView];
+        }
+    }
+}
+
+- (NSString*) placeholder
+{
+    return [_attributedPlaceholder string];
+}
+
+- (void) setPlaceholder:(NSString*)placeholder
+{
+    if (placeholder) {
+        [self setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:placeholder attributes:[self defaultTextAttributes]]];
+    } else {
+        [self setAttributedPlaceholder:nil];
+    }
+}
+
+- (void) setRightView:(UIView*)rightView
+{
+    if (rightView != _rightView) {
+        if (_rightView) {
+            [_rightView removeFromSuperview];
+        }
+        _rightView = rightView;
+        if (rightView) {
+            [self addSubview:rightView];
+        }
+    }
+}
+
+- (UIReturnKeyType) returnKeyType
+{
+    return UIReturnKeyDefault;
+}
+
+- (void) setReturnKeyType:(UIReturnKeyType)type
+{
+}
+
+- (NSString*) text
+{
+    return [_textStorage string];
+}
+
+- (void) setText:(NSString*)text
+{
+    if (text) {
+        [self setAttributedText:[[NSAttributedString alloc] initWithString:text attributes:[self defaultTextAttributes]]];
+    } else {
+        [self setAttributedText:nil];
+    }
+}
+
+- (void) setTextAlignment:(UITextAlignment)textAlignment
+{
+    _textAlignment = textAlignment;
+    [_placeholderTextLabel setTextAlignment:textAlignment];
+    [_textLabel setTextAlignment:textAlignment];
+}
+
+- (void) setTextColor:(UIColor*)textColor
+{
+    NSAssert(nil != textColor, @"???");
+    _textColor = textColor;
+    [_textStorage addAttribute:UITextAttributeTextColor value:textColor range:(NSRange){ 0, [_textStorage length] }];
+    if (!_defaultTextAttributes) {
+        _defaultTextAttributes = [NSMutableDictionary dictionaryWithDictionary:[self defaultTextAttributes]];
+    }
+    [_defaultTextAttributes setObject:textColor forKey:UITextAttributeTextColor];
+}
+
+
+#pragma mark _UITextInputPlus
+
+- (void) beginSelectionChange
+{
+    if (_inputDelegateHas.selectionWillChange) {
+        [[self inputDelegate] selectionWillChange:self];
+    }
+}
+
+- (void) endSelectionChange
+{
+    if (_inputDelegateHas.selectionDidChange) {
+        [[self inputDelegate] selectionDidChange:self];
+    }
+}
+
+
+#pragma mark Geometry
+
+- (CGRect) borderRectForBounds:(CGRect)bounds
+{
+    return bounds;
+}
+
+- (CGRect) clearButtonRectForBounds:(CGRect)bounds
 {
     return CGRectZero;
 }
 
-- (CGRect)editingRectForBounds:(CGRect)bounds
+- (CGRect) editingRectForBounds:(CGRect)bounds
 {
     return [self textRectForBounds:bounds];
 }
 
-- (CGRect)leftViewRectForBounds:(CGRect)bounds
+- (CGRect) leftViewRectForBounds:(CGRect)bounds
 {
     if (_leftView) {
         const CGRect frame = _leftView.frame;
@@ -336,12 +616,12 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     }
 }
 
-- (CGRect)placeholderRectForBounds:(CGRect)bounds
+- (CGRect) placeholderRectForBounds:(CGRect)bounds
 {
     return [self textRectForBounds:bounds];
 }
 
-- (CGRect)rightViewRectForBounds:(CGRect)bounds
+- (CGRect) rightViewRectForBounds:(CGRect)bounds
 {
     if (_rightView) {
         const CGRect frame = _rightView.frame;
@@ -354,37 +634,30 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     }
 }
 
-- (CGRect)textRectForBounds:(CGRect)bounds
+- (CGRect) textRectForBounds:(CGRect)bounds
 {
-    // Docs say:
-    // The default implementation of this method returns a rectangle that is derived from the control’s original bounds,
-    // but which does not include the area occupied by the receiver’s border or overlay views.
-    
-    // It appears what happens is something like this:
-    // check border type:
-    //   if no border, skip to next major step
-    //   if has border, set textRect = borderBounds, then inset textRect according to border style
-    // check if textRect overlaps with leftViewRect, if it does, make it smaller
-    // check if textRect overlaps with rightViewRect, if it does, make it smaller
-    // check if textRect overlaps with clearButtonRect (if currently needed?), if it does, make it smaller
-    
-    CGRect textRect = bounds;
-    
-    if (_borderStyle != UITextBorderStyleNone) {
-        textRect = [self borderRectForBounds:bounds];
-		if(self.borderStyle == UITextBorderStyleRoundedRect) {
-			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 4.0f, 1.0f);
-		} else if(self.borderStyle == UITextBorderStyleBezel) {
-			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 2.0f, 3.0f);
-		} else if(self.borderStyle == UITextBorderStyleLine) {
-//			textRect = CGRectOffset(CGRectInset(textRect, 2.0f, 2.0f), 2.0f, 3.0f);
-		}
+    CGRect textRect;
+    switch ([self borderStyle]) {
+        case UITextBorderStyleRoundedRect: {
+            textRect = CGRectOffset(CGRectInset(bounds, 7.0f, 2.0f), -1.0f, 0.0f);
+            break;
+        }
+        case UITextBorderStyleBezel: {
+            textRect = CGRectOffset(CGRectInset(bounds, 7.0f, 2.5f), 0.0f, 1.5f);
+            break;
+        }
+        case UITextBorderStyleLine: {
+            textRect = CGRectInset(bounds, 2.0f, 2.0f);
+            break;
+        }
+        case UITextBorderStyleNone: {
+            textRect = bounds;
+            break;
+        }
 	}
     
-    // Going to go ahead and assume that the left view is on the left, the right view is on the right, and there's space between..
-    // I imagine this is a dangerous assumption...
     if ([self _isLeftViewVisible]) {
-        CGRect overlap = CGRectIntersection(textRect,[self leftViewRectForBounds:bounds]);
+        CGRect overlap = CGRectIntersection(textRect, [self leftViewRectForBounds:bounds]);
         if (!CGRectIsNull(overlap)) {
             textRect = CGRectOffset(textRect, overlap.size.width, 0);
             textRect.size.width -= overlap.size.width;
@@ -392,37 +665,38 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     }
     
     if ([self _isRightViewVisible]) {
-        CGRect overlap = CGRectIntersection(textRect,[self rightViewRectForBounds:bounds]);
+        CGRect overlap = CGRectIntersection(textRect, [self rightViewRectForBounds:bounds]);
         if (!CGRectIsNull(overlap)) {
             textRect = CGRectOffset(textRect, -overlap.size.width, 0);
             textRect.size.width -= overlap.size.width;
         }
     }
     
-    return CGRectIntegral(textRect);
+    return textRect;
 }
 
 
+#pragma mark Drawing
 
-- (void)drawPlaceholderInRect:(CGRect)rect
+- (void) drawPlaceholderInRect:(CGRect)rect
 {
 }
 
-- (void)drawTextInRect:(CGRect)rect
+- (void) drawTextInRect:(CGRect)rect
 {
 }
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)rect
 {
-    UIImage *currentBackgroundImage = nil;
-	if(self.borderStyle == UITextBorderStyleRoundedRect) {
+    UIImage* currentBackgroundImage = nil;
+	if ([self borderStyle] == UITextBorderStyleRoundedRect) {
 		currentBackgroundImage = [UIImage _textFieldRoundedRectBackground];
 	} else {
-		currentBackgroundImage = self.enabled? _background : _disabledBackground;
+		currentBackgroundImage = [self isEnabled]? _background : _disabledBackground;
 	}
 	
-	CGRect borderFrame = [self borderRectForBounds:self.bounds];
-	if(currentBackgroundImage != nil) {
+	CGRect borderFrame = [self borderRectForBounds:[self bounds]];
+	if (currentBackgroundImage) {
 		[currentBackgroundImage drawInRect:borderFrame];
 	} else {
 		CGContextRef context = UIGraphicsGetCurrentContext();
@@ -445,7 +719,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 			
 			CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 			CGFloat locations[] = { 1.0f, 0.0f };
-			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) @[(id) [UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id) [UIColor colorWithWhite:0.65 alpha:1.0].CGColor], locations);
+			CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) @[(id)[UIColor colorWithWhite:0.5 alpha:1.0].CGColor, (id)[UIColor colorWithWhite:0.65 alpha:1.0].CGColor], locations);
 			
 			CGContextSaveGState(context);
 			CGContextAddPath(context, [UIBezierPath bezierPathWithRoundedRect:blackOutlineFrame cornerRadius:3.6f].CGPath);
@@ -456,239 +730,287 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 			CFRelease(gradient);
 			
 			CGContextRestoreGState(context);
-						
+            
 			// top inner shadow
 			CGRect shadowFrame = CGRectMake(1, 2, borderFrame.size.width-2.0, 10.0);
 			[[UIColor colorWithWhite:0.88 alpha:1.0] set];
-			[[UIBezierPath bezierPathWithRoundedRect:shadowFrame cornerRadius:2.9] fill];	
+			[[UIBezierPath bezierPathWithRoundedRect:shadowFrame cornerRadius:2.9] fill];
 			
 			// main white area
 			CGRect whiteFrame = CGRectMake(1, 3, borderFrame.size.width-2.0, borderFrame.size.height-5.0);
 			[[UIColor whiteColor] set];
 			[[UIBezierPath bezierPathWithRoundedRect:whiteFrame cornerRadius:2.6] fill];
 		} else if(self.borderStyle == UITextBorderStyleLine) {
-			[[UIColor colorWithWhite:0.1f alpha:0.8f] set];
-			CGContextStrokeRect(context, borderFrame);
-			
-			[[UIColor colorWithWhite:1.0f alpha:1.0f] set];
-			CGContextFillRect(context, CGRectInset(borderFrame, 1.0f, 1.0f));
+			[[UIColor blackColor] set];
+            UIRectFrame(borderFrame);
 		}
 	}
 }
 
 
-- (UITextAutocapitalizationType)autocapitalizationType
+#pragma mark UIKeyInput
+
+- (BOOL) hasText
 {
-    return UITextAutocapitalizationTypeNone;
+    return [_model hasText];
 }
 
-- (void)setAutocapitalizationType:(UITextAutocapitalizationType)type
+- (void) insertText:(NSString*)text
 {
+    [_interactionController insertText:text];
 }
 
-- (UITextAutocorrectionType)autocorrectionType
+- (void) deleteBackward
 {
-    return UITextAutocorrectionTypeDefault;
-}
-
-- (void)setAutocorrectionType:(UITextAutocorrectionType)type
-{
-}
-
-- (BOOL)enablesReturnKeyAutomatically
-{
-    return YES;
-}
-
-- (void)setEnablesReturnKeyAutomatically:(BOOL)enabled
-{
-}
-
-- (UIKeyboardAppearance)keyboardAppearance
-{
-    return UIKeyboardAppearanceDefault;
-}
-
-- (void)setKeyboardAppearance:(UIKeyboardAppearance)type
-{
-}
-
-- (UIKeyboardType)keyboardType
-{
-    return UIKeyboardTypeDefault;
-}
-
-- (void)setKeyboardType:(UIKeyboardType)type
-{
-}
-
-- (UIReturnKeyType)returnKeyType
-{
-    return UIReturnKeyDefault;
-}
-
-- (void)setReturnKeyType:(UIReturnKeyType)type
-{
-}
-
-- (BOOL)isSecureTextEntry
-{
-    return [_textLayer isSecureTextEntry];
-}
-
-- (void)setSecureTextEntry:(BOOL)secure
-{
-    [_textLayer setSecureTextEntry:secure];
+    [_interactionController deleteBackward];
 }
 
 
-- (BOOL)canBecomeFirstResponder
+#pragma mark UITextInput
+
+- (NSString*) textInRange:(UITextRange*)range
 {
-    return (self.window != nil);
+    return [_inputAdapter textInRange:range];
 }
 
-- (BOOL)becomeFirstResponder
+- (void) replaceRange:(UITextRange*)range withText:(NSString*)text
+{
+    [_inputAdapter replaceRange:range withText:text];
+}
+
+- (BOOL) shouldChangeTextInRange:(UITextRange*)range replacementText:(NSString*)text
+{
+    return [_inputAdapter shouldChangeTextInRange:range replacementText:text];
+}
+
+- (UITextRange*) selectedTextRange
+{
+    return [_inputAdapter selectedTextRange];
+}
+
+- (void) setSelectedTextRange:(UITextRange*)selectedTextRange
+{
+    [_inputAdapter setSelectedTextRange:selectedTextRange];
+}
+
+- (UITextRange*) markedTextRange
+{
+    return [_inputAdapter markedTextRange];
+}
+
+- (void) setMarkedText:(NSString*)markedText selectedRange:(NSRange)selectedRange
+{
+    [_inputAdapter setMarkedText:markedText selectedRange:selectedRange];
+}
+
+- (void) unmarkText
+{
+    [_inputAdapter unmarkText];
+}
+
+- (UITextRange*) textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
+{
+    return [_inputAdapter textRangeFromPosition:fromPosition toPosition:toPosition];
+}
+
+- (UITextPosition*) positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset
+{
+    return [_inputAdapter positionFromPosition:position offset:offset];
+}
+
+- (UITextPosition*) positionFromPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction offset:(NSInteger)offset
+{
+    return [_inputAdapter positionFromPosition:position inDirection:direction offset:offset];
+}
+
+- (UITextPosition*) beginningOfDocument
+{
+    return [_inputAdapter beginningOfDocument];
+}
+
+- (UITextPosition*) endOfDocument
+{
+    return [_inputAdapter endOfDocument];
+}
+
+- (NSComparisonResult) comparePosition:(UITextPosition*)position toPosition:(UITextPosition*)other
+{
+    return [_inputAdapter comparePosition:position toPosition:other];
+}
+
+- (NSInteger) offsetFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition
+{
+    return [_inputAdapter offsetFromPosition:fromPosition toPosition:toPosition];
+}
+
+- (UITextPosition*) positionWithinRange:(UITextRange*)range farthestInDirection:(UITextLayoutDirection)direction
+{
+    return [_inputAdapter positionWithinRange:range farthestInDirection:direction];
+}
+
+- (UITextRange*) characterRangeByExtendingPosition:(UITextPosition*)position inDirection:(UITextLayoutDirection)direction
+{
+    return [_inputAdapter characterRangeByExtendingPosition:position inDirection:direction];
+}
+
+- (UITextWritingDirection) baseWritingDirectionForPosition:(UITextPosition*)position inDirection:(UITextStorageDirection)direction
+{
+    return [_inputAdapter baseWritingDirectionForPosition:position inDirection:direction];
+}
+
+- (void) setBaseWritingDirection:(UITextWritingDirection)writingDirection forRange:(UITextRange*)range
+{
+    [_inputAdapter setBaseWritingDirection:writingDirection forRange:range];
+}
+
+- (CGRect) firstRectForRange:(UITextRange*)range
+{
+    return [_inputAdapter firstRectForRange:range];
+}
+
+- (CGRect) caretRectForPosition:(UITextPosition*)position
+{
+    return [_inputAdapter caretRectForPosition:position];
+}
+
+- (NSArray*) selectionRectsForRange:(UITextRange*)range
+{
+    return [_inputAdapter selectionRectsForRange:range];
+}
+
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point
+{
+    return [_inputAdapter closestPositionToPoint:point];
+}
+
+- (UITextPosition*) closestPositionToPoint:(CGPoint)point withinRange:(UITextRange*)range
+{
+    return [_inputAdapter closestPositionToPoint:point withinRange:range];
+}
+
+- (UITextRange*) characterRangeAtPoint:(CGPoint)point
+{
+    return [_inputAdapter characterRangeAtPoint:point];
+}
+
+
+#pragma mark UIView
+
+- (void) willMoveToWindow:(UIWindow*)window
+{
+    [super willMoveToWindow:window];
+    if (window) {
+        _interactionController = [[_UITextInteractionController alloc] initWithView:self model:_model];
+        [_interactionController addOneFingerTapRecognizerToView:self];
+        [_interactionController addOneFingerDoubleTapRecognizerToView:self];
+    } else {
+        [_interactionController removeGestureRecognizersFromView:self];
+        _interactionController = nil;
+    }
+}
+
+
+#pragma mark UIResponder
+
+- (BOOL) canBecomeFirstResponder
+{
+    return (self.window != nil) && [self isEnabled] && (!_delegateHas.shouldBeginEditing || [[self delegate] textFieldShouldBeginEditing:self]);
+}
+
+- (BOOL) becomeFirstResponder
 {
     if ([super becomeFirstResponder]) {
-		_placeholderTextLayer.hidden = YES;
-        return [_textLayer becomeFirstResponder];
-    } else {
-        return NO;
+        _editing = YES;
+        
+        _textFieldEditor = [[_UITextFieldEditor alloc] initWithFrame:[self textRectForBounds:[self bounds]]];
+        [_textFieldEditor setOpaque:NO];
+        [_textFieldEditor setBackgroundColor:nil];
+        [self addSubview:_textFieldEditor];
+
+        if (_clearsOnBeginEditing && (!_delegateHas.shouldClear || [_delegate textFieldShouldClear:self])) {
+            [self setText:@""];
+        }
+        
+        if (_delegateHas.didBeginEditing) {
+            [[self delegate] textFieldDidBeginEditing:self];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
+
+        return YES;
     }
+    return NO;
 }
 
-- (BOOL)resignFirstResponder
+- (BOOL) canResignFirstResponder
+{
+    return (!_delegateHas.shouldEndEditing || [[self delegate] textFieldShouldEndEditing:self]);
+}
+
+- (BOOL) resignFirstResponder
 {
     if ([super resignFirstResponder]) {
-        return [_textLayer resignFirstResponder];
+        _editing = NO;
+        
+        if ([self hasText]) {
+            if (_textLabel) {
+                [self addSubview:_textLabel];
+            }
+        } else {
+            if (_placeholderTextLabel) {
+                [self addSubview:_placeholderTextLabel];
+            }
+        }
+        
+        [self setInputDelegate:nil];
+        
+        [_textFieldEditor removeFromSuperview], _textFieldEditor = nil;
+
+        if (_delegateHas.didEndEditing) {
+            [[self delegate] textFieldDidEndEditing:self];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:self];
+        
+        return YES;
     } else {
         return NO;
     }
 }
 
-- (UIFont *)font
+
+#pragma mark _UItextInteractionController
+
+- (NSRange) textModel:(_UITextModel*)controller willChangeSelectionFromCharacterRange:(NSRange)fromRange toCharacterRange:(NSRange)toRange
 {
-    return _textLayer.font;
+    return toRange;
 }
 
-- (void)setFont:(UIFont *)newFont
+- (void) textInputDidChangeSelection:(_UITextModel*)controller
 {
-    _textLayer.font = newFont;
-	_placeholderTextLayer.font = newFont;
 }
 
-- (UIColor *)textColor
+- (void) textModelDidChange:(_UITextModel*)controller
 {
-    return _textLayer.textColor;
+    [self _didChangeText];
 }
 
-- (void)setTextColor:(UIColor *)newColor
+- (void) textModel:(_UITextModel*)controller prepareAttributedTextForInsertion:(id)text
 {
-    _textLayer.textColor = newColor;
 }
 
-- (UITextAlignment)textAlignment
+
+#pragma mark Events & Notification
+
+- (BOOL) _textShouldDoCommandBySelector:(SEL)selector
 {
-    return _textLayer.textAlignment;
-}
-
-- (void)setTextAlignment:(UITextAlignment)textAlignment
-{
-    _textLayer.textAlignment = textAlignment;
-	_placeholderTextLayer.textAlignment = textAlignment;
-}
-
-- (NSString *)text
-{
-    return _textLayer.text;
-}
-
-- (void)setText:(NSString *)newText
-{
-    [self setAttributedText:[[NSAttributedString alloc] initWithString:newText]];
-}
-
-- (void) setAttributedText:(NSAttributedString *)attributedText
-{
-    _attributedText = attributedText;
-    _textLayer.text = [attributedText string];
-	_placeholderTextLayer.hidden = _textLayer.text.length > 0 || _editing;
-}
-
-- (BOOL)_textShouldBeginEditing
-{
-    return _delegateHas.shouldBeginEditing? [_delegate textFieldShouldBeginEditing:self] : YES;
-}
-
-- (void)_textDidBeginEditing
-{
-    BOOL shouldClear = _clearsOnBeginEditing;
-
-    if (shouldClear && _delegateHas.shouldClear) {
-        shouldClear = [_delegate textFieldShouldClear:self];
-    }
-
-    if (shouldClear) {
-        // this doesn't work - it can cause an exception to trigger. hrm...
-        // so... rather than worry too much about it right now, just gonna delay it :P
-        //self.text = @"";
-        [self performSelector:@selector(setText:) withObject:@"" afterDelay:0];
-    }
-	
-	_placeholderTextLayer.hidden = YES;
-    
-    _editing = YES;
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
-
-    if (_delegateHas.didBeginEditing) {
-        [_delegate textFieldDidBeginEditing:self];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:self];
-}
-
-- (BOOL)_textShouldEndEditing
-{
-    return _delegateHas.shouldEndEditing? [_delegate textFieldShouldEndEditing:self] : YES;
-}
-
-- (void)_textDidEndEditing
-{
-	_placeholderTextLayer.hidden = _textLayer.text.length > 0;
-	
-    _editing = NO;
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
-	
-    if (_delegateHas.didEndEditing) {
-        [_delegate textFieldDidEndEditing:self];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:self];
-}
-
-- (BOOL)_textShouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    return _delegateHas.shouldChangeCharacters? [_delegate textField:self shouldChangeCharactersInRange:range replacementString:text] : YES;
-}
-
-- (void)_textDidChange
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
-}
-
-- (void)_textDidReceiveReturnKey
-{
-    if (_delegateHas.shouldReturn) {
-        [_delegate textFieldShouldReturn:self];
-    }
-}
-
-- (BOOL)_textShouldDoCommandBySelector:(SEL)selector {
 	if(_delegateHas.doCommandBySelector) {
 		return [(id)self.delegate textField:self doCommandBySelector:selector];
 	} else {
 		if(selector == @selector(insertNewline:) || selector == @selector(insertNewlineIgnoringFieldEditor:)) {
-			[self _textDidReceiveReturnKey];
+            if (_delegateHas.shouldReturn) {
+                [_delegate textFieldShouldReturn:self];
+            }
 			return YES;
 		}
 	}
@@ -696,7 +1018,23 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
 	return NO;
 }
 
-- (NSString *)description
+
+#pragma mark Misc.
+
+- (void) _didChangeText
+{
+    [self setNeedsLayout];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self];
+}
+
+- (NSAttributedString*) _adjustAttributesForPlaceholder:(NSAttributedString*)string
+{
+    NSMutableAttributedString* s = [string mutableCopy];
+    [s addAttribute:UITextAttributeTextColor value:[UIColor colorWithRed:0.0f green:0.0f blue:0.1f alpha:0.22f] range:(NSRange){ 0, [s length] }];
+    return s;
+}
+
+- (NSString*) description
 {
     NSString *textAlignment = @"";
     switch (self.textAlignment) {
@@ -713,7 +1051,7 @@ static NSString* const kUISecureTextEntryKey = @"UISecureTextEntry";
     return [NSString stringWithFormat:@"<%@: %p; textAlignment = %@; editing = %@; textColor = %@; font = %@; delegate = %@>", [self className], self, textAlignment, (self.editing ? @"YES" : @"NO"), self.textColor, self.font, self.delegate];
 }
 
-- (id)mouseCursorForEvent:(UIEvent *)event
+- (id) mouseCursorForEvent:(UIEvent*)event
 {
     return [NSCursor IBeamCursor];
 }

@@ -27,24 +27,26 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController+UIPrivate.h"
-#import "UIView+UIPrivate.h"
-#import "UIScreen.h"
-#import "UIWindow.h"
-#import "UIScreen.h"
-#import "UINavigationItem.h"
-#import "UIBarButtonItem.h"
-#import "UINavigationController.h"
-#import "UISplitViewController.h"
-#import "UIToolbar.h"
-#import "UIScreen.h"
-#import "UITabBarController.h"
-#import "UINib.h"
-#import "UINibLoading.h"
-#import "UIStoryboard.h"
+#import <UIKit/UIViewController.h>
+//
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UINavigationBar.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UINib.h>
+#import <UIKit/UINibLoading.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UISplitViewController.h>
+#import <UIKit/UIStoryboard.h>
+#import <UIKit/UIStoryboardSegue.h>
+#import <UIKit/UIStoryboardSegueTemplate.h>
+#import <UIKit/UITabBarController.h>
+#import <UIKit/UIToolbar.h>
+#import <UIKit/UIWindow.h>
+//
 #import "UIStoryboard+UIPrivate.h"
-#import "UIStoryboardSegueTemplate.h"
-#import "UIStoryboardSegue.h"
+#import "UIView+UIPrivate.h"
+#import "UIViewController+UIPrivate.h"
 
 
 static NSString* const kUIExternalObjectsTableForViewLoadingKey = @"UIExternalObjectsTableForViewLoading";
@@ -63,6 +65,8 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 
     UIViewControllerAppearState _appearState;
     
+    NSMutableArray* _childViewControllers;
+    
     struct {
         BOOL wantsFullScreenLayout : 1;
         BOOL modalInPopover : 1;
@@ -75,18 +79,24 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 @synthesize navigationItem = _navigationItem;
 @synthesize view = _view;
 
-- (id)init
+- (instancetype) init
 {
     NSBundle* bundle = [NSBundle bundleForClass:[self class]];
     NSString* nibPath = [bundle pathForResource:NSStringFromClass([self class]) ofType:@"nib"];
     if (nibPath && bundle) {
         return [self initWithNibName:NSStringFromClass([self class]) bundle:bundle];
     } else {
-        return [self initWithNibName:nil bundle:nil];
+        bundle = [NSBundle mainBundle];
+        nibPath = [bundle pathForResource:NSStringFromClass([self class]) ofType:@"nib"];
+        if (bundle && nibPath) {
+            return [self initWithNibName:NSStringFromClass([self class]) bundle:bundle];
+        } else {
+            return [self initWithNibName:nil bundle:nil];
+        }
     }
 }
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+- (instancetype) initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
     if (nil != (self = [super init])) {
         _nibName = [nibName copy];
@@ -96,7 +106,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     return self;
 }
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super init])) {
         if ([coder containsValueForKey:kUINibNameKey]) {
@@ -117,7 +127,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [_view _setViewController:nil];
 }
@@ -352,34 +362,57 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
 {
 }
 
-- (void)addChildViewController:(UIViewController *)childController
+- (NSArray*) childViewControllers
 {
+    return _childViewControllers ?: @[];
+}
+
+- (void) addChildViewController:(UIViewController*)childController
+{
+    NSAssert(nil != childController, @"???");
     [childController willMoveToParentViewController:self];
     [childController _setParentViewController:self];
+    if (!_childViewControllers) {
+        _childViewControllers = [NSMutableArray arrayWithObject:childController];
+    } else {
+        [_childViewControllers addObject:childController];
+    }
 }
 
-- (void)removeFromParentViewController
+- (void) removeFromParentViewController
 {
     [self willMoveToParentViewController:nil];
-    [self _setParentViewController:nil];
+    [_parentViewController _removeChildViewController:self];
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
+- (void) _removeChildViewController:(UIViewController*)childController
+{
+    [childController _setParentViewController:nil];
+    [_childViewControllers removeObject:childController];
+}
+
+- (void) willMoveToParentViewController:(UIViewController *)parent
 {
 }
 
-- (void)didMoveToParentViewController:(UIViewController *)parent
+- (void) didMoveToParentViewController:(UIViewController *)parent
 {
 }
 
-- (void)transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
+- (void) transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
 {
-    [fromViewController beginAppearanceTransition:NO animated:duration > 0];
-    [toViewController beginAppearanceTransition:YES animated:duration > 0];
+    UIView* view = [self view];
+    BOOL sendBeginEndAppearance = [view window] != nil;
+
+    if (sendBeginEndAppearance) {
+        [fromViewController beginAppearanceTransition:NO animated:duration > 0];
+        [toViewController beginAppearanceTransition:YES animated:duration > 0];
+    }
+
     [UIView animateWithDuration:duration
         animations:^{
             [[fromViewController view] removeFromSuperview];
-            [[self view] addSubview:[toViewController view]];
+            [view addSubview:[toViewController view]];
             if (animations) {
                 animations();
             }
@@ -388,8 +421,10 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
             if (completion) {
                 completion(finished);
             }
-            [fromViewController _endAppearanceTransition];
-            [toViewController _endAppearanceTransition];
+            if (sendBeginEndAppearance) {
+                [fromViewController endAppearanceTransition];
+                [toViewController endAppearanceTransition];
+            }
         }
      ];
 }
@@ -440,7 +475,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (void)viewWillMoveToWindow:(UIWindow *)window
+- (void) _viewWillMoveToWindow:(UIWindow*)window
 {
     if (!_flags.isInAnimatedVCTransition) {
         if (window) {
@@ -451,7 +486,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (void)viewDidMoveToWindow:(UIWindow *)window
+- (void) _viewDidMoveToWindow:(UIWindow*)window
 {
     if (!_flags.isInAnimatedVCTransition) {
         if (window) {
@@ -462,7 +497,7 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
     }
 }
 
-- (BOOL)beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated
+- (void) beginAppearanceTransition:(BOOL)shouldAppear animated:(BOOL)animated
 {
     if (animated) {
         _flags.isInAnimatedVCTransition = YES;
@@ -473,12 +508,10 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
             appearState = UIViewControllerStateWillDisappear;
         }
         [self _setViewAppearState:appearState isAnimating:animated];
-        return YES;
     }
-    return NO;
 }
 
-- (BOOL)_endAppearanceTransition
+- (void) endAppearanceTransition
 {
     if (_flags.isInAnimatedVCTransition) {
         UIViewControllerAppearState appearState;
@@ -487,13 +520,11 @@ static NSString* const kUIStoryboardSegueTemplatesKey           = @"UIStoryboard
         } else if (_appearState == UIViewControllerStateWillDisappear) {
             appearState = UIViewControllerStateDidDisappear;
         } else {
-            return NO;
+            return;
         }
         [self _setViewAppearState:appearState isAnimating:NO];
         _flags.isInAnimatedVCTransition = NO;
-        return YES;
     }
-    return NO;
 }
 
 - (NSString *)description

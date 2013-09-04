@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
@@ -27,40 +28,66 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIEvent.h"
+#import <UIKit/UIEvent.h>
+
+@class UIView;
 
 @interface UIResponder : NSObject
+#pragma mark Managing the Responder Chain
+- (UIResponder*) nextResponder;
+- (BOOL) isFirstResponder;
+- (BOOL) canBecomeFirstResponder;
+- (BOOL) becomeFirstResponder;
+- (BOOL) canResignFirstResponder;
+- (BOOL) resignFirstResponder;
 
-- (UIResponder *)nextResponder;
-- (BOOL)isFirstResponder;
-- (BOOL)canBecomeFirstResponder;
-- (BOOL)becomeFirstResponder;
-- (BOOL)canResignFirstResponder;
-- (BOOL)resignFirstResponder;
+#pragma mark Managing Input Views
+@property (readonly, retain) UIView* inputView;
+@property (readonly, retain) UIView* inputAccessoryView;
+- (void)reloadInputViews;
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
-
+#pragma mark Responding to Touch Events
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event;
 
+#pragma mark Responding to Motion Events
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event;
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event;
 - (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event;
 
-@property (readonly, strong) UIView *inputAccessoryView;
-@property (readonly, strong) UIView *inputView;
-@property (assign, readonly) NSUndoManager *undoManager;
+#pragma mark Responding to Remote-Control Events
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event;
+
+#pragma mark Getting the Undo Manager
+@property(readonly) NSUndoManager *undoManager;
+
+#pragma mark Validating Commands
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
 
 @end
 
 
 @interface NSObject (UIResponderStandardEditActions)
-- (void)copy:(id)sender;
-- (void)cut:(id)sender;
-- (void)delete:(id)sender;
-- (void)paste:(id)sender;
-- (void)select:(id)sender;
-- (void)selectAll:(id)sender;
+
+#pragma mark Handling Copy, Cut, Delete, and Paste Commands
+- (void) copy:(id)sender;
+- (void) cut:(id)sender;
+- (void) delete:(id)sender;
+- (void) paste:(id)sender;
+
+#pragma mark Handling Selection Commands
+- (void) select:(id)sender;
+- (void) selectAll:(id)sender;
+
+#pragma mark Handling Styled Text Editing
+- (void) toggleBoldface:(id)sender;
+- (void) toggleItalics:(id)sender;
+- (void) toggleUnderline:(id)sender;
+
+#pragma mark Handling Writing Direction Changes
+- (void) makeTextWritingDirectionLeftToRight:(id)sender;
+- (void) makeTextWritingDirectionRightToLeft:(id)sender;
+
 @end

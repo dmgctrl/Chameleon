@@ -27,9 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITouch.h"
-
-@class UIView;
+#import <UIKit/UITouch.h>
 
 @interface UITouch (UIPrivate)
 - (void)_setPhase:(UITouchPhase)phase screenLocation:(CGPoint)screenLocation tapCount:(NSUInteger)tapCount timestamp:(NSTimeInterval)timestamp;

@@ -29,29 +29,58 @@
 
 #import <Foundation/Foundation.h>
 
+@class UITouch;
+@class UIWindow;
+@class UIView;
+@class UIGestureRecognizer;
+
+#pragma mark Constants
+
 typedef enum {
     UIEventTypeTouches,
     UIEventTypeMotion,
-    UIEventTypeKeyPress			// AppKitIntegration
+    UIEventTypeKeyPress
 } UIEventType;
 
 typedef enum {
     UIEventSubtypeNone        = 0,
     UIEventSubtypeMotionShake = 1,
+    UIEventSubtypeRemoteControlPlay                 = 100,
+    UIEventSubtypeRemoteControlPause                = 101,
+    UIEventSubtypeRemoteControlStop                 = 102,
+    UIEventSubtypeRemoteControlTogglePlayPause      = 103,
+    UIEventSubtypeRemoteControlNextTrack            = 104,
+    UIEventSubtypeRemoteControlPreviousTrack        = 105,
+    UIEventSubtypeRemoteControlBeginSeekingBackward = 106,
+    UIEventSubtypeRemoteControlEndSeekingBackward   = 107,
+    UIEventSubtypeRemoteControlBeginSeekingForward  = 108,
+    UIEventSubtypeRemoteControlEndSeekingForward    = 109,
 } UIEventSubtype;
 
-@class UITouch, UIWindow, UIView, UIGestureRecognizer;
 
-@interface UIEvent : NSObject 
+@interface UIEvent : NSObject
+
+#pragma mark Getting the Touches for an Event
+
+- (NSSet*) allTouches;
+- (NSSet*) touchesForView:(UIView*)view;
+- (NSSet*) touchesForWindow:(UIWindow*)window;
+
+
+#pragma mark Getting Event Attributes
 
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 
-- (NSSet *)allTouches;
-- (NSSet *)touchesForView:(UIView *)view;
-- (NSSet *)touchesForWindow:(UIWindow *)window;
-- (NSSet *)touchesForGestureRecognizer:(UIGestureRecognizer *)gesture;
+
+#pragma mark Getting the Event Type
 
 @property (nonatomic, readonly) UIEventType type;
 @property (nonatomic, readonly) UIEventSubtype subtype;
+
+
+#pragma mark Getting the Touches for a Gesture Recognizer
+
+- (NSSet*) touchesForGestureRecognizer:(UIGestureRecognizer*)gesture;
+
 
 @end

@@ -29,7 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class UIAccelerometer, UIAcceleration;
+@class UIAccelerometer;
+@class UIAcceleration;
 
 @protocol UIAccelerometerDelegate <NSObject>
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;

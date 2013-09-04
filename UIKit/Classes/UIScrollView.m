@@ -83,6 +83,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     NSTimer *_scrollTimer;
     NSTimeInterval _scrollAnimationTime;
     
+    CGPoint _dragReferencePoint;
     BOOL _dragging;
     BOOL _decelerating;
     
@@ -271,12 +272,16 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     _verticalScroller.hidden = !self._canScrollVertical;
     _horizontalScroller.hidden = !self._canScrollHorizontal;
     
-    CGRect bounds = self.bounds;
-    bounds.origin.x = _contentOffset.x+_contentInset.left;
-    bounds.origin.y = _contentOffset.y+_contentInset.top;
-    self.bounds = bounds;
-    
-    [self setNeedsLayout];
+    CGPoint contentOffset = [self contentOffset];
+    UIEdgeInsets contentInset = [self contentInset];
+    CGRect frame = [self frame];
+    [self setBounds:(CGRect){
+        .origin = {
+            .x = contentOffset.x - contentInset.left,
+            .y = contentOffset.y - contentInset.top,
+        },
+        .size = frame.size
+    }];
 }
 
 - (void)_cancelScrollAnimation
@@ -442,14 +447,22 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 
 - (void)flashScrollIndicators
 {
-    [_horizontalScroller flash];
-    [_verticalScroller flash];
+    if (_showsHorizontalScrollIndicator) {
+        [_horizontalScroller flash];
+    }
+    if (_showsVerticalScrollIndicator) {
+        [_verticalScroller flash];
+    }
 }
 
 - (void)_quickFlashScrollIndicators
 {
-    [_horizontalScroller quickFlash];
-    [_verticalScroller quickFlash];
+    if (_showsHorizontalScrollIndicator) {
+        [_horizontalScroller quickFlash];
+    }
+    if (_showsVerticalScrollIndicator) {
+        [_verticalScroller quickFlash];
+    }
 }
 
 - (BOOL)isTracking
@@ -462,8 +475,8 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     UITouch *touch = [[event allTouches] anyObject];
     const CGPoint point = [touch locationInView:self];
     const CGFloat scrollerSize = UIScrollerWidthForBoundsSize(self.bounds.size);
-    const BOOL shouldShowHorizontal = CGRectContainsPoint(CGRectInset(_horizontalScroller.frame, -scrollerSize, -scrollerSize), point);
-    const BOOL shouldShowVertical = CGRectContainsPoint(CGRectInset(_verticalScroller.frame, -scrollerSize, -scrollerSize), point);
+    const BOOL shouldShowHorizontal = _showsHorizontalScrollIndicator && CGRectContainsPoint(CGRectInset(_horizontalScroller.frame, -scrollerSize, -scrollerSize), point);
+    const BOOL shouldShowVertical = _showsVerticalScrollIndicator && CGRectContainsPoint(CGRectInset(_verticalScroller.frame, -scrollerSize, -scrollerSize), point);
     const BOOL shouldShowScrollers = (shouldShowVertical || shouldShowHorizontal || _decelerating);
     
     _horizontalScroller.alwaysVisible = shouldShowScrollers;
@@ -546,8 +559,12 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     if (!_dragging) {
         _dragging = YES;
 
-        _horizontalScroller.alwaysVisible = YES;
-        _verticalScroller.alwaysVisible = YES;
+        if (_showsVerticalScrollIndicator) {
+            _verticalScroller.alwaysVisible = YES;
+        }
+        if (_showsHorizontalScrollIndicator) {
+            _horizontalScroller.alwaysVisible = YES;
+        }
         
         [self _cancelScrollAnimation];
 
@@ -576,8 +593,12 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
         if (decelerationAnimation) {
             [self _setScrollAnimation:decelerationAnimation];
 
-            _horizontalScroller.alwaysVisible = YES;
-            _verticalScroller.alwaysVisible = YES;
+            if (_showsHorizontalScrollIndicator) {
+                _horizontalScroller.alwaysVisible = YES;
+            }
+            if (_showsVerticalScrollIndicator) {
+                _verticalScroller.alwaysVisible = YES;
+            }
             _decelerating = YES;
 
             if (_delegateCan.scrollViewWillBeginDecelerating) {
@@ -594,9 +615,13 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 - (void)_dragBy:(CGPoint)delta
 {
     if (_dragging) {
-        _horizontalScroller.alwaysVisible = YES;
-        _verticalScroller.alwaysVisible = YES;
-
+        if (_showsHorizontalScrollIndicator) {
+            _horizontalScroller.alwaysVisible = YES;
+        }
+        if (_showsVerticalScrollIndicator) {
+            _verticalScroller.alwaysVisible = YES;
+        }
+        
         const CGPoint originalOffset = self.contentOffset;
         
         CGPoint proposedOffset = originalOffset;
@@ -662,9 +687,14 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
     if (gesture == _panGestureRecognizer) {
         if (_panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
             [self _beginDragging];
+            _dragReferencePoint = [_panGestureRecognizer translationInView:self];
         } else if (_panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
-            [self _dragBy:[_panGestureRecognizer translationInView:self]];
-            [_panGestureRecognizer setTranslation:CGPointZero inView:self];
+            CGPoint translatedPoint = [_panGestureRecognizer translationInView:self];
+            CGPoint delta = {
+                .x = translatedPoint.x - _dragReferencePoint.x,
+                .y = translatedPoint.y - _dragReferencePoint.y
+            };
+            [self _dragBy:delta];
         } else if (_panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
             [self _endDraggingWithDecelerationVelocity:[_panGestureRecognizer velocityInView:self]];
         }
@@ -734,8 +764,25 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
 
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated
 {
-    const CGRect contentRect = CGRectMake(0,0,_contentSize.width, _contentSize.height);
-    const CGRect visibleRect = self.bounds;
+    if (!rect.size.width || !rect.size.height) {
+        return;
+    }
+    
+    [self layoutIfNeeded];
+    
+    const UIEdgeInsets contentInset = [self contentInset];
+    const CGSize contentSize = [self contentSize];
+    const CGRect contentRect = {
+        .origin = {
+            .x = -contentInset.left,
+            .y = -contentInset.top
+        },
+        .size = {
+            .width = contentSize.width + contentInset.left + contentInset.right,
+            .height = contentSize.height + contentInset.top + contentInset.bottom
+        }
+    };
+    const CGRect visibleRect = [self bounds];
     CGRect goalRect = CGRectIntersection(rect, contentRect);
 
     if (!CGRectIsNull(goalRect) && !CGRectContainsRect(visibleRect, goalRect)) {
@@ -745,7 +792,7 @@ static NSString* const kUIScrollIndicatorInsetsKey = @"UIScrollIndicatorInsets";
         goalRect.size.width = MIN(goalRect.size.width, visibleRect.size.width);
         goalRect.size.height = MIN(goalRect.size.height, visibleRect.size.height);
         
-        CGPoint offset = self.contentOffset;
+        CGPoint offset = [self contentOffset];
         
         if (CGRectGetMaxY(goalRect) > CGRectGetMaxY(visibleRect)) {
             offset.y += CGRectGetMaxY(goalRect) - CGRectGetMaxY(visibleRect);

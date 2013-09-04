@@ -28,23 +28,64 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <ApplicationServices/ApplicationServices.h>
+#import <UIKit/UIKitDefines.h>
 
-extern NSString *const UIScreenDidConnectNotification;
-extern NSString *const UIScreenDidDisconnectNotification;
-extern NSString *const UIScreenModeDidChangeNotification;
+@class UIScreenMode;
+@class CADisplayLink;
 
-@class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
+#pragma mark Constants
+
+typedef enum {
+    UIScreenOverscanCompensationScale,
+    UIScreenOverscanCompensationInsetBounds,
+    UIScreenOverscanCompensationInsetApplicationFrame,
+} UIScreenOverscanCompensation;
+
+
+#pragma mark Notifications
+
+UIKIT_EXTERN NSString* const UIScreenDidConnectNotification;
+UIKIT_EXTERN NSString* const UIScreenDidDisconnectNotification;
+UIKIT_EXTERN NSString* const UIScreenModeDidChangeNotification;
+UIKIT_EXTERN NSString* const UIScreenBrightnessDidChangeNotification;
+
 
 @interface UIScreen : NSObject
 
-+ (UIScreen *)mainScreen;
-+ (NSArray *)screens;
+#pragma mark Getting the Available Screens
+
++ (UIScreen*) mainScreen;
++ (NSArray*) screens;
+@property (nonatomic, readonly, retain) UIScreen* mirroredScreen;
+
+
+#pragma mark Getting the Bounds Information
 
 @property (nonatomic, readonly) CGRect bounds;
 @property (nonatomic, readonly) CGRect applicationFrame;
-@property (nonatomic, readonly, copy) NSArray *availableModes;      // only ever returns the currentMode
-@property (nonatomic, strong) UIScreenMode *currentMode;            // ignores any attempt to set this
 @property (nonatomic, readonly) CGFloat scale;
+
+
+#pragma mark Accessing the Screen Modes
+
+@property (nonatomic, readonly, retain) UIScreenMode* preferredMode;
+@property (nonatomic, readonly, copy) NSArray* availableModes;
+@property (nonatomic, strong) UIScreenMode* currentMode;
+
+
+#pragma mark Getting a Display Link
+
+- (CADisplayLink*) displayLinkWithTarget:(id)target selector:(SEL)sel;
+
+
+#pragma mark Setting a Display’s Brightness
+
+@property (nonatomic) CGFloat brightness;
+@property (nonatomic) BOOL wantsSoftwareDimming;
+
+
+#pragma mark Setting a Display’s Overscan Compensation
+
+@property (nonatomic) UIScreenOverscanCompensation overscanCompensation;
 
 @end

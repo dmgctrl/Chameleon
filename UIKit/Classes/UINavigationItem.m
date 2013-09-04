@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UINavigationItem.h"
+#import "UINavigationBar.h"
 #import "UIBarButtonItem.h"
 #import "UINavigationItem+UIPrivate.h"
 #import "UINavigationBar.h"
@@ -47,6 +47,14 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
         __keyPaths = [[NSSet alloc] initWithObjects:@"title", @"prompt", @"backBarButtonItem", @"leftBarButtonItem", @"rightBarButtonItem", @"titleView", @"hidesBackButton", nil];
     });
     return __keyPaths;
+}
+
+- (id) initWithCoder:(NSCoder*)coder
+{
+    if (nil != (self = [super init])) {
+        
+    }
+    return self;
 }
 
 - (id)initWithTitle:(NSString *)theTitle
@@ -83,13 +91,13 @@ static void * const UINavigationItemContext = "UINavigationItemContext";
     
     if (_navigationBar != nil && navigationBar == nil) {
         // remove observation
-        for (NSString * keyPath in [isa _keyPathsTriggeringUIUpdates]) {
+        for (NSString * keyPath in [[self class] _keyPathsTriggeringUIUpdates]) {
             [self removeObserver:self forKeyPath:keyPath];
         }
     }
     else if (navigationBar != nil) {
         // observe property changes to notify UI element
-        for (NSString * keyPath in [isa _keyPathsTriggeringUIUpdates]) {
+        for (NSString * keyPath in [[self class] _keyPathsTriggeringUIUpdates]) {
             [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:UINavigationItemContext];
         }
     }

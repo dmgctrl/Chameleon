@@ -27,13 +27,29 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
+#import <UIKit/UIControl.h>
 
-@interface UISwitch : UIControl
+@class UIImage;
 
-- (id)initWithFrame:(CGRect)frame;
-- (void)setOn:(BOOL)on animated:(BOOL)animated;
+@interface UISwitch : UIControl <NSCoding>
 
-@property(nonatomic, getter=isOn) BOOL on;
+#pragma mark Initializing the Switch Object
+
+- (id) initWithFrame:(CGRect)frame;
+
+
+#pragma mark Setting the Off/On State
+
+- (void) setOn:(BOOL)on animated:(BOOL)animated;
+@property (nonatomic, getter=isOn) BOOL on;
+
+
+#pragma mark Customizing the Appearance of the Switch
+
+@property (nonatomic, retain) UIColor* onTintColor;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* thumbTintColor;
+@property (nonatomic, retain) UIImage* onImage;
+@property (nonatomic, retain) UIImage* offImage;
 
 @end

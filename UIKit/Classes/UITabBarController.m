@@ -27,25 +27,34 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITabBarController.h"
-#import "UITabBar.h"
+#import <UIKit/UITabBarController.h>
+#import <UIKit/UITabBar.h>
 
 @implementation UITabBarController 
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+#pragma mark Managing the View Controllers
+
+- (void) setViewControllers:(NSArray*)viewController animated:(BOOL)animated
+{
+#warning implement -setViewControllers:animated:
+    UIKIT_STUB(@"-setViewControllers:animated:");
+}
+
+
+#pragma mark UIViewController Overrides
+
+- (id) initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle
 {
     if ((self = [super initWithNibName:nibName bundle:nibBundle])) {
-        _tabBar = [(UITabBar *)[UITabBar alloc] initWithFrame:CGRectZero];
+        _tabBar = [(UITabBar*)[UITabBar alloc] initWithFrame:CGRectZero];
     }
     return self;
 }
 
 
-- (void)setViewControllers:(NSArray *)viewController animated:(BOOL)animated
-{
-}
+#pragma mark NSObject Protocol
 
-- (NSString *)description
+- (NSString*) description
 {
     return [NSString stringWithFormat:@"<%@: %p; selectedViewController = %@; viewControllers = %@; selectedIndex = %lu; tabBar = %@>", [self className], self, self.selectedViewController, self.viewControllers, self.selectedIndex, self.tabBar];
 }

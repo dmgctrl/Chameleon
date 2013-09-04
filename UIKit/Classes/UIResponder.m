@@ -27,36 +27,28 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIResponder.h"
-#import "UIWindow+UIPrivate.h"
+#import <UIKit/UIResponder.h>
+#import <UIKit/UIWindow+UIPrivate.h>
 
 @implementation UIResponder
 
-- (UIResponder *)nextResponder
+#pragma mark Managing the Responder Chain
+- (UIResponder*) nextResponder
 {
     return nil;
 }
 
-- (UIWindow *)_responderWindow
-{
-    if ([self isKindOfClass:[UIView class]]) {
-        return [(UIView *)self window];
-    } else {
-        return [[self nextResponder] _responderWindow];
-    }
-}
-
-- (BOOL)isFirstResponder
+- (BOOL) isFirstResponder
 {
     return ([[self _responderWindow] _firstResponder] == self);
 }
 
-- (BOOL)canBecomeFirstResponder
+- (BOOL) canBecomeFirstResponder
 {
     return NO;
 }
 
-- (BOOL)becomeFirstResponder
+- (BOOL) becomeFirstResponder
 {
     if ([self isFirstResponder]) {
         return YES;
@@ -78,71 +70,134 @@
                 return YES;
             }
         }
-
         return NO;
     }
 }
 
-- (BOOL)canResignFirstResponder
+- (BOOL) canResignFirstResponder
 {
     return YES;
 }
 
-- (BOOL)resignFirstResponder
+- (BOOL) resignFirstResponder
 {
     if ([self isFirstResponder]) {
-        [[self _responderWindow] _setFirstResponder:nil];
+        if ([self canResignFirstResponder]) {
+            [[self _responderWindow] _setFirstResponder:nil];
+            return YES;
+        }
     }
-    
-    return YES;
+    return NO;
 }
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-    if ([isa instancesRespondToSelector:action]) {
-        return YES;
-    } else {
-        return [[self nextResponder] canPerformAction:action withSender:sender];
-    }
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [[self nextResponder] touchesBegan:touches withEvent:event];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [[self nextResponder] touchesMoved:touches withEvent:event];
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [[self nextResponder] touchesEnded:touches withEvent:event];
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [[self nextResponder] touchesCancelled:touches withEvent:event];
-}
-
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event		{}
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event		{}
-- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event	{}
-
-- (UIView *)inputAccessoryView
+#pragma mark Managing Input Views
+- (UIView*) inputView
 {
     return nil;
 }
 
-- (UIView *)inputView
+- (UIView*) inputAccessoryView
 {
     return nil;
 }
 
-- (NSUndoManager *)undoManager
+- (void) reloadInputViews
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Responding to Touch Events
+- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(touchesBegan:withEvent:)]) {
+        [responder touchesBegan:touches withEvent:event];
+    }
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent*)event
+{
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(touchesMoved:withEvent:)]) {
+        [responder touchesMoved:touches withEvent:event];
+    }
+}
+
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(touchesEnded:withEvent:)]) {
+        [responder touchesEnded:touches withEvent:event];
+    }
+}
+
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    id responder = [self nextResponder];
+    if ([responder respondsToSelector:@selector(touchesCancelled:withEvent:)]) {
+        [responder touchesCancelled:touches withEvent:event];
+    }
+}
+
+#pragma mark Responding to Motion Events
+- (void) motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void) motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark Responding to Remote-Control Events
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event
+{
+#warning stub
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark Getting the Undo Manager
+
+- (NSUndoManager*) undoManager
 {
     return [[self nextResponder] undoManager];
+}
+
+
+#pragma mark Validating Commands
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    if ([[self class] instancesRespondToSelector:action]) {
+        return YES;
+    } else {
+        UIResponder* nextResponder = [self nextResponder];
+        if ([nextResponder isKindOfClass:[UIResponder class]]) {
+            return [[self nextResponder] canPerformAction:action withSender:sender];
+        } else {
+            return NO;
+        }
+    }
+}
+
+#pragma mark private methods
+- (UIWindow *)_responderWindow
+{
+    if ([self isKindOfClass:[UIView class]]) {
+        return [(UIView *)self window];
+    } else {
+        return [[self nextResponder] _responderWindow];
+    }
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <UIKit/UIKit.h>
+#import <UIKit/UIKitView.h>
 
 @class ChameleonAppDelegate;
 

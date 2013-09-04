@@ -28,7 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "UIGeometry.h"
+#import <UIKit/UIGeometry.h>
 
 enum {
     UIPopoverArrowDirectionUp = 1UL << 0,
@@ -41,7 +41,12 @@ enum {
 };
 typedef NSUInteger UIPopoverArrowDirection;
 
-@class UIView, UIViewController, UIPopoverController, UIBarButtonItem, UIPopoverView, UIImage;
+@class UIView;
+@class UIViewController;
+@class UIPopoverController;
+@class UIBarButtonItem;
+@class UIPopoverView;
+@class UIImage;
 
 @protocol UIPopoverControllerDelegate <NSObject>
 @optional

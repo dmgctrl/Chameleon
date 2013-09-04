@@ -27,45 +27,67 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIStringDrawing.h"
-#import "UIScrollView.h"
-#import "UIDataDetectors.h"
-#import "UITextInputTraits.h"
+#import <UIKit/UIStringDrawing.h>
+#import <UIKit/UIScrollView.h>
+#import <UIKit/UIDataDetectors.h>
+#import <UIKit/UITextInput.h>
+#import <UIKit/UITextInputTraits.h>
 
-extern NSString *const UITextViewTextDidBeginEditingNotification;
-extern NSString *const UITextViewTextDidChangeNotification;
-extern NSString *const UITextViewTextDidEndEditingNotification;
+UIKIT_EXTERN NSString *const UITextViewTextDidBeginEditingNotification;
+UIKIT_EXTERN NSString *const UITextViewTextDidChangeNotification;
+UIKIT_EXTERN NSString *const UITextViewTextDidEndEditingNotification;
 
-@class UIColor, UIFont, UITextLayer, UITextView;
+@class UIColor;
+@class UIFont;
+@class NSLayoutManager;
+@class NSTextContainer;
+@class NSTextStorage;
 
+@class UITextView;
 @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
 @optional
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
-- (void)textViewDidBeginEditing:(UITextView *)textView;
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView;
-- (void)textViewDidEndEditing:(UITextView *)textView;
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
-- (void)textViewDidChange:(UITextView *)textView;
-- (void)textViewDidChangeSelection:(UITextView *)textView;
+- (BOOL) textViewShouldBeginEditing:(UITextView*)textView;
+- (void) textViewDidBeginEditing:(UITextView*)textView;
+- (BOOL) textViewShouldEndEditing:(UITextView*)textView;
+- (void) textViewDidEndEditing:(UITextView*)textView;
+- (BOOL) textView:(UITextView*)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
+- (void) textViewDidChange:(UITextView*)textView;
+- (void) textViewDidChangeSelection:(UITextView*)textView;
 @end
 
-@interface UITextView : UIScrollView <NSCoding, UITextInputTraits>
+@interface UITextView : UIScrollView <NSCoding, UITextInput, UITextInputTraits>
 
-- (void)scrollRangeToVisible:(NSRange)range;
+- (instancetype) initWithFrame:(CGRect)frame;
+- (instancetype) initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)textContainer;
 
-
-@property (nonatomic) UITextAlignment textAlignment; // stub, not yet implemented!
-@property (nonatomic) NSRange selectedRange;
+#pragma mark Configuring the Text Attributes
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, copy) NSAttributedString* attributedText;
+@property (nonatomic, strong) UIFont* font;
+@property (nonatomic, strong) UIColor* textColor;
 @property (nonatomic, getter=isEditable) BOOL editable;
-@property (nonatomic, copy) NSString *text;
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, strong) UIFont *font;
+@property (nonatomic) BOOL allowsEditingTextAttributes;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
+@property (nonatomic) UITextAlignment textAlignment;
+@property (nonatomic, copy) NSDictionary* typingAttributes;
+@property (nonatomic, copy) NSDictionary* linkTextAttributes;
+- (BOOL) hasText;
+
+#pragma mark Working with the Selection
+@property (nonatomic) NSRange selectedRange;
+- (void) scrollRangeToVisible:(NSRange)range;
+@property (nonatomic) BOOL clearsOnInsertion;
+
+#pragma mark Accessing the Delegate
 @property (nonatomic, assign) id<UITextViewDelegate> delegate;
 
-@property (nonatomic, readwrite, strong) UIView *inputAccessoryView;
-@property (nonatomic, readwrite, strong) UIView *inputView;
+#pragma mark Replacing the System Input Views
+@property (nonatomic, readwrite, strong) UIView* inputAccessoryView;
+@property (nonatomic, readwrite, strong) UIView* inputView;
 
-- (BOOL)hasText;
+#pragma mark Accessing Text Kit Objects
+@property (nonatomic, readonly) NSLayoutManager* layoutManager;
+@property (nonatomic, readonly) NSTextContainer* textContainer;
+@property (nonatomic, readonly) NSTextStorage* textStorage;
 
 @end

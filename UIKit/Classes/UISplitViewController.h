@@ -27,22 +27,30 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
-
-@protocol UISplitViewControllerDelegate;
-
-@interface UISplitViewController : UIViewController 
-
-@property (nonatomic, assign) id <UISplitViewControllerDelegate> delegate;
-@property (nonatomic, copy) NSArray *viewControllers;
-
-@end
+#import <UIKit/UIViewController.h>
 
 @class UIPopoverController;
 
 @protocol UISplitViewControllerDelegate <NSObject>
 @optional
-- (void)splitViewController:(UISplitViewController*)svc popoverController:(UIPopoverController*)pc willPresentViewController:(UIViewController *)aViewController;
-- (void)splitViewController:(UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController:(UIPopoverController*)pc;
-- (void)splitViewController:(UISplitViewController*)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)button;
+- (void) splitViewController:(UISplitViewController*)svc popoverController:(UIPopoverController*)pc willPresentViewController:(UIViewController*)aViewController;
+- (void) splitViewController:(UISplitViewController*)svc willHideViewController:(UIViewController*)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController:(UIPopoverController*)pc;
+- (void) splitViewController:(UISplitViewController*)svc willShowViewController:(UIViewController*)aViewController invalidatingBarButtonItem:(UIBarButtonItem*)button;
 @end
+
+@protocol UISplitViewControllerDelegate;
+
+@interface UISplitViewController : UIViewController 
+
+#pragma mark Managing the Child View Controllers
+
+@property (nonatomic, copy) NSArray* viewControllers;
+@property (nonatomic) BOOL presentsWithGesture;
+
+
+#pragma mark Accessing the Delegate Object
+
+@property (nonatomic, assign) id <UISplitViewControllerDelegate> delegate;
+
+@end
+

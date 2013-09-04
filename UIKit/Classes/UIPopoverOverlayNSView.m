@@ -29,6 +29,7 @@
 
 #import "UIPopoverOverlayNSView.h"
 #import "UIPopoverController+UIPrivate.h"
+#import <AppKit/AppKit.h>
 
 @implementation UIPopoverOverlayNSView
 

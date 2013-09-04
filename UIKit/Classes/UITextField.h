@@ -27,13 +27,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
-#import "UIStringDrawing.h"
-#import "UITextInputTraits.h"
+#import <UIKit/UIControl.h>
+#import <UIKit/UIStringDrawing.h>
+#import <UIKit/UITextInputTraits.h>
+#import <UIKit/UITextInput.h>
 
-extern NSString *const UITextFieldTextDidBeginEditingNotification;
-extern NSString *const UITextFieldTextDidChangeNotification;
-extern NSString *const UITextFieldTextDidEndEditingNotification;
+
+UIKIT_EXTERN NSString *const UITextFieldTextDidBeginEditingNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
+UIKIT_EXTERN NSString *const UITextFieldTextDidEndEditingNotification;
 
 typedef enum {
     UITextBorderStyleNone,
@@ -49,7 +51,12 @@ typedef enum {
     UITextFieldViewModeAlways
 } UITextFieldViewMode;
 
-@class UIFont, UIColor, UITextField, UIImage, UITextLayer;
+@class UIImage;
+@class NSTextStorage;
+@class NSTextContainer;
+@class NSLayoutManager;
+
+@class UITextField;
 
 @protocol UITextFieldDelegate <NSObject>
 @optional
@@ -63,42 +70,57 @@ typedef enum {
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
 @end
 
-@interface UITextField : UIControl <UITextInputTraits>
+@interface UITextField : UIControl <UITextInputTraits, UITextInput>
 
-- (CGRect)borderRectForBounds:(CGRect)bounds;
-- (CGRect)clearButtonRectForBounds:(CGRect)bounds;
-- (CGRect)editingRectForBounds:(CGRect)bounds;
-- (CGRect)leftViewRectForBounds:(CGRect)bounds;
-- (CGRect)placeholderRectForBounds:(CGRect)bounds;
-- (CGRect)rightViewRectForBounds:(CGRect)bounds;
-- (CGRect)textRectForBounds:(CGRect)bounds;
-
-- (void)drawPlaceholderInRect:(CGRect)rect;
-- (void)drawTextInRect:(CGRect)rect;
-
-@property (nonatomic, assign) id<UITextFieldDelegate> delegate;
-@property (nonatomic, assign) UITextAlignment textAlignment;
-@property (nonatomic, copy) NSString *placeholder;
-@property (nonatomic, copy) NSString *text;
+#pragma mark Accessing the Text Attributes
+@property (nonatomic, copy) NSString* text;
 @property (nonatomic, copy) NSAttributedString* attributedText;
-@property (nonatomic, strong) UIFont *font;
-@property (nonatomic) UITextBorderStyle borderStyle;
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, readonly, getter=isEditing) BOOL editing;
-@property (nonatomic) BOOL clearsOnBeginEditing;
+@property (nonatomic, copy) NSString* placeholder;
+@property (nonatomic, copy) NSAttributedString* attributedPlaceholder;
+@property (nonatomic, copy) NSDictionary* defaultTextAttributes;
+@property (nonatomic, strong) UIFont* font;
+@property (nonatomic, strong) UIColor* textColor;
+@property (nonatomic, assign) UITextAlignment textAlignment;
+@property (nonatomic, copy) NSDictionary* typingAttributes;
+
+#pragma mark Sizing the Text Field’s Text
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 @property (nonatomic) CGFloat minimumFontSize;
 
-@property (nonatomic, strong) UIImage *background;
-@property (nonatomic, strong) UIImage *disabledBackground;
+#pragma mark Managing the Editing Behavior
+@property (nonatomic, readonly, getter=isEditing) BOOL editing;
+@property (nonatomic) BOOL clearsOnBeginEditing;
+@property (nonatomic) BOOL clearsOnInsertion;
+@property (nonatomic) BOOL allowsEditingTextAttributes;
 
+#pragma mark Setting the View’s Background Appearance
+@property (nonatomic) UITextBorderStyle borderStyle;
+@property (nonatomic, strong) UIImage* background;
+@property (nonatomic, strong) UIImage* disabledBackground;
+
+#pragma mark Managing Overlay Views
 @property (nonatomic) UITextFieldViewMode clearButtonMode;
-@property (nonatomic, strong) UIView *leftView;
+@property (nonatomic, strong) UIView* leftView;
 @property (nonatomic) UITextFieldViewMode leftViewMode;
-@property (nonatomic, strong) UIView *rightView;
+@property (nonatomic, strong) UIView* rightView;
 @property (nonatomic) UITextFieldViewMode rightViewMode;
 
-@property (nonatomic, readwrite, strong) UIView *inputAccessoryView;
-@property (nonatomic, readwrite, strong) UIView *inputView;
+#pragma mark Accessing the Delegate
+@property (nonatomic, assign) id<UITextFieldDelegate> delegate;
+
+#pragma mark Drawing and Positioning Overrides
+- (CGRect) textRectForBounds:(CGRect)bounds;
+- (void) drawTextInRect:(CGRect)rect;
+- (CGRect) placeholderRectForBounds:(CGRect)bounds;
+- (void) drawPlaceholderInRect:(CGRect)rect;
+- (CGRect) borderRectForBounds:(CGRect)bounds;
+- (CGRect) editingRectForBounds:(CGRect)bounds;
+- (CGRect) clearButtonRectForBounds:(CGRect)bounds;
+- (CGRect) leftViewRectForBounds:(CGRect)bounds;
+- (CGRect) rightViewRectForBounds:(CGRect)bounds;
+
+#pragma mark Replacing the System Input Views
+@property (nonatomic, retain) UIView* inputAccessoryView;
+@property (nonatomic, retain) UIView* inputView;
 
 @end

@@ -9,14 +9,14 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8DC2EF4F0486A6940098B216"
-               BuildableName = "UIKit.framework"
-               BlueprintName = "UIKit"
+               BlueprintIdentifier = "F9C4F65D1799815300D8E583"
+               BuildableName = "UIKit Specs (OSX).octest"
+               BlueprintName = "UIKit Specs (OSX)"
                ReferencedContainer = "container:UIKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F95F641C15C34D6900F3523B"
+               BlueprintIdentifier = "F9C4F65D1799815300D8E583"
                BuildableName = "UIKit Specs (OSX).octest"
                BlueprintName = "UIKit Specs (OSX)"
                ReferencedContainer = "container:UIKit.xcodeproj">

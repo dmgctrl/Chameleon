@@ -35,16 +35,17 @@
 #import "UIWindow.h"
 #import "UIImage+UIPrivate.h"
 #import "UIScreen.h"
-#import <QuartzCore/QuartzCore.h>
 #import "UIImageRep.h"
+//
+#import <QuartzCore/QuartzCore.h>
 
 static NSString* const kUIImageKey = @"UIImage";
 
-static NSArray *CGImagesWithUIImages(NSArray *images)
+static NSArray* CGImagesWithUIImages(NSArray* images)
 {
-    NSMutableArray *CGImages = [NSMutableArray arrayWithCapacity:[images count]];
-    for (UIImage *img in images) {
-        [CGImages addObject:(__bridge id)[img CGImage]];
+    NSMutableArray* CGImages = [NSMutableArray arrayWithCapacity:[images count]];
+    for (UIImage* image in images) {
+        [CGImages addObject:(__bridge id)[image CGImage]];
     }
     return CGImages;
 }
@@ -53,24 +54,24 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     NSInteger _drawMode;
 }
 
-+ (BOOL)_instanceImplementsDrawRect
+static void commonInit(UIImageView* self)
 {
-    return NO;
+    self.userInteractionEnabled = NO;
+    self.opaque = NO;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype) initWithFrame:(CGRect)frame
 {
-    if ((self=[super initWithFrame:frame])) {
-        _drawMode = _UIImageViewDrawModeNormal;
-        self.userInteractionEnabled = NO;
-        self.opaque = NO;
+    if (nil != (self = [super initWithFrame:frame])) {
+        commonInit(self);
     }
     return self;
 }
 
-- (id) initWithCoder:(NSCoder*)coder
+- (instancetype) initWithCoder:(NSCoder*)coder
 {
     if (nil != (self = [super initWithCoder:coder])) {
+        commonInit(self);
         if ([coder containsValueForKey:kUIImageKey]) {
             self.image = [coder decodeObjectForKey:kUIImageKey];
         }
@@ -78,36 +79,40 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     return self;
 }
 
-- (void) encodeWithCoder:(NSCoder*)coder
+- (instancetype) initWithImage:(UIImage*)image highlightedImage:(UIImage*)highlightedImage;
 {
-    [self doesNotRecognizeSelector:_cmd];
-}
-
-- (id)initWithImage:(UIImage *)theImage
-{
-    CGRect frame = CGRectZero;
-
-    if (theImage) {
-        frame.size = theImage.size;
+    if (nil != (self = [super initWithFrame:(CGRect){ .size = [image size] }])) {
+        commonInit(self);
+        _image = image;
+        _highlightedImage = highlightedImage;
     }
-        
-    if ((self = [self initWithFrame:frame])) {
-        self.image = theImage;
-    }
-
     return self;
 }
 
-
-- (CGSize)sizeThatFits:(CGSize)size
+- (instancetype) initWithImage:(UIImage*)image
 {
-    return _image? _image.size : CGSizeZero;
+    return [self initWithImage:image highlightedImage:nil];
 }
 
-- (void)setHighlighted:(BOOL)h
+
+#pragma mark Properties
+
+- (void) setBounds:(CGRect)bounds
 {
-    if (h != _highlighted) {
-        _highlighted = h;
+    [self _displayIfNeededChangingFromOldSize:self.bounds.size toNewSize:bounds.size];
+    [super setBounds:bounds];
+}
+
+- (void) setFrame:(CGRect)frame
+{
+    [self _displayIfNeededChangingFromOldSize:self.frame.size toNewSize:frame.size];
+    [super setFrame:frame];
+}
+
+- (void) setHighlighted:(BOOL)highlighted
+{
+    if (highlighted != _highlighted) {
+        _highlighted = highlighted;
         [self setNeedsDisplay];
 
         if ([self isAnimating]) {
@@ -116,131 +121,247 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     }
 }
 
-- (void)setImage:(UIImage *)newImage
+- (void) setHighlightedImage:(UIImage*)highlightedImage
 {
-    if (_image != newImage) {
-        _image = newImage;
-        if (!_highlighted || !_highlightedImage) {
-            [self setNeedsDisplay];
-        }
-    }
-}
-
-- (void)setHighlightedImage:(UIImage *)newImage
-{
-    if (_highlightedImage != newImage) {
-        _highlightedImage = newImage;
+    if (_highlightedImage != highlightedImage) {
+        _highlightedImage = highlightedImage;
         if (_highlighted) {
             [self setNeedsDisplay];
         }
     }
 }
 
-- (BOOL)_hasResizableImage
+- (void) setImage:(UIImage*)image
 {
-    return (_image.topCapHeight > 0 || _image.leftCapWidth > 0);
-}
-
-- (void)_setDrawMode:(NSInteger)drawMode
-{
-    if (drawMode != _drawMode) {
-        _drawMode = drawMode;
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)displayLayer:(CALayer *)theLayer
-{
-    [super displayLayer:theLayer];
-    
-    UIImage *displayImage = (_highlighted && _highlightedImage)? _highlightedImage : _image;
-    const CGFloat scale = self.window.screen.scale;
-    const CGRect bounds = self.bounds;
-    
-    if (displayImage && self._hasResizableImage && bounds.size.width > 0 && bounds.size.height > 0) {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, NO, scale);
-        [displayImage drawInRect:bounds];
-        displayImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    }
-    
-    // adjust the image if required.
-    // this will likely only ever be used UIButton, but it seemed a good place for it.
-    // I wonder how the real UIKit does this...
-    if (displayImage && (_drawMode != _UIImageViewDrawModeNormal)) {
-        CGRect imageBounds;
-        imageBounds.origin = CGPointZero;
-        imageBounds.size = displayImage.size;
-
-        UIGraphicsBeginImageContextWithOptions(imageBounds.size, NO, scale);
-        
-        CGBlendMode blendMode = kCGBlendModeNormal;
-        CGFloat alpha = 1;
-        
-        if (_drawMode == _UIImageViewDrawModeDisabled) {
-            alpha = 0.5;
-        } else if (_drawMode == _UIImageViewDrawModeHighlighted) {
-            [[[UIColor blackColor] colorWithAlphaComponent:0.4] setFill];
-            UIRectFill(imageBounds);
-            blendMode = kCGBlendModeDestinationAtop;
+    if (_image != image) {
+        _image = image;
+        if (!_highlighted || !_highlightedImage) {
+            [self setNeedsDisplay];
         }
-        
-        [displayImage drawInRect:imageBounds blendMode:blendMode alpha:alpha];
-        displayImage = UIGraphicsGetImageFromCurrentImageContext();
-
-        UIGraphicsEndImageContext();
     }
+}
 
-    UIImageRep *bestRepresentation = [displayImage _bestRepresentationForProposedScale:scale];
-    theLayer.contents = (__bridge id)bestRepresentation.CGImage;
+
+#pragma mark UIView
+
+- (CGSize) sizeThatFits:(CGSize)size
+{
+    return _image? _image.size : CGSizeZero;
+}
+
+
+#pragma mark NSCoding
+
+- (void) encodeWithCoder:(NSCoder*)coder
+{
+    [self doesNotRecognizeSelector:_cmd];
+}
+
+
+#pragma mark Public Methods
+
+- (void) startAnimating
+{
+    NSArray* images = _highlighted? _highlightedAnimationImages : _animationImages;
     
-    if ([theLayer respondsToSelector:@selector(setContentsScale:)]) {
-        [theLayer setContentsScale:bestRepresentation.scale];
-    }
-}
-
-- (void)_displayIfNeededChangingFromOldSize:(CGSize)oldSize toNewSize:(CGSize)newSize
-{
-    if (!CGSizeEqualToSize(newSize,oldSize) && self._hasResizableImage) {
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)setFrame:(CGRect)newFrame
-{
-    [self _displayIfNeededChangingFromOldSize:self.frame.size toNewSize:newFrame.size];
-    [super setFrame:newFrame];
-}
-
-- (void)setBounds:(CGRect)newBounds
-{
-    [self _displayIfNeededChangingFromOldSize:self.bounds.size toNewSize:newBounds.size];
-    [super setBounds:newBounds];
-}
-
-- (void)startAnimating
-{
-    NSArray *images = _highlighted? _highlightedAnimationImages : _animationImages;
-
-    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
+    CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
     animation.calculationMode = kCAAnimationDiscrete;
     animation.duration = self.animationDuration ?: ([images count] * (1/30.0));
     animation.repeatCount = self.animationRepeatCount ?: HUGE_VALF;
     animation.values = CGImagesWithUIImages(images);
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeBoth;
-
+    
     [self.layer addAnimation:animation forKey:@"contents"];
 }
 
-- (void)stopAnimating
+- (void) stopAnimating
 {
     [self.layer removeAnimationForKey:@"contents"];
 }
 
-- (BOOL)isAnimating
+- (BOOL) isAnimating
 {
     return ([self.layer animationForKey:@"contents"] != nil);
+}
+
+
+#pragma mark Private Methods
+
+- (void) _setDrawMode:(NSInteger)drawMode
+{
+    _drawMode = drawMode;
+    [self setNeedsDisplay];
+}
+
+
+- (BOOL) _hasResizableImage
+{
+    return (_image.topCapHeight > 0 || _image.leftCapWidth > 0);
+}
+
+- (CGRect) _rectForContentWithSize:(CGSize)size withContentMode:(UIViewContentMode)contentMode withinRect:(CGRect)rect
+{
+    switch (contentMode) {
+        case UIViewContentModeScaleAspectFill: {
+            if (size.width > size.height) {
+                return (CGRect) {
+                    .origin = rect.origin,
+                    .size = {
+                        .width = rect.size.width,
+                        .height = rect.size.height * (rect.size.width / size.width),
+                    }
+                };
+            } else {
+                return (CGRect) {
+                    .origin = rect.origin,
+                    .size = {
+                        .width = rect.size.width * (rect.size.height / size.height),
+                        .height = rect.size.height,
+                    }
+                };
+            }
+            break;
+        }
+        case UIViewContentModeScaleAspectFit: {
+            CGFloat scale = 1.0f;
+            if (rect.size.width > rect.size.height) {
+                scale = rect.size.width / size.width;
+            } else {
+                scale = rect.size.height / size.height;
+            }
+            CGFloat width = size.width * scale;
+            CGFloat height = size.height * scale;
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - width) / 2.0,
+                    .y = rect.origin.y + (rect.size.height - height) / 2.0,
+                },
+                .size = {
+                    .width = width,
+                    .height = height
+                }
+            };
+        }
+        case UIViewContentModeCenter: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - size.width) / 2.0,
+                    .y = rect.origin.y + (rect.size.height - size.height) / 2.0,
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeTop: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - size.width) / 2.0,
+                    .y = rect.origin.y,
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeBottom: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - size.width) / 2.0,
+                    .y = rect.origin.y + (rect.size.height - size.height),
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeLeft: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x,
+                    .y = rect.origin.y + (rect.size.height - size.height) / 2.0,
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeRight: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - size.width),
+                    .y = rect.origin.y + (rect.size.height - size.height) / 2.0,
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeTopLeft: {
+            return (CGRect){
+                .origin = {},
+                .size = size
+            };
+        }
+        case UIViewContentModeTopRight: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - size.width),
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeBottomLeft: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x + (rect.size.width - size.width),
+                    .y = rect.origin.y + (rect.size.height - size.height),
+                },
+                .size = size
+            };
+        }
+        case UIViewContentModeBottomRight: {
+            return (CGRect){
+                .origin = {
+                    .x = rect.origin.x,
+                    .y = rect.origin.y + (rect.size.height - size.height),
+                },
+                .size = size
+            };
+        }
+
+        case UIViewContentModeScaleToFill:
+        case UIViewContentModeRedraw:
+        default: {
+            return rect;
+        }
+    }
+}
+
+- (void) drawRect:(CGRect)rect
+{
+    UIImage* displayImage = (_highlighted && _highlightedImage)? _highlightedImage : _image;
+    
+    CGBlendMode blendMode = kCGBlendModeNormal;
+    CGFloat alpha = 1.0f;
+    if (_drawMode != _UIImageViewDrawModeNormal) {
+        if (_drawMode == _UIImageViewDrawModeDisabled) {
+            alpha = 0.5f;
+        } else if (_drawMode == _UIImageViewDrawModeHighlighted) {
+            blendMode = kCGBlendModeDestinationAtop;
+        }
+    }
+
+    CGRect bounds = [self bounds];
+    
+    if (blendMode == kCGBlendModeDestinationAtop) {
+        [[[UIColor blackColor] colorWithAlphaComponent:0.4] setFill];
+        UIRectFill(bounds);
+    }
+
+    if (![self _hasResizableImage]) {
+        bounds = [self _rectForContentWithSize:[displayImage size] withContentMode:[self contentMode] withinRect:bounds];
+    }
+
+    [displayImage drawInRect:bounds blendMode:blendMode alpha:alpha];
+}
+
+- (void) _displayIfNeededChangingFromOldSize:(CGSize)oldSize toNewSize:(CGSize)newSize
+{
+    if (!CGSizeEqualToSize(newSize, oldSize) && [self _hasResizableImage]) {
+        [self setNeedsDisplay];
+    }
 }
 
 @end

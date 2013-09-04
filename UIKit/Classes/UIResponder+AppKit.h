@@ -32,6 +32,10 @@
 @class UIKey;
 
 @interface UIResponder (AppKitIntegration)
+
+- (void) windowDidBecomeKey;
+- (void) windowDidResignKey;
+
 // This message is sent up the responder chain so that views behind other views can make use of the scroll wheel (such as UIScrollView).
 - (void)scrollWheelMoved:(CGPoint)delta withEvent:(UIEvent *)event;
 
@@ -62,6 +66,8 @@
 - (void) doCommandBySelector:(SEL)selector;
 - (BOOL) tryToPerform:(SEL)selector with:(id)object;
 
+- (BOOL) acceptsFirstMouse;
+
 @end
 
 
@@ -86,6 +92,8 @@
 - (void) deleteForward:(id)sender;
 - (void) insertBacktab:(id)sender;
 - (void) insertTab:(id)sender;
+
+- (void) insertText:(NSString*)text;
 
 @end
 

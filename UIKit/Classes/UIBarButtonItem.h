@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIBarItem.h"
+#import <UIKit/UIBarItem.h>
 
 typedef enum {
     UIBarButtonSystemItemDone,
@@ -61,7 +61,13 @@ typedef enum {
     UIBarButtonItemStyleDone,
 } UIBarButtonItemStyle;
 
-@class UIView, UIImage;
+typedef enum {
+    UIBarMetricsDefault,
+    UIBarMetricsLandscapePhone,
+} UIBarMetrics;
+
+@class  UIImage;
+@class UIView;
 
 @interface UIBarButtonItem : UIBarItem 
 

@@ -2,6 +2,7 @@
 #import "UIProxyObject.h"
 #import "UIImageNibPlaceholder.h"
 #import "UIGeometry.h"
+#import "UICustomObject.h"
 
 
 typedef struct {
@@ -305,7 +306,11 @@ static inline double decodeFloat64(void const** pp);
         for (NSUInteger i = 0, iMax = numberOfClasses; i < iMax; i++) {
             NSUInteger length = decodeVariableLengthInteger(&cp);
             NSUInteger unknownValue = decodeVariableLengthInteger(&cp);
-            #pragma unused (unknownValue)
+            if (unknownValue == 1) {
+                // TODO: When unknownValue is 1, there's a four byte bitfield
+                // that prefixes the class name.  I'm unsure of what this is.
+                cp += 4;
+            }
             NSString* className = [[NSString alloc] initWithBytes:cp length:length - 1 encoding:NSUTF8StringEncoding];
             if (!className) {
                 return nil;
@@ -332,6 +337,7 @@ static inline double decodeFloat64(void const** pp);
 @implementation UINibArchiveDecoderV1 {
     UINibArchiveDataV1* archiveData_;
     NSPointerArray* objects_;
+    UICustomObject* _placeholder;
     /**/
     NSBundle* bundle_;
     id owner_;
@@ -729,6 +735,7 @@ static Class kClassForUIImageNibPlaceholder;
                     assert(value->type == kInlinedValueTypeArray);
                     value++;
                     NSMutableArray* array = [[NSMutableArray alloc] initWithCapacity:objectEntry->numberOfValues - 1];
+                    [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(array)];
                     while (value <= lastValue) {
                         id object = [self _extractObjectFromValue:value++];
                         [array addObject:object];
@@ -739,6 +746,7 @@ static Class kClassForUIImageNibPlaceholder;
                     assert(value->type == kInlinedValueTypeArray);
                     value++;
                     NSMutableSet* set = [[NSMutableSet alloc] initWithCapacity:objectEntry->numberOfValues - 1];
+                    [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(set)];
                     while (value <= lastValue) {
                         id object = [self _extractObjectFromValue:value++];
                         [set addObject:object];
@@ -751,6 +759,7 @@ static Class kClassForUIImageNibPlaceholder;
                     NSUInteger numberOfEntries = ((objectEntry->numberOfValues - 1) >> 1);
                     value++;
                     NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:objectEntry->numberOfValues - 1];
+                    [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(dict)];
                     while (numberOfEntries--) {
                         assert(value->indexOfKey == archiveData_->keyForEmpty);
                         id k = [self _extractObjectFromValue:value++];
@@ -760,7 +769,9 @@ static Class kClassForUIImageNibPlaceholder;
                     }
                     object = dict;
                 } else if (class == kClassForNSNumber) {
-                    return [self _extractObjectFromValue:value];
+                    NSNumber* number = [self _extractObjectFromValue:value];
+                    [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(number)];
+                    object = number;
                 } else {
                     UINibDecoderObjectEntry* myObjectEntry = objectEntry_;
                     UINibDecoderValueEntry* myNextGenericValue = nextGenericValue_;
@@ -770,34 +781,37 @@ static Class kClassForUIImageNibPlaceholder;
                     nextGenericValue_ = value;
                     lastValue_ = lastValue;
                     
+                    UICustomObject* placeholder = [[UICustomObject alloc] init];
+                    [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(placeholder)];
                     object = [[class alloc] initWithCoder:self];
                     
                     objectEntry_ = myObjectEntry;
                     nextGenericValue_ = myNextGenericValue;
                     lastValue_ = myLastValue;
-                }
 
-                assert(object);
-                [object awakeAfterUsingCoder:self];
-                
-                if (class == kClassForUIProxyObject) {
-                    NSString* proxiedObjectIdentifier = [object proxiedObjectIdentifier];
-                    if ([proxiedObjectIdentifier isEqualToString:kIBFilesOwnerKey]) {
-                        object = owner_; 
-                    } else if ([proxiedObjectIdentifier isEqualToString:kIBFirstResponderKey]) {
-                        object = [NSNull null];
+                    if (class == kClassForUIProxyObject) {
+                        NSString* proxiedObjectIdentifier = [object proxiedObjectIdentifier];
+                        if ([proxiedObjectIdentifier isEqualToString:kIBFilesOwnerKey]) {
+                            object = owner_; 
+                        } else if ([proxiedObjectIdentifier isEqualToString:kIBFirstResponderKey]) {
+                            object = [NSNull null];
+                        } else {
+                            object = [externalObjects_ objectForKey:proxiedObjectIdentifier];
+                        }
+                        if (!object) {
+                            [self _cannotDereferenceExternalObject:proxiedObjectIdentifier];
+                        }
+                    } else if (class == kClassForUIImageNibPlaceholder) {
+                        NSString* resourceName = [object resourceName];
+                        object = [UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]];
                     } else {
-                        object = [externalObjects_ objectForKey:proxiedObjectIdentifier];
+                        object = [object awakeAfterUsingCoder:self];
                     }
-                    if (!object) {
-                        [self _cannotDereferenceExternalObject:proxiedObjectIdentifier];
-                    }
-                } else if (class == kClassForUIImageNibPlaceholder) {
-                    NSString* resourceName = [object resourceName];
-                    object = [UIImage imageWithContentsOfFile:[bundle_ pathForResource:resourceName ofType:nil]];
-                }
+                    assert(object);
 
-                [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(object)];
+                    [placeholder setTarget:object];
+                    [objects_ replacePointerAtIndex:indexOfObject withPointer:(__bridge void *)(object)];
+                }
             }
             return object;
         }

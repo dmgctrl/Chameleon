@@ -27,8 +27,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
-#import "UITableView.h"
+#import <UIKit/UIViewController.h>
+#import <UIKit/UITableView.h>
+
+@class UIRefreshControl;
 
 @interface UITableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> 
 
@@ -36,5 +38,6 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
+@property (nonatomic, retain) UIRefreshControl* refreshControl;
 
 @end
